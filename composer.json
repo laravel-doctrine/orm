@@ -1,0 +1,44 @@
+{
+  "name": "brouwers/laravel-doctrine",
+  "description": "A Doctrine ORM bridge for Laravel 5",
+  "license": "MIT",
+  "keywords": [
+    "doctrine",
+    "laravel",
+    "orm",
+    "data mapper",
+    "database"
+  ],
+  "authors": [
+    {
+      "name": "Patrick Brouwers",
+      "email": "patrick@maatwebsite.nl"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "illuminate/support": "~5.1",
+    "illuminate/database": "~5.1",
+    "doctrine/orm": "2.5.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0",
+    "mockery/mockery": "~0.9",
+    "gedmo/doctrine-extensions": "~2.4.1",
+    "beberlei/DoctrineExtensions": "^1.0"
+  },
+  "suggest": {
+    "gedmo/doctrine-extensions": "Behavioral Doctrine2 extensions (~2.4.1)",
+    "beberlei/DoctrineExtensions": "Query/Type Doctrine2 extensions (^1.0)"
+  },
+  "autoload": {
+    "psr-4": {
+      "Brouwers\\LaravelDoctrine\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests"
+    ]
+  }
+}
