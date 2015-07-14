@@ -311,13 +311,6 @@ class DoctrineServiceProvider extends ServiceProvider
                 $this->app[Dispatcher::class]
             );
 
-            if ($this->config['gedmo_extensions']['enabled']) {
-                $manager->enableGedmoExtensions(
-                    $this->config['meta']['namespaces'],
-                    $this->config['gedmo_extensions']['all_mappings']
-                );
-            }
-
             // Register the extensions
             foreach ($this->config['extensions'] as $extension) {
                 if (!class_exists($extension)) {
