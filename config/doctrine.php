@@ -90,7 +90,7 @@ return [
     |
     */
     'extensions'                => [
-        //Brouwers\LaravelDoctrine\Extensions\TablePrefix\TablePrefixExtension::class,
+        //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
     ],
     /*
     |--------------------------------------------------------------------------
@@ -98,7 +98,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'custom_types'              => [
-        'json' => Brouwers\LaravelDoctrine\Types\Json::class,
+        'json' => LaravelDoctrine\ORM\Types\Json::class,
         //'CarbonDate'       => DoctrineExtensions\Types\CarbonDateType::class,
         //'CarbonDateTime'   => DoctrineExtensions\Types\CarbonDateTimeType::class,
         //'CarbonDateTimeTz' => DoctrineExtensions\Types\CarbonDateTimeTzType::class,

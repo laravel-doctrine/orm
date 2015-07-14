@@ -1,8 +1,8 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration\Connections;
+namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-use Brouwers\LaravelDoctrine\Configuration\Driver;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
 interface Connection extends Driver
 {

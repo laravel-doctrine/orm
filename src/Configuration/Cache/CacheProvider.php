@@ -1,8 +1,8 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration\Cache;
+namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Brouwers\LaravelDoctrine\Configuration\Driver;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
 interface CacheProvider extends Driver
 {

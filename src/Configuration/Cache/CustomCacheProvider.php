@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration\Cache;
+namespace LaravelDoctrine\ORM\Configuration\Cache;
 
 class CustomCacheProvider extends AbstractCacheProvider
 {

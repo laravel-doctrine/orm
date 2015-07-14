@@ -65,13 +65,13 @@ Require this package in your `composer.json` and run `composer update`.
 After updating composer, add the ServiceProvider to the providers array in `config/app.php`
 
 ```php
-'Brouwers\LaravelDoctrine\DoctrineServiceProvider',
+'LaravelDoctrine\ORM\DoctrineServiceProvider',
 ```
 
 Optionally you can register the EntityManager facade:
 
 ```php
-'EntityManager' => 'Brouwers\LaravelDoctrine\Facades\EntityManager'
+'EntityManager' => 'LaravelDoctrine\ORM\Facades\EntityManager'
 ```
 
 To publish the config use:

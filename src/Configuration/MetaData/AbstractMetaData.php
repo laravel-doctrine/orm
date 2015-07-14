@@ -1,8 +1,8 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration\MetaData;
+namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
-use Brouwers\LaravelDoctrine\Configuration\Cache\CacheManager;
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 
 abstract class AbstractMetaData implements MetaData
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration;
+namespace LaravelDoctrine\ORM\Configuration;
 
-use Brouwers\LaravelDoctrine\Exceptions\DriverNotRegistered;
 use Closure;
+use LaravelDoctrine\ORM\Exceptions\DriverNotRegistered;
 
 trait ExtendableTrait
 {

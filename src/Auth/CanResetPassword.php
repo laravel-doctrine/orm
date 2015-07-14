@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Auth;
+namespace LaravelDoctrine\ORM\Auth;
 
 trait CanResetPassword
 {

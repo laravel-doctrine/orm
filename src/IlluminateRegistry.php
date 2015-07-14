@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine;
+namespace LaravelDoctrine\ORM;
 
 use Doctrine\Common\Persistence\AbstractManagerRegistry;
 use Doctrine\Common\Persistence\ManagerRegistry;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Exceptions;
+namespace LaravelDoctrine\ORM\Exceptions;
 
 use LogicException;
 

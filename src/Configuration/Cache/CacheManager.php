@@ -1,12 +1,12 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration\Cache;
+namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Brouwers\LaravelDoctrine\Configuration\Extendable;
-use Brouwers\LaravelDoctrine\Configuration\ExtendableTrait;
-use Brouwers\LaravelDoctrine\Exceptions\CouldNotExtend;
-use Brouwers\LaravelDoctrine\Exceptions\DriverNotFound;
 use Closure;
+use LaravelDoctrine\ORM\Configuration\Extendable;
+use LaravelDoctrine\ORM\Configuration\ExtendableTrait;
+use LaravelDoctrine\ORM\Exceptions\CouldNotExtend;
+use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 
 class CacheManager implements Extendable
 {

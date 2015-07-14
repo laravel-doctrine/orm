@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration\Connections;
+namespace LaravelDoctrine\ORM\Configuration\Connections;
 
 class PgsqlConnection extends AbstractConnection
 {

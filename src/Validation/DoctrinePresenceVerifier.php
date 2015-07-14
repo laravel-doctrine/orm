@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Validation;
+namespace LaravelDoctrine\ORM\Validation;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Validation\PresenceVerifierInterface;

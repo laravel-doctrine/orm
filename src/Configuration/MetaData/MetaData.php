@@ -1,8 +1,8 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration\MetaData;
+namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
-use Brouwers\LaravelDoctrine\Configuration\Driver;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
 interface MetaData extends Driver
 {

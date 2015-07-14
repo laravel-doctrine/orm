@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Auth\Passwords;
+namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration\Cache;
+namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Brouwers\LaravelDoctrine\Exceptions\DriverNotFound;
 use Doctrine\Common\Cache\MemcachedCache;
+use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 use Memcached;
 
 class MemcachedCacheProvider extends AbstractCacheProvider

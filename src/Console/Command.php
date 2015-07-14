@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Console;
+namespace LaravelDoctrine\ORM\Console;
 
 class Command extends \Illuminate\Console\Command
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Facades;
+namespace LaravelDoctrine\ORM\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

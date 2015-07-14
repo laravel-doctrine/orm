@@ -1,8 +1,8 @@
 <?php
 
-use Brouwers\LaravelDoctrine\Configuration\Connections\AbstractConnection;
-use Brouwers\LaravelDoctrine\Configuration\Connections\ConnectionManager;
-use Brouwers\LaravelDoctrine\Configuration\Connections\MysqlConnection;
+use LaravelDoctrine\ORM\Configuration\Connections\AbstractConnection;
+use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
+use LaravelDoctrine\ORM\Configuration\Connections\MysqlConnection;
 
 class ConnectionManagerTest extends PHPUnit_Framework_TestCase
 {

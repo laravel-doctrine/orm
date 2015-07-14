@@ -1,9 +1,9 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration\MetaData;
+namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
-use Brouwers\LaravelDoctrine\Configuration\MetaData\Config\ConfigDriver;
 use Doctrine\ORM\Tools\Setup;
+use LaravelDoctrine\ORM\Configuration\MetaData\Config\ConfigDriver;
 
 class Config extends AbstractMetaData
 {

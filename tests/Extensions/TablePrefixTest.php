@@ -1,8 +1,8 @@
 <?php
 
-use Brouwers\LaravelDoctrine\Extensions\TablePrefix\TablePrefixListener;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixListener;
 use Mockery as m;
 
 class TablePrefixTest extends \PHPUnit_Framework_TestCase

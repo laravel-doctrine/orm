@@ -1,25 +1,7 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine;
+namespace LaravelDoctrine\ORM;
 
-use Brouwers\LaravelDoctrine\Auth\DoctrineUserProvider;
-use Brouwers\LaravelDoctrine\Configuration\Cache\CacheManager;
-use Brouwers\LaravelDoctrine\Configuration\Connections\ConnectionManager;
-use Brouwers\LaravelDoctrine\Configuration\LaravelNamingStrategy;
-use Brouwers\LaravelDoctrine\Configuration\MetaData\MetaDataManager;
-use Brouwers\LaravelDoctrine\Console\ClearMetadataCacheCommand;
-use Brouwers\LaravelDoctrine\Console\ClearQueryCacheCommand;
-use Brouwers\LaravelDoctrine\Console\ClearResultCacheCommand;
-use Brouwers\LaravelDoctrine\Console\EnsureProductionSettingsCommand;
-use Brouwers\LaravelDoctrine\Console\GenerateProxiesCommand;
-use Brouwers\LaravelDoctrine\Console\InfoCommand;
-use Brouwers\LaravelDoctrine\Console\SchemaCreateCommand;
-use Brouwers\LaravelDoctrine\Console\SchemaDropCommand;
-use Brouwers\LaravelDoctrine\Console\SchemaUpdateCommand;
-use Brouwers\LaravelDoctrine\Console\SchemaValidateCommand;
-use Brouwers\LaravelDoctrine\Exceptions\ExtensionNotFound;
-use Brouwers\LaravelDoctrine\Extensions\ExtensionManager;
-use Brouwers\LaravelDoctrine\Validation\DoctrinePresenceVerifier;
 use DebugBar\Bridge\DoctrineCollector;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\Proxy;
@@ -34,6 +16,24 @@ use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Support\ServiceProvider;
+use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
+use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
+use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
+use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
+use LaravelDoctrine\ORM\Console\ClearMetadataCacheCommand;
+use LaravelDoctrine\ORM\Console\ClearQueryCacheCommand;
+use LaravelDoctrine\ORM\Console\ClearResultCacheCommand;
+use LaravelDoctrine\ORM\Console\EnsureProductionSettingsCommand;
+use LaravelDoctrine\ORM\Console\GenerateProxiesCommand;
+use LaravelDoctrine\ORM\Console\InfoCommand;
+use LaravelDoctrine\ORM\Console\SchemaCreateCommand;
+use LaravelDoctrine\ORM\Console\SchemaDropCommand;
+use LaravelDoctrine\ORM\Console\SchemaUpdateCommand;
+use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
+use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
+use LaravelDoctrine\ORM\Extensions\ExtensionManager;
+use LaravelDoctrine\ORM\Validation\DoctrinePresenceVerifier;
 
 class DoctrineServiceProvider extends ServiceProvider
 {

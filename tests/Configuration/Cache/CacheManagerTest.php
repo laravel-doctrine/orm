@@ -1,9 +1,9 @@
 <?php
 
-use Brouwers\LaravelDoctrine\Configuration\Cache\AbstractCacheProvider;
-use Brouwers\LaravelDoctrine\Configuration\Cache\CacheManager;
-use Brouwers\LaravelDoctrine\Configuration\Cache\FileCacheProvider;
 use Doctrine\Common\Cache\FilesystemCache;
+use LaravelDoctrine\ORM\Configuration\Cache\AbstractCacheProvider;
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
+use LaravelDoctrine\ORM\Configuration\Cache\FileCacheProvider;
 
 class CacheManagerTest extends PHPUnit_Framework_TestCase
 {

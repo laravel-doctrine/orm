@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Auth\Passwords;
+namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Auth\Passwords\PasswordBroker;

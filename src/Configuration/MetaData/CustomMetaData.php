@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration\MetaData;
+namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 class CustomMetaData extends AbstractMetaData
 {

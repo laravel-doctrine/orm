@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration;
+namespace LaravelDoctrine\ORM\Configuration;
 
 use Closure;
 

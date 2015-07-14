@@ -1,14 +1,14 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Configuration\MetaData;
+namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
-use Brouwers\LaravelDoctrine\Configuration\Extendable;
-use Brouwers\LaravelDoctrine\Configuration\ExtendableTrait;
-use Brouwers\LaravelDoctrine\Configuration\Hookable;
-use Brouwers\LaravelDoctrine\Exceptions\CouldNotExtend;
-use Brouwers\LaravelDoctrine\Exceptions\DriverNotFound;
 use Closure;
 use Doctrine\ORM\Configuration;
+use LaravelDoctrine\ORM\Configuration\Extendable;
+use LaravelDoctrine\ORM\Configuration\ExtendableTrait;
+use LaravelDoctrine\ORM\Configuration\Hookable;
+use LaravelDoctrine\ORM\Exceptions\CouldNotExtend;
+use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 
 class MetaDataManager implements Extendable, Hookable
 {

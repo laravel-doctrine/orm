@@ -1,6 +1,6 @@
 <?php
 
-namespace Brouwers\LaravelDoctrine\Console;
+namespace LaravelDoctrine\ORM\Console;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Exception;

@@ -1,7 +1,7 @@
 <?php
 
-use Brouwers\LaravelDoctrine\Configuration\LaravelNamingStrategy;
 use Illuminate\Support\Str;
+use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 
 class LaravelNamingStrategyTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,10 +1,10 @@
 <?php
 
-use Brouwers\LaravelDoctrine\Configuration\MetaData\AbstractMetaData;
-use Brouwers\LaravelDoctrine\Configuration\MetaData\Annotations;
-use Brouwers\LaravelDoctrine\Configuration\MetaData\MetaDataManager;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Tools\Setup;
+use LaravelDoctrine\ORM\Configuration\MetaData\AbstractMetaData;
+use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
+use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 
 class MetaDataManagerTest extends PHPUnit_Framework_TestCase
 {
