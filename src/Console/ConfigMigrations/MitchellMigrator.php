@@ -1,16 +1,9 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: mduncan
- * Date: 7/14/15
- * Time: 3:38 PM
- */
 
 namespace LaravelDoctrine\ORM\ConfigMigrations;
 
-
-use LaravelDoctrine\ORM\Utilities\ArrayUtil;
 use Doctrine\ORM;
+use LaravelDoctrine\ORM\Utilities\ArrayUtil;
 
 class MitchellMigrator implements ConfigurationMigrator
 {
@@ -21,7 +14,7 @@ class MitchellMigrator implements ConfigurationMigrator
         $this->defaultConfig = $defaultConfig;
     }
 
-    function convertConfiguration($sourceArray)
+    public function convertConfiguration($sourceArray)
     {
         //determine if configuration is from FoxxMD fork or original Mitchell repo
         $isFoxxMD = ArrayUtil::get($sourceArray['entity_managers']) !== null;
@@ -36,48 +29,49 @@ class MitchellMigrator implements ConfigurationMigrator
             $config['managers']['default'] = $this->convertManager($sourceArray, $isFoxxMD);
         }
 
-        $config['meta'] = $this->defaultConfig['meta'];
-        $config['extensions'] = $this->defaultConfig['extensions'];
+        $config['meta']         = $this->defaultConfig['meta'];
+        $config['extensions']   = $this->defaultConfig['extensions'];
         $config['custom_types'] = $this->defaultConfig['custom_types'];
 
-        if($isFoxxMD){
+        if ($isFoxxMD) {
             $dqls = $this->convertDQL($sourceArray['entity_managers']);
-            if(!empty($dqls)){
+            if (!empty($dqls)) {
                 array_push($config, $dqls);
             }
         }
 
         $config['debugbar'] = $this->defaultConfig['debugbar'];
-        $config['cache'] = $this->convertCache($sourceArray);
+        $config['cache']    = $this->convertCache($sourceArray);
 
         return $config;
     }
 
-    function convertManager($sourceArray, $isFoxxMD)
+    public function convertManager($sourceArray, $isFoxxMD)
     {
         return [
-            'meta' => $isFoxxMD ? $sourceArray['metadata']['driver'] : 'annotations',
+            'meta'       => $isFoxxMD ? $sourceArray['metadata']['driver'] : 'annotations',
             'connection' => $isFoxxMD ? $sourceArray['connection'] : config('database.default'),
-            'paths' => ArrayUtil::get($sourceArray['metadata']['paths'], $sourceArray['metadata']),
+            'paths'      => ArrayUtil::get($sourceArray['metadata']['paths'], $sourceArray['metadata']),
             'repository' => ArrayUtil::get($sourceArray['repository'], ORM\EntityRepository::class),
-            'proxies' => [
-                'namespace' => ArrayUtil::get($sourceArray['proxy']['namespace'], false),
-                'path' => ArrayUtil::get($sourceArray['proxy']['directory'], storage_path('proxies')),
+            'proxies'    => [
+                'namespace'     => ArrayUtil::get($sourceArray['proxy']['namespace'], false),
+                'path'          => ArrayUtil::get($sourceArray['proxy']['directory'], storage_path('proxies')),
                 'auto_generate' => ArrayUtil::get($sourceArray['proxy']['auto_generate'], env('DOCTRINE_PROXY_AUTOGENERATE', false))
             ]
         ];
     }
 
-    function convertCache($sourceArray)
+    public function convertCache($sourceArray)
     {
         $cacheProvider = ArrayUtil::get($sourceArray['cache_provider']);
+
         return [
-            'default' => $cacheProvider == null ? config('cache.default') : config('cache.' . $cacheProvider),
+            'default'      => $cacheProvider == null ? config('cache.default') : config('cache.' . $cacheProvider),
             'second_level' => false,
         ];
     }
 
-    function convertDQL($sourceManagers)
+    public function convertDQL($sourceManagers)
     {
         $dqls = [];
         foreach ($sourceManagers as $manager) {
@@ -93,6 +87,7 @@ class MitchellMigrator implements ConfigurationMigrator
                 }
             }
         }
+
         return $dqls;
     }
 }

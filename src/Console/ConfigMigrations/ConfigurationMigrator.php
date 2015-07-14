@@ -4,5 +4,5 @@ namespace LaravelDoctrine\ORM\ConfigMigrations;
 
 interface ConfigurationMigrator
 {
-    function convertConfiguration($sourceArray);
+    public function convertConfiguration($sourceArray);
 }

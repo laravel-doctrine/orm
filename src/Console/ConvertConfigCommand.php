@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: mduncan
- * Date: 7/14/15
- * Time: 2:04 PM
- */
 
 namespace LaravelDoctrine\ORM\Console;
 
@@ -21,16 +15,15 @@ class ConvertConfigCommand extends Command
 
     public function fire()
     {
-
         if (($destPath = $this->option('dest-path')) === null) {
             $destPath = 'config';
         }
 
-        if(($author = $this->argument('author')) === null){
+        if (($author = $this->argument('author')) === null) {
             throw new InvalidArgumentException('Missing author option');
         }
 
-        if(($sourceFilePath = $this->option('source-file')) === null){
+        if (($sourceFilePath = $this->option('source-file')) === null) {
             $sourceFilePath = 'config/doctrine.php';
         }
 
@@ -63,8 +56,7 @@ class ConvertConfigCommand extends Command
         //TODO make this relative
         $defaultArrayConfig = include '../../config/doctrine.php';
 
-
-        switch($author){
+        switch ($author) {
             case 'atrauzzi':
                 $convertedArrayConfig = $this->convertAtrauzzi($sourceArrayConfig, $defaultArrayConfig);
                 break;
@@ -79,13 +71,15 @@ class ConvertConfigCommand extends Command
         $this->info('Conversion successful. File generated at ' . $destFilePath);
     }
 
-    private function convertMitchell($sourceConfig, $defaultconfig){
+    private function convertMitchell($sourceConfig, $defaultconfig)
+    {
         $mMigrator = new MitchellMigrator($defaultconfig);
+
         return $mMigrator->convertConfiguration($sourceConfig);
     }
 
-    private function convertAtrauzzi($sourceConfig){
-
+    private function convertAtrauzzi($sourceConfig)
+    {
     }
 
     public function getArguments()
@@ -98,9 +92,9 @@ class ConvertConfigCommand extends Command
 
     protected function getOptions()
     {
-        return array(
+        return [
             ['dest-path', null, InputOption::VALUE_OPTIONAL, 'Where the generated configuration should be placed. Default is config.', 'config'],
             ['source-file', null, InputOption::VALUE_OPTIONAL, 'Where the source configuration file is located. Default is config/doctrine.php', 'config/doctrine.php']
-        );
+        ];
     }
 }
