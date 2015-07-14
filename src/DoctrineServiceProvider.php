@@ -19,7 +19,6 @@ use Brouwers\LaravelDoctrine\Console\SchemaUpdateCommand;
 use Brouwers\LaravelDoctrine\Console\SchemaValidateCommand;
 use Brouwers\LaravelDoctrine\Exceptions\ExtensionNotFound;
 use Brouwers\LaravelDoctrine\Extensions\ExtensionManager;
-use Brouwers\LaravelDoctrine\Migrations\DoctrineMigrationRepository;
 use Brouwers\LaravelDoctrine\Validation\DoctrinePresenceVerifier;
 use DebugBar\Bridge\DoctrineCollector;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -55,7 +54,6 @@ class DoctrineServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->extendAuthManager();
-        $this->extendMigrator();
 
         // Boot the extension manager
         $this->app->make(ExtensionManager::class)->boot();
@@ -249,7 +247,6 @@ class DoctrineServiceProvider extends ServiceProvider
             }
 
             $configuration->getMetadataDriverImpl()->addPaths([
-                __DIR__ . '/Migrations',
                 __DIR__ . '/Auth/Passwords'
             ]);
 
@@ -388,16 +385,6 @@ class DoctrineServiceProvider extends ServiceProvider
                 $app['em'],
                 $app['config']['auth.model']
             );
-        });
-    }
-
-    /**
-     * Extend the migrator
-     */
-    protected function extendMigrator()
-    {
-        $this->app->bind('migration.repository', function ($app) {
-            return $app->make(DoctrineMigrationRepository::class);
         });
     }
 
