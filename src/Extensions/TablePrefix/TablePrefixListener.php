@@ -2,10 +2,12 @@
 
 namespace LaravelDoctrine\ORM\Extensions\TablePrefix;
 
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
-class TablePrefixListener
+class TablePrefixListener implements EventSubscriber
 {
     /**
      * @var string
@@ -18,6 +20,17 @@ class TablePrefixListener
     public function __construct($prefix)
     {
         $this->prefix = (string) $prefix;
+    }
+
+    /**
+     * Returns an array of events this subscriber wants to listen to.
+     * @return array
+     */
+    public function getSubscribedEvents()
+    {
+        return [
+            Events::loadClassMetadata
+        ];
     }
 
     /**

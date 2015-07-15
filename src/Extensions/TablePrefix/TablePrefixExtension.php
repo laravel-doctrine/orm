@@ -6,7 +6,6 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Events;
 use LaravelDoctrine\ORM\Extensions\Extension;
 
 class TablePrefixExtension implements Extension
@@ -14,12 +13,11 @@ class TablePrefixExtension implements Extension
     /**
      * @param EventManager           $manager
      * @param EntityManagerInterface $em
-     * @param Reader                 $reader
+     * @param Reader|null            $reader
      */
-    public function addSubscribers(EventManager $manager, EntityManagerInterface $em, Reader $reader)
+    public function addSubscribers(EventManager $manager, EntityManagerInterface $em, Reader $reader = null)
     {
-        $manager->addEventListener(
-            Events::loadClassMetadata,
+        $manager->addEventSubscriber(
             new TablePrefixListener(
                 $this->getPrefix($em->getConnection())
             )
@@ -43,6 +41,6 @@ class TablePrefixExtension implements Extension
     {
         $params = $connection->getParams();
 
-        return isset($params['prefix']) ? $params['prefix'] : null;
+        return array_get($params, 'prefix');
     }
 }
