@@ -24,6 +24,7 @@ use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Console\ClearMetadataCacheCommand;
 use LaravelDoctrine\ORM\Console\ClearQueryCacheCommand;
 use LaravelDoctrine\ORM\Console\ClearResultCacheCommand;
+use LaravelDoctrine\ORM\Console\ConvertConfigCommand;
 use LaravelDoctrine\ORM\Console\EnsureProductionSettingsCommand;
 use LaravelDoctrine\ORM\Console\GenerateProxiesCommand;
 use LaravelDoctrine\ORM\Console\InfoCommand;
@@ -363,7 +364,8 @@ class DoctrineServiceProvider extends ServiceProvider
             ClearResultCacheCommand::class,
             ClearQueryCacheCommand::class,
             EnsureProductionSettingsCommand::class,
-            GenerateProxiesCommand::class
+            GenerateProxiesCommand::class,
+            ConvertConfigCommand::class
         ]);
     }
 
