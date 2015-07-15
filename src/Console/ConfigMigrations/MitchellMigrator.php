@@ -4,6 +4,7 @@ namespace LaravelDoctrine\ORM\ConfigMigrations;
 
 use Doctrine\ORM;
 use LaravelDoctrine\ORM\Utilities\ArrayUtil;
+use Philo\Blade\Blade;
 
 class MitchellMigrator implements ConfigurationMigrator
 {
@@ -11,6 +12,7 @@ class MitchellMigrator implements ConfigurationMigrator
 
     public function __construct($defaultConfig)
     {
+        $this->blade = new Blade('src/Console/ConfigMigrations/templates/mitchell', 'src/Console/ConfigMigrations/templates');
         $this->defaultConfig = $defaultConfig;
     }
 
@@ -19,56 +21,68 @@ class MitchellMigrator implements ConfigurationMigrator
         //determine if configuration is from FoxxMD fork or original Mitchell repo
         $isFoxxMD = ArrayUtil::get($sourceArray['entity_managers']) !== null;
 
-        $config['dev'] = config('app.debug');
+        $managers = [];
+        $cache = '';
+        $dqls = null;
+
+        //$config['dev'] = config('app.debug');
 
         if ($isFoxxMD) {
-            foreach ($sourceArray['entity_managers'] as $manager) {
-                $config['managers'] = $this->convertManager($manager, $isFoxxMD);
+            foreach ($sourceArray['entity_managers'] as $key => $manager) {
+                $managers[$key] = $this->convertManager($manager, $isFoxxMD);
             }
         } else {
-            $config['managers']['default'] = $this->convertManager($sourceArray, $isFoxxMD);
+            $managers['default'] = $this->convertManager($sourceArray, $isFoxxMD);
         }
 
-        $config['meta']         = $this->defaultConfig['meta'];
-        $config['extensions']   = $this->defaultConfig['extensions'];
-        $config['custom_types'] = $this->defaultConfig['custom_types'];
+        //$config['meta']         = $this->defaultConfig['meta'];
+        //$config['extensions']   = $this->defaultConfig['extensions'];
+        //$config['custom_types'] = $this->defaultConfig['custom_types'];
 
         if ($isFoxxMD) {
             $dqls = $this->convertDQL($sourceArray['entity_managers']);
-            if (!empty($dqls)) {
-                array_push($config, $dqls);
-            }
+            /*            if (!empty($dqls)) {
+                            array_push($config, $dqls);
+                        }*/
         }
 
-        $config['debugbar'] = $this->defaultConfig['debugbar'];
-        $config['cache']    = $this->convertCache($sourceArray);
+        //$config['debugbar'] = $this->defaultConfig['debugbar'];
+        $cache    = $this->convertCache($sourceArray);
 
-        return $config;
+        $results = $this->blade->view()->make('defaults', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls])->render();
+        $unescaped = html_entity_decode($results, ENT_QUOTES);
+
+        return $unescaped;
     }
 
     public function convertManager($sourceArray, $isFoxxMD)
     {
-        return [
-            'meta'       => $isFoxxMD ? $sourceArray['metadata']['driver'] : 'annotations',
-            'connection' => $isFoxxMD ? $sourceArray['connection'] : config('database.default'),
-            'paths'      => ArrayUtil::get($sourceArray['metadata']['paths'], $sourceArray['metadata']),
-            'repository' => ArrayUtil::get($sourceArray['repository'], ORM\EntityRepository::class),
-            'proxies'    => [
-                'namespace'     => ArrayUtil::get($sourceArray['proxy']['namespace'], false),
-                'path'          => ArrayUtil::get($sourceArray['proxy']['directory'], storage_path('proxies')),
-                'auto_generate' => ArrayUtil::get($sourceArray['proxy']['auto_generate'], env('DOCTRINE_PROXY_AUTOGENERATE', false))
-            ]
-        ];
+        $results = $this->blade->view()->make('manager', ['data' => $sourceArray, 'isFork' => $isFoxxMD])->render();
+        $unescaped = html_entity_decode($results, ENT_QUOTES);
+        return $unescaped;
+        /*        return [
+                    'meta'       => $isFoxxMD ? $sourceArray['metadata']['driver'] : 'annotations',
+                    'connection' => $isFoxxMD ? $sourceArray['connection'] : config('database.default'),
+                    'paths'      => ArrayUtil::get($sourceArray['metadata']['paths'], $sourceArray['metadata']),
+                    'repository' => ArrayUtil::get($sourceArray['repository'], ORM\EntityRepository::class),
+                    'proxies'    => [
+                        'namespace'     => ArrayUtil::get($sourceArray['proxy']['namespace'], false),
+                        'path'          => ArrayUtil::get($sourceArray['proxy']['directory'], storage_path('proxies')),
+                        'auto_generate' => ArrayUtil::get($sourceArray['proxy']['auto_generate'], env('DOCTRINE_PROXY_AUTOGENERATE', false))
+                    ]
+                ];*/
     }
 
     public function convertCache($sourceArray)
     {
         $cacheProvider = ArrayUtil::get($sourceArray['cache_provider']);
-
-        return [
-            'default'      => $cacheProvider == null ? config('cache.default') : config('cache.' . $cacheProvider),
-            'second_level' => false,
-        ];
+        $results = $this->blade->view()->make('cache', ['cacheProvider' => $cacheProvider])->render();
+        $unescaped = html_entity_decode($results, ENT_QUOTES);
+        return $unescaped;
+        /*        return [
+                    'default'      => $cacheProvider == null ? config('cache.default') : config('cache.' . $cacheProvider),
+                    'second_level' => false,
+                ];*/
     }
 
     public function convertDQL($sourceManagers)
@@ -88,6 +102,13 @@ class MitchellMigrator implements ConfigurationMigrator
             }
         }
 
-        return $dqls;
+        if(!empty($dqls)){
+            $results = $this->blade->view()->make('dql', ['dql' => $dqls])->render();
+            $unescaped = html_entity_decode($results, ENT_QUOTES);
+            return $unescaped;
+        } else {
+            return null;
+        }
+
     }
 }

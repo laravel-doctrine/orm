@@ -58,16 +58,16 @@ class ConvertConfigCommand extends Command
 
         switch ($author) {
             case 'atrauzzi':
-                $convertedArrayConfig = $this->convertAtrauzzi($sourceArrayConfig, $defaultArrayConfig);
+                $convertedConfigString = $this->convertAtrauzzi($sourceArrayConfig, $defaultArrayConfig);
                 break;
             case 'mitchellvanw':
-                $convertedArrayConfig = $this->convertMitchell($sourceArrayConfig, $defaultArrayConfig);
+                $convertedConfigString = $this->convertMitchell($sourceArrayConfig, $defaultArrayConfig);
                 break;
             default:
                 throw new InvalidArgumentException('Author provided was not a valid choice.');
         }
 
-        file_put_contents($destFilePath, '<?php return ' . var_export($convertedArrayConfig, true) . ';');
+        file_put_contents($destFilePath, '<?php ' . $convertedConfigString);
         $this->info('Conversion successful. File generated at ' . $destFilePath);
     }
 
