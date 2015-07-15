@@ -11,9 +11,9 @@ interface Extension
     /**
      * @param EventManager           $manager
      * @param EntityManagerInterface $em
-     * @param Reader                 $reader
+     * @param Reader|null            $reader
      */
-    public function addSubscribers(EventManager $manager, EntityManagerInterface $em, Reader $reader);
+    public function addSubscribers(EventManager $manager, EntityManagerInterface $em, Reader $reader = null);
 
     /**
      * @return array
