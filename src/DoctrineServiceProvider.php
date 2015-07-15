@@ -11,9 +11,9 @@ use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Illuminate\Auth\AuthManager;
-use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Support\ServiceProvider;
 use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
@@ -32,6 +32,7 @@ use LaravelDoctrine\ORM\Console\SchemaDropCommand;
 use LaravelDoctrine\ORM\Console\SchemaUpdateCommand;
 use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
+use LaravelDoctrine\ORM\Extensions\DriverChain;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
 use LaravelDoctrine\ORM\Validation\DoctrinePresenceVerifier;
 
@@ -76,6 +77,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerManagerRegistry();
         $this->registerEntityManager();
         $this->registerClassMetaDataFactory();
+        $this->registerDriverChain();
         $this->registerExtensions();
         $this->registerCustomTypes();
         $this->registerPresenceVerifier();
@@ -138,13 +140,18 @@ class DoctrineServiceProvider extends ServiceProvider
                 }
 
                 // Paths
-                $configuration->getMetadataDriverImpl()->addPaths(
-                    array_get($settings, 'paths', [])
-                );
+                $paths = array_get($settings, 'paths', []);
+                $meta = $configuration->getMetadataDriverImpl();
+
+                if (method_exists($meta, 'addPaths')) {
+                    $meta->addPaths($paths);
+                } elseif (method_exists($meta, 'getLocator')) {
+                    $meta->getLocator()->addPaths($paths);
+                }
 
                 // Repository
                 $configuration->setDefaultRepositoryClassName(
-                    array_get($settings, 'repository', \Doctrine\ORM\EntityRepository::class)
+                    array_get($settings, 'repository', EntityRepository::class)
                 );
 
                 // Proxies
@@ -244,10 +251,6 @@ class DoctrineServiceProvider extends ServiceProvider
                 );
             }
 
-            $configuration->getMetadataDriverImpl()->addPaths([
-                __DIR__ . '/Auth/Passwords'
-            ]);
-
             // Automatically make table, column names, etc. like Laravel
             $configuration->setNamingStrategy(
                 $this->app->make(LaravelNamingStrategy::class)
@@ -291,6 +294,37 @@ class DoctrineServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the driver chain
+     */
+    protected function registerDriverChain()
+    {
+        $this->app->singleton(DriverChain::class, function ($app) {
+
+            $configuration = $app['em']->getConfiguration();
+
+            $chain = new DriverChain(
+                $configuration->getMetadataDriverImpl()
+            );
+
+            // Register namespaces
+            $namespaces = array_merge($app->config->get('doctrine.meta.namespaces', ['App']), ['LaravelDoctrine']);
+            foreach ($namespaces as $namespace) {
+                $chain->addNamespace($namespace);
+            }
+
+            // Register default paths
+            $chain->addPaths(array_merge(
+                $app->config->get('doctrine.meta.paths', []),
+                [__DIR__ . '/Auth/Passwords']
+            ));
+
+            $configuration->setMetadataDriverImpl($chain->getChain());
+
+            return $chain;
+        });
+    }
+
+    /**
      * Register doctrine extensions
      */
     protected function registerExtensions()
@@ -301,7 +335,7 @@ class DoctrineServiceProvider extends ServiceProvider
 
             $manager = new ExtensionManager(
                 $this->app[ManagerRegistry::class],
-                $this->app[Dispatcher::class]
+                $this->app[DriverChain::class]
             );
 
             // Register the extensions
@@ -392,6 +426,7 @@ class DoctrineServiceProvider extends ServiceProvider
             'em',
             'validation.presence',
             'migration.repository',
+            DriverChain::class,
             AuthManager::class,
             EntityManager::class,
             ClassMetadataFactory::class,
