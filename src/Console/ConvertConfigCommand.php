@@ -42,19 +42,17 @@ class ConvertConfigCommand extends Command
 
         $destFilePath = $destPath . '/doctrine.generated.php';
 
+        $originalSourceFilePath = $sourceFilePath;
         $sourceFilePath = realPath($sourceFilePath);
 
         if (!file_exists($sourceFilePath)) {
             throw new InvalidArgumentException(
                 sprintf("Source file at path '<info>%s</info>' does not exist.",
-                    $sourceFilePath)
+                    $originalSourceFilePath)
             );
         }
 
         $sourceArrayConfig = include $sourceFilePath;
-
-        //TODO make this relative
-        $defaultArrayConfig = include '../../config/doctrine.php';
 
         switch ($author) {
             case 'atrauzzi':
@@ -71,9 +69,9 @@ class ConvertConfigCommand extends Command
         $this->info('Conversion successful. File generated at ' . $destFilePath);
     }
 
-    private function convertMitchell($sourceConfig, $defaultconfig)
+    private function convertMitchell($sourceConfig)
     {
-        $mMigrator = new MitchellMigrator($defaultconfig);
+        $mMigrator = new MitchellMigrator();
 
         return $mMigrator->convertConfiguration($sourceConfig);
     }
