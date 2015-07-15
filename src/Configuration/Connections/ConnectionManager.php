@@ -13,19 +13,19 @@ class ConnectionManager implements Extendable
     use ExtendableTrait;
 
     /**
-     * @param $drivers
+     * @param $connections
      *
      * @throws DriverNotFound
      */
-    public static function registerConnections(array $drivers)
+    public static function registerConnections(array $connections)
     {
         $manager = static::getInstance();
 
-        foreach ($drivers as $name => $driver) {
-            $class = __NAMESPACE__ . '\\' . studly_case($name) . 'Connection';
+        foreach ($connections as $name => $connection) {
+            $class = __NAMESPACE__ . '\\' . studly_case($connection['driver']) . 'Connection';
 
             if (class_exists($class)) {
-                $driver = (new $class())->configure($driver);
+                $driver = (new $class())->configure($connection);
                 $manager->register($driver);
             } else {
                 throw new DriverNotFound("Connection {$name} is not supported");
