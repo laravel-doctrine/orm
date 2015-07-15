@@ -92,8 +92,6 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             $this->getConfigPath(), 'doctrine'
         );
-
-        $this->config = $this->app['config']['doctrine'];
     }
 
     /**
@@ -105,7 +103,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $managers    = [];
         $connections = [];
 
-        foreach ($this->config['managers'] as $manager => $settings) {
+        foreach ($this->app->config->get('doctrine.managers', []) as $manager => $settings) {
             $managerName    = IlluminateRegistry::getManagerNamePrefix() . $manager;
             $connectionName = IlluminateRegistry::getConnectionNamePrefix() . $manager;
 
@@ -228,7 +226,7 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function setupConnection()
     {
         ConnectionManager::registerConnections(
-            $this->app['config']['database']['connections']
+            $this->app->config->get('database.connections', [])
         );
     }
 
@@ -238,14 +236,14 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function setupMetaData()
     {
         MetaDataManager::registerDrivers(
-            $this->config['meta']['drivers'],
-            $this->config['dev']
+            $this->app->config->get('doctrine.meta.drivers', []),
+            $this->app->config->get('doctrine.dev', false)
         );
 
         MetaDataManager::resolved(function (Configuration $configuration) {
 
             // Debugbar
-            if ($this->config['debugbar'] === true) {
+            if ($this->app->config->get('doctrine.debugbar', false) === true) {
                 $debugStack = new DebugStack();
                 $configuration->setSQLLogger($debugStack);
                 $this->app['debugbar']->addCollector(
@@ -258,13 +256,8 @@ class DoctrineServiceProvider extends ServiceProvider
                 $this->app->make(LaravelNamingStrategy::class)
             );
 
-            // Custom functions
-            $configuration->setCustomDatetimeFunctions($this->config['custom_datetime_functions']);
-            $configuration->setCustomNumericFunctions($this->config['custom_numeric_functions']);
-            $configuration->setCustomStringFunctions($this->config['custom_string_functions']);
-
             // Second level caching
-            if ($this->config['cache']['second_level']) {
+            if ($this->app->config->get('cache.second_level', false)) {
                 $configuration->setSecondLevelCacheEnabled(true);
 
                 $cacheConfig = $configuration->getSecondLevelCacheConfiguration();
@@ -272,7 +265,7 @@ class DoctrineServiceProvider extends ServiceProvider
                     new DefaultCacheFactory(
                         $cacheConfig->getRegionsConfiguration(),
                         CacheManager::resolve(
-                            $this->config['cache']['default']
+                            $this->app->config->get('cache.default')
                         )
                     )
                 );
@@ -286,7 +279,7 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function setupCache()
     {
         CacheManager::registerDrivers(
-            $this->app['config']['cache']['stores']
+            $this->app->config->get('cache.stores', [])
         );
     }
 
@@ -346,7 +339,7 @@ class DoctrineServiceProvider extends ServiceProvider
             );
 
             // Register the extensions
-            foreach ($this->config['extensions'] as $extension) {
+            foreach ($this->app->config->get('doctrine.extensions', []) as $extension) {
                 if (!class_exists($extension)) {
                     throw new ExtensionNotFound("Extension {$extension} not found");
                 }
@@ -365,7 +358,7 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerCustomTypes()
     {
-        foreach ($this->config['custom_types'] as $name => $class) {
+        foreach ($this->app->config->get('doctrine.custom_types', []) as $name => $class) {
             if (!Type::hasType($name)) {
                 Type::addType($name, $class);
             } else {
