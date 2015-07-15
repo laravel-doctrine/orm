@@ -3,15 +3,18 @@
 namespace LaravelDoctrine\ORM\ConfigMigrations;
 
 use Doctrine\ORM;
+use Illuminate\Contracts\View\Factory;
 use LaravelDoctrine\ORM\Utilities\ArrayUtil;
-use View;
 
 class MitchellMigrator implements ConfigurationMigrator
 {
-    public function __construct()
+    private $viewFactory;
+
+    public function __construct(Factory $viewFactory)
     {
-        View::addLocation(realpath(__DIR__ . '/templates'));
-        View::addNamespace('mitchell', realpath(__DIR__ . '/templates/mitchell'));
+        $this->viewFactory = $viewFactory;
+        //add namespace for views
+        $this->viewFactory->addNamespace('mitchell', realpath(__DIR__ . '/templates/mitchell'));
     }
 
     public function convertConfiguration($sourceArray)
@@ -37,7 +40,7 @@ class MitchellMigrator implements ConfigurationMigrator
 
         $cache    = $this->convertCache($sourceArray);
 
-        $results = View::make('mitchell.master', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls])->render();
+        $results = $this->viewFactory->make('mitchell.master', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
 
         return $unescaped;
@@ -45,7 +48,7 @@ class MitchellMigrator implements ConfigurationMigrator
 
     public function convertManager($sourceArray, $isFoxxMD)
     {
-        $results = View::make('mitchell.manager', ['data' => $sourceArray, 'isFork' => $isFoxxMD])->render();
+        $results = $this->viewFactory->make('mitchell.manager', ['data' => $sourceArray, 'isFork' => $isFoxxMD])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
         return $unescaped;
     }
@@ -53,7 +56,7 @@ class MitchellMigrator implements ConfigurationMigrator
     public function convertCache($sourceArray)
     {
         $cacheProvider = ArrayUtil::get($sourceArray['cache_provider']);
-        $results = View::make('mitchell.cache',['cacheProvider' => $cacheProvider])->render();
+        $results = $this->viewFactory->make('mitchell.cache',['cacheProvider' => $cacheProvider])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
         return $unescaped;
     }
@@ -76,7 +79,7 @@ class MitchellMigrator implements ConfigurationMigrator
         }
 
         if(!empty($dqls)){
-            $results = View::make('mitchel.dql', ['dql' => $dqls])->render();
+            $results = $this->viewFactory->make('mitchel.dql', ['dql' => $dqls])->render();
             $unescaped = html_entity_decode($results, ENT_QUOTES);
             return $unescaped;
         } else {

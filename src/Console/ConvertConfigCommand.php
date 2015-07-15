@@ -2,6 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
+use Illuminate\Contracts\View\Factory;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\ConfigMigrations\MitchellMigrator;
 use Symfony\Component\Console\Input\InputArgument;
@@ -13,8 +14,11 @@ class ConvertConfigCommand extends Command
 
     protected $description = 'Convert the configuration file for another laravel-doctrine implementation into a valid configuration for LaravelDoctrine\ORM.';
 
-    public function fire()
+    public function fire(Factory $viewFactory)
     {
+        //add config templates directory to view locations
+        $viewFactory->addLocation(realpath(__DIR__ . '/ConfigMigrations/templates'));
+
         if (($destPath = $this->option('dest-path')) === null) {
             $destPath = 'config';
         }
@@ -54,12 +58,14 @@ class ConvertConfigCommand extends Command
 
         $sourceArrayConfig = include $sourceFilePath;
 
+        //TODO make this relative
+
         switch ($author) {
             case 'atrauzzi':
-                $convertedConfigString = $this->convertAtrauzzi($sourceArrayConfig, $defaultArrayConfig);
+                //$convertedConfigString = $this->convertAtrauzzi($sourceArrayConfig, $viewFactory);
                 break;
             case 'mitchellvanw':
-                $convertedConfigString = $this->convertMitchell($sourceArrayConfig, $defaultArrayConfig);
+                $convertedConfigString = $this->convertMitchell($sourceArrayConfig, $viewFactory);
                 break;
             default:
                 throw new InvalidArgumentException('Author provided was not a valid choice.');
@@ -69,15 +75,16 @@ class ConvertConfigCommand extends Command
         $this->info('Conversion successful. File generated at ' . $destFilePath);
     }
 
-    private function convertMitchell($sourceConfig)
+    private function convertMitchell($sourceConfig, $viewFactory)
     {
-        $mMigrator = new MitchellMigrator();
+        $mMigrator = new MitchellMigrator($viewFactory);
 
         return $mMigrator->convertConfiguration($sourceConfig);
     }
 
-    private function convertAtrauzzi($sourceConfig)
+    private function convertAtrauzzi($sourceConfig, $viewFactory)
     {
+        //TODO
     }
 
     public function getArguments()
