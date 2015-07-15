@@ -21,7 +21,6 @@
     "illuminate/database": "~5.1",
     "illuminate/console": "~5.1",
     "illuminate/view": "~5.1",
-    "philo/laravel-blade": "3.*",
     "doctrine/orm": "2.5.*"
   },
   "require-dev": {

@@ -4,41 +4,40 @@ namespace LaravelDoctrine\ORM\ConfigMigrations;
 
 use Doctrine\ORM;
 use LaravelDoctrine\ORM\Utilities\ArrayUtil;
-use Philo\Blade\Blade;
+use View;
 
 class MitchellMigrator implements ConfigurationMigrator
 {
-    private $defaultConfig;
-
     public function __construct()
     {
-        $this->blade = new Blade(realpath(__DIR__ . '/templates/mitchell'), realpath(__DIR__ . '/templates'));
+        View::addLocation(realpath(__DIR__ . '/templates'));
+        View::addNamespace('mitchell', realpath(__DIR__ . '/templates/mitchell'));
     }
 
     public function convertConfiguration($sourceArray)
     {
         //determine if configuration is from FoxxMD fork or original Mitchell repo
-        $isFoxxMD = ArrayUtil::get($sourceArray['entity_managers']) !== null;
+        $isFork = ArrayUtil::get($sourceArray['entity_managers']) !== null;
 
         $managers = [];
         $cache = '';
         $dqls = null;
 
-        if ($isFoxxMD) {
+        if ($isFork) {
             foreach ($sourceArray['entity_managers'] as $key => $manager) {
-                $managers[$key] = $this->convertManager($manager, $isFoxxMD);
+                $managers[$key] = $this->convertManager($manager, $isFork);
             }
         } else {
-            $managers['default'] = $this->convertManager($sourceArray, $isFoxxMD);
+            $managers['default'] = $this->convertManager($sourceArray, $isFork);
         }
 
-        if ($isFoxxMD) {
+        if ($isFork) {
             $dqls = $this->convertDQL($sourceArray['entity_managers']);
         }
 
         $cache    = $this->convertCache($sourceArray);
 
-        $results = $this->blade->view()->make('master', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls])->render();
+        $results = View::make('mitchell.master', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
 
         return $unescaped;
@@ -46,7 +45,7 @@ class MitchellMigrator implements ConfigurationMigrator
 
     public function convertManager($sourceArray, $isFoxxMD)
     {
-        $results = $this->blade->view()->make('manager', ['data' => $sourceArray, 'isFork' => $isFoxxMD])->render();
+        $results = View::make('mitchell.manager', ['data' => $sourceArray, 'isFork' => $isFoxxMD])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
         return $unescaped;
     }
@@ -54,7 +53,7 @@ class MitchellMigrator implements ConfigurationMigrator
     public function convertCache($sourceArray)
     {
         $cacheProvider = ArrayUtil::get($sourceArray['cache_provider']);
-        $results = $this->blade->view()->make('cache', ['cacheProvider' => $cacheProvider])->render();
+        $results = View::make('mitchell.cache',['cacheProvider' => $cacheProvider])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
         return $unescaped;
     }
@@ -77,7 +76,7 @@ class MitchellMigrator implements ConfigurationMigrator
         }
 
         if(!empty($dqls)){
-            $results = $this->blade->view()->make('dql', ['dql' => $dqls])->render();
+            $results = View::make('mitchel.dql', ['dql' => $dqls])->render();
             $unescaped = html_entity_decode($results, ENT_QUOTES);
             return $unescaped;
         } else {
