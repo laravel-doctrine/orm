@@ -10,10 +10,9 @@ class MitchellMigrator implements ConfigurationMigrator
 {
     private $defaultConfig;
 
-    public function __construct($defaultConfig)
+    public function __construct()
     {
-        $this->blade = new Blade('src/Console/ConfigMigrations/templates/mitchell', 'src/Console/ConfigMigrations/templates');
-        $this->defaultConfig = $defaultConfig;
+        $this->blade = new Blade(realpath(__DIR__ . '/templates/mitchell'), realpath(__DIR__ . '/templates'));
     }
 
     public function convertConfiguration($sourceArray)
@@ -25,8 +24,6 @@ class MitchellMigrator implements ConfigurationMigrator
         $cache = '';
         $dqls = null;
 
-        //$config['dev'] = config('app.debug');
-
         if ($isFoxxMD) {
             foreach ($sourceArray['entity_managers'] as $key => $manager) {
                 $managers[$key] = $this->convertManager($manager, $isFoxxMD);
@@ -35,21 +32,13 @@ class MitchellMigrator implements ConfigurationMigrator
             $managers['default'] = $this->convertManager($sourceArray, $isFoxxMD);
         }
 
-        //$config['meta']         = $this->defaultConfig['meta'];
-        //$config['extensions']   = $this->defaultConfig['extensions'];
-        //$config['custom_types'] = $this->defaultConfig['custom_types'];
-
         if ($isFoxxMD) {
             $dqls = $this->convertDQL($sourceArray['entity_managers']);
-            /*            if (!empty($dqls)) {
-                            array_push($config, $dqls);
-                        }*/
         }
 
-        //$config['debugbar'] = $this->defaultConfig['debugbar'];
         $cache    = $this->convertCache($sourceArray);
 
-        $results = $this->blade->view()->make('defaults', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls])->render();
+        $results = $this->blade->view()->make('master', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
 
         return $unescaped;
@@ -60,17 +49,6 @@ class MitchellMigrator implements ConfigurationMigrator
         $results = $this->blade->view()->make('manager', ['data' => $sourceArray, 'isFork' => $isFoxxMD])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
         return $unescaped;
-        /*        return [
-                    'meta'       => $isFoxxMD ? $sourceArray['metadata']['driver'] : 'annotations',
-                    'connection' => $isFoxxMD ? $sourceArray['connection'] : config('database.default'),
-                    'paths'      => ArrayUtil::get($sourceArray['metadata']['paths'], $sourceArray['metadata']),
-                    'repository' => ArrayUtil::get($sourceArray['repository'], ORM\EntityRepository::class),
-                    'proxies'    => [
-                        'namespace'     => ArrayUtil::get($sourceArray['proxy']['namespace'], false),
-                        'path'          => ArrayUtil::get($sourceArray['proxy']['directory'], storage_path('proxies')),
-                        'auto_generate' => ArrayUtil::get($sourceArray['proxy']['auto_generate'], env('DOCTRINE_PROXY_AUTOGENERATE', false))
-                    ]
-                ];*/
     }
 
     public function convertCache($sourceArray)
@@ -79,10 +57,6 @@ class MitchellMigrator implements ConfigurationMigrator
         $results = $this->blade->view()->make('cache', ['cacheProvider' => $cacheProvider])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
         return $unescaped;
-        /*        return [
-                    'default'      => $cacheProvider == null ? config('cache.default') : config('cache.' . $cacheProvider),
-                    'second_level' => false,
-                ];*/
     }
 
     public function convertDQL($sourceManagers)
