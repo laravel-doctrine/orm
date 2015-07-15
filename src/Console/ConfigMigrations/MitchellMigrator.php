@@ -46,9 +46,9 @@ class MitchellMigrator implements ConfigurationMigrator
         return $unescaped;
     }
 
-    public function convertManager($sourceArray, $isFoxxMD)
+    public function convertManager($sourceArray, $isFork)
     {
-        $results = $this->viewFactory->make('mitchell.manager', ['data' => $sourceArray, 'isFork' => $isFoxxMD])->render();
+        $results = $this->viewFactory->make('mitchell.manager', ['data' => $sourceArray, 'isFork' => $isFork])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
         return $unescaped;
     }
