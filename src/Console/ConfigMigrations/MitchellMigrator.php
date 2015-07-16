@@ -10,6 +10,9 @@ class MitchellMigrator implements ConfigurationMigrator
 {
     private $viewFactory;
 
+    /**
+     * @param Factory $viewFactory
+     */
     public function __construct(Factory $viewFactory)
     {
         $this->viewFactory = $viewFactory;
@@ -17,6 +20,12 @@ class MitchellMigrator implements ConfigurationMigrator
         $this->viewFactory->addNamespace('mitchell', realpath(__DIR__ . '/templates/mitchell'));
     }
 
+    /**
+     * Convert a configuration array from mitchellvanw/laravel-doctrine to a string representation of a php array configuration for this project
+     *
+     * @param array $sourceArray
+     * @return string
+     */
     public function convertConfiguration($sourceArray)
     {
         //determine if configuration is from FoxxMD fork or original Mitchell repo
@@ -46,6 +55,13 @@ class MitchellMigrator implements ConfigurationMigrator
         return $unescaped;
     }
 
+    /**
+     * Convert an entity manager section from mitchellvanw/laravel-doctrine to a string representation of a php array configuration for an entity manager for this project
+     *
+     * @param array $sourceArray
+     * @param boolean $isFork
+     * @return string
+     */
     public function convertManager($sourceArray, $isFork)
     {
         $results = $this->viewFactory->make('mitchell.manager', ['data' => $sourceArray, 'isFork' => $isFork])->render();
@@ -53,6 +69,12 @@ class MitchellMigrator implements ConfigurationMigrator
         return $unescaped;
     }
 
+    /**
+     * Convert a cache section from mitchellvanw/laravel-doctrine to a string representation of a php array configuration for a cache section for this project
+     *
+     * @param array $sourceArray
+     * @return string
+     */
     public function convertCache($sourceArray)
     {
         $cacheProvider = ArrayUtil::get($sourceArray['cache_provider']);
@@ -61,6 +83,14 @@ class MitchellMigrator implements ConfigurationMigrator
         return $unescaped;
     }
 
+    /**
+     * Convert the dql sections from the entity managers in a configuration from foxxmd/laravel-doctrine into a string representation of a php array configuration for custom string/numeric/datetime functions
+     *
+     * Returns null if no dql sections were found.
+     *
+     * @param $sourceManagers
+     * @return null|string
+     */
     public function convertDQL($sourceManagers)
     {
         $dqls = [];

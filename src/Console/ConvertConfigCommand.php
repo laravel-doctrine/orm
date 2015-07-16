@@ -75,6 +75,13 @@ class ConvertConfigCommand extends Command
         $this->info('Conversion successful. File generated at ' . $destFilePath);
     }
 
+    /**
+     * Convert a configuration file from mitchellvanw/laravel-doctrine to a string representation of a php array configuration for this project
+     *
+     * @param array $sourceConfig
+     * @param Factory $viewFactory
+     * @return string
+     */
     private function convertMitchell($sourceConfig, $viewFactory)
     {
         $mMigrator = new MitchellMigrator($viewFactory);
@@ -82,6 +89,14 @@ class ConvertConfigCommand extends Command
         return $mMigrator->convertConfiguration($sourceConfig);
     }
 
+    /**
+     * Convert a configuration file from atrauzzi/laravel-doctrine to a string representation of a php array configuration for this project
+     *
+     * @param array $sourceConfig
+     * @param Factory $viewFactory
+     * @return string
+     *
+     */
     private function convertAtrauzzi($sourceConfig, $viewFactory)
     {
         //TODO
