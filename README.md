@@ -62,7 +62,7 @@ Begin reading [the full documentation](https://github.com/laravel-doctrine/orm/w
 Require this package in your `composer.json` and run `composer update`.
 
 ```php
-"brouwers/laravel-doctrine": "~1.0.0"
+"laravel-doctrine/orm": "@dev"
 ```
 
 After updating composer, add the ServiceProvider to the providers array in `config/app.php`
@@ -147,4 +147,4 @@ Continue reading [the full documentation](https://github.com/laravel-doctrine/or
 
 ## License
 
-This package is licensed under the [MIT license](https://github.com/mitchellvanw/laravel-doctrine/blob/master/LICENSE).
+This package is licensed under the [MIT license](https://github.com/laravel-doctrine/orm/blob/master/LICENSE).
