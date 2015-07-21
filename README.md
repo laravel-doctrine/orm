@@ -2,9 +2,9 @@
 
 <img src="https://cloud.githubusercontent.com/assets/7728097/8503648/de6beb86-21c2-11e5-9d70-ed4c24185a7e.jpg"/>
 
-[![GitHub release](https://img.shields.io/github/release/patrickbrouwers/Laravel-Doctrine.svg?style=flat)](https://packagist.org/packages/brouwers/laravel-doctrine)
-[![Travis](https://img.shields.io/travis/patrickbrouwers/Laravel-Doctrine.svg?style=flat)](https://travis-ci.org/patrickbrouwers/Laravel-Doctrine)
-[![Scrutinizer](https://img.shields.io/scrutinizer/g/patrickbrouwers/Laravel-Doctrine.svg?style=flat)](https://github.com/patrickbrouwers/Laravel-Doctrine)
+[![GitHub release](https://img.shields.io/github/release/laravel-doctrine/orm.svg?style=flat)](https://packagist.org/packages/brouwers/laravel-doctrine)
+[![Travis](https://img.shields.io/travis/laravel-doctrine/orm.svg?style=flat)](https://travis-ci.org/laravel-doctrine/orm)
+[![Scrutinizer](https://img.shields.io/scrutinizer/g/laravel-doctrine/orm.svg?style=flat)](https://github.com/laravel-doctrine/orm)
 [![Packagist](https://img.shields.io/packagist/dd/brouwers/Laravel-Doctrine.svg?style=flat)](https://packagist.org/packages/brouwers/laravel-doctrine)
 [![Packagist](https://img.shields.io/packagist/dm/brouwers/Laravel-Doctrine.svg?style=flat)](https://packagist.org/packages/brouwers/laravel-doctrine)
 [![Packagist](https://img.shields.io/packagist/dt/brouwers/Laravel-Doctrine.svg?style=flat)](https://packagist.org/packages/brouwers/laravel-doctrine)
@@ -27,32 +27,35 @@
 
 ## Documentation
 
-Begin reading [the full documentation](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki) here or go to a specific chapter right away.
+Begin reading [the full documentation](https://github.com/laravel-doctrine/orm/wiki) here or go to a specific chapter right away.
 
-1. [Installation](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Installation)
-2. [Basics](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Basics)
-  1. [Entities](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Entities)
-  2. [Meta Data](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Meta-Data)
-      1. [Annotations](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Meta-Data#annotations)
-      2. [YAML](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Meta-Data#yaml)
-      3. [XML](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Meta-Data#xml)
-      4. [Config files](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Meta-Data#config-files)
-      5. [StaticPHP](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Meta-Data#static-php)
-  3. [EntityManager](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/EntityManager)
-  4. [Multiple Connections](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Multiple-Connections)
-  5. [Repositories](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Repositories)
-  6. [Console Commands](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Console-Commands)
-3. [Configuration](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Configuration)
-  1. [Connections](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Connections)
-  2. [Meta Data](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Meta-Data-Configuration)
-  3. [Caching](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Caching)
-4. [Extensions](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Extensions)
-  1. [Authentication](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Authentication)
-  2. [Softdeletes](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Softdeletes)
-  3. [Timestamps](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Timestamps)
-  4. [Table Prefixing](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Table-Prefixing)
-  5. [DoctrineExtensions](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/DoctrineExtensions)
-  6. [Writing your own extensions](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki/Writing-your-own-extensions)
+1. [Installation](https://github.com/laravel-doctrine/orm/wiki/Installation)
+2. [Basics](https://github.com/laravel-doctrine/orm/wiki/Basics)
+  1. [Entities](https://github.com/laravel-doctrine/orm/wiki/Entities)
+  2. [Meta Data](https://github.com/laravel-doctrine/orm/wiki/Meta-Data)
+      1. [Annotations](https://github.com/laravel-doctrine/orm/wiki/Meta-Data#annotations)
+      2. [YAML](https://github.com/laravel-doctrine/orm/wiki/Meta-Data#yaml)
+      3. [XML](https://github.com/laravel-doctrine/orm/wiki/Meta-Data#xml)
+      4. [Config files](https://github.com/laravel-doctrine/orm/wiki/Meta-Data#config-files)
+      5. [StaticPHP](https://github.com/laravel-doctrine/orm/wiki/Meta-Data#static-php)
+  3. [EntityManager](https://github.com/laravel-doctrine/orm/wiki/EntityManager)
+  4. [Multiple Connections](https://github.com/laravel-doctrine/orm/wiki/Multiple-Connections)
+  5. [Repositories](https://github.com/laravel-doctrine/orm/wiki/Repositories)
+  6. [Console Commands](https://github.com/laravel-doctrine/orm/wiki/Console-Commands)
+3. [Configuration](https://github.com/laravel-doctrine/orm/wiki/Configuration)
+  1. [Connections](https://github.com/laravel-doctrine/orm/wiki/Connections)
+  2. [Meta Data](https://github.com/laravel-doctrine/orm/wiki/Meta-Data-Configuration)
+  3. [Caching](https://github.com/laravel-doctrine/orm/wiki/Caching)
+4. [Extensions](https://github.com/laravel-doctrine/orm/wiki/Extensions)
+  1. [Authentication](https://github.com/laravel-doctrine/orm/wiki/Authentication)
+  2. [Softdeletes](https://github.com/laravel-doctrine/orm/wiki/Softdeletes)
+  3. [Timestamps](https://github.com/laravel-doctrine/orm/wiki/Timestamps)
+  4. [Table Prefixing](https://github.com/laravel-doctrine/orm/wiki/Table-Prefixing)
+  5. [DoctrineExtensions](https://github.com/laravel-doctrine/orm/wiki/DoctrineExtensions)
+  6. [Writing your own extensions](https://github.com/laravel-doctrine/orm/wiki/Writing-your-own-extensions)
+5. [Configuration Migration](https://github.com/laravel-doctrine/orm/wiki/Migrating-Configurations)
+  1. [Using the Configuration Migration Command](https://github.com/laravel-doctrine/orm/wiki/Using-the-configuration-migration-command)
+  2. [Writing a template for configurations](https://github.com/laravel-doctrine/orm/wiki/Writing-a-template-for-a-configuration)
 
 ## Installation
 
@@ -140,7 +143,7 @@ class Article
 
 To quickly create the `articles` table inside your database, run: `php artisan doctrine:schema:update`
 
-Continue reading [the full documentation](https://github.com/patrickbrouwers/Laravel-Doctrine/wiki).
+Continue reading [the full documentation](https://github.com/laravel-doctrine/orm/wiki).
 
 ## License
 
