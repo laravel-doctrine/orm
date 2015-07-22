@@ -95,6 +95,7 @@ class ExtensionManager
     }
 
     /**
+     * Todo: Should be removed once GedmoExtension in the laravel-doctrine/extensions repo is tested to work
      * @param bool $all
      */
     public function enableGedmoExtensions($all = true)
