@@ -26,9 +26,10 @@ class ConnectionManager implements Extendable
 
             if (class_exists($class)) {
                 $driver = (new $class())->configure($connection);
+                $driver->setName($name);
                 $manager->register($driver);
             } else {
-                throw new DriverNotFound("Connection {$name} is not supported");
+                throw new DriverNotFound("Driver {$connection['driver']} in connection '{$name}' is not supported");
             }
         }
     }
