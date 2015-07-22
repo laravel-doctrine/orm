@@ -257,6 +257,11 @@ class DoctrineServiceProvider extends ServiceProvider
                 $this->app->make(LaravelNamingStrategy::class)
             );
 
+            // Custom functions
+            $configuration->setCustomDatetimeFunctions($this->config['custom_datetime_functions']);
+            $configuration->setCustomNumericFunctions($this->config['custom_numeric_functions']);
+            $configuration->setCustomStringFunctions($this->config['custom_string_functions']);
+
             // Second level caching
             if ($this->app->config->get('cache.second_level', false)) {
                 $configuration->setSecondLevelCacheEnabled(true);
