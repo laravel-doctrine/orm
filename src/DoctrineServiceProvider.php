@@ -258,9 +258,9 @@ class DoctrineServiceProvider extends ServiceProvider
             );
 
             // Custom functions
-            $configuration->setCustomDatetimeFunctions($this->config['custom_datetime_functions']);
-            $configuration->setCustomNumericFunctions($this->config['custom_numeric_functions']);
-            $configuration->setCustomStringFunctions($this->config['custom_string_functions']);
+            $configuration->setCustomDatetimeFunctions($this->app->config->get('doctrine.custom_datetime_functions'));
+            $configuration->setCustomNumericFunctions($this->app->config->get('doctrine.custom_numeric_functions'));
+            $configuration->setCustomStringFunctions($this->app->config->get('doctrine.custom_string_functions'));
 
             // Second level caching
             if ($this->app->config->get('cache.second_level', false)) {
