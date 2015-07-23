@@ -207,11 +207,11 @@ class DoctrineServiceProvider extends ServiceProvider
             list($managers, $connections) = $this->setUpEntityManagers();
 
             return new IlluminateRegistry(
-                head($managers),
+                isset($managers['default']) ? $managers['default'] : head($managers),
                 $connections,
                 $managers,
-                head($connections),
-                head($managers),
+                isset($connections['default']) ? $connections['default'] : head($connections),
+                isset($managers['default']) ? $managers['default'] : head($managers),
                 Proxy::class,
                 $app
             );
