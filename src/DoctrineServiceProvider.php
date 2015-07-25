@@ -19,6 +19,7 @@ use Illuminate\Support\ServiceProvider;
 use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
+use LaravelDoctrine\ORM\Configuration\CustomTypeManager;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Console\ClearMetadataCacheCommand;
@@ -53,8 +54,9 @@ class DoctrineServiceProvider extends ServiceProvider
     /**
      * Boot service provider.
      */
-    public function boot()
+    public function boot(CustomTypeManager $typeManager)
     {
+        $typeManager->addCustomTypes(config('doctrine.custom_types', []));
         $this->extendAuthManager();
 
         // Boot the extension manager
@@ -359,19 +361,6 @@ class DoctrineServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    protected function registerCustomTypes()
-    {
-        foreach ($this->app->config->get('doctrine.custom_types', []) as $name => $class) {
-            if (!Type::hasType($name)) {
-                Type::addType($name, $class);
-            } else {
-                Type::overrideType($name, $class);
-            }
-        }
-    }
 
     /**
      * Register the validation presence verifier
