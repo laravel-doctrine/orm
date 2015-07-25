@@ -10,6 +10,7 @@ class ConnectionManagerTest extends PHPUnit_Framework_TestCase
     {
         ConnectionManager::registerConnections([
             'mysql' => [
+                'driver'   => 'mysql',
                 'host'     => 'host',
                 'database' => 'database',
                 'username' => 'username',
