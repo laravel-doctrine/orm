@@ -33,6 +33,7 @@ use LaravelDoctrine\ORM\Console\SchemaCreateCommand;
 use LaravelDoctrine\ORM\Console\SchemaDropCommand;
 use LaravelDoctrine\ORM\Console\SchemaUpdateCommand;
 use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
+use LaravelDoctrine\ORM\Exceptions\ClassNotFound;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
 use LaravelDoctrine\ORM\Extensions\DriverChain;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
@@ -129,7 +130,15 @@ class DoctrineServiceProvider extends ServiceProvider
                 // Subscribers
                 if (isset($settings['events']['subscribers'])) {
                     foreach ($settings['events']['subscribers'] as $subscriber) {
-                        $manager->getEventManager()->addEventSubscriber($subscriber);
+                        if(class_exists($subscriber, false)){
+                            $subsriberInstance = new $subscriber;
+                            $manager->getEventManager()->addEventSubscriber($subscriber);
+                        }
+
+                        else
+                        {
+                            throw new ClassNotFound($subscriber);
+                        }
                     }
                 }
 
