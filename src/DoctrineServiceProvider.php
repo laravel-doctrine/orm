@@ -57,7 +57,6 @@ class DoctrineServiceProvider extends ServiceProvider
     public function boot(CustomTypeManager $typeManager)
     {
         $typeManager->addCustomTypes(config('doctrine.custom_types', []));
-        $this->extendAuthManager();
 
         // Boot the extension manager
         $this->app->make(ExtensionManager::class)->boot();
@@ -84,6 +83,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerExtensions();
         $this->registerPresenceVerifier();
         $this->registerConsoleCommands();
+        $this->extendAuthManager();
     }
 
     /**
@@ -418,6 +418,7 @@ class DoctrineServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
+            'auth',
             'em',
             'validation.presence',
             'migration.repository',
