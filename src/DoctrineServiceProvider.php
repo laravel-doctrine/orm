@@ -131,8 +131,8 @@ class DoctrineServiceProvider extends ServiceProvider
                 if (isset($settings['events']['subscribers'])) {
                     foreach ($settings['events']['subscribers'] as $subscriber) {
                         if(class_exists($subscriber, false)){
-                            $subsriberInstance = new $subscriber;
-                            $manager->getEventManager()->addEventSubscriber($subscriber);
+                            $subscriberInstance = new $subscriber;
+                            $manager->getEventManager()->addEventSubscriber($subscriberInstance);
                         }
 
                         else
