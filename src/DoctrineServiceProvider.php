@@ -49,7 +49,7 @@ class DoctrineServiceProvider extends ServiceProvider
      * Indicates if loading of the provider is deferred.
      * @var bool
      */
-    protected $defer = false;
+    protected $defer = true;
 
     /**
      * Boot service provider.
@@ -418,6 +418,7 @@ class DoctrineServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
+            'auth',
             'em',
             'validation.presence',
             'migration.repository',
