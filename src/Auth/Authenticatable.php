@@ -84,6 +84,6 @@ trait Authenticatable
      */
     public function getKeyName()
     {
-        return method_exists($this, 'getKeyName') ? $this->getKeyName() : 'id';
+        return 'id';
     }
 }
