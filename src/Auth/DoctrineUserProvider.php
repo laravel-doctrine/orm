@@ -61,7 +61,7 @@ class DoctrineUserProvider implements UserProvider
     public function retrieveByToken($identifier, $token)
     {
         return $this->getRepository()->findOneBy([
-            $this->getEntity()->getAuthIdentifier()    => $identifier,
+            $this->getEntity()->getKeyName()    => $identifier,
             $this->getEntity()->getRememberTokenName() => $token
         ]);
     }
