@@ -2,6 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Auth;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -26,15 +27,15 @@ class DoctrineUserProvider implements UserProvider
     protected $entity;
 
     /**
-     * @param Hasher                 $hasher
-     * @param EntityManagerInterface $em
-     * @param                        $entity
+     * @param Hasher $hasher
+     * @param ManagerRegistry $manager
+     * @param $entity
      */
-    public function __construct(Hasher $hasher, EntityManagerInterface $em, $entity)
+    public function __construct(Hasher $hasher, ManagerRegistry $manager, $entity)
     {
         $this->hasher = $hasher;
-        $this->em     = $em;
         $this->entity = $entity;
+        $this->em = $manager->getManagerForClass($entity);
     }
 
     /**
@@ -60,7 +61,7 @@ class DoctrineUserProvider implements UserProvider
     public function retrieveByToken($identifier, $token)
     {
         return $this->getRepository()->findOneBy([
-            $this->getEntity()->getKeyName()           => $identifier,
+            $this->getEntity()->getAuthIdentifier()    => $identifier,
             $this->getEntity()->getRememberTokenName() => $token
         ]);
     }
@@ -123,7 +124,7 @@ class DoctrineUserProvider implements UserProvider
 
     /**
      * Returns instantiated entity.
-     * @return mixed
+     * @return AuthenticatableContract
      */
     protected function getEntity()
     {

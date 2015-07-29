@@ -404,11 +404,8 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function extendAuthManager()
     {
         $this->app[AuthManager::class]->extend('doctrine', function ($app) {
-            return new DoctrineUserProvider(
-                $app[Hasher::class],
-                $app['em'],
-                $app['config']['auth.model']
-            );
+            $model = $this->app['config']['auth.model'];
+            return new DoctrineUserProvider($app[Hasher::class], $app[ManagerRegistry::class], $model);
         });
     }
 
