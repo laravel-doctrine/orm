@@ -77,4 +77,13 @@ trait Authenticatable
     {
         return 'rememberToken';
     }
+
+    /**
+     * Get the column name for the primary key
+     * @return string
+     */
+    public function getKeyName()
+    {
+        return method_exists($this, 'getKeyName') ? $this->getKeyName() : 'id';
+    }
 }
