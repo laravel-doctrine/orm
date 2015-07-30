@@ -9,6 +9,12 @@
 [![Packagist](https://img.shields.io/packagist/dm/brouwers/Laravel-Doctrine.svg?style=flat)](https://packagist.org/packages/brouwers/laravel-doctrine)
 [![Packagist](https://img.shields.io/packagist/dt/brouwers/Laravel-Doctrine.svg?style=flat)](https://packagist.org/packages/brouwers/laravel-doctrine)
 
+### This software is STILL IN DEVELOPMENT.
+
+It is working software but **breaking changes** may occur with no prior warning. **Do not use this in production!**
+
+**For more information or to get started contributing visit us on [Slack](http://slack.laraveldoctrine.org/)**
+
 *A drop-in Doctrine ORM 2 implementation for Laravel 5+*
 
 * Easy configuration
