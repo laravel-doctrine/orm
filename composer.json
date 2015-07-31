@@ -36,5 +36,8 @@
     "classmap": [
       "tests"
     ]
+  },
+  "suggest": {
+    "yajra/laravel-oci8": "Oracle database driver for Laravel (~2.0)."
   }
 }
