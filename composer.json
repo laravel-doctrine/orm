@@ -38,6 +38,6 @@
     ]
   },
   "suggest": {
-    "yajra/laravel-oci8": "Oracle database driver for Laravel (~2.0)."
+    "yajra/laravel-oci8": "Support for Laravel native queue and session database drivers in Oracle (~2.0)."
   }
 }
