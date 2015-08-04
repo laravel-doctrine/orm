@@ -31,9 +31,9 @@ class DoctrineUserProvider implements UserProvider
     /**
      * @param Hasher $hasher
      * @param ManagerRegistry $manager
-     * @param $entity
+     * @param string $entity
      */
-    public function __construct(Hasher $hasher, ManagerRegistry $manager, AuthenticatableContract $entity)
+    public function __construct(Hasher $hasher, ManagerRegistry $manager, $entity)
     {
         $this->hasher = $hasher;
         $this->entity = $entity;
