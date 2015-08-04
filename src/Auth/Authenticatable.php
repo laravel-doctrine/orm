@@ -23,6 +23,10 @@ trait Authenticatable
         return method_exists($this, 'getKey') ? $this->getKey() : $this->id;
     }
     
+    /**
+     * Get the column name for the primary key
+     * @return string
+     */
     public function getAuthIdentifierName() {
         return 'id';
     }
@@ -80,14 +84,5 @@ trait Authenticatable
     public function getRememberTokenName()
     {
         return 'rememberToken';
-    }
-
-    /**
-     * Get the column name for the primary key
-     * @return string
-     */
-    public function getKeyName()
-    {
-        return 'id';
     }
 }
