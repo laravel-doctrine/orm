@@ -5,12 +5,12 @@ namespace LaravelDoctrine\ORM\Auth;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use LaravelDoctrine\ORM\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher;
 
-class DoctrineUserProvider implements UserProvider
-{
+class DoctrineUserProvider implements UserProvider {
+
     /**
      * @var Hasher
      */
@@ -31,8 +31,7 @@ class DoctrineUserProvider implements UserProvider
      * @param ManagerRegistry $manager
      * @param $entity
      */
-    public function __construct(Hasher $hasher, ManagerRegistry $manager, $entity)
-    {
+    public function __construct(Hasher $hasher, ManagerRegistry $manager, AuthenticatableContract $entity) {
         $this->hasher = $hasher;
         $this->entity = $entity;
         $this->em = $manager->getManagerForClass($entity);
@@ -45,8 +44,7 @@ class DoctrineUserProvider implements UserProvider
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function retrieveById($identifier)
-    {
+    public function retrieveById($identifier) {
         return $this->getRepository()->find($identifier);
     }
 
@@ -58,11 +56,10 @@ class DoctrineUserProvider implements UserProvider
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function retrieveByToken($identifier, $token)
-    {
+    public function retrieveByToken($identifier, $token) {
         return $this->getRepository()->findOneBy([
-            $this->getEntity()->getKeyName()    => $identifier,
-            $this->getEntity()->getRememberTokenName() => $token
+                    $this->getEntity()->getAuthIdentifierName() => $identifier,
+                    $this->getEntity()->getRememberTokenName() => $token
         ]);
     }
 
@@ -74,8 +71,7 @@ class DoctrineUserProvider implements UserProvider
      *
      * @return void
      */
-    public function updateRememberToken(AuthenticatableContract $user, $token)
-    {
+    public function updateRememberToken(AuthenticatableContract $user, $token) {
         $user->setRememberToken($token);
         $this->em->persist($user);
         $this->em->flush($user);
@@ -88,8 +84,7 @@ class DoctrineUserProvider implements UserProvider
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function retrieveByCredentials(array $credentials)
-    {
+    public function retrieveByCredentials(array $credentials) {
         $criteria = [];
         foreach ($credentials as $key => $value) {
             if (!str_contains($key, 'password')) {
@@ -108,8 +103,7 @@ class DoctrineUserProvider implements UserProvider
      *
      * @return bool
      */
-    public function validateCredentials(AuthenticatableContract $user, array $credentials)
-    {
+    public function validateCredentials(AuthenticatableContract $user, array $credentials) {
         return $this->hasher->check($credentials['password'], $user->getAuthPassword());
     }
 
@@ -117,8 +111,7 @@ class DoctrineUserProvider implements UserProvider
      * Returns repository for the entity.
      * @return EntityRepository
      */
-    protected function getRepository()
-    {
+    protected function getRepository() {
         return $this->em->getRepository($this->entity);
     }
 
@@ -126,8 +119,8 @@ class DoctrineUserProvider implements UserProvider
      * Returns instantiated entity.
      * @return AuthenticatableContract
      */
-    protected function getEntity()
-    {
+    protected function getEntity() {
         return new $this->entity;
     }
+
 }
