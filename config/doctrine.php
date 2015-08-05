@@ -90,7 +90,7 @@ return [
     |
     */
     'extensions'                => [
-        //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
+        LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
     ],
     /*
     |--------------------------------------------------------------------------
@@ -165,5 +165,16 @@ return [
     'cache'                     => [
         'default'      => config('cache.default'),
         'second_level' => false,
+    ],
+    /*
+    |--------------------------------------------------------------------------
+    | Gedmo extensions
+    |--------------------------------------------------------------------------
+    |
+    | Settings for Gedmo extensions
+    |
+    */
+    'gedmo' => [
+        'all_mappings' => false
     ]
 ];

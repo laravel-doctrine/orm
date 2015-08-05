@@ -5,7 +5,6 @@ namespace LaravelDoctrine\ORM\Extensions;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
-use Gedmo\DoctrineExtensions;
 
 class ExtensionManager
 {
@@ -70,11 +69,6 @@ class ExtensionManager
             $this->metadata = $this->em->getConfiguration();
             $this->reader   = $this->driverChain->getReader();
 
-            $hash = spl_object_hash($em);
-            if (!isset($this->subscribedExtensions[$hash])) {
-                $this->subscribedExtensions[$hash] = [];
-            }
-
             foreach ($this->extensions as $extension) {
                 $this->bootExtension($extension);
             }
@@ -94,39 +88,35 @@ class ExtensionManager
      */
     public function bootExtension(Extension $extension)
     {
-        $hash = spl_object_hash($this->em);
-        if (isset($this->subscribedExtensions[$hash][get_class($extension)])) { //This extension is already subscribed to this entity manager.
+        if ($this->notSubscribedYet($extension)) {
+            $extension->addSubscribers($this->evm, $this->em, $this->reader);
 
-            return;
-        }
-
-        $extension->addSubscribers($this->evm, $this->em, $this->reader);
-
-        if (is_array($extension->getFilters())) {
-            foreach ($extension->getFilters() as $name => $filter) {
-                $this->metadata->addFilter($name, $filter);
-                $this->em->getFilters()->enable($name);
+            if (is_array($extension->getFilters())) {
+                foreach ($extension->getFilters() as $name => $filter) {
+                    $this->metadata->addFilter($name, $filter);
+                    $this->em->getFilters()->enable($name);
+                }
             }
+
+            $this->markAsSubscribed($extension);
         }
-        $this->subscribedExtensions[$hash][get_class($extension)] = true;
     }
 
     /**
-     * Todo: Should be removed once GedmoExtension in the laravel-doctrine/extensions repo is tested to work
-     * @param bool $all
+     * @param Extension $extension
+     *
+     * @return bool
      */
-    public function enableGedmoExtensions($all = true)
+    protected function notSubscribedYet(Extension $extension)
     {
-        if ($all) {
-            DoctrineExtensions::registerMappingIntoDriverChainORM(
-                $this->driverChain->getChain(),
-                $this->driverChain->getReader()
-            );
-        } else {
-            DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
-                $this->driverChain->getChain(),
-                $this->driverChain->getReader()
-            );
-        }
+        return !isset($this->subscribedExtensions[spl_object_hash($this->em)][get_class($extension)]);
+    }
+
+    /**
+     * @param Extension $extension
+     */
+    protected function markAsSubscribed(Extension $extension)
+    {
+        $this->subscribedExtensions[spl_object_hash($this->em)][get_class($extension)] = true;
     }
 }
