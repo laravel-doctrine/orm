@@ -40,6 +40,11 @@ class ExtensionManager
     protected $registry;
 
     /**
+     * @var array
+     */
+    protected $subscribedExtensions = [];
+
+    /**
      * @var DriverChain
      */
     private $driverChain;
@@ -65,6 +70,11 @@ class ExtensionManager
             $this->metadata = $this->em->getConfiguration();
             $this->reader   = $this->driverChain->getReader();
 
+            $hash = spl_object_hash($em);
+            if (!isset($this->subscribedExtensions[$hash])) {
+                $this->subscribedExtensions[$hash] = [];
+            }
+
             foreach ($this->extensions as $extension) {
                 $this->bootExtension($extension);
             }
@@ -84,6 +94,12 @@ class ExtensionManager
      */
     public function bootExtension(Extension $extension)
     {
+        $hash = spl_object_hash($this->em);
+        if (isset($this->subscribedExtensions[$hash][get_class($extension)])) { //This extension is already subscribed to this entity manager.
+
+            return;
+        }
+
         $extension->addSubscribers($this->evm, $this->em, $this->reader);
 
         if (is_array($extension->getFilters())) {
@@ -92,6 +108,7 @@ class ExtensionManager
                 $this->em->getFilters()->enable($name);
             }
         }
+        $this->subscribedExtensions[$hash][get_class($extension)] = true;
     }
 
     /**
