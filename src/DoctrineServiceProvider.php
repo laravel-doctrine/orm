@@ -255,7 +255,11 @@ class DoctrineServiceProvider extends ServiceProvider
 
             // Register namespaces
             $namespaces = array_merge($app->config->get('doctrine.meta.namespaces', ['App']), ['LaravelDoctrine']);
-            foreach ($namespaces as $namespace) {
+            foreach ($namespaces as $alias => $namespace) {
+                if (is_string($alias)) {
+                    $configuration->addEntityNamespace($alias, $namespace);
+                }
+
                 $chain->addNamespace($namespace);
             }
 
