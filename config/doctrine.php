@@ -20,7 +20,7 @@ return [
     'managers'                  => [
         'default' => [
             'meta'       => env('DOCTRINE_METADATA', 'annotations'),
-            'connection' => env('DOCTRINE_CONNECTION', 'mysql'),
+            'connection' => env('DB_CONNECTION', 'mysql'),
             'paths'      => [
                 app_path()
             ],
