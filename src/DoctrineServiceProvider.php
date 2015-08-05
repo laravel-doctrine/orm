@@ -6,7 +6,6 @@ use DebugBar\Bridge\DoctrineCollector;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\Proxy;
 use Doctrine\DBAL\Logging\DebugStack;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -55,10 +54,8 @@ class DoctrineServiceProvider extends ServiceProvider
     /**
      * Boot service provider.
      */
-    public function boot(CustomTypeManager $typeManager)
+    public function boot()
     {
-        $typeManager->addCustomTypes(config('doctrine.custom_types', []));
-
         // Boot the extension manager
         $this->app->make(ExtensionManager::class)->boot();
 
@@ -85,6 +82,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerPresenceVerifier();
         $this->registerConsoleCommands();
         $this->extendAuthManager();
+        $this->registerCustomTypes();
     }
 
     /**
@@ -130,13 +128,10 @@ class DoctrineServiceProvider extends ServiceProvider
                 // Subscribers
                 if (isset($settings['events']['subscribers'])) {
                     foreach ($settings['events']['subscribers'] as $subscriber) {
-                        if(class_exists($subscriber, false)){
+                        if (class_exists($subscriber, false)) {
                             $subscriberInstance = new $subscriber;
                             $manager->getEventManager()->addEventSubscriber($subscriberInstance);
-                        }
-
-                        else
-                        {
+                        } else {
                             throw new ClassNotFound($subscriber);
                         }
                     }
@@ -369,13 +364,20 @@ class DoctrineServiceProvider extends ServiceProvider
         });
     }
 
-
     /**
      * Register the validation presence verifier
      */
     protected function registerPresenceVerifier()
     {
         $this->app->singleton('validation.presence', DoctrinePresenceVerifier::class);
+    }
+
+    /**
+     * Register custom types
+     */
+    protected function registerCustomTypes()
+    {
+        (new CustomTypeManager())->addCustomTypes(config('doctrine.custom_types', []));
     }
 
     /**
@@ -405,6 +407,7 @@ class DoctrineServiceProvider extends ServiceProvider
     {
         $this->app[AuthManager::class]->extend('doctrine', function ($app) {
             $model = $this->app['config']['auth.model'];
+
             return new DoctrineUserProvider($app[Hasher::class], $app[ManagerRegistry::class], $model);
         });
     }

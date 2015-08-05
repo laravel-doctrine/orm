@@ -27,7 +27,7 @@ class DoctrineUserProvider implements UserProvider
     protected $entity;
 
     /**
-     * @param Hasher $hasher
+     * @param Hasher          $hasher
      * @param ManagerRegistry $manager
      * @param $entity
      */
@@ -35,7 +35,7 @@ class DoctrineUserProvider implements UserProvider
     {
         $this->hasher = $hasher;
         $this->entity = $entity;
-        $this->em = $manager->getManagerForClass($entity);
+        $this->em     = $manager->getManagerForClass($entity);
     }
 
     /**
@@ -61,7 +61,7 @@ class DoctrineUserProvider implements UserProvider
     public function retrieveByToken($identifier, $token)
     {
         return $this->getRepository()->findOneBy([
-            $this->getEntity()->getKeyName()    => $identifier,
+            $this->getEntity()->getKeyName()           => $identifier,
             $this->getEntity()->getRememberTokenName() => $token
         ]);
     }
