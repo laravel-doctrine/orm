@@ -10,7 +10,6 @@ use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Hashing\Hasher;
@@ -32,7 +31,6 @@ use LaravelDoctrine\ORM\Console\SchemaCreateCommand;
 use LaravelDoctrine\ORM\Console\SchemaDropCommand;
 use LaravelDoctrine\ORM\Console\SchemaUpdateCommand;
 use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
-use LaravelDoctrine\ORM\Exceptions\ClassNotFound;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
 use LaravelDoctrine\ORM\Extensions\DriverChain;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
@@ -111,7 +109,7 @@ class DoctrineServiceProvider extends ServiceProvider
 
             // Bind manager
             $this->app->singleton($managerName, function () use ($settings) {
-                EntityManagerFactory::create($settings);
+                return (new EntityManagerFactory)->create($settings);
             });
 
             // Bind connection
