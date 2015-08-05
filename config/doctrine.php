@@ -19,8 +19,8 @@ return [
     */
     'managers'                  => [
         'default' => [
-            'meta'       => 'annotations',
-            'connection' => config('database.default'),
+            'meta'       => env('DOCTRINE_METADATA', 'annotations'),
+            'connection' => env('DOCTRINE_CONNECTION', 'mysql'),
             'paths'      => [
                 app_path()
             ],
@@ -163,7 +163,7 @@ return [
     |
     */
     'cache'                     => [
-        'default'      => config('cache.default'),
+        'default'      => env('DOCTRINE_CACHE', 'array'),
         'second_level' => false,
     ],
     /*
