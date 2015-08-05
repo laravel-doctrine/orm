@@ -59,6 +59,8 @@ class DoctrineServiceProvider extends ServiceProvider
         // Boot the extension manager
         $this->app->make(ExtensionManager::class)->boot();
 
+        $this->extendAuthManager();
+
         $this->publishes([
             $this->getConfigPath() => config_path('doctrine.php'),
         ], 'config');
@@ -81,7 +83,6 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerExtensions();
         $this->registerPresenceVerifier();
         $this->registerConsoleCommands();
-        $this->extendAuthManager();
         $this->registerCustomTypes();
     }
 
