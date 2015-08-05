@@ -22,12 +22,13 @@ trait Authenticatable
     {
         return method_exists($this, 'getKey') ? $this->getKey() : $this->id;
     }
-    
+
     /**
      * Get the column name for the primary key
      * @return string
      */
-    public function getAuthIdentifierName() {
+    public function getAuthIdentifierName()
+    {
         return 'id';
     }
 

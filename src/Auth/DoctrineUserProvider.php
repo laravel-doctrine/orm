@@ -12,7 +12,6 @@ use LaravelDoctrine\ORM\Contracts\Auth\Authenticatable as AuthenticatableContrac
 
 class DoctrineUserProvider implements UserProvider
 {
-
     /**
      * @var Hasher
      */
@@ -29,15 +28,15 @@ class DoctrineUserProvider implements UserProvider
     protected $entity;
 
     /**
-     * @param Hasher $hasher
+     * @param Hasher          $hasher
      * @param ManagerRegistry $manager
-     * @param string $entity
+     * @param string          $entity
      */
     public function __construct(Hasher $hasher, ManagerRegistry $manager, $entity)
     {
         $this->hasher = $hasher;
         $this->entity = $entity;
-        $this->em = $manager->getManagerForClass($entity);
+        $this->em     = $manager->getManagerForClass($entity);
     }
 
     /**
@@ -64,7 +63,7 @@ class DoctrineUserProvider implements UserProvider
     {
         return $this->getRepository()->findOneBy([
                     $this->getEntity()->getAuthIdentifierName() => $identifier,
-                    $this->getEntity()->getRememberTokenName() => $token
+                    $this->getEntity()->getRememberTokenName()  => $token
         ]);
     }
 
@@ -72,7 +71,7 @@ class DoctrineUserProvider implements UserProvider
      * Update the "remember me" token for the given user in storage.
      *
      * @param Authenticatable $user
-     * @param string                                     $token
+     * @param string          $token
      *
      * @return void
      */
@@ -106,7 +105,7 @@ class DoctrineUserProvider implements UserProvider
      * Validate a user against the given credentials.
      *
      * @param Authenticatable $user
-     * @param array                                      $credentials
+     * @param array           $credentials
      *
      * @return bool
      */
@@ -132,5 +131,4 @@ class DoctrineUserProvider implements UserProvider
     {
         return new $this->entity;
     }
-
 }

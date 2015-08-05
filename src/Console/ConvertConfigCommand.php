@@ -47,7 +47,7 @@ class ConvertConfigCommand extends Command
         $destFilePath = $destPath . '/doctrine.generated.php';
 
         $originalSourceFilePath = $sourceFilePath;
-        $sourceFilePath = realPath($sourceFilePath);
+        $sourceFilePath         = realPath($sourceFilePath);
 
         if (!file_exists($sourceFilePath)) {
             throw new InvalidArgumentException(
@@ -78,8 +78,8 @@ class ConvertConfigCommand extends Command
     /**
      * Convert a configuration file from mitchellvanw/laravel-doctrine to a string representation of a php array configuration for this project
      *
-     * @param array $sourceConfig
-     * @param Factory $viewFactory
+     * @param  array   $sourceConfig
+     * @param  Factory $viewFactory
      * @return string
      */
     private function convertMitchell($sourceConfig, $viewFactory)
@@ -92,10 +92,9 @@ class ConvertConfigCommand extends Command
     /**
      * Convert a configuration file from atrauzzi/laravel-doctrine to a string representation of a php array configuration for this project
      *
-     * @param array $sourceConfig
-     * @param Factory $viewFactory
+     * @param  array   $sourceConfig
+     * @param  Factory $viewFactory
      * @return string
-     *
      */
     private function convertAtrauzzi($sourceConfig, $viewFactory)
     {

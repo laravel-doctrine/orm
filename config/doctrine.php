@@ -19,8 +19,8 @@ return [
     */
     'managers'                  => [
         'default' => [
-            'meta'       => 'annotations',
-            'connection' => config('database.default'),
+            'meta'       => env('DOCTRINE_METADATA', 'annotations'),
+            'connection' => env('DB_CONNECTION', 'mysql'),
             'paths'      => [
                 app_path()
             ],
@@ -90,7 +90,7 @@ return [
     |
     */
     'extensions'                => [
-        //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
+        LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
     ],
     /*
     |--------------------------------------------------------------------------
@@ -163,7 +163,18 @@ return [
     |
     */
     'cache'                     => [
-        'default'      => config('cache.default'),
+        'default'      => env('DOCTRINE_CACHE', 'array'),
         'second_level' => false,
+    ],
+    /*
+    |--------------------------------------------------------------------------
+    | Gedmo extensions
+    |--------------------------------------------------------------------------
+    |
+    | Settings for Gedmo extensions
+    |
+    */
+    'gedmo' => [
+        'all_mappings' => false
     ]
 ];

@@ -85,16 +85,6 @@ final class IlluminateRegistry extends AbstractManagerRegistry implements Manage
     }
 
     /**
-     * @param string $class
-     *
-     * @return mixed|object
-     */
-    public function getManagerForClass($class = 'default')
-    {
-        return $this->getService($class);
-    }
-
-    /**
      * @return string
      */
     public static function getManagerNamePrefix()

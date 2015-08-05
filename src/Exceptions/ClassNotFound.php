@@ -6,5 +6,4 @@ use LogicException;
 
 class ClassNotFound extends LogicException
 {
-
 }

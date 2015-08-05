@@ -2,7 +2,6 @@
 
 namespace LaravelDoctrine\ORM\ConfigMigrations;
 
-use Doctrine\ORM;
 use Illuminate\Contracts\View\Factory;
 use LaravelDoctrine\ORM\Utilities\ArrayUtil;
 
@@ -23,7 +22,7 @@ class MitchellMigrator implements ConfigurationMigrator
     /**
      * Convert a configuration array from mitchellvanw/laravel-doctrine to a string representation of a php array configuration for this project
      *
-     * @param array $sourceArray
+     * @param  array  $sourceArray
      * @return string
      */
     public function convertConfiguration($sourceArray)
@@ -32,8 +31,8 @@ class MitchellMigrator implements ConfigurationMigrator
         $isFork = ArrayUtil::get($sourceArray['entity_managers']) !== null;
 
         $managers = [];
-        $cache = '';
-        $dqls = null;
+        $cache    = '';
+        $dqls     = null;
 
         if ($isFork) {
             foreach ($sourceArray['entity_managers'] as $key => $manager) {
@@ -49,7 +48,7 @@ class MitchellMigrator implements ConfigurationMigrator
 
         $cache    = $this->convertCache($sourceArray);
 
-        $results = $this->viewFactory->make('mitchell.master', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls])->render();
+        $results   = $this->viewFactory->make('mitchell.master', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
 
         return $unescaped;
@@ -58,28 +57,30 @@ class MitchellMigrator implements ConfigurationMigrator
     /**
      * Convert an entity manager section from mitchellvanw/laravel-doctrine to a string representation of a php array configuration for an entity manager for this project
      *
-     * @param array $sourceArray
-     * @param boolean $isFork
+     * @param  array  $sourceArray
+     * @param  bool   $isFork
      * @return string
      */
     public function convertManager($sourceArray, $isFork)
     {
-        $results = $this->viewFactory->make('mitchell.manager', ['data' => $sourceArray, 'isFork' => $isFork])->render();
+        $results   = $this->viewFactory->make('mitchell.manager', ['data' => $sourceArray, 'isFork' => $isFork])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
+
         return $unescaped;
     }
 
     /**
      * Convert a cache section from mitchellvanw/laravel-doctrine to a string representation of a php array configuration for a cache section for this project
      *
-     * @param array $sourceArray
+     * @param  array  $sourceArray
      * @return string
      */
     public function convertCache($sourceArray)
     {
         $cacheProvider = ArrayUtil::get($sourceArray['cache_provider']);
-        $results = $this->viewFactory->make('mitchell.cache',['cacheProvider' => $cacheProvider])->render();
-        $unescaped = html_entity_decode($results, ENT_QUOTES);
+        $results       = $this->viewFactory->make('mitchell.cache', ['cacheProvider' => $cacheProvider])->render();
+        $unescaped     = html_entity_decode($results, ENT_QUOTES);
+
         return $unescaped;
     }
 
@@ -108,13 +109,13 @@ class MitchellMigrator implements ConfigurationMigrator
             }
         }
 
-        if(!empty($dqls)){
-            $results = $this->viewFactory->make('mitchel.dql', ['dql' => $dqls])->render();
+        if (!empty($dqls)) {
+            $results   = $this->viewFactory->make('mitchel.dql', ['dql' => $dqls])->render();
             $unescaped = html_entity_decode($results, ENT_QUOTES);
+
             return $unescaped;
         } else {
             return null;
         }
-
     }
 }

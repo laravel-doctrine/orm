@@ -6,12 +6,10 @@ use DebugBar\Bridge\DoctrineCollector;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\Proxy;
 use Doctrine\DBAL\Logging\DebugStack;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Hashing\Hasher;
@@ -33,7 +31,6 @@ use LaravelDoctrine\ORM\Console\SchemaCreateCommand;
 use LaravelDoctrine\ORM\Console\SchemaDropCommand;
 use LaravelDoctrine\ORM\Console\SchemaUpdateCommand;
 use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
-use LaravelDoctrine\ORM\Exceptions\ClassNotFound;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
 use LaravelDoctrine\ORM\Extensions\DriverChain;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
@@ -55,12 +52,12 @@ class DoctrineServiceProvider extends ServiceProvider
     /**
      * Boot service provider.
      */
-    public function boot(CustomTypeManager $typeManager)
+    public function boot()
     {
-        $typeManager->addCustomTypes(config('doctrine.custom_types', []));
-
         // Boot the extension manager
         $this->app->make(ExtensionManager::class)->boot();
+
+        $this->extendAuthManager();
 
         $this->publishes([
             $this->getConfigPath() => config_path('doctrine.php'),
@@ -84,7 +81,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerExtensions();
         $this->registerPresenceVerifier();
         $this->registerConsoleCommands();
-        $this->extendAuthManager();
+        $this->registerCustomTypes();
     }
 
     /**
@@ -112,73 +109,7 @@ class DoctrineServiceProvider extends ServiceProvider
 
             // Bind manager
             $this->app->singleton($managerName, function () use ($settings) {
-
-                $manager = EntityManager::create(
-                    ConnectionManager::resolve(array_get($settings, 'connection')),
-                    MetaDataManager::resolve(array_get($settings, 'meta'))
-                );
-
-                $configuration = $manager->getConfiguration();
-
-                // Listeners
-                if (isset($settings['events']['listeners'])) {
-                    foreach ($settings['events']['listeners'] as $event => $listener) {
-                        $manager->getEventManager()->addEventListener($event, $listener);
-                    }
-                }
-
-                // Subscribers
-                if (isset($settings['events']['subscribers'])) {
-                    foreach ($settings['events']['subscribers'] as $subscriber) {
-                        if(class_exists($subscriber, false)){
-                            $subscriberInstance = new $subscriber;
-                            $manager->getEventManager()->addEventSubscriber($subscriberInstance);
-                        }
-
-                        else
-                        {
-                            throw new ClassNotFound($subscriber);
-                        }
-                    }
-                }
-
-                // Filters
-                if (isset($settings['filters'])) {
-                    foreach ($settings['filters'] as $name => $filter) {
-                        $configuration->getMetadataDriverImpl()->addFilter($name, $filter);
-                        $manager->getFilters()->enable($name);
-                    }
-                }
-
-                // Paths
-                $paths = array_get($settings, 'paths', []);
-                $meta = $configuration->getMetadataDriverImpl();
-
-                if (method_exists($meta, 'addPaths')) {
-                    $meta->addPaths($paths);
-                } elseif (method_exists($meta, 'getLocator')) {
-                    $meta->getLocator()->addPaths($paths);
-                }
-
-                // Repository
-                $configuration->setDefaultRepositoryClassName(
-                    array_get($settings, 'repository', EntityRepository::class)
-                );
-
-                // Proxies
-                $configuration->setProxyDir(
-                    array_get($settings, 'proxies.path', storage_path('proxies'))
-                );
-
-                $configuration->setAutoGenerateProxyClasses(
-                    array_get($settings, 'proxies.auto_generate', false)
-                );
-
-                if ($namespace = array_get($settings, 'proxies.namespace', false)) {
-                    $configuration->setProxyNamespace($namespace);
-                }
-
-                return $manager;
+                return (new EntityManagerFactory)->create($settings);
             });
 
             // Bind connection
@@ -369,13 +300,20 @@ class DoctrineServiceProvider extends ServiceProvider
         });
     }
 
-
     /**
      * Register the validation presence verifier
      */
     protected function registerPresenceVerifier()
     {
         $this->app->singleton('validation.presence', DoctrinePresenceVerifier::class);
+    }
+
+    /**
+     * Register custom types
+     */
+    protected function registerCustomTypes()
+    {
+        (new CustomTypeManager())->addCustomTypes(config('doctrine.custom_types', []));
     }
 
     /**
@@ -405,6 +343,7 @@ class DoctrineServiceProvider extends ServiceProvider
     {
         $this->app[AuthManager::class]->extend('doctrine', function ($app) {
             $model = $this->app['config']['auth.model'];
+
             return new DoctrineUserProvider($app[Hasher::class], $app[ManagerRegistry::class], $model);
         });
     }

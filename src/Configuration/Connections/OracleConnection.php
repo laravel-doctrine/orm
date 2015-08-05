@@ -25,6 +25,6 @@ class OracleConnection extends AbstractConnection
             'charset'  => array_get($config, 'charset'),
             'prefix'   => array_get($config, 'prefix'),
             'port'     => array_get($config, 'port'),
-        ]);        
+        ]);
     }
 }

@@ -5,7 +5,6 @@ namespace LaravelDoctrine\ORM\Extensions;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
-use Gedmo\DoctrineExtensions;
 
 class ExtensionManager
 {
@@ -38,6 +37,11 @@ class ExtensionManager
      * @var ManagerRegistry
      */
     protected $registry;
+
+    /**
+     * @var array
+     */
+    protected $subscribedExtensions = [];
 
     /**
      * @var DriverChain
@@ -84,32 +88,35 @@ class ExtensionManager
      */
     public function bootExtension(Extension $extension)
     {
-        $extension->addSubscribers($this->evm, $this->em, $this->reader);
+        if ($this->notSubscribedYet($extension)) {
+            $extension->addSubscribers($this->evm, $this->em, $this->reader);
 
-        if (is_array($extension->getFilters())) {
-            foreach ($extension->getFilters() as $name => $filter) {
-                $this->metadata->addFilter($name, $filter);
-                $this->em->getFilters()->enable($name);
+            if (is_array($extension->getFilters())) {
+                foreach ($extension->getFilters() as $name => $filter) {
+                    $this->metadata->addFilter($name, $filter);
+                    $this->em->getFilters()->enable($name);
+                }
             }
+
+            $this->markAsSubscribed($extension);
         }
     }
 
     /**
-     * Todo: Should be removed once GedmoExtension in the laravel-doctrine/extensions repo is tested to work
-     * @param bool $all
+     * @param Extension $extension
+     *
+     * @return bool
      */
-    public function enableGedmoExtensions($all = true)
+    protected function notSubscribedYet(Extension $extension)
     {
-        if ($all) {
-            DoctrineExtensions::registerMappingIntoDriverChainORM(
-                $this->driverChain->getChain(),
-                $this->driverChain->getReader()
-            );
-        } else {
-            DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
-                $this->driverChain->getChain(),
-                $this->driverChain->getReader()
-            );
-        }
+        return !isset($this->subscribedExtensions[spl_object_hash($this->em)][get_class($extension)]);
+    }
+
+    /**
+     * @param Extension $extension
+     */
+    protected function markAsSubscribed(Extension $extension)
+    {
+        $this->subscribedExtensions[spl_object_hash($this->em)][get_class($extension)] = true;
     }
 }
