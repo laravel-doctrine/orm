@@ -24,6 +24,15 @@ trait Authenticatable
     }
 
     /**
+     * Get the column name for the primary key
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'id';
+    }
+
+    /**
      * @return string
      */
     public function getPassword()
@@ -76,14 +85,5 @@ trait Authenticatable
     public function getRememberTokenName()
     {
         return 'rememberToken';
-    }
-
-    /**
-     * Get the column name for the primary key
-     * @return string
-     */
-    public function getKeyName()
-    {
-        return 'id';
     }
 }
