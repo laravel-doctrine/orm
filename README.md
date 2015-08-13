@@ -65,13 +65,13 @@ Begin reading [the full documentation](https://github.com/laravel-doctrine/orm/w
 
 ## Installation
 
-Require this package in your `composer.json` and run `composer update`.
+Require this package  
 
 ```php
-"laravel-doctrine/orm": "@dev"
+"composer require laravel-doctrine/orm"
 ```
 
-After updating composer, add the ServiceProvider to the providers array in `config/app.php`
+After adding the package, add the ServiceProvider to the providers array in `config/app.php`
 
 ```php
 'LaravelDoctrine\ORM\DoctrineServiceProvider',
