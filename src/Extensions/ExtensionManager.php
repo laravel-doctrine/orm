@@ -86,9 +86,6 @@ class ExtensionManager
      */
     public function register(Extension $extension)
     {
-        if (method_exists($extension, 'register')) {
-            $extension->register();
-        }
         $this->extensions[] = $extension;
     }
 
