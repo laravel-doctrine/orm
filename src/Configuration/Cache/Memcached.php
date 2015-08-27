@@ -40,7 +40,7 @@ class Memcached extends CacheProvider
      */
     protected function doFetch($id)
     {
-        return $this->store->get($id);
+        return $this->store->get($id) ?: false;
     }
 
     /**
@@ -60,7 +60,7 @@ class Memcached extends CacheProvider
      */
     protected function doContains($id)
     {
-        return (bool) (false !== $this->store->get($id));
+        return (bool) (false !== $this->doFetch($id));
     }
 
     /**

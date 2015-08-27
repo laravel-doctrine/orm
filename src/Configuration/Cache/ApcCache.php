@@ -29,7 +29,7 @@ class ApcCache extends DoctrineApcCache
      */
     protected function doFetch($id)
     {
-        return $this->store->get($id);
+        return $this->store->get($id) ?: false;
     }
 
     /**
@@ -41,7 +41,7 @@ class ApcCache extends DoctrineApcCache
      */
     protected function doContains($id)
     {
-        return (bool) (false !== $this->store->get($id));
+        return (bool) (false !== $this->doFetch($id));
     }
 
     /**

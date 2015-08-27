@@ -38,7 +38,7 @@ class RedisCache extends CacheProvider
      */
     protected function doFetch($id)
     {
-        return $this->store->get($id);
+        return $this->store->get($id) ?: false;
     }
 
     /**
