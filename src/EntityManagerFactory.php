@@ -9,6 +9,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Str;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
@@ -39,12 +40,19 @@ class EntityManagerFactory
     protected $cache;
 
     /**
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * @param Application       $app
      * @param MetaDataManager   $meta
      * @param ConnectionManager $connection
      * @param CacheManager      $cache
      * @param Repository        $config
      */
     public function __construct(
+        Application $app,
         MetaDataManager $meta,
         ConnectionManager $connection,
         CacheManager $cache,
@@ -54,6 +62,7 @@ class EntityManagerFactory
         $this->connection = $connection;
         $this->config     = $config;
         $this->cache      = $cache;
+        $this->app = $app;
     }
 
     /**
