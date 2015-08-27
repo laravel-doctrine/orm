@@ -5,7 +5,7 @@ namespace LaravelDoctrine\ORM\Auth;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as IlluminateAuthenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher;
 use LaravelDoctrine\ORM\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -44,7 +44,7 @@ class DoctrineUserProvider implements UserProvider
      *
      * @param mixed $identifier
      *
-     * @return Authenticatable|null
+     * @return IlluminateAuthenticatable|null
      */
     public function retrieveById($identifier)
     {
@@ -57,7 +57,7 @@ class DoctrineUserProvider implements UserProvider
      * @param mixed  $identifier
      * @param string $token
      *
-     * @return Authenticatable|null
+     * @return IlluminateAuthenticatable|null
      */
     public function retrieveByToken($identifier, $token)
     {
@@ -70,12 +70,12 @@ class DoctrineUserProvider implements UserProvider
     /**
      * Update the "remember me" token for the given user in storage.
      *
-     * @param Authenticatable $user
-     * @param string          $token
+     * @param IlluminateAuthenticatable $user
+     * @param string                    $token
      *
      * @return void
      */
-    public function updateRememberToken(Authenticatable $user, $token)
+    public function updateRememberToken(IlluminateAuthenticatable $user, $token)
     {
         $user->setRememberToken($token);
         $this->em->persist($user);
@@ -87,7 +87,7 @@ class DoctrineUserProvider implements UserProvider
      *
      * @param array $credentials
      *
-     * @return Authenticatable|null
+     * @return IlluminateAuthenticatable|null
      */
     public function retrieveByCredentials(array $credentials)
     {
@@ -104,12 +104,12 @@ class DoctrineUserProvider implements UserProvider
     /**
      * Validate a user against the given credentials.
      *
-     * @param Authenticatable $user
-     * @param array           $credentials
+     * @param IlluminateAuthenticatable $user
+     * @param array                     $credentials
      *
      * @return bool
      */
-    public function validateCredentials(Authenticatable $user, array $credentials)
+    public function validateCredentials(IlluminateAuthenticatable $user, array $credentials)
     {
         return $this->hasher->check($credentials['password'], $user->getAuthPassword());
     }

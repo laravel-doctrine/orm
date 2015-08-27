@@ -18,22 +18,23 @@ class EntityManagerFactory
      */
     public function create($settings = [])
     {
-        $manager = EntityManager::create(
-            ConnectionManager::resolve(array_get($settings, 'connection')),
-            MetaDataManager::resolve(array_get($settings, 'meta'))
-        );
+        $configuration = MetaDataManager::resolve(array_get($settings, 'meta'));
 
-        $configuration = $manager->getConfiguration();
-
-        $this->registerListeners($settings, $manager);
-        $this->registerSubscribers($settings, $manager);
-        $this->registerFilters($settings, $configuration, $manager);
         $this->registerPaths($settings, $configuration);
         $this->configureProxies($settings, $configuration);
 
         $configuration->setDefaultRepositoryClassName(
             array_get($settings, 'repository', EntityRepository::class)
         );
+
+        $manager = EntityManager::create(
+            ConnectionManager::resolve(array_get($settings, 'connection')),
+            $configuration
+        );
+
+        $this->registerSubscribers($settings, $manager);
+        $this->registerFilters($settings, $configuration, $manager);
+        $this->registerListeners($settings, $manager);
 
         return $manager;
     }
