@@ -3,29 +3,16 @@
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
 use Doctrine\Common\Cache\ArrayCache;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
-class ArrayCacheProvider extends AbstractCacheProvider
+class ArrayCacheProvider implements Driver
 {
     /**
-     * @var string
-     */
-    protected $name = 'array';
-
-    /**
-     * @param array $config
+     * @param array $settings
      *
-     * @throws DriverNotFound
-     * @return ArrayCacheProvider
-     */
-    public function configure($config = [])
-    {
-        return $this;
-    }
-
-    /**
      * @return ArrayCache
      */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
         return new ArrayCache();
     }

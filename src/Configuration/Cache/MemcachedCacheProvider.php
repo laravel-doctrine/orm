@@ -2,54 +2,33 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Doctrine\Common\Cache\MemcachedCache;
-use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
-use Memcached;
+use Illuminate\Cache\MemcachedStore;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
-class MemcachedCacheProvider extends AbstractCacheProvider
+class MemcachedCacheProvider implements Driver
 {
     /**
-     * @var string
+     * @var MemcachedStore
      */
-    protected $name = 'memcached';
+    protected $store;
 
     /**
-     * @param array $config
-     *
-     * @throws DriverNotFound
-     * @return MemcachedCacheProvider
+     * @param MemcachedStore $store
      */
-    public function configure($config = [])
+    public function __construct(MemcachedStore $store)
     {
-        $this->config = $config;
-
-        return $this;
+        $this->store = $store;
     }
 
     /**
-     * @throws DriverNotFound
+     * @param array $settings
+     *
      * @return MemcachedCache
      */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
-        $cache = new MemcachedCache();
-
-        if (extension_loaded('memcached')) {
-            $memcached = new Memcached();
-
-            foreach ($this->config['servers'] as $server) {
-                $memcached->addServer(
-                    $server['host'],
-                    $server['port'],
-                    $server['weight']
-                );
-            }
-
-            $cache->setMemcached($memcached);
-
-            return $cache;
-        }
-
-        throw new DriverNotFound('Memcached extension not loaded');
+        return new Memcached(
+            $this->store
+        );
     }
 }

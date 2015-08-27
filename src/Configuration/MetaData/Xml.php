@@ -3,29 +3,21 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Tools\Setup;
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 
 class Xml extends AbstractMetaData
 {
     /**
-     * @var string
+     * @var CacheManager
      */
-    protected $name = 'xml';
+    protected $cacheManager;
 
     /**
-     * @param array $settings
-     * @param bool  $dev
-     *
-     * @return static
+     * @param CacheManager $cacheManager
      */
-    public function configure(array $settings = [], $dev = false)
+    public function __construct(CacheManager $cacheManager)
     {
-        $this->settings = [
-            'dev'        => $dev,
-            'paths'      => array_get($settings, 'paths', []),
-            'proxy_path' => array_get($settings, 'proxies.path'),
-        ];
-
-        return $this;
+        $this->cacheManager = $cacheManager;
     }
 
     /**
@@ -36,8 +28,8 @@ class Xml extends AbstractMetaData
         return Setup::createXMLMetadataConfiguration(
             array_get($this->settings, 'paths'),
             array_get($this->settings, 'dev'),
-            array_get($this->settings, 'proxy_path'),
-            $this->getCache()
+            array_get($this->settings, 'proxies.path'),
+            $this->cacheManager->driver()
         );
     }
 }

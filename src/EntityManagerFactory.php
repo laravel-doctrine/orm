@@ -2,15 +2,60 @@
 
 namespace LaravelDoctrine\ORM;
 
+use DebugBar\Bridge\DoctrineCollector;
+use Doctrine\DBAL\Logging\DebugStack;
+use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Str;
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
+use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Exceptions\ClassNotFound;
 
 class EntityManagerFactory
 {
+    /**
+     * @var MetaDataManager
+     */
+    protected $meta;
+
+    /**
+     * @var ConnectionManager
+     */
+    protected $connection;
+
+    /**
+     * @var Repository
+     */
+    protected $config;
+
+    /**
+     * @var CacheManager
+     */
+    protected $cache;
+
+    /**
+     * @param MetaDataManager   $meta
+     * @param ConnectionManager $connection
+     * @param CacheManager      $cache
+     * @param Repository        $config
+     */
+    public function __construct(
+        MetaDataManager $meta,
+        ConnectionManager $connection,
+        CacheManager $cache,
+        Repository $config
+    ) {
+        $this->meta       = $meta;
+        $this->connection = $connection;
+        $this->config     = $config;
+        $this->cache      = $cache;
+    }
+
     /**
      * @param array $settings
      *
@@ -18,8 +63,19 @@ class EntityManagerFactory
      */
     public function create($settings = [])
     {
-        $configuration = MetaDataManager::resolve(array_get($settings, 'meta'));
+        $configuration = $this->meta->driver(
+            array_get($settings, 'meta'),
+            $settings
+        );
 
+        $connection = $this->connection->driver(
+            array_get($settings, 'connection')
+        );
+
+        $this->setLogger($configuration);
+        $this->setNamingStrategy($configuration);
+        $this->setCustomFunctions($configuration);
+        $this->setSecondLevelCaching($configuration);
         $this->registerPaths($settings, $configuration);
         $this->configureProxies($settings, $configuration);
 
@@ -28,13 +84,13 @@ class EntityManagerFactory
         );
 
         $manager = EntityManager::create(
-            ConnectionManager::resolve(array_get($settings, 'connection')),
+            $connection,
             $configuration
         );
 
+        $this->registerListeners($settings, $manager);
         $this->registerSubscribers($settings, $manager);
         $this->registerFilters($settings, $configuration, $manager);
-        $this->registerListeners($settings, $manager);
 
         return $manager;
     }
@@ -108,7 +164,7 @@ class EntityManagerFactory
     protected function configureProxies($settings = [], Configuration $configuration)
     {
         $configuration->setProxyDir(
-            array_get($settings, 'proxies.path', storage_path('proxies'))
+            array_get($settings, 'proxies.path')
         );
 
         $configuration->setAutoGenerateProxyClasses(
@@ -117,6 +173,58 @@ class EntityManagerFactory
 
         if ($namespace = array_get($settings, 'proxies.namespace', false)) {
             $configuration->setProxyNamespace($namespace);
+        }
+    }
+
+    /**
+     * @param Configuration $configuration
+     */
+    protected function setLogger(Configuration $configuration)
+    {
+        if ($this->config->get('doctrine.debugbar', false) === true) {
+            $debugStack = new DebugStack();
+            $configuration->setSQLLogger($debugStack);
+            $this->app['debugbar']->addCollector(
+                new DoctrineCollector($debugStack)
+            );
+        }
+    }
+
+    /**
+     * @param Configuration $configuration
+     */
+    protected function setNamingStrategy(Configuration $configuration)
+    {
+        $configuration->setNamingStrategy(
+            new LaravelNamingStrategy(new Str)
+        );
+    }
+
+    /**
+     * @param Configuration $configuration
+     */
+    protected function setCustomFunctions(Configuration $configuration)
+    {
+        $configuration->setCustomDatetimeFunctions($this->config->get('doctrine.custom_datetime_functions'));
+        $configuration->setCustomNumericFunctions($this->config->get('doctrine.custom_numeric_functions'));
+        $configuration->setCustomStringFunctions($this->config->get('doctrine.custom_string_functions'));
+    }
+
+    /**
+     * @param Configuration $configuration
+     */
+    protected function setSecondLevelCaching(Configuration $configuration)
+    {
+        if ($this->config->get('cache.second_level', false)) {
+            $configuration->setSecondLevelCacheEnabled(true);
+
+            $cacheConfig = $configuration->getSecondLevelCacheConfiguration();
+            $cacheConfig->setCacheFactory(
+                new DefaultCacheFactory(
+                    $cacheConfig->getRegionsConfiguration(),
+                    $this->cache->driver()
+                )
+            );
         }
     }
 }

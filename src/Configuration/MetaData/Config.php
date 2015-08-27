@@ -3,46 +3,41 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Tools\Setup;
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
+use LaravelDoctrine\ORM\Configuration\Driver;
 use LaravelDoctrine\ORM\Configuration\MetaData\Config\ConfigDriver;
 
-class Config extends AbstractMetaData
+class Config implements Driver
 {
     /**
-     * @var string
+     * @var CacheManager
      */
-    protected $name = 'config';
+    protected $cacheManager;
 
     /**
-     * @param array $settings
-     * @param bool  $dev
-     *
-     * @return static
+     * @param CacheManager $cacheManager
      */
-    public function configure(array $settings = [], $dev = false)
+    public function __construct(CacheManager $cacheManager)
     {
-        $this->settings = [
-            'dev'          => $dev,
-            'proxy_path'   => array_get($settings, 'proxies.path'),
-            'mapping_file' => array_get($settings, 'mapping_file')
-        ];
-
-        return $this;
+        $this->cacheManager = $cacheManager;
     }
 
     /**
+     * @param array $settings
+     *
      * @return \Doctrine\ORM\Configuration|mixed
      */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
         $configuration = Setup::createConfiguration(
-            array_get($this->settings, 'dev'),
-            array_get($this->settings, 'proxy_path'),
-            $this->getCache()
+            array_get($settings, 'dev'),
+            array_get($settings, 'proxies.path'),
+            $this->cacheManager->driver()
         );
 
         $configuration->setMetadataDriverImpl(
             new ConfigDriver(
-                config(array_get($this->settings, 'mapping_file'), [])
+                config(array_get($settings, 'mapping_file'), [])
             )
         );
 

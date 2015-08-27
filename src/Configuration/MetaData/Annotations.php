@@ -3,43 +3,37 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Tools\Setup;
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
-class Annotations extends AbstractMetaData
+class Annotations implements Driver
 {
     /**
-     * @var string
+     * @var CacheManager
      */
-    protected $name = 'annotations';
+    protected $cacheManager;
 
     /**
-     * @param array $settings
-     * @param bool  $dev
-     *
-     * @return static
+     * @param CacheManager $cacheManager
      */
-    public function configure(array $settings = [], $dev = false)
+    public function __construct(CacheManager $cacheManager)
     {
-        $this->settings = [
-            'dev'        => $dev,
-            'paths'      => array_get($settings, 'paths', []),
-            'proxy_path' => array_get($settings, 'proxies.path'),
-            'simple'     => array_get($settings, 'simple', false)
-        ];
-
-        return $this;
+        $this->cacheManager = $cacheManager;
     }
 
     /**
-     * @return \Doctrine\ORM\Configuration|mixed
+     * @param array $settings
+     *
+     * @return \Doctrine\ORM\Configuration
      */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
         return Setup::createAnnotationMetadataConfiguration(
-            array_get($this->settings, 'paths'),
-            array_get($this->settings, 'dev'),
-            array_get($this->settings, 'proxy_path'),
-            $this->getCache(),
-            array_get($this->settings, 'simple')
+            array_get($settings, 'paths'),
+            array_get($settings, 'dev'),
+            array_get($settings, 'proxy_path'),
+            $this->cacheManager->driver(),
+            array_get($settings, 'simple')
         );
     }
 }

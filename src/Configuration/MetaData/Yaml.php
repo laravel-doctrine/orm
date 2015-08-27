@@ -3,41 +3,36 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Tools\Setup;
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
-class Yaml extends AbstractMetaData
+class Yaml implements Driver
 {
     /**
-     * @var string
+     * @var CacheManager
      */
-    protected $name = 'yaml';
+    protected $cacheManager;
 
     /**
-     * @param array $settings
-     * @param bool  $dev
-     *
-     * @return static
+     * @param CacheManager $cacheManager
      */
-    public function configure(array $settings = [], $dev = false)
+    public function __construct(CacheManager $cacheManager)
     {
-        $this->settings = [
-            'dev'        => $dev,
-            'paths'      => array_get($settings, 'paths', []),
-            'proxy_path' => array_get($settings, 'proxies.path'),
-        ];
-
-        return $this;
+        $this->cacheManager = $cacheManager;
     }
 
     /**
-     * @return \Doctrine\ORM\Configuration|mixed
+     * @param array $settings
+     *
+     * @return \Doctrine\ORM\Configuration
      */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
         return Setup::createYAMLMetadataConfiguration(
             array_get($this->settings, 'paths'),
             array_get($this->settings, 'dev'),
-            array_get($this->settings, 'proxy_path'),
-            $this->getCache()
+            array_get($this->settings, 'proxies.path'),
+            $this->cacheManager->driver()
         );
     }
 }

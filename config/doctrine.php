@@ -4,21 +4,13 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Development state
-    |--------------------------------------------------------------------------
-    |
-    | If set to false, metadata caching will become active
-    |
-    */
-    'dev'                       => config('app.debug'),
-    /*
-    |--------------------------------------------------------------------------
     | Entity Mangers
     |--------------------------------------------------------------------------
     |
     */
     'managers'                  => [
         'default' => [
+            'dev'        => config('app.debug'),
             'meta'       => env('DOCTRINE_METADATA', 'annotations'),
             'connection' => env('DB_CONNECTION', 'mysql'),
             'paths'      => [

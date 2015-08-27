@@ -2,12 +2,8 @@
 
 namespace LaravelDoctrine\ORM;
 
-use DebugBar\Bridge\DoctrineCollector;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\Proxy;
-use Doctrine\DBAL\Logging\DebugStack;
-use Doctrine\ORM\Cache\DefaultCacheFactory;
-use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
@@ -18,7 +14,6 @@ use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\CustomTypeManager;
-use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Console\ClearMetadataCacheCommand;
 use LaravelDoctrine\ORM\Console\ClearQueryCacheCommand;
@@ -108,8 +103,8 @@ class DoctrineServiceProvider extends ServiceProvider
             $connectionName = IlluminateRegistry::getConnectionNamePrefix() . $manager;
 
             // Bind manager
-            $this->app->singleton($managerName, function () use ($settings) {
-                return (new EntityManagerFactory)->create($settings);
+            $this->app->singleton($managerName, function ($app) use ($settings) {
+                return $app->make(EntityManagerFactory::class)->create($settings);
             });
 
             // Bind connection
@@ -167,9 +162,7 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function setupConnection()
     {
-        ConnectionManager::registerConnections(
-            $this->app->config->get('database.connections', [])
-        );
+        $this->app->singleton(ConnectionManager::class);
     }
 
     /**
@@ -177,47 +170,7 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function setupMetaData()
     {
-        MetaDataManager::registerDrivers(
-            $this->app->config->get('doctrine.meta.drivers', []),
-            $this->app->config->get('doctrine.dev', false)
-        );
-
-        MetaDataManager::resolved(function (Configuration $configuration) {
-
-            // Debugbar
-            if ($this->app->config->get('doctrine.debugbar', false) === true) {
-                $debugStack = new DebugStack();
-                $configuration->setSQLLogger($debugStack);
-                $this->app['debugbar']->addCollector(
-                    new DoctrineCollector($debugStack)
-                );
-            }
-
-            // Automatically make table, column names, etc. like Laravel
-            $configuration->setNamingStrategy(
-                $this->app->make(LaravelNamingStrategy::class)
-            );
-
-            // Custom functions
-            $configuration->setCustomDatetimeFunctions($this->app->config->get('doctrine.custom_datetime_functions'));
-            $configuration->setCustomNumericFunctions($this->app->config->get('doctrine.custom_numeric_functions'));
-            $configuration->setCustomStringFunctions($this->app->config->get('doctrine.custom_string_functions'));
-
-            // Second level caching
-            if ($this->app->config->get('cache.second_level', false)) {
-                $configuration->setSecondLevelCacheEnabled(true);
-
-                $cacheConfig = $configuration->getSecondLevelCacheConfiguration();
-                $cacheConfig->setCacheFactory(
-                    new DefaultCacheFactory(
-                        $cacheConfig->getRegionsConfiguration(),
-                        CacheManager::resolve(
-                            $this->app->config->get('cache.default')
-                        )
-                    )
-                );
-            }
-        });
+        $this->app->singleton(MetaDataManager::class);
     }
 
     /**
@@ -225,9 +178,7 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function setupCache()
     {
-        CacheManager::registerDrivers(
-            $this->app->config->get('cache.stores', [])
-        );
+        $this->app->singleton(CacheManager::class);
     }
 
     /**

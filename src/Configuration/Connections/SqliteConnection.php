@@ -2,27 +2,56 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-class SqliteConnection extends AbstractConnection
+use Illuminate\Contracts\Config\Repository;
+use LaravelDoctrine\ORM\Configuration\Driver;
+
+class SqliteConnection implements Driver
 {
     /**
-     * @var string
+     * @var Repository
      */
-    protected $name = 'sqlite';
+    protected $config;
 
     /**
-     * @param array $config
-     *
-     * @return SqliteConnection
+     * @param Repository $config
      */
-    public function configure($config = [])
+    public function __construct(Repository $config)
     {
-        return new static ([
+        $this->config = $config;
+    }
+
+    /**
+     * @param array $settings
+     *
+     * @return array
+     */
+    public function resolve(array $settings = [])
+    {
+        return [
             'driver'   => 'pdo_sqlite',
-            'user'     => array_get($config, 'username'),
-            'password' => array_get($config, 'password'),
-            'prefix'   => array_get($config, 'prefix'),
-            'memory'   => $config['database'] == ':memory' ? true : false,
-            'path'     => $config['database'] == ':memory' ? null : $config['database']
-        ]);
+            'user'     => $this->config->get('database.connections.sqlite.username'),
+            'password' => $this->config->get('database.connections.sqlite.password'),
+            'prefix'   => $this->config->get('database.connections.sqlite.prefix'),
+            'memory'   => $this->getMemory(),
+            'path'     => $this->getPath()
+        ];
+    }
+
+    /**
+     * @return bool
+     */
+    protected function getMemory()
+    {
+        return $this->config->get('database.connections.sqlite.database') == ':memory' ? true : false;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPath()
+    {
+        return $this->config->get('database.connections.sqlite.database') == ':memory'
+            ? null
+            : $this->config->get('database.connections.sqlite.database');
     }
 }

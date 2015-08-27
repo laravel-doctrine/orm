@@ -4,45 +4,39 @@ namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver;
 use Doctrine\ORM\Tools\Setup;
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 
 class StaticPhp extends AbstractMetaData
 {
     /**
-     * @var string
+     * @var CacheManager
      */
-    protected $name = 'static_php';
+    protected $cacheManager;
 
     /**
-     * @param array $settings
-     * @param bool  $dev
-     *
-     * @return static
+     * @param CacheManager $cacheManager
      */
-    public function configure(array $settings = [], $dev = false)
+    public function __construct(CacheManager $cacheManager)
     {
-        $this->settings = [
-            'dev'        => $dev,
-            'paths'      => array_get($settings, 'paths'),
-            'proxy_path' => array_get($settings, 'proxies.path')
-        ];
-
-        return $this;
+        $this->cacheManager = $cacheManager;
     }
 
     /**
+     * @param array $settings
+     *
      * @return \Doctrine\ORM\Configuration|mixed
      */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
         $configuration = Setup::createConfiguration(
-            array_get($this->settings, 'dev'),
-            array_get($this->settings, 'proxy_path'),
-            $this->getCache()
+            array_get($settings, 'dev'),
+            array_get($settings, 'proxies.path'),
+            $this->cacheManager->driver()
         );
 
         $configuration->setMetadataDriverImpl(
             new StaticPHPDriver(
-                array_get($this->settings, 'paths')
+                array_get($settings, 'paths')
             )
         );
 

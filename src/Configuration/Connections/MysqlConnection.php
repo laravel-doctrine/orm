@@ -2,30 +2,41 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-class MysqlConnection extends AbstractConnection
+use Illuminate\Contracts\Config\Repository;
+use LaravelDoctrine\ORM\Configuration\Driver;
+
+class MysqlConnection implements Driver
 {
     /**
-     * @var string
+     * @var Repository
      */
-    protected $name = 'mysql';
+    protected $config;
 
     /**
-     * @param array $config
-     *
-     * @return MysqlConnection
+     * @param Repository $config
      */
-    public function configure($config = [])
+    public function __construct(Repository $config)
     {
-        return new static ([
+        $this->config = $config;
+    }
+
+    /**
+     * @param array $settings
+     *
+     * @return array
+     */
+    public function resolve(array $settings = [])
+    {
+        return [
             'driver'      => 'pdo_mysql',
-            'host'        => array_get($config, 'host'),
-            'dbname'      => array_get($config, 'database'),
-            'user'        => array_get($config, 'username'),
-            'password'    => array_get($config, 'password'),
-            'charset'     => array_get($config, 'charset'),
-            'port'        => array_get($config, 'port'),
-            'unix_socket' => array_get($config, 'unix_socket'),
-            'prefix'      => array_get($config, 'prefix'),
-        ]);
+            'host'        => $this->config->get('database.connections.mysql.host'),
+            'dbname'      => $this->config->get('database.connections.mysql.database'),
+            'user'        => $this->config->get('database.connections.mysql.username'),
+            'password'    => $this->config->get('database.connections.mysql.password'),
+            'charset'     => $this->config->get('database.connections.mysql.charset'),
+            'port'        => $this->config->get('database.connections.mysql.port'),
+            'unix_socket' => $this->config->get('database.connections.mysql.unix_socket'),
+            'prefix'      => $this->config->get('database.connections.mysql.prefix'),
+        ];
     }
 }

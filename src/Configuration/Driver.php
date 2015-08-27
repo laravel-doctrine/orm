@@ -5,17 +5,9 @@ namespace LaravelDoctrine\ORM\Configuration;
 interface Driver
 {
     /**
+     * @param array $settings
+     *
      * @return mixed
      */
-    public function resolve();
-
-    /**
-     * @return string
-     */
-    public function getName();
-
-    /**
-     * @param $name
-     */
-    public function setName($name);
+    public function resolve(array $settings = []);
 }

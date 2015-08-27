@@ -1,89 +1,92 @@
 <?php
 
-use LaravelDoctrine\ORM\Configuration\Connections\AbstractConnection;
+use Doctrine\ORM\Tools\Setup;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Foundation\Application;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\Connections\MysqlConnection;
+use LaravelDoctrine\ORM\Configuration\Connections\SqliteConnection;
+use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
+use Mockery as m;
 
 class ConnectionManagerTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ConnectionManager
+     */
+    protected $manager;
+
+    /**
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * @var Repository
+     */
+    protected $config;
+
     protected function setUp()
     {
-        ConnectionManager::registerConnections([
-            'mysql' => [
-                'driver'   => 'mysql',
-                'host'     => 'host',
-                'database' => 'database',
-                'username' => 'username',
-                'password' => 'password',
-                'charset'  => 'charset',
-            ]
-        ]);
+        $this->app = m::mock(Application::class);
+        $this->app->shouldReceive('make')->andReturn(m::self());
+
+        $this->config = m::mock(Repository::class);
+        $this->config->shouldReceive('get');
+
+        $this->manager = new ConnectionManager(
+            $this->app
+        );
     }
 
-    public function test_register_connections()
+    public function test_driver_returns_the_default_driver()
     {
-        $drivers = ConnectionManager::getDrivers();
-        $this->assertCount(1, $drivers);
-        $this->assertInstanceOf(MysqlConnection::class, head($drivers));
+        $this->app->shouldReceive('resolve')->andReturn(
+            (new MysqlConnection($this->config))->resolve()
+        );
+
+        $this->assertTrue(is_array($this->manager->driver()));
+        $this->assertContains('pdo_mysql', $this->manager->driver());
     }
 
-    public function test_connection_can_be_extended()
+    public function test_driver_can_return_a_given_driver()
     {
-        ConnectionManager::extend('mysql', function ($driver) {
+        $this->app->shouldReceive('resolve')->andReturn(
+            (new SqliteConnection($this->config))->resolve()
+        );
 
-            // Should give instance of the already registered driver
-            $this->assertTrue(is_array($driver));
+        $this->assertTrue(is_array($this->manager->driver('sqlite')));
+        $this->assertContains('pdo_sqlite', $this->manager->driver());
+    }
 
-            return [
-                'host'     => 'host',
-                'database' => 'database',
-                'username' => 'username2',
-                'password' => 'password',
-                'charset'  => 'charset',
-            ];
+    public function test_cant_resolve_unsupported_drivers()
+    {
+        $this->setExpectedException(DriverNotFound::class);
+        $this->manager->driver('non-existing');
+    }
+
+    public function test_can_create_custom_drivers()
+    {
+        $this->manager->extend('new', function () {
+            return 'connection';
         });
 
-        $driver = ConnectionManager::resolve('mysql');
-
-        $this->assertEquals('username2', $driver['username']);
+        $this->assertEquals('connection', $this->manager->driver('new'));
     }
 
-    public function test_custom_connection_can_be_set()
+    public function test_can_use_application_when_extending()
     {
-        ConnectionManager::extend('custom', function () {
-            return [
-                'host'     => 'host',
-                'database' => 'database',
-                'username' => 'username3',
-                'password' => 'password',
-                'charset'  => 'charset',
-            ];
+        $this->manager->extend('new', function ($app) {
+            $this->assertInstanceOf(Application::class, $app);
+        });
+    }
+
+    public function test_can_replace_an_existing_driver()
+    {
+        $this->manager->extend('oci8', function () {
+            return 'connection';
         });
 
-        $driver = ConnectionManager::resolve('custom');
-        $this->assertEquals('username3', $driver['username']);
-    }
-
-    public function test_a_string_class_can_be_use_as_extend()
-    {
-        ConnectionManager::extend('custom3', StubConnection::class);
-
-        $driver = ConnectionManager::resolve('custom3');
-        $this->assertContains('stub', $driver);
-    }
-}
-
-class StubConnection extends AbstractConnection
-{
-    /**
-     * @param array $config
-     *
-     * @return array
-     */
-    public function configure($config = [])
-    {
-        $this->settings = ['stub' => 'stub'];
-
-        return $this;
+        $this->assertEquals('connection', $this->manager->driver('oci8'));
     }
 }

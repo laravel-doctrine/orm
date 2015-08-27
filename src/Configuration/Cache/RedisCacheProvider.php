@@ -2,53 +2,33 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Doctrine\Common\Cache\RedisCache;
-use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
-use Redis;
+use Illuminate\Cache\RedisStore;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
-class RedisCacheProvider extends AbstractCacheProvider
+class RedisCacheProvider implements Driver
 {
     /**
-     * @var string
+     * @var RedisStore
      */
-    protected $name = 'redis';
+    protected $store;
 
     /**
-     * @param array $config
-     *
-     * @throws DriverNotFound
-     * @return RedisCacheProvider
+     * @param RedisStore $store
      */
-    public function configure($config = [])
+    public function __construct(RedisStore $store)
     {
-        $redisConfig = config('database.redis.' . $config['connection']);
-
-        $this->config = [
-            'host'     => $redisConfig['host'],
-            'port'     => $redisConfig['port'],
-            'database' => $redisConfig['database']
-        ];
-
-        return $this;
+        $this->store = $store;
     }
 
     /**
-     * @throws DriverNotFound
+     * @param array $settings
+     *
      * @return RedisCache
      */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
-        if (extension_loaded('redis')) {
-            $cache = new RedisCache();
-            $redis = new Redis();
-            $redis->connect($this->config['host'], $this->config['port']);
-            $redis->select($this->config['database']);
-
-            $cache->setRedis($redis);
-
-            return $cache;
-        }
-
-        throw new DriverNotFound('Redis extension was not found');
+        return new RedisCache(
+            $this->store
+        );
     }
 }

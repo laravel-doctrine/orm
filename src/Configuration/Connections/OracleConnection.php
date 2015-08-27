@@ -2,29 +2,40 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-class OracleConnection extends AbstractConnection
+use Illuminate\Contracts\Config\Repository;
+use LaravelDoctrine\ORM\Configuration\Driver;
+
+class OracleConnection implements Driver
 {
     /**
-     * @var string
+     * @var Repository
      */
-    protected $name = 'oracle';
+    protected $config;
 
     /**
-     * @param array $config
-     *
-     * @return OracleConnection
+     * @param Repository $config
      */
-    public function configure($config = [])
+    public function __construct(Repository $config)
     {
-        return new static ([
-            'driver'   => 'oci8',
-            'host'     => array_get($config, 'host'),
-            'dbname'   => array_get($config, 'database'),
-            'user'     => array_get($config, 'username'),
-            'password' => array_get($config, 'password'),
-            'charset'  => array_get($config, 'charset'),
-            'prefix'   => array_get($config, 'prefix'),
-            'port'     => array_get($config, 'port'),
-        ]);
+        $this->config = $config;
+    }
+
+    /**
+     * @param array $settings
+     *
+     * @return array
+     */
+    public function resolve(array $settings = [])
+    {
+        return [
+            'driver'      => 'oci8',
+            'host'        => $this->config->get('database.connections.oracle.host'),
+            'dbname'      => $this->config->get('database.connections.oracle.database'),
+            'user'        => $this->config->get('database.connections.oracle.username'),
+            'password'    => $this->config->get('database.connections.oracle.password'),
+            'charset'     => $this->config->get('database.connections.oracle.charset'),
+            'port'        => $this->config->get('database.connections.oracle.port'),
+            'prefix'      => $this->config->get('database.connections.oracle.prefix'),
+        ];
     }
 }

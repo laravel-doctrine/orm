@@ -2,8 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Exceptions;
 
-use LogicException;
+use InvalidArgumentException;
 
-class DriverNotFound extends LogicException
+class DriverNotFound extends InvalidArgumentException
 {
 }
