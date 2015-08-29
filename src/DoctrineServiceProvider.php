@@ -108,8 +108,8 @@ class DoctrineServiceProvider extends ServiceProvider
             });
 
             // Bind connection
-            $this->app->singleton($connectionName, function ($app) use ($manager) {
-                $app->make(IlluminateRegistry::getManagerNamePrefix() . $manager)->getConnection();
+            $this->app->singleton($connectionName, function ($app) use ($managerName) {
+                $app->make($managerName)->getConnection();
             });
 
             $managers[$manager]    = $manager;
