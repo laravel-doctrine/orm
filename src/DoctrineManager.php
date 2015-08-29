@@ -64,4 +64,21 @@ class DoctrineManager
             $this->extend($connection, $callback);
         }
     }
+
+    /**
+     * @param            $namespace
+     * @param bool|false $connection
+     */
+    public function addNamespace($namespace, $connection = false)
+    {
+        $connections = $connection ? [$connection] : $this->registry->getManagerNames();
+
+        foreach ($connections as $connection) {
+            $manager = $this->registry->getConnection($connection);
+
+            $manager->getConfiguration()
+                    ->getMetadataDriverImpl()
+                    ->addNamespace($namespace);
+        }
+    }
 }

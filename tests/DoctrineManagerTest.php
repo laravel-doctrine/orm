@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\DoctrineExtender;
 use LaravelDoctrine\ORM\DoctrineManager;
+use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use Mockery as m;
 
 class DoctrineManagerTest extends PHPUnit_Framework_TestCase
@@ -131,6 +132,61 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->extendAll(function ($configuration, $connection, $eventManager) {
             $this->assertExtendedCorrectly($configuration, $connection, $eventManager);
         });
+    }
+
+    public function test_can_add_a_new_namespace_to_default_connection()
+    {
+        $this->registry->shouldReceive('getConnection')
+                       ->once()
+                       ->with('default')
+                       ->andReturn($this->em);
+
+        $configuration = m::mock(Configuration::class);
+
+        $mappingDriver = m::mock(MappingDriverChain::class);
+        $mappingDriver->shouldReceive('addNamespace')->once()->with('NewNamespace');
+
+        $configuration->shouldReceive('getMetadataDriverImpl')
+            ->once()
+            ->andReturn($mappingDriver);
+
+        $this->em->shouldReceive('getConfiguration')
+                 ->once()->andReturn($configuration);
+
+        $this->manager->addNamespace('NewNamespace', 'default');
+    }
+
+    public function test_can_add_a_new_namespace_to_all_connections()
+    {
+        $this->registry->shouldReceive('getManagerNames')->once()->andReturn([
+            'default',
+            'custom'
+        ]);
+
+        $this->registry->shouldReceive('getConnection')
+                       ->once()
+                       ->with('default')
+                       ->andReturn($this->em);
+
+        $this->registry->shouldReceive('getConnection')
+                       ->once()
+                       ->with('custom')
+                       ->andReturn($this->em);
+
+        $configuration = m::mock(Configuration::class);
+
+        $mappingDriver = m::mock(MappingDriverChain::class);
+        $mappingDriver->shouldReceive('addNamespace')
+            ->twice()->with('NewNamespace');
+
+        $configuration->shouldReceive('getMetadataDriverImpl')
+                      ->twice()
+                      ->andReturn($mappingDriver);
+
+        $this->em->shouldReceive('getConfiguration')
+                 ->twice()->andReturn($configuration);
+
+        $this->manager->addNamespace('NewNamespace');
     }
 
     protected function tearDown()
