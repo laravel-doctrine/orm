@@ -82,7 +82,16 @@ return [
     |
     */
     'extensions'                => [
-        LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
+        //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
+        //LaravelDoctrine\Extensions\Timestamps\TimestampableExtension::class,
+        //LaravelDoctrine\Extensions\SoftDeletes\SoftDeleteableExtension::class,
+        //LaravelDoctrine\Extensions\Sluggable\SluggableExtension::class,
+        //LaravelDoctrine\Extensions\Sortable\SortableExtension::class,
+        //LaravelDoctrine\Extensions\Tree\TreeExtension::class,
+        //LaravelDoctrine\Extensions\Loggable\LoggableExtension::class,
+        //LaravelDoctrine\Extensions\Blameable\BlameableExtension::class,
+        //LaravelDoctrine\Extensions\IpTraceable\IpTraceableExtension::class,
+        //LaravelDoctrine\Extensions\Translatable\TranslatableExtension::class
     ],
     /*
     |--------------------------------------------------------------------------

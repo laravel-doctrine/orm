@@ -73,7 +73,11 @@ class ExtensionManager
         Configuration $configuration
     ) {
         if ($this->notSubscribedYet($connection, $extension)) {
-            $extension->addSubscribers($evm, $em, $configuration->getMetadataDriverImpl());
+            $extension->addSubscribers(
+                $evm,
+                $em,
+                $configuration->getMetadataDriverImpl()->getReader()
+            );
 
             if (is_array($extension->getFilters())) {
                 foreach ($extension->getFilters() as $name => $filter) {

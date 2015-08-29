@@ -24,4 +24,16 @@ class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDr
     {
         $this->addDriver($this->getDefaultDriver(), $namespace);
     }
+
+    /**
+     * @return \Doctrine\Common\Annotations\Reader|null
+     */
+    public function getReader()
+    {
+        $driver = $this->getDefaultDriver();
+
+        if (method_exists($driver, 'getReader')) {
+            return $driver->getReader();
+        }
+    }
 }
