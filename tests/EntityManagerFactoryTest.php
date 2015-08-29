@@ -349,6 +349,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                             ->atLeast()->once()
                             ->andReturn($this->mappingDriver);
 
+        $this->configuration->shouldReceive('setMetadataDriverImpl')
+                            ->atLeast()->once();
+
         $this->configuration->shouldReceive('getAutoCommit')
                             ->atLeast()->once()
                             ->andReturn(true);

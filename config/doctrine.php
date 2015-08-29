@@ -13,6 +13,9 @@ return [
             'dev'        => config('app.debug'),
             'meta'       => env('DOCTRINE_METADATA', 'annotations'),
             'connection' => env('DB_CONNECTION', 'mysql'),
+            'namespaces' => [
+                'App'
+            ],
             'paths'      => [
                 app_path()
             ],
@@ -50,9 +53,6 @@ return [
     |
     */
     'meta'                      => [
-        'namespaces' => [
-            'App'
-        ],
         'drivers'    => [
             'annotations' => [
                 'driver' => 'annotations',

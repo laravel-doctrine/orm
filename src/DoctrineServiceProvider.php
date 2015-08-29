@@ -27,7 +27,6 @@ use LaravelDoctrine\ORM\Console\SchemaDropCommand;
 use LaravelDoctrine\ORM\Console\SchemaUpdateCommand;
 use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
-use LaravelDoctrine\ORM\Extensions\DriverChain;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
 use LaravelDoctrine\ORM\Validation\DoctrinePresenceVerifier;
 
@@ -72,7 +71,6 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerManagerRegistry();
         $this->registerEntityManager();
         $this->registerClassMetaDataFactory();
-        $this->registerDriverChain();
         $this->registerExtensions();
         $this->registerPresenceVerifier();
         $this->registerConsoleCommands();
@@ -187,42 +185,7 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function registerClassMetaDataFactory()
     {
         $this->app->singleton(ClassMetadataFactory::class, function ($app) {
-            return $app['em']->getMetadataFactory();
-        });
-    }
-
-    /**
-     * Register the driver chain
-     */
-    protected function registerDriverChain()
-    {
-        $this->app->singleton(DriverChain::class, function ($app) {
-
-            $configuration = $app['em']->getConfiguration();
-
-            $chain = new DriverChain(
-                $configuration->getMetadataDriverImpl()
-            );
-
-            // Register namespaces
-            $namespaces = array_merge($app->config->get('doctrine.meta.namespaces', ['App']), ['LaravelDoctrine']);
-            foreach ($namespaces as $alias => $namespace) {
-                if (is_string($alias)) {
-                    $configuration->addEntityNamespace($alias, $namespace);
-                }
-
-                $chain->addNamespace($namespace);
-            }
-
-            // Register default paths
-            $chain->addPaths(array_merge(
-                $app->config->get('doctrine.meta.paths', []),
-                [__DIR__ . '/Auth/Passwords']
-            ));
-
-            $configuration->setMetadataDriverImpl($chain->getChain());
-
-            return $chain;
+            return $app->make('em')->getMetadataFactory();
         });
     }
 
@@ -236,8 +199,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->app->singleton(ExtensionManager::class, function ($app) {
 
             $manager = new ExtensionManager(
-                $this->app[ManagerRegistry::class],
-                $this->app[DriverChain::class]
+                $this->app->make(ManagerRegistry::class)
             );
 
             // Register the extensions
@@ -268,7 +230,7 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerCustomTypes()
     {
-        (new CustomTypeManager())->addCustomTypes(config('doctrine.custom_types', []));
+        (new CustomTypeManager())->addCustomTypes($this->app->make('config')->get('doctrine.custom_types', []));
     }
 
     /**
@@ -296,8 +258,8 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function extendAuthManager()
     {
-        $this->app[AuthManager::class]->extend('doctrine', function ($app) {
-            $model = $this->app['config']['auth.model'];
+        $this->app->make(AuthManager::class)->extend('doctrine', function ($app) {
+            $model = $this->app->make('config')->get('auth.model');
 
             return new DoctrineUserProvider($app[Hasher::class], $app[ManagerRegistry::class], $model);
         });
@@ -322,7 +284,6 @@ class DoctrineServiceProvider extends ServiceProvider
             'em',
             'validation.presence',
             'migration.repository',
-            DriverChain::class,
             AuthManager::class,
             EntityManager::class,
             ClassMetadataFactory::class,
