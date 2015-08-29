@@ -9,7 +9,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Str;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
@@ -40,19 +40,19 @@ class EntityManagerFactory
     protected $cache;
 
     /**
-     * @var Application
+     * @var Container
      */
-    protected $app;
+    protected $container;
 
     /**
-     * @param Application       $app
+     * @param Container         $container
      * @param MetaDataManager   $meta
      * @param ConnectionManager $connection
      * @param CacheManager      $cache
      * @param Repository        $config
      */
     public function __construct(
-        Application $app,
+        Container $container,
         MetaDataManager $meta,
         ConnectionManager $connection,
         CacheManager $cache,
@@ -62,7 +62,7 @@ class EntityManagerFactory
         $this->connection = $connection;
         $this->config     = $config;
         $this->cache      = $cache;
-        $this->app        = $app;
+        $this->container  = $container;
     }
 
     /**
@@ -196,7 +196,7 @@ class EntityManagerFactory
         if ($this->config->get('doctrine.debugbar', false) === true) {
             $debugStack = new DebugStack();
             $configuration->setSQLLogger($debugStack);
-            $this->app->make('debugbar')->addCollector(
+            $this->container->make('debugbar')->addCollector(
                 new DoctrineCollector($debugStack)
             );
         }

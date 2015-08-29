@@ -1,8 +1,6 @@
 <?php
 
-use Doctrine\ORM\Configuration;
-use Doctrine\ORM\Tools\Setup;
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
@@ -23,13 +21,13 @@ class MetaDataManagerTest extends PHPUnit_Framework_TestCase
     protected $cache;
 
     /**
-     * @var Application
+     * @var Container
      */
     protected $app;
 
     protected function setUp()
     {
-        $this->app = m::mock(Application::class);
+        $this->app = m::mock(Container::class);
         $this->app->shouldReceive('make')->andReturn(m::self());
 
         $this->cache = m::mock(CacheManager::class);
@@ -71,7 +69,7 @@ class MetaDataManagerTest extends PHPUnit_Framework_TestCase
     public function test_can_use_application_when_extending()
     {
         $this->manager->extend('new', function ($app) {
-            $this->assertInstanceOf(Application::class, $app);
+            $this->assertInstanceOf(Container::class, $app);
         });
     }
 

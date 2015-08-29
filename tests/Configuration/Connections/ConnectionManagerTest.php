@@ -1,8 +1,7 @@
 <?php
 
-use Doctrine\ORM\Tools\Setup;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\Connections\MysqlConnection;
 use LaravelDoctrine\ORM\Configuration\Connections\SqliteConnection;
@@ -17,7 +16,7 @@ class ConnectionManagerTest extends PHPUnit_Framework_TestCase
     protected $manager;
 
     /**
-     * @var Application
+     * @var Container
      */
     protected $app;
 
@@ -28,7 +27,7 @@ class ConnectionManagerTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->app = m::mock(Application::class);
+        $this->app = m::mock(Container::class);
         $this->app->shouldReceive('make')->andReturn(m::self());
 
         $this->config = m::mock(Repository::class);
@@ -77,7 +76,7 @@ class ConnectionManagerTest extends PHPUnit_Framework_TestCase
     public function test_can_use_application_when_extending()
     {
         $this->manager->extend('new', function ($app) {
-            $this->assertInstanceOf(Application::class, $app);
+            $this->assertInstanceOf(Container::class, $app);
         });
     }
 

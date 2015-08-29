@@ -12,7 +12,7 @@ class CacheManager extends Manager
      */
     public function getDefaultDriver()
     {
-        return $this->app->make('config')->get('doctrine.cache.default', 'array');
+        return $this->container->make('config')->get('doctrine.cache.default', 'array');
     }
 
     /**

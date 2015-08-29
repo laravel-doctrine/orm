@@ -1,9 +1,8 @@
 <?php
 
 use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\ORM\Tools\Setup;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Cache\ArrayCacheProvider;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Cache\FileCacheProvider;
@@ -18,7 +17,7 @@ class CacheManagerTest extends PHPUnit_Framework_TestCase
     protected $manager;
 
     /**
-     * @var Application
+     * @var Container
      */
     protected $app;
 
@@ -29,7 +28,7 @@ class CacheManagerTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->app = m::mock(Application::class);
+        $this->app = m::mock(Container::class);
         $this->app->shouldReceive('make')->andReturn(m::self());
         $this->app->shouldReceive('get')->with('doctrine.cache.default', 'array')->andReturn('array');
 
@@ -75,7 +74,7 @@ class CacheManagerTest extends PHPUnit_Framework_TestCase
     public function test_can_use_application_when_extending()
     {
         $this->manager->extend('new', function ($app) {
-            $this->assertInstanceOf(Application::class, $app);
+            $this->assertInstanceOf(Container::class, $app);
         });
     }
 

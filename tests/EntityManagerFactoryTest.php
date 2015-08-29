@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping\EntityListenerResolver;
 use Doctrine\ORM\Query\FilterCollection;
 use Doctrine\ORM\Repository\RepositoryFactory;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
@@ -44,9 +44,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected $meta;
 
     /**
-     * @var Application
+     * @var Container
      */
-    protected $app;
+    protected $container;
 
     /**
      * @var EntityManagerFactory
@@ -87,7 +87,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->mockConfig();
 
         $this->factory = new EntityManagerFactory(
-            $this->app,
+            $this->container,
             $this->meta,
             $this->connection,
             $this->cache,
@@ -125,7 +125,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $debugbar = m::mock(LaravelDebugbar::class);
         $debugbar->shouldReceive('addCollector')->once();
 
-        $this->app->shouldReceive('make')
+        $this->container->shouldReceive('make')
                   ->with('debugbar')->once()
                   ->andReturn($debugbar);
 
@@ -310,7 +310,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
     protected function mockApp()
     {
-        $this->app = m::mock(Application::class);
+        $this->container = m::mock(Container::class);
     }
 
     protected function disableDebugbar()

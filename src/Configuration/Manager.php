@@ -2,17 +2,16 @@
 
 namespace LaravelDoctrine\ORM\Configuration;
 
-use Closure;
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 
 abstract class Manager
 {
     /**
      * The application instance.
-     * @var \Illuminate\Contracts\Foundation\Application
+     * @var Container
      */
-    protected $app;
+    protected $container;
 
     /**
      * The registered custom driver creators.
@@ -29,11 +28,11 @@ abstract class Manager
     /**
      * Create a new manager instance.
      *
-     * @param \Illuminate\Contracts\Foundation\Application $app
+     * @param Container $container
      */
-    public function __construct(Application $app)
+    public function __construct(Container $container)
     {
-        $this->app = $app;
+        $this->container = $container;
     }
 
     /**
@@ -56,6 +55,7 @@ abstract class Manager
      * Get a driver instance.
      *
      * @param string $driver
+     * @param array  $settings
      *
      * @return mixed
      */
@@ -91,7 +91,7 @@ abstract class Manager
         if (isset($this->customCreators[$driver])) {
             return $this->callCustomCreator($driver);
         } elseif (class_exists($class)) {
-            return $this->app->make($class)->resolve($settings);
+            return $this->container->make($class)->resolve($settings);
         }
 
         throw new DriverNotFound("Driver [$driver] not supported.");
@@ -106,7 +106,7 @@ abstract class Manager
      */
     protected function callCustomCreator($driver)
     {
-        return $this->customCreators[$driver]($this->app);
+        return $this->customCreators[$driver]($this->container);
     }
 
     /**
