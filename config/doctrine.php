@@ -13,6 +13,9 @@ return [
             'dev'        => config('app.debug'),
             'meta'       => env('DOCTRINE_METADATA', 'annotations'),
             'connection' => env('DB_CONNECTION', 'mysql'),
+            'namespaces' => [
+                'App'
+            ],
             'paths'      => [
                 app_path()
             ],
@@ -50,9 +53,6 @@ return [
     |
     */
     'meta'                      => [
-        'namespaces' => [
-            'App'
-        ],
         'drivers'    => [
             'annotations' => [
                 'driver' => 'annotations',
@@ -82,7 +82,16 @@ return [
     |
     */
     'extensions'                => [
-        LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
+        //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
+        //LaravelDoctrine\Extensions\Timestamps\TimestampableExtension::class,
+        //LaravelDoctrine\Extensions\SoftDeletes\SoftDeleteableExtension::class,
+        //LaravelDoctrine\Extensions\Sluggable\SluggableExtension::class,
+        //LaravelDoctrine\Extensions\Sortable\SortableExtension::class,
+        //LaravelDoctrine\Extensions\Tree\TreeExtension::class,
+        //LaravelDoctrine\Extensions\Loggable\LoggableExtension::class,
+        //LaravelDoctrine\Extensions\Blameable\BlameableExtension::class,
+        //LaravelDoctrine\Extensions\IpTraceable\IpTraceableExtension::class,
+        //LaravelDoctrine\Extensions\Translatable\TranslatableExtension::class
     ],
     /*
     |--------------------------------------------------------------------------

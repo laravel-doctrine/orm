@@ -2,8 +2,9 @@
 
 namespace LaravelDoctrine\ORM\Extensions;
 
-use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\EventManager;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ExtensionManager
@@ -12,26 +13,6 @@ class ExtensionManager
      * @var array|Extension[]
      */
     protected $extensions = [];
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    /**
-     * @var \Doctrine\Common\EventManager
-     */
-    protected $evm;
-
-    /**
-     * @var \Doctrine\ORM\Configuration
-     */
-    protected $metadata;
-
-    /**
-     * @var Reader
-     */
-    protected $reader;
 
     /**
      * @var ManagerRegistry
@@ -44,18 +25,11 @@ class ExtensionManager
     protected $subscribedExtensions = [];
 
     /**
-     * @var DriverChain
-     */
-    private $driverChain;
-
-    /**
      * @param ManagerRegistry $registry
-     * @param DriverChain     $driverChain
      */
-    public function __construct(ManagerRegistry $registry, DriverChain $driverChain)
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->registry    = $registry;
-        $this->driverChain = $driverChain;
+        $this->registry = $registry;
     }
 
     /**
@@ -63,14 +37,15 @@ class ExtensionManager
      */
     public function boot()
     {
-        foreach ($this->registry->getManagers() as $em) {
-            $this->em       = $em;
-            $this->evm      = $this->em->getEventManager();
-            $this->metadata = $this->em->getConfiguration();
-            $this->reader   = $this->driverChain->getReader();
-
+        foreach ($this->registry->getManagers() as $connection => $em) {
             foreach ($this->extensions as $extension) {
-                $this->bootExtension($extension);
+                $this->bootExtension(
+                    $connection,
+                    $extension,
+                    $em,
+                    $em->getEventManager(),
+                    $em->getConfiguration()
+                );
             }
         }
     }
@@ -84,39 +59,54 @@ class ExtensionManager
     }
 
     /**
-     * @param Extension $extension
+     * @param                        $connection
+     * @param Extension              $extension
+     * @param EntityManagerInterface $em
+     * @param EventManager           $evm
+     * @param Configuration          $configuration
      */
-    public function bootExtension(Extension $extension)
-    {
-        if ($this->notSubscribedYet($extension)) {
-            $extension->addSubscribers($this->evm, $this->em, $this->reader);
+    public function bootExtension(
+        $connection,
+        Extension $extension,
+        EntityManagerInterface $em,
+        EventManager $evm,
+        Configuration $configuration
+    ) {
+        if ($this->notSubscribedYet($connection, $extension)) {
+            $extension->addSubscribers(
+                $evm,
+                $em,
+                $configuration->getMetadataDriverImpl()->getReader()
+            );
 
             if (is_array($extension->getFilters())) {
                 foreach ($extension->getFilters() as $name => $filter) {
-                    $this->metadata->addFilter($name, $filter);
-                    $this->em->getFilters()->enable($name);
+                    $configuration->addFilter($name, $filter);
+                    $em->getFilters()->enable($name);
                 }
             }
 
-            $this->markAsSubscribed($extension);
+            $this->markAsSubscribed($connection, $extension);
         }
     }
 
     /**
+     * @param           $connection
      * @param Extension $extension
      *
      * @return bool
      */
-    protected function notSubscribedYet(Extension $extension)
+    protected function notSubscribedYet($connection, Extension $extension)
     {
-        return !isset($this->subscribedExtensions[spl_object_hash($this->em)][get_class($extension)]);
+        return !isset($this->subscribedExtensions[$connection][get_class($extension)]);
     }
 
     /**
+     * @param           $connection
      * @param Extension $extension
      */
-    protected function markAsSubscribed(Extension $extension)
+    protected function markAsSubscribed($connection, Extension $extension)
     {
-        $this->subscribedExtensions[spl_object_hash($this->em)][get_class($extension)] = true;
+        $this->subscribedExtensions[$connection][get_class($extension)] = true;
     }
 }

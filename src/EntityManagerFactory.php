@@ -16,6 +16,7 @@ use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Exceptions\ClassNotFound;
+use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 
 class EntityManagerFactory
 {
@@ -87,6 +88,7 @@ class EntityManagerFactory
         $this->setSecondLevelCaching($configuration);
         $this->registerPaths($settings, $configuration);
         $this->configureProxies($settings, $configuration);
+        $this->setCustomMappingDriverChain($settings, $configuration);
 
         $configuration->setDefaultRepositoryClassName(
             array_get($settings, 'repository', EntityRepository::class)
@@ -238,5 +240,29 @@ class EntityManagerFactory
                 )
             );
         }
+    }
+
+    /**
+     * @param array         $settings
+     * @param Configuration $configuration
+     */
+    protected function setCustomMappingDriverChain($settings = [], Configuration $configuration)
+    {
+        $chain = new MappingDriverChain(
+            $configuration->getMetadataDriverImpl(),
+            'LaravelDoctrine'
+        );
+
+        foreach (array_get($settings, 'namespaces', []) as $alias => $namespace) {
+            if (is_string($alias)) {
+                $configuration->addEntityNamespace($alias, $namespace);
+            }
+
+            $chain->addNamespace($namespace);
+        }
+
+        $configuration->setMetadataDriverImpl(
+            $chain
+        );
     }
 }

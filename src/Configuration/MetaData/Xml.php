@@ -4,8 +4,9 @@ namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Tools\Setup;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
-class Xml extends AbstractMetaData
+class Xml implements Driver
 {
     /**
      * @var CacheManager
@@ -21,14 +22,16 @@ class Xml extends AbstractMetaData
     }
 
     /**
+     * @param array $settings
+     *
      * @return \Doctrine\ORM\Configuration|mixed
      */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
         return Setup::createXMLMetadataConfiguration(
-            array_get($this->settings, 'paths'),
-            array_get($this->settings, 'dev'),
-            array_get($this->settings, 'proxies.path'),
+            array_get($settings, 'paths'),
+            array_get($settings, 'dev'),
+            array_get($settings, 'proxies.path'),
             $this->cacheManager->driver()
         );
     }
