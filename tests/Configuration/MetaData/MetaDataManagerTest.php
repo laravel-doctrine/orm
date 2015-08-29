@@ -83,4 +83,9 @@ class MetaDataManagerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('configuration', $this->manager->driver('annotations'));
     }
+
+    protected function tearDown()
+    {
+        m::close();
+    }
 }

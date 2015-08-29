@@ -89,4 +89,9 @@ class ConnectionManagerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('connection', $this->manager->driver('oci8'));
     }
+
+    protected function tearDown()
+    {
+        m::close();
+    }
 }

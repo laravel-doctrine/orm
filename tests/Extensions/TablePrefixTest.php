@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixListener;
 use Mockery as m;
 
-class TablePrefixTest extends \PHPUnit_Framework_TestCase
+class TablePrefixTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var ClassMetadataInfo

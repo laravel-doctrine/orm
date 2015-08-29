@@ -87,4 +87,9 @@ class CacheManagerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('provider', $this->manager->driver('memcache'));
     }
+
+    protected function tearDown()
+    {
+        m::close();
+    }
 }

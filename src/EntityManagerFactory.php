@@ -62,7 +62,7 @@ class EntityManagerFactory
         $this->connection = $connection;
         $this->config     = $config;
         $this->cache      = $cache;
-        $this->app = $app;
+        $this->app        = $app;
     }
 
     /**
@@ -112,7 +112,11 @@ class EntityManagerFactory
     {
         if (isset($settings['events']['listeners'])) {
             foreach ($settings['events']['listeners'] as $event => $listener) {
-                $manager->getEventManager()->addEventListener($event, $listener);
+                if (class_exists($listener, false)) {
+                    $manager->getEventManager()->addEventListener($event, new $listener);
+                } else {
+                    throw new ClassNotFound($listener);
+                }
             }
         }
     }
@@ -126,8 +130,7 @@ class EntityManagerFactory
         if (isset($settings['events']['subscribers'])) {
             foreach ($settings['events']['subscribers'] as $subscriber) {
                 if (class_exists($subscriber, false)) {
-                    $subscriberInstance = new $subscriber;
-                    $manager->getEventManager()->addEventSubscriber($subscriberInstance);
+                    $manager->getEventManager()->addEventSubscriber(new $subscriber);
                 } else {
                     throw new ClassNotFound($subscriber);
                 }
@@ -193,7 +196,7 @@ class EntityManagerFactory
         if ($this->config->get('doctrine.debugbar', false) === true) {
             $debugStack = new DebugStack();
             $configuration->setSQLLogger($debugStack);
-            $this->app['debugbar']->addCollector(
+            $this->app->make('debugbar')->addCollector(
                 new DoctrineCollector($debugStack)
             );
         }
