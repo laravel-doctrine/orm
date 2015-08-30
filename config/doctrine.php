@@ -111,41 +111,19 @@ return [
     | DQL custom datetime functions
     |--------------------------------------------------------------------------
     */
-    'custom_datetime_functions' => [
-        //'DATEADD'  => DoctrineExtensions\Query\Mysql\DateAdd::class,
-        //'DATEDIFF' => DoctrineExtensions\Query\Mysql\DateDiff::class
-    ],
+    'custom_datetime_functions' => [],
     /*
     |--------------------------------------------------------------------------
     | DQL custom numeric functions
     |--------------------------------------------------------------------------
     */
-    'custom_numeric_functions'  => [
-        //'ACOS'    => DoctrineExtensions\Query\Mysql\Acos::class,
-        //'ASIN'    => DoctrineExtensions\Query\Mysql\Asin::class,
-        //'ATAN'    => DoctrineExtensions\Query\Mysql\Atan::class,
-        //'ATAN2'   => DoctrineExtensions\Query\Mysql\Atan2::class,
-        //'COS'     => DoctrineExtensions\Query\Mysql\Cos::class,
-        //'COT'     => DoctrineExtensions\Query\Mysql\Cot::class,
-        //'DEGREES' => DoctrineExtensions\Query\Mysql\Degrees::class,
-        //'RADIANS' => DoctrineExtensions\Query\Mysql\Radians::class,
-        //'SIN'     => DoctrineExtensions\Query\Mysql\Sin::class,
-        //'TAN'     => DoctrineExtensions\Query\Mysql\Ta::class
-    ],
+    'custom_numeric_functions'  => [],
     /*
     |--------------------------------------------------------------------------
     | DQL custom string functions
     |--------------------------------------------------------------------------
     */
-    'custom_string_functions'   => [
-        //'CHAR_LENGTH' => DoctrineExtensions\Query\Mysql\CharLength::class,
-        //'CONCAT_WS'   => DoctrineExtensions\Query\Mysql\ConcatWs::class,
-        //'FIELD'       => DoctrineExtensions\Query\Mysql\Field::class,
-        //'FIND_IN_SET' => DoctrineExtensions\Query\Mysql\FindInSet::class,
-        //'REPLACE'     => DoctrineExtensions\Query\Mysql\Replace::class,
-        //'SOUNDEX'     => DoctrineExtensions\Query\Mysql\Soundex::class,
-        //'STR_TO_DATE' => DoctrineExtensions\Query\Mysql\StrToDat::class
-    ],
+    'custom_string_functions'   => [ ],
     /*
     |--------------------------------------------------------------------------
     | Enable Debugbar Doctrine query collection
