@@ -46,35 +46,6 @@ return [
     ],
     /*
     |--------------------------------------------------------------------------
-    | Doctrine Meta Data
-    |--------------------------------------------------------------------------
-    |
-    | Available: annotations|yaml|xml
-    |
-    */
-    'meta'                      => [
-        'drivers'    => [
-            'annotations' => [
-                'driver' => 'annotations',
-                'simple' => false
-            ],
-            'yaml'        => [
-                'driver' => 'yaml'
-            ],
-            'xml'         => [
-                'driver' => 'xml'
-            ],
-            'config'      => [
-                'driver'       => 'config',
-                'mapping_file' => 'mappings'
-            ],
-            'static_php'  => [
-                'driver' => 'static_php'
-            ]
-        ]
-    ],
-    /*
-    |--------------------------------------------------------------------------
     | Doctrine Extensions
     |--------------------------------------------------------------------------
     |
