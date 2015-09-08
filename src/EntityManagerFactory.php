@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Support\Str;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
@@ -81,7 +80,7 @@ class EntityManagerFactory
             array_get($settings, 'connection')
         );
 
-        $this->setNamingStrategy($configuration);
+        $this->setNamingStrategy($settings, $configuration);
         $this->setCustomFunctions($configuration);
         $this->setSecondLevelCaching($configuration);
         $this->registerPaths($settings, $configuration);
@@ -203,12 +202,15 @@ class EntityManagerFactory
     }
 
     /**
+     * @param array         $settings
      * @param Configuration $configuration
      */
-    protected function setNamingStrategy(Configuration $configuration)
+    protected function setNamingStrategy(array $settings = [], Configuration $configuration)
     {
+        $strategy = array_get($settings, 'naming_strategy', LaravelNamingStrategy::class);
+
         $configuration->setNamingStrategy(
-            new LaravelNamingStrategy(new Str)
+            $this->container->make($strategy)
         );
     }
 

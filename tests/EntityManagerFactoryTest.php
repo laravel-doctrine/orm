@@ -16,6 +16,7 @@ use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
+use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\EntityManagerFactory;
 use LaravelDoctrine\ORM\Loggers\Logger;
@@ -107,6 +108,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
         $this->disableCustomFunctions();
+        $this->mockLaravelNamingStrategy();
 
         $manager = $this->factory->create($this->settings);
 
@@ -117,6 +119,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->disableSecondLevelCaching();
         $this->disableCustomFunctions();
+        $this->mockLaravelNamingStrategy();
 
         $this->config->shouldReceive('get')
                      ->with('doctrine.logger', false)
@@ -139,6 +142,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
+        $this->mockLaravelNamingStrategy();
 
         $this->configuration->shouldReceive('setCustomDatetimeFunctions')
                             ->once()->with(['datetime']);
@@ -156,6 +160,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->disableDebugbar();
         $this->disableCustomFunctions();
+        $this->mockLaravelNamingStrategy();
 
         $this->config->shouldReceive('get')
                      ->with('cache.second_level', false)->once()
@@ -196,6 +201,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
         $this->disableCustomFunctions();
+        $this->mockLaravelNamingStrategy();
 
         $this->mappingDriver->shouldReceive('addPaths')
                             ->once()
@@ -211,6 +217,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
         $this->disableCustomFunctions();
+        $this->mockLaravelNamingStrategy();
 
         $this->settings['filters'] = [
             'name' => FilterStub::class
@@ -235,6 +242,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
         $this->disableCustomFunctions();
+        $this->mockLaravelNamingStrategy();
 
         $this->settings['events']['listeners'] = [
             'name' => ListenerStub::class
@@ -252,6 +260,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
         $this->disableCustomFunctions();
+        $this->mockLaravelNamingStrategy();
 
         $this->settings['events']['subscribers'] = [
             'name' => SubscriberStub::class
@@ -262,6 +271,27 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEntityManager($manager);
         $this->assertCount(1, $manager->getEventManager()->getListeners());
         $this->assertTrue(array_key_exists('onFlush', $manager->getEventManager()->getListeners()));
+    }
+
+    public function test_can_set_custom_naming_strategy()
+    {
+        $this->disableDebugbar();
+        $this->disableSecondLevelCaching();
+        $this->disableCustomFunctions();
+
+        $this->settings['naming_strategy'] = 'Doctrine\ORM\Mapping\DefaultNamingStrategy';
+
+        $strategy = m::mock('Doctrine\ORM\Mapping\DefaultNamingStrategy');
+
+        $this->container->shouldReceive('make')
+                        ->with('Doctrine\ORM\Mapping\DefaultNamingStrategy')
+                        ->once()->andReturn($strategy);
+
+        $this->configuration->shouldReceive('setNamingStrategy')->once()->with($strategy);
+
+        $manager = $this->factory->create($this->settings);
+
+        $this->assertEntityManager($manager);
     }
 
     /**
@@ -343,7 +373,6 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->configuration = m::mock(Configuration::class);
         $this->configuration->shouldReceive('setSQLLogger');
-        $this->configuration->shouldReceive('setNamingStrategy');
 
         $this->mappingDriver = m::mock(AnnotationDriver::class)->makePartial();
         $this->configuration->shouldReceive('getMetadataDriverImpl')
@@ -403,6 +432,17 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->configuration->shouldReceive('setDefaultRepositoryClassName')
                             ->once()
                             ->with('Repo');
+    }
+
+    protected function mockLaravelNamingStrategy()
+    {
+        $strategy = m::mock(LaravelNamingStrategy::class);
+
+        $this->container->shouldReceive('make')
+                        ->with(LaravelNamingStrategy::class)
+                        ->once()->andReturn($strategy);
+
+        $this->configuration->shouldReceive('setNamingStrategy')->once()->with($strategy);
     }
 
     protected function tearDown()

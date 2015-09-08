@@ -33,11 +33,6 @@ use LaravelDoctrine\ORM\Validation\DoctrinePresenceVerifier;
 class DoctrineServiceProvider extends ServiceProvider
 {
     /**
-     * @var array
-     */
-    protected $config;
-
-    /**
      * Indicates if loading of the provider is deferred.
      * @var bool
      */
