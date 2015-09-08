@@ -7,6 +7,18 @@ return [
     | Entity Mangers
     |--------------------------------------------------------------------------
     |
+    | Configure your Entity Managers here. You can set a different connection
+    | and driver per manager and configure events and filters. Change the
+    | paths setting to the appropriate path and replace App namespace
+    | by your own namespace.
+    |
+    | Available meta drivers: annotations|yaml|xml|config|static_php
+    |
+    | Available connections: mysql|oracle|pgsql|sqlite|sqlsrv
+    | (Connections can be configured in the database config)
+    |
+    | --> Warning: Proxy auto generation should only be enabled in dev!
+    |
     */
     'managers'                  => [
         'default' => [
@@ -30,9 +42,6 @@ return [
             | Doctrine events
             |--------------------------------------------------------------------------
             |
-            | If you want to use the Doctrine Extensions from Gedmo,
-            | you'll have to set this setting to true.
-            |
             | The listener array expects the key to be a Doctrine event
             | e.g. Doctrine\ORM\Events::onFlush
             |
@@ -50,6 +59,9 @@ return [
     |--------------------------------------------------------------------------
     |
     | Enable/disable Doctrine Extensions by adding or removing them from the list
+    |
+    | If you want to require custom extensions you will have to require
+    | laravel-doctrine/extensions in your composer.json
     |
     */
     'extensions'                => [
@@ -93,7 +105,8 @@ return [
     /*
     |--------------------------------------------------------------------------
     | Enable query logging with laravel file logging,
-    | debugbar, clockwork or an own implementation
+    | debugbar, clockwork or an own implementation.
+    | Setting it to false, will disable logging
     |
     | Available:
     | - LaravelDoctrine\ORM\Loggers\LaravelDebugbarLogger
@@ -107,8 +120,8 @@ return [
     | Cache
     |--------------------------------------------------------------------------
     |
-    | By default the Laravel cache setting is used,
-    | but it's possible to overrule here
+    | Configure meta-data, query and result caching here.
+    | Optionally you can enable second level caching.
     |
     | Available: acp|array|file|memcached|redis
     |
@@ -123,6 +136,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | Settings for Gedmo extensions
+    | If you want to use this you will have to require
+    | laravel-doctrine/extensions in your composer.json
     |
     */
     'gedmo' => [
