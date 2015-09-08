@@ -123,13 +123,19 @@ return [
     | DQL custom string functions
     |--------------------------------------------------------------------------
     */
-    'custom_string_functions'   => [ ],
+    'custom_string_functions'   => [],
     /*
     |--------------------------------------------------------------------------
-    | Enable Debugbar Doctrine query collection
+    | Enable query logging with laravel file logging,
+    | debugbar, clockwork or an own implementation
+    |
+    | Available:
+    | - LaravelDoctrine\ORM\Loggers\LaravelDebugbarLogger
+    | - LaravelDoctrine\ORM\Loggers\ClockworkLogger
+    | - LaravelDoctrine\ORM\Loggers\FileLogger
     |--------------------------------------------------------------------------
     */
-    'debugbar'                  => env('DOCTRINE_DEBUGBAR', false),
+    'logger'                  => env('DOCTRINE_LOGGER', false),
     /*
     |--------------------------------------------------------------------------
     | Cache

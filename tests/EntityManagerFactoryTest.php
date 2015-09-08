@@ -1,6 +1,5 @@
 <?php
 
-use Barryvdh\Debugbar\LaravelDebugbar;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver;
@@ -19,6 +18,7 @@ use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\EntityManagerFactory;
+use LaravelDoctrine\ORM\Loggers\Logger;
 use Mockery as m;
 
 class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
@@ -119,15 +119,16 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableCustomFunctions();
 
         $this->config->shouldReceive('get')
-                     ->with('doctrine.debugbar', false)
-                     ->once()->andReturn(true);
+                     ->with('doctrine.logger', false)
+                     ->twice()->andReturn('LoggerMock');
 
-        $debugbar = m::mock(LaravelDebugbar::class);
-        $debugbar->shouldReceive('addCollector')->once();
+        $logger = m::mock(Logger::class);
 
         $this->container->shouldReceive('make')
-                  ->with('debugbar')->once()
-                  ->andReturn($debugbar);
+                  ->with('LoggerMock')->once()
+                  ->andReturn($logger);
+
+        $logger->shouldReceive('register')->once();
 
         $manager = $this->factory->create($this->settings);
 
@@ -316,7 +317,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected function disableDebugbar()
     {
         $this->config->shouldReceive('get')
-                     ->with('doctrine.debugbar', false)
+                     ->with('doctrine.logger', false)
                      ->once()->andReturn(false);
     }
 

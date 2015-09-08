@@ -48,7 +48,6 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Boot the extension manager
         $this->app->make(ExtensionManager::class)->boot();
 
         $this->extendAuthManager();
@@ -286,6 +285,7 @@ class DoctrineServiceProvider extends ServiceProvider
             'migration.repository',
             AuthManager::class,
             EntityManager::class,
+            DoctrineManager::class,
             ClassMetadataFactory::class,
             EntityManagerInterface::class,
             ExtensionManager::class,

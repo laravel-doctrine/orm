@@ -2,11 +2,10 @@
 
 namespace LaravelDoctrine\ORM;
 
-use DebugBar\Bridge\DoctrineCollector;
-use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
@@ -82,7 +81,6 @@ class EntityManagerFactory
             array_get($settings, 'connection')
         );
 
-        $this->setLogger($configuration);
         $this->setNamingStrategy($configuration);
         $this->setCustomFunctions($configuration);
         $this->setSecondLevelCaching($configuration);
@@ -99,6 +97,7 @@ class EntityManagerFactory
             $configuration
         );
 
+        $this->setLogger($manager, $configuration);
         $this->registerListeners($settings, $manager);
         $this->registerSubscribers($settings, $manager);
         $this->registerFilters($settings, $configuration, $manager);
@@ -191,16 +190,15 @@ class EntityManagerFactory
     }
 
     /**
-     * @param Configuration $configuration
+     * @param EntityManagerInterface $em
+     * @param Configuration          $configuration
      */
-    protected function setLogger(Configuration $configuration)
+    protected function setLogger(EntityManagerInterface $em, Configuration $configuration)
     {
-        if ($this->config->get('doctrine.debugbar', false) === true) {
-            $debugStack = new DebugStack();
-            $configuration->setSQLLogger($debugStack);
-            $this->container->make('debugbar')->addCollector(
-                new DoctrineCollector($debugStack)
-            );
+        if ($this->config->get('doctrine.logger', false)) {
+            $this->container->make(
+                $this->config->get('doctrine.logger', false)
+            )->register($em, $configuration);
         }
     }
 
