@@ -82,7 +82,7 @@ class EntityManagerFactory
 
         $this->setNamingStrategy($settings, $configuration);
         $this->setCustomFunctions($configuration);
-        $this->setSecondLevelCaching($configuration);
+        $this->setCacheSettings($configuration);
         $this->registerPaths($settings, $configuration);
         $this->configureProxies($settings, $configuration);
         $this->setCustomMappingDriverChain($settings, $configuration);
@@ -227,9 +227,21 @@ class EntityManagerFactory
     /**
      * @param Configuration $configuration
      */
+    protected function setCacheSettings(Configuration $configuration)
+    {
+        if ($namespace = $this->config->get('doctrine.cache.namespace', null)) {
+            $this->cache->driver()->setNamespace($namespace);
+        }
+
+        $this->setSecondLevelCaching($configuration);
+    }
+
+    /**
+     * @param Configuration $configuration
+     */
     protected function setSecondLevelCaching(Configuration $configuration)
     {
-        if ($this->config->get('cache.second_level', false)) {
+        if ($this->config->get('doctrine.cache.second_level', false)) {
             $configuration->setSecondLevelCacheEnabled(true);
 
             $cacheConfig = $configuration->getSecondLevelCacheConfiguration();

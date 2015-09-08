@@ -50,7 +50,7 @@ return [
                 'listeners'   => [],
                 'subscribers' => []
             ],
-            'filters' => []
+            'filters'    => []
         ]
     ],
     /*
@@ -114,7 +114,7 @@ return [
     | - LaravelDoctrine\ORM\Loggers\FileLogger
     |--------------------------------------------------------------------------
     */
-    'logger'                  => env('DOCTRINE_LOGGER', false),
+    'logger'                    => env('DOCTRINE_LOGGER', false),
     /*
     |--------------------------------------------------------------------------
     | Cache
@@ -127,8 +127,9 @@ return [
     |
     */
     'cache'                     => [
-        'default'      => env('DOCTRINE_CACHE', 'array'),
-        'second_level' => false,
+        'default'                => env('DOCTRINE_CACHE', 'array'),
+        'namespace'              => null,
+        'second_level'           => false,
     ],
     /*
     |--------------------------------------------------------------------------
@@ -140,7 +141,7 @@ return [
     | laravel-doctrine/extensions in your composer.json
     |
     */
-    'gedmo' => [
+    'gedmo'                     => [
         'all_mappings' => false
     ]
 ];

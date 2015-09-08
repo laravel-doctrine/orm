@@ -107,8 +107,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
-        $this->mockLaravelNamingStrategy();
+        $this->enableLaravelNamingStrategy();
 
         $manager = $this->factory->create($this->settings);
 
@@ -118,8 +119,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     public function test_debugbar_logger_can_be_enabled()
     {
         $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
-        $this->mockLaravelNamingStrategy();
+        $this->enableLaravelNamingStrategy();
 
         $this->config->shouldReceive('get')
                      ->with('doctrine.logger', false)
@@ -142,7 +144,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
-        $this->mockLaravelNamingStrategy();
+        $this->disableCustomCacheNamespace();
+        $this->enableLaravelNamingStrategy();
 
         $this->configuration->shouldReceive('setCustomDatetimeFunctions')
                             ->once()->with(['datetime']);
@@ -160,10 +163,11 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->disableDebugbar();
         $this->disableCustomFunctions();
-        $this->mockLaravelNamingStrategy();
+        $this->enableLaravelNamingStrategy();
+        $this->disableCustomCacheNamespace();
 
         $this->config->shouldReceive('get')
-                     ->with('cache.second_level', false)->once()
+                     ->with('doctrine.cache.second_level', false)->once()
                      ->andReturn(true);
 
         $this->configuration->shouldReceive('setSecondLevelCacheEnabled')
@@ -196,12 +200,34 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEntityManager($manager);
     }
 
+    public function test_custom_cache_namespace_can_be_set()
+    {
+        $this->disableDebugbar();
+        $this->disableCustomFunctions();
+        $this->enableLaravelNamingStrategy();
+        $this->disableSecondLevelCaching();
+
+        $this->config->shouldReceive('get')
+                     ->with('doctrine.cache.namespace', null)->once()
+                     ->andReturn('namespace');
+
+        $cache = m::mock(Cache::class);
+        $this->cache->shouldReceive('driver')->once()->andReturn($cache);
+
+        $cache->shouldReceive('setNamespace')->once()->with('namespace');
+
+        $manager = $this->factory->create($this->settings);
+
+        $this->assertEntityManager($manager);
+    }
+
     public function test_can_register_paths()
     {
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
-        $this->mockLaravelNamingStrategy();
+        $this->enableLaravelNamingStrategy();
 
         $this->mappingDriver->shouldReceive('addPaths')
                             ->once()
@@ -216,8 +242,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
-        $this->mockLaravelNamingStrategy();
+        $this->enableLaravelNamingStrategy();
 
         $this->settings['filters'] = [
             'name' => FilterStub::class
@@ -241,8 +268,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
-        $this->mockLaravelNamingStrategy();
+        $this->enableLaravelNamingStrategy();
 
         $this->settings['events']['listeners'] = [
             'name' => ListenerStub::class
@@ -259,8 +287,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
-        $this->mockLaravelNamingStrategy();
+        $this->enableLaravelNamingStrategy();
 
         $this->settings['events']['subscribers'] = [
             'name' => SubscriberStub::class
@@ -277,6 +306,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
 
         $this->settings['naming_strategy'] = 'Doctrine\ORM\Mapping\DefaultNamingStrategy';
@@ -354,12 +384,19 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected function disableSecondLevelCaching()
     {
         $this->config->shouldReceive('get')
-                     ->with('cache.second_level', false)->atLeast()->once()
+                     ->with('doctrine.cache.second_level', false)->atLeast()->once()
                      ->andReturn(false);
 
         $this->configuration->shouldReceive('isSecondLevelCacheEnabled')
                             ->atLeast()->once()
                             ->andReturn(false);
+    }
+
+    protected function disableCustomCacheNamespace()
+    {
+        $this->config->shouldReceive('get')
+                     ->with('doctrine.cache.namespace', null)->atLeast()->once()
+                     ->andReturn(false);
     }
 
     protected function disableCustomFunctions()
@@ -434,7 +471,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                             ->with('Repo');
     }
 
-    protected function mockLaravelNamingStrategy()
+    protected function enableLaravelNamingStrategy()
     {
         $strategy = m::mock(LaravelNamingStrategy::class);
 
