@@ -88,8 +88,8 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
         $this->builder->shouldReceive('andWhere')
                       ->once()->with('e.condition2 = :condition2');
 
-        $this->query->shouldReceive('setParameter')->once()->with('condition1', 'value1');
-        $this->query->shouldReceive('setParameter')->once()->with('condition2', 'value2');
+        $this->builder->shouldReceive('setParameter')->once()->with('condition1', 'value1');
+        $this->builder->shouldReceive('setParameter')->once()->with('condition2', 'value2');
 
         $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com', null, null, [
             'condition1' => 'value1',
@@ -114,8 +114,8 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
         $this->builder->shouldReceive('andWhere')
                       ->once()->with('e.condition2 = :condition2');
 
-        $this->query->shouldReceive('setParameter')->once()->with('condition1', 'value1');
-        $this->query->shouldReceive('setParameter')->once()->with('condition2', 'value2');
+        $this->builder->shouldReceive('setParameter')->once()->with('condition1', 'value1');
+        $this->builder->shouldReceive('setParameter')->once()->with('condition2', 'value2');
 
         $this->verifier->getMultiCount(CountableEntityMock::class, 'email', ['test@email.com'], [
             'condition1' => 'value1',

@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM\Validation;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 use Illuminate\Validation\PresenceVerifierInterface;
 
 class DoctrinePresenceVerifier implements PresenceVerifierInterface
@@ -34,10 +35,7 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
      */
     public function getCount($collection, $column, $value, $excludeId = null, $idColumn = null, array $extra = [])
     {
-        $em      = $this->getEntityManager($collection);
-        $builder = $em->createQueryBuilder();
-
-        $builder->select('count(e)')->from($collection, 'e');
+        $builder = $this->select($collection);
         $builder->where("e.{$column} = :{$column}");
 
         if (!is_null($excludeId) && $excludeId != 'NULL') {
@@ -45,19 +43,13 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
             $builder->andWhere("e.{$idColumn} <> :{$idColumn}");
         }
 
-        foreach ($extra as $key => $extraValue) {
-            $builder->andWhere("e.{$key} = :{$key}");
-        }
+        $this->queryExtraConditions($extra, $builder);
 
         $query = $builder->getQuery();
         $query->setParameter($column, $value);
 
         if (!is_null($excludeId) && $excludeId != 'NULL') {
             $query->setParameter($idColumn, $excludeId);
-        }
-
-        foreach ($extra as $key => $extraValue) {
-            $query->setParameter($key, $extraValue);
         }
 
         return $query->getSingleScalarResult();
@@ -75,23 +67,39 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
      */
     public function getMultiCount($collection, $column, array $values, array $extra = [])
     {
-        $em      = $this->getEntityManager($collection);
+        $builder = $this->select($collection);
+        $builder->where($builder->expr()->in("e.{$column}", $values));
+
+        $this->queryExtraConditions($extra, $builder);
+
+        return $builder->getQuery()->presence();
+    }
+
+    /**
+     * @param string $collection
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function select($collection)
+    {
+        $em = $this->getEntityManager($collection);
         $builder = $em->createQueryBuilder();
 
         $builder->select('count(e)')->from($collection, 'e');
-        $builder->where($builder->expr()->in("e.{$column}", $values));
 
+        return $builder;
+    }
+
+    /**
+     * @param array        $extra
+     * @param QueryBuilder $builder
+     */
+    protected function queryExtraConditions(array $extra, QueryBuilder $builder)
+    {
         foreach ($extra as $key => $extraValue) {
             $builder->andWhere("e.{$key} = :{$key}");
+            $builder->setParameter($key, $extraValue);
         }
-
-        $query = $builder->getQuery();
-
-        foreach ($extra as $key => $extraValue) {
-            $query->setParameter($key, $extraValue);
-        }
-
-        return $query->presence();
     }
 
     /**
