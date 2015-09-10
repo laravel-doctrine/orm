@@ -47,4 +47,9 @@ class PgsqlConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('sslmode',      $resolved['sslmode']);
         $this->assertEquals('prefix',       $resolved['prefix']);
     }
+
+    protected function tearDown()
+    {
+        m::close();
+    }
 }

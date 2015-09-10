@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Tools\Setup;
+use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Driver;
 use LaravelDoctrine\ORM\Configuration\MetaData\Config\ConfigDriver;
@@ -15,11 +16,18 @@ class Config implements Driver
     protected $cacheManager;
 
     /**
-     * @param CacheManager $cacheManager
+     * @var Repository
      */
-    public function __construct(CacheManager $cacheManager)
+    protected $config;
+
+    /**
+     * @param CacheManager $cacheManager
+     * @param Repository   $config
+     */
+    public function __construct(CacheManager $cacheManager, Repository $config)
     {
         $this->cacheManager = $cacheManager;
+        $this->config       = $config;
     }
 
     /**
@@ -37,7 +45,7 @@ class Config implements Driver
 
         $configuration->setMetadataDriverImpl(
             new ConfigDriver(
-                config(array_get($settings, 'mapping_file'), [])
+                $this->config->get(array_get($settings, 'mapping_file'), [])
             )
         );
 

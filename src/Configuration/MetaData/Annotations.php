@@ -29,11 +29,11 @@ class Annotations implements Driver
     public function resolve(array $settings = [])
     {
         return Setup::createAnnotationMetadataConfiguration(
-            array_get($settings, 'paths'),
-            array_get($settings, 'dev'),
-            array_get($settings, 'proxy_path'),
+            array_get($settings, 'paths', []),
+            array_get($settings, 'dev', false),
+            array_get($settings, 'proxies.path'),
             $this->cacheManager->driver(),
-            array_get($settings, 'simple')
+            array_get($settings, 'simple', false)
         );
     }
 }

@@ -43,4 +43,9 @@ class SqlsrvConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('port',         $resolved['port']);
         $this->assertEquals('prefix',       $resolved['prefix']);
     }
+
+    protected function tearDown()
+    {
+        m::close();
+    }
 }

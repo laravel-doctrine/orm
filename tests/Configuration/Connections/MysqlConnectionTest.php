@@ -47,4 +47,9 @@ class MysqlConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('unix_socket',  $resolved['unix_socket']);
         $this->assertEquals('prefix',       $resolved['prefix']);
     }
+
+    protected function tearDown()
+    {
+        m::close();
+    }
 }

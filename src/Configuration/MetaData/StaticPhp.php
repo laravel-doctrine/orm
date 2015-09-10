@@ -5,8 +5,9 @@ namespace LaravelDoctrine\ORM\Configuration\MetaData;
 use Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver;
 use Doctrine\ORM\Tools\Setup;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
-class StaticPhp extends AbstractMetaData
+class StaticPhp implements Driver
 {
     /**
      * @var CacheManager

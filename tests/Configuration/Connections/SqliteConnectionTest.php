@@ -65,4 +65,9 @@ class SqliteConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($resolved['memory']);
         $this->assertNull($resolved['path']);
     }
+
+    protected function tearDown()
+    {
+        m::close();
+    }
 }
