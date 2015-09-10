@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixListener;
 use Mockery as m;
 
-class TablePrefixTest extends PHPUnit_Framework_TestCase
+class TablePrefixListenerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var ClassMetadataInfo
@@ -31,14 +31,14 @@ class TablePrefixTest extends PHPUnit_Framework_TestCase
         $this->args          = new LoadClassMetadataEventArgs($this->metadata, $this->objectManager);
     }
 
-    public function testPrefixAdded()
+    public function test_prefix_was_added()
     {
         $tablePrefix = new TablePrefixListener('someprefix_');
         $tablePrefix->loadClassMetadata($this->args);
         $this->assertEquals('someprefix_foo', $this->metadata->getTableName());
     }
 
-    public function testPrefixAddedToSequence()
+    public function test_prefix_was_added_to_sequence()
     {
         $this->metadata->setSequenceGeneratorDefinition(['sequenceName' => 'bar']);
         $this->metadata->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_SEQUENCE);
@@ -47,7 +47,7 @@ class TablePrefixTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('someprefix_foo', $this->metadata->getTableName());
     }
 
-    public function testManyToManyHasPrefix()
+    public function test_many_to_many_has_prefix()
     {
         $this->metadata->mapManyToMany(['fieldName' => 'fooBar', 'targetEntity' => 'bar']);
         $tablePrefix = new TablePrefixListener('someprefix_');

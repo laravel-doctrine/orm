@@ -22,7 +22,7 @@ class ExtensionManager
     /**
      * @var array
      */
-    protected $subscribedExtensions = [];
+    protected $bootedExtensions = [];
 
     /**
      * @param ManagerRegistry $registry
@@ -39,13 +39,15 @@ class ExtensionManager
     {
         foreach ($this->registry->getManagers() as $connection => $em) {
             foreach ($this->extensions as $extension) {
-                $this->bootExtension(
-                    $connection,
-                    $extension,
-                    $em,
-                    $em->getEventManager(),
-                    $em->getConfiguration()
-                );
+                if ($this->notBootedYet($connection, $extension)) {
+                    $this->bootExtension(
+                        $connection,
+                        $extension,
+                        $em,
+                        $em->getEventManager(),
+                        $em->getConfiguration()
+                    );
+                }
             }
         }
     }
@@ -65,29 +67,27 @@ class ExtensionManager
      * @param EventManager           $evm
      * @param Configuration          $configuration
      */
-    public function bootExtension(
+    protected function bootExtension(
         $connection,
         Extension $extension,
         EntityManagerInterface $em,
         EventManager $evm,
         Configuration $configuration
     ) {
-        if ($this->notSubscribedYet($connection, $extension)) {
-            $extension->addSubscribers(
-                $evm,
-                $em,
-                $configuration->getMetadataDriverImpl()->getReader()
-            );
+        $extension->addSubscribers(
+            $evm,
+            $em,
+            $configuration->getMetadataDriverImpl()->getReader()
+        );
 
-            if (is_array($extension->getFilters())) {
-                foreach ($extension->getFilters() as $name => $filter) {
-                    $configuration->addFilter($name, $filter);
-                    $em->getFilters()->enable($name);
-                }
+        if (is_array($extension->getFilters())) {
+            foreach ($extension->getFilters() as $name => $filter) {
+                $configuration->addFilter($name, $filter);
+                $em->getFilters()->enable($name);
             }
-
-            $this->markAsSubscribed($connection, $extension);
         }
+
+        $this->markAsBooted($connection, $extension);
     }
 
     /**
@@ -96,17 +96,33 @@ class ExtensionManager
      *
      * @return bool
      */
-    protected function notSubscribedYet($connection, Extension $extension)
+    protected function notBootedYet($connection, Extension $extension)
     {
-        return !isset($this->subscribedExtensions[$connection][get_class($extension)]);
+        return !isset($this->bootedExtensions[$connection][get_class($extension)]);
     }
 
     /**
      * @param           $connection
      * @param Extension $extension
      */
-    protected function markAsSubscribed($connection, Extension $extension)
+    protected function markAsBooted($connection, Extension $extension)
     {
-        $this->subscribedExtensions[$connection][get_class($extension)] = true;
+        $this->bootedExtensions[$connection][get_class($extension)] = true;
+    }
+
+    /**
+     * @return array|Extension[]
+     */
+    public function getExtensions()
+    {
+        return $this->extensions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBootedExtensions()
+    {
+        return $this->bootedExtensions;
     }
 }

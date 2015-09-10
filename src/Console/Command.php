@@ -2,7 +2,9 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-class Command extends \Illuminate\Console\Command
+use Illuminate\Console\Command as IlluminateCommand;
+
+class Command extends IlluminateCommand
 {
     /**
      * Display blue message

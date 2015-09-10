@@ -4,6 +4,7 @@ namespace LaravelDoctrine\ORM\Extensions;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain as DoctrineMappingDriverChain;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
 class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDriver
 {
@@ -32,7 +33,7 @@ class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDr
     {
         $driver = $this->getDefaultDriver();
 
-        if (method_exists($driver, 'getReader')) {
+        if ($driver instanceof AnnotationDriver) {
             return $driver->getReader();
         }
     }
