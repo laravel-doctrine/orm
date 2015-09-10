@@ -2,22 +2,22 @@
 
 namespace LaravelDoctrine\ORM\Validation;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Illuminate\Validation\PresenceVerifierInterface;
 
 class DoctrinePresenceVerifier implements PresenceVerifierInterface
 {
     /**
-     * @var EntityManagerInterface
+     * @var ManagerRegistry
      */
-    protected $em;
+    protected $registry;
 
     /**
-     * @param EntityManagerInterface $em
+     * @param ManagerRegistry $registry
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->em = $em;
+        $this->registry = $registry;
     }
 
     /**
@@ -34,7 +34,8 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
      */
     public function getCount($collection, $column, $value, $excludeId = null, $idColumn = null, array $extra = [])
     {
-        $builder = $this->em->createQueryBuilder();
+        $em      = $this->getEntityManager($collection);
+        $builder = $em->createQueryBuilder();
 
         $builder->select('count(e)')->from($collection, 'e');
         $builder->where("e.{$column} = :{$column}");
@@ -74,22 +75,32 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
      */
     public function getMultiCount($collection, $column, array $values, array $extra = [])
     {
-        $builder = $this->em->createQueryBuilder();
+        $em      = $this->getEntityManager($collection);
+        $builder = $em->createQueryBuilder();
 
         $builder->select('count(e)')->from($collection, 'e');
-        $builder->where($builder->expr()->in(":{$column}", ":{$column}"));
+        $builder->where($builder->expr()->in("e.{$column}", $values));
 
         foreach ($extra as $key => $extraValue) {
             $builder->andWhere("e.{$key} = :{$key}");
         }
 
         $query = $builder->getQuery();
-        $query->setParameter($column, $values);
 
         foreach ($extra as $key => $extraValue) {
             $query->setParameter($key, $extraValue);
         }
 
         return $query->presence();
+    }
+
+    /**
+     * @param string $entity
+     *
+     * @return \Doctrine\Common\Persistence\ObjectManager|null
+     */
+    protected function getEntityManager($entity)
+    {
+        return $this->registry->getManagerForClass($entity);
     }
 }
