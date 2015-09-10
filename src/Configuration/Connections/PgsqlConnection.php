@@ -29,14 +29,14 @@ class PgsqlConnection implements Driver
     {
         return [
             'driver'   => 'pdo_pgsql',
-            'host'     => $this->config->get('database.connections.mysql.host'),
-            'dbname'   => $this->config->get('database.connections.mysql.database'),
-            'user'     => $this->config->get('database.connections.mysql.username'),
-            'password' => $this->config->get('database.connections.mysql.password'),
-            'charset'  => $this->config->get('database.connections.mysql.charset'),
-            'port'     => $this->config->get('database.connections.mysql.port'),
-            'sslmode'  => $this->config->get('database.connections.mysql.sslmode'),
-            'prefix'   => $this->config->get('database.connections.mysql.prefix'),
+            'host'     => $this->config->get('database.connections.pgsql.host'),
+            'dbname'   => $this->config->get('database.connections.pgsql.database'),
+            'user'     => $this->config->get('database.connections.pgsql.username'),
+            'password' => $this->config->get('database.connections.pgsql.password'),
+            'charset'  => $this->config->get('database.connections.pgsql.charset'),
+            'port'     => $this->config->get('database.connections.pgsql.port'),
+            'sslmode'  => $this->config->get('database.connections.pgsql.sslmode'),
+            'prefix'   => $this->config->get('database.connections.pgsql.prefix'),
         ];
     }
 }
