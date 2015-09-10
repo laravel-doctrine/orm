@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
+use InvalidArgumentException;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
@@ -67,7 +68,7 @@ class EntityManagerFactory
     /**
      * @param array $settings
      *
-     * @return EntityManager
+     * @return EntityManagerInterface
      */
     public function create($settings = [])
     {
@@ -96,6 +97,8 @@ class EntityManagerFactory
             $configuration
         );
 
+        $manager = $this->decorateManager($settings, $manager);
+
         $this->setLogger($manager, $configuration);
         $this->registerListeners($settings, $manager);
         $this->registerSubscribers($settings, $manager);
@@ -105,10 +108,10 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array         $settings
-     * @param EntityManager $manager
+     * @param array                  $settings
+     * @param EntityManagerInterface $manager
      */
-    protected function registerListeners($settings = [], EntityManager $manager)
+    protected function registerListeners($settings = [], EntityManagerInterface $manager)
     {
         if (isset($settings['events']['listeners'])) {
             foreach ($settings['events']['listeners'] as $event => $listener) {
@@ -122,10 +125,10 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array         $settings
-     * @param EntityManager $manager
+     * @param array                  $settings
+     * @param EntityManagerInterface $manager
      */
-    protected function registerSubscribers($settings = [], EntityManager $manager)
+    protected function registerSubscribers($settings = [], EntityManagerInterface $manager)
     {
         if (isset($settings['events']['subscribers'])) {
             foreach ($settings['events']['subscribers'] as $subscriber) {
@@ -139,12 +142,15 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array         $settings
-     * @param Configuration $configuration
-     * @param EntityManager $manager
+     * @param array                  $settings
+     * @param Configuration          $configuration
+     * @param EntityManagerInterface $manager
      */
-    protected function registerFilters($settings = [], Configuration $configuration, EntityManager $manager = null)
-    {
+    protected function registerFilters(
+        $settings = [],
+        Configuration $configuration,
+        EntityManagerInterface $manager = null
+    ) {
         if (isset($settings['filters'])) {
             foreach ($settings['filters'] as $name => $filter) {
                 $configuration->getMetadataDriverImpl()->addFilter($name, $filter);
@@ -276,5 +282,26 @@ class EntityManagerFactory
         $configuration->setMetadataDriverImpl(
             $chain
         );
+    }
+
+    /**
+     * @param $settings
+     * @param $manager
+     *
+     * @return mixed
+     */
+    protected function decorateManager($settings, $manager)
+    {
+        if ($decorator = array_get($settings, 'decorator', false)) {
+            if (!class_exists($decorator)) {
+                throw new InvalidArgumentException("EntityManagerDecorator {$decorator} does not exist");
+            }
+
+            $manager = new $decorator($manager);
+
+            return $manager;
+        }
+
+        return $manager;
     }
 }

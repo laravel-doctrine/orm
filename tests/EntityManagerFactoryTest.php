@@ -8,7 +8,8 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Cache\CacheFactory;
 use Doctrine\ORM\Cache\RegionsConfiguration;
 use Doctrine\ORM\Configuration;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Decorator\EntityManagerDecorator;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\EntityListenerResolver;
 use Doctrine\ORM\Query\FilterCollection;
 use Doctrine\ORM\Repository\RepositoryFactory;
@@ -96,9 +97,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    protected function assertEntityManager(EntityManager $manager)
+    protected function assertEntityManager(EntityManagerInterface $manager)
     {
-        $this->assertInstanceOf(EntityManager::class, $manager);
+        $this->assertInstanceOf(EntityManagerInterface::class, $manager);
         $this->assertInstanceOf(Connection::class, $manager->getConnection());
         $this->assertInstanceOf(Configuration::class, $manager->getConfiguration());
     }
@@ -130,8 +131,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $logger = m::mock(Logger::class);
 
         $this->container->shouldReceive('make')
-                  ->with('LoggerMock')->once()
-                  ->andReturn($logger);
+                        ->with('LoggerMock')->once()
+                        ->andReturn($logger);
 
         $logger->shouldReceive('register')->once();
 
@@ -324,6 +325,23 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEntityManager($manager);
     }
 
+    public function test_can_decorate_the_entity_manager()
+    {
+        $this->disableDebugbar();
+        $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
+        $this->disableCustomFunctions();
+        $this->enableLaravelNamingStrategy();
+
+        $this->settings['decorator'] = Decorator::class;
+
+        $manager = $this->factory->create($this->settings);
+
+        $this->assertEntityManager($manager);
+        $this->assertInstanceOf(Decorator::class, $manager);
+        $this->assertInstanceOf(EntityManagerDecorator::class, $manager);
+    }
+
     /**
      * MOCKS
      */
@@ -508,4 +526,8 @@ class SubscriberStub implements EventSubscriber
             'onFlush'
         ];
     }
+}
+
+class Decorator extends EntityManagerDecorator
+{
 }
