@@ -30,4 +30,15 @@ class CustomTypeManager
             $this->addType($name, $class);
         }
     }
+
+    /**
+     * @param $type
+     *
+     * @throws \Doctrine\DBAL\DBALException
+     * @return Type
+     */
+    public function getType($type)
+    {
+        return Type::getType($type);
+    }
 }
