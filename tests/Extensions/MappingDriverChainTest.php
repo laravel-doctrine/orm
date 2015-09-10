@@ -41,6 +41,15 @@ class MappingDriverChainTest extends PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('NonExisting', $this->chain->getDrivers());
     }
 
+    public function test_can_add_paths()
+    {
+        $this->driver->shouldReceive('addPaths')->with(['paths'])->once();
+        $this->driver->shouldReceive('addPaths')->with(['paths2'])->once();
+
+        $this->chain->addPaths(['paths']);
+        $this->chain->addPaths(['paths2']);
+    }
+
     public function test_can_get_annotation_reader()
     {
         $this->driver->shouldReceive('getReader')

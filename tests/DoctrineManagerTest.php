@@ -47,7 +47,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_can_extend_doctrine_on_existing_connection_with_callback()
     {
-        $this->registry->shouldReceive('getConnection')
+        $this->registry->shouldReceive('getManager')
                        ->once()
                        ->with('default')
                        ->andReturn($this->em);
@@ -61,7 +61,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_can_extend_doctrine_on_existing_connection_with_class()
     {
-        $this->registry->shouldReceive('getConnection')
+        $this->registry->shouldReceive('getManager')
                        ->once()
                        ->with('default')
                        ->andReturn($this->em);
@@ -78,7 +78,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_cant_extend_with_a_non_existing_extender_class()
     {
-        $this->registry->shouldReceive('getConnection')
+        $this->registry->shouldReceive('getManager')
                        ->once()
                        ->with('default')
                        ->andReturn($this->em);
@@ -90,7 +90,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_cant_extend_with_an_invalid_class()
     {
-        $this->registry->shouldReceive('getConnection')
+        $this->registry->shouldReceive('getManager')
                        ->once()
                        ->with('default')
                        ->andReturn($this->em);
@@ -112,12 +112,12 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
             'custom'
         ]);
 
-        $this->registry->shouldReceive('getConnection')
+        $this->registry->shouldReceive('getManager')
                        ->once()
                        ->with('default')
                        ->andReturn($this->em);
 
-        $this->registry->shouldReceive('getConnection')
+        $this->registry->shouldReceive('getManager')
                        ->once()
                        ->with('custom')
                        ->andReturn($this->em);
@@ -136,7 +136,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_can_add_a_new_namespace_to_default_connection()
     {
-        $this->registry->shouldReceive('getConnection')
+        $this->registry->shouldReceive('getManager')
                        ->once()
                        ->with('default')
                        ->andReturn($this->em);
@@ -163,12 +163,12 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
             'custom'
         ]);
 
-        $this->registry->shouldReceive('getConnection')
+        $this->registry->shouldReceive('getManager')
                        ->once()
                        ->with('default')
                        ->andReturn($this->em);
 
-        $this->registry->shouldReceive('getConnection')
+        $this->registry->shouldReceive('getManager')
                        ->once()
                        ->with('custom')
                        ->andReturn($this->em);
@@ -187,6 +187,61 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
                  ->twice()->andReturn($configuration);
 
         $this->manager->addNamespace('NewNamespace');
+    }
+
+    public function test_can_add_paths_to_default_connection()
+    {
+        $this->registry->shouldReceive('getManager')
+                       ->once()
+                       ->with('default')
+                       ->andReturn($this->em);
+
+        $configuration = m::mock(Configuration::class);
+
+        $mappingDriver = m::mock(MappingDriverChain::class);
+        $mappingDriver->shouldReceive('addPaths')->once()->with(['paths']);
+
+        $configuration->shouldReceive('getMetadataDriverImpl')
+                      ->once()
+                      ->andReturn($mappingDriver);
+
+        $this->em->shouldReceive('getConfiguration')
+                 ->once()->andReturn($configuration);
+
+        $this->manager->addPaths(['paths'], 'default');
+    }
+
+    public function test_can_add_paths_to_all_connections()
+    {
+        $this->registry->shouldReceive('getManagerNames')->once()->andReturn([
+            'default',
+            'custom'
+        ]);
+
+        $this->registry->shouldReceive('getManager')
+                       ->once()
+                       ->with('default')
+                       ->andReturn($this->em);
+
+        $this->registry->shouldReceive('getManager')
+                       ->once()
+                       ->with('custom')
+                       ->andReturn($this->em);
+
+        $configuration = m::mock(Configuration::class);
+
+        $mappingDriver = m::mock(MappingDriverChain::class);
+        $mappingDriver->shouldReceive('addPaths')
+                      ->twice()->with(['paths']);
+
+        $configuration->shouldReceive('getMetadataDriverImpl')
+                      ->twice()
+                      ->andReturn($mappingDriver);
+
+        $this->em->shouldReceive('getConfiguration')
+                 ->twice()->andReturn($configuration);
+
+        $this->manager->addPaths(['paths']);
     }
 
     protected function tearDown()

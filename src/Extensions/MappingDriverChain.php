@@ -27,6 +27,18 @@ class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDr
     }
 
     /**
+     * @param array $paths
+     */
+    public function addPaths(array $paths = [])
+    {
+        $driver = $this->getDefaultDriver();
+
+        if ($driver instanceof AnnotationDriver) {
+            $driver->addPaths($paths);
+        }
+    }
+
+    /**
      * @return \Doctrine\Common\Annotations\Reader|null
      */
     public function getReader()

@@ -34,7 +34,7 @@ class DoctrineManager
      */
     public function extend($connection, $callback)
     {
-        $manager = $this->registry->getConnection($connection);
+        $manager = $this->registry->getManager($connection);
 
         if (!is_callable($callback)) {
             if (!class_exists($callback)) {
@@ -74,11 +74,28 @@ class DoctrineManager
         $connections = $connection ? [$connection] : $this->registry->getManagerNames();
 
         foreach ($connections as $connection) {
-            $manager = $this->registry->getConnection($connection);
+            $manager = $this->registry->getManager($connection);
 
             $manager->getConfiguration()
                     ->getMetadataDriverImpl()
                     ->addNamespace($namespace);
+        }
+    }
+
+    /**
+     * @param array      $paths
+     * @param bool|false $connection
+     */
+    public function addPaths(array $paths = [], $connection = false)
+    {
+        $connections = $connection ? [$connection] : $this->registry->getManagerNames();
+
+        foreach ($connections as $connection) {
+            $manager = $this->registry->getManager($connection);
+
+            $manager->getConfiguration()
+                    ->getMetadataDriverImpl()
+                    ->addPaths($paths);
         }
     }
 }

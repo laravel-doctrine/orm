@@ -298,8 +298,6 @@ class EntityManagerFactory
             }
 
             $manager = new $decorator($manager);
-
-            return $manager;
         }
 
         return $manager;
