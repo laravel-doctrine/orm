@@ -33,6 +33,19 @@ class ApcCache extends DoctrineApcCache
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function doFetchMultiple(array $keys)
+    {
+        $found = [];
+        foreach ($keys as $key) {
+            $found[$key] = $this->doFetch($key);
+        }
+
+        return $found;
+    }
+
+    /**
      * Tests if an entry exists in the cache.
      *
      * @param string $id The cache id of the entry to check for.
