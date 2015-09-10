@@ -3,7 +3,6 @@
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Common\Persistence\Proxy;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
@@ -82,43 +81,21 @@ class DoctrineServiceProvider extends ServiceProvider
     }
 
     /**
-     * Setup the entity managers
-     * @return array
-     */
-    protected function setUpEntityManagers()
-    {
-        $managers    = [];
-        $connections = [];
-
-        foreach ($this->app->config->get('doctrine.managers', []) as $manager => $settings) {
-            $managerName    = IlluminateRegistry::getManagerNamePrefix() . $manager;
-            $connectionName = IlluminateRegistry::getConnectionNamePrefix() . $manager;
-
-            // Bind manager
-            $this->app->singleton($managerName, function ($app) use ($settings) {
-                return $app->make(EntityManagerFactory::class)->create($settings);
-            });
-
-            // Bind connection
-            $this->app->singleton($connectionName, function ($app) use ($managerName) {
-                $app->make($managerName)->getConnection();
-            });
-
-            $managers[$manager]    = $manager;
-            $connections[$manager] = $manager;
-        }
-
-        return [$managers, $connections];
-    }
-
-    /**
      * Setup the entity manager
      */
     protected function registerEntityManager()
     {
+        $registry = $this->app->make(ManagerRegistry::class);
+
+        // Add all managers into the registry
+        foreach ($this->app->config->get('doctrine.managers', []) as $manager => $settings) {
+            $registry->addManager($manager, $settings);
+            $registry->addConnection($manager);
+        }
+
         // Bind the default Entity Manager
-        $this->app->singleton('em', function ($app) {
-            return $app->make(ManagerRegistry::class)->getManager();
+        $this->app->singleton('em', function () use ($registry) {
+            return $registry->getManager();
         });
 
         $this->app->alias('em', EntityManager::class);
@@ -130,21 +107,7 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerManagerRegistry()
     {
-        $this->app->singleton(IlluminateRegistry::class, function ($app) {
-
-            list($managers, $connections) = $this->setUpEntityManagers();
-
-            return new IlluminateRegistry(
-                isset($managers['default']) ? $managers['default'] : head($managers),
-                $connections,
-                $managers,
-                isset($connections['default']) ? $connections['default'] : head($connections),
-                isset($managers['default']) ? $managers['default'] : head($managers),
-                Proxy::class,
-                $app
-            );
-        });
-
+        $this->app->singleton(IlluminateRegistry::class);
         $this->app->alias(IlluminateRegistry::class, ManagerRegistry::class);
     }
 
