@@ -1,7 +1,7 @@
 <?php
 
 use Carbon\Carbon;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use LaravelDoctrine\ORM\Auth\Passwords\DoctrineTokenRepository;
@@ -35,15 +35,10 @@ class DoctrineTokenRepositoryTest extends PHPUnit_Framework_TestCase
     {
         $this->em = m::mock(EntityManagerInterface::class);
 
-        $this->registry = m::mock(ManagerRegistry::class);
-        $this->registry->shouldReceive('getManagerForClass')
-                       ->with(PasswordReminder::class)
-                       ->once()->andReturn($this->em);
-
         $this->builder = m::mock(QueryBuilder::class);
 
         $this->repository = new DoctrineTokenRepository(
-            $this->registry,
+            $this->em,
             'hashkey',
             60
         );

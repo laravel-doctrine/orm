@@ -224,7 +224,31 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerCustomTypes()
     {
-        (new CustomTypeManager())->addCustomTypes($this->app->make('config')->get('doctrine.custom_types', []));
+        (new CustomTypeManager)->addCustomTypes($this->app->make('config')->get('doctrine.custom_types', []));
+    }
+
+    /**
+     * Extend the auth manager
+     */
+    protected function extendAuthManager()
+    {
+        $this->app->make(AuthManager::class)->extend('doctrine', function ($app) {
+            $entity = $this->app->make('config')->get('auth.model');
+
+            return new DoctrineUserProvider(
+                $app[Hasher::class],
+                $app[ManagerRegistry::class]->getManagerForClass($entity),
+                $entity
+            );
+        });
+    }
+
+    /**
+     * @return string
+     */
+    protected function getConfigPath()
+    {
+        return __DIR__ . '/../config/doctrine.php';
     }
 
     /**
@@ -245,26 +269,6 @@ class DoctrineServiceProvider extends ServiceProvider
             GenerateProxiesCommand::class,
             ConvertConfigCommand::class
         ]);
-    }
-
-    /**
-     * Extend the auth manager
-     */
-    protected function extendAuthManager()
-    {
-        $this->app->make(AuthManager::class)->extend('doctrine', function ($app) {
-            $model = $this->app->make('config')->get('auth.model');
-
-            return new DoctrineUserProvider($app[Hasher::class], $app[ManagerRegistry::class], $model);
-        });
-    }
-
-    /**
-     * @return string
-     */
-    protected function getConfigPath()
-    {
-        return __DIR__ . '/../config/doctrine.php';
     }
 
     /**

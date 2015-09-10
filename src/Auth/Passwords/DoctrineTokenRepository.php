@@ -3,7 +3,6 @@
 namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use Carbon\Carbon;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\CanResetPassword;
@@ -28,15 +27,15 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
     /**
      * Constructs the repository.
      *
-     * @param ManagerRegistry $registry
-     * @param string          $hashKey
-     * @param int             $expires
+     * @param EntityManagerInterface $em
+     * @param string                 $hashKey
+     * @param int                    $expires
      */
-    public function __construct(ManagerRegistry $registry, $hashKey, $expires = 60)
+    public function __construct(EntityManagerInterface $em, $hashKey, $expires = 60)
     {
         $this->hashKey = $hashKey;
         $this->expires = $expires * 60;
-        $this->em      = $registry->getManagerForClass(PasswordReminder::class);
+        $this->em      = $em;
     }
 
     /**

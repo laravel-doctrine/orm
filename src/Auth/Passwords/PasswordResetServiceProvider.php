@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Auth\Passwords;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Support\ServiceProvider;
 
@@ -57,11 +57,11 @@ class PasswordResetServiceProvider extends ServiceProvider
     protected function registerTokenRepository()
     {
         $this->app->singleton('auth.password.tokens', function ($app) {
-            $key = $app['config']['app.key'];
-
-            $expire = $app['config']->get('auth.reminder.expire', 60);
-
-            return new DoctrineTokenRepository($this->app->make(EntityManagerInterface::class), $key, $expire);
+            return new DoctrineTokenRepository(
+                $this->app->make(ManagerRegistry::class)->getManagerForClass(PasswordReminder::class),
+                $app['config']['app.key'],
+                $app['config']->get('auth.reminder.expire', 60)
+            );
         });
     }
 
