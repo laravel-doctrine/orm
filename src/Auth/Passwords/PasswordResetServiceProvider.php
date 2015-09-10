@@ -20,7 +20,7 @@ class PasswordResetServiceProvider extends ServiceProvider
      */
     public function boot(DoctrineManager $manager)
     {
-        // The path PasswordReminder should be added, so the entity can be found
+        // The path to PasswordReminder should be added, so the entity can be found
         $manager->addPaths([
             __DIR__
         ]);

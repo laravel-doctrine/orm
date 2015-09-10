@@ -84,9 +84,9 @@ class EntityManagerFactory
         $this->setNamingStrategy($settings, $configuration);
         $this->setCustomFunctions($configuration);
         $this->setCacheSettings($configuration);
-        $this->registerPaths($settings, $configuration);
         $this->configureProxies($settings, $configuration);
         $this->setCustomMappingDriverChain($settings, $configuration);
+        $this->registerPaths($settings, $configuration);
 
         $configuration->setDefaultRepositoryClassName(
             array_get($settings, 'repository', EntityRepository::class)
@@ -165,14 +165,9 @@ class EntityManagerFactory
      */
     protected function registerPaths($settings = [], Configuration $configuration)
     {
-        $paths = array_get($settings, 'paths', []);
-        $meta  = $configuration->getMetadataDriverImpl();
-
-        if (method_exists($meta, 'addPaths')) {
-            $meta->addPaths($paths);
-        } elseif (method_exists($meta, 'getLocator')) {
-            $meta->getLocator()->addPaths($paths);
-        }
+        $configuration->getMetadataDriverImpl()->addPaths(
+            array_get($settings, 'paths', [])
+        );
     }
 
     /**

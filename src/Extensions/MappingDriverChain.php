@@ -2,8 +2,10 @@
 
 namespace LaravelDoctrine\ORM\Extensions;
 
+use Doctrine\Common\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain as DoctrineMappingDriverChain;
+use Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
 class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDriver
@@ -33,8 +35,10 @@ class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDr
     {
         $driver = $this->getDefaultDriver();
 
-        if ($driver instanceof AnnotationDriver) {
+        if ($driver instanceof AnnotationDriver || $driver instanceof StaticPHPDriver) {
             $driver->addPaths($paths);
+        } elseif ($driver instanceof FileDriver) {
+            $driver->getLocator()->addPaths($paths);
         }
     }
 
