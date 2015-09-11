@@ -22,14 +22,14 @@ return [
     */
     'managers'                  => [
         'default' => [
-            'dev'        => config('app.debug'),
+            'dev'        => env('APP_DEBUG'),
             'meta'       => env('DOCTRINE_METADATA', 'annotations'),
             'connection' => env('DB_CONNECTION', 'mysql'),
             'namespaces' => [
                 'App'
             ],
             'paths'      => [
-                app_path()
+                base_path('app')
             ],
             'repository' => Doctrine\ORM\EntityRepository::class,
             'proxies'    => [

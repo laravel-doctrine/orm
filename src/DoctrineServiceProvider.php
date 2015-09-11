@@ -46,9 +46,11 @@ class DoctrineServiceProvider extends ServiceProvider
 
         $this->extendAuthManager();
 
-        $this->publishes([
-            $this->getConfigPath() => config_path('doctrine.php'),
-        ], 'config');
+        if (!$this->isLumen()) {
+            $this->publishes([
+                $this->getConfigPath() => config_path('doctrine.php'),
+            ], 'config');
+        }
     }
 
     /**
@@ -57,8 +59,8 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->setupCache();
         $this->mergeConfig();
+        $this->setupCache();
         $this->setupMetaData();
         $this->setupConnection();
         $this->registerManagerRegistry();
@@ -78,6 +80,12 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             $this->getConfigPath(), 'doctrine'
         );
+
+        if ($this->isLumen()) {
+            $this->app->configure('cache');
+            $this->app->configure('database');
+            $this->app->configure('doctrine');
+        }
     }
 
     /**
@@ -85,7 +93,7 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerEntityManager()
     {
-        $registry = $this->app->make(ManagerRegistry::class);
+        $registry = $this->app->make('registry');
 
         // Add all managers into the registry
         foreach ($this->app->config->get('doctrine.managers', []) as $manager => $settings) {
@@ -107,8 +115,9 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerManagerRegistry()
     {
-        $this->app->singleton(IlluminateRegistry::class);
-        $this->app->alias(IlluminateRegistry::class, ManagerRegistry::class);
+        $this->app->singleton('registry', IlluminateRegistry::class);
+        $this->app->alias('registry', ManagerRegistry::class);
+        $this->app->alias('registry', ManagerRegistry::class);
     }
 
     /**
@@ -160,7 +169,7 @@ class DoctrineServiceProvider extends ServiceProvider
             );
 
             // Register the extensions
-            foreach ($this->app->config->get('doctrine.extensions', []) as $extension) {
+            foreach ($this->app->make('config')->get('doctrine.extensions', []) as $extension) {
                 if (!class_exists($extension)) {
                     throw new ExtensionNotFound("Extension {$extension} not found");
                 }
@@ -195,12 +204,12 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function extendAuthManager()
     {
-        $this->app->make(AuthManager::class)->extend('doctrine', function ($app) {
+        $this->app->make('auth')->extend('doctrine', function ($app) {
             $entity = $this->app->make('config')->get('auth.model');
 
             return new DoctrineUserProvider(
-                $app[Hasher::class],
-                $app[ManagerRegistry::class]->getManagerForClass($entity),
+                $app['hasher'],
+                $app['registry']->getManagerForClass($entity),
                 $entity
             );
         });
@@ -253,5 +262,13 @@ class DoctrineServiceProvider extends ServiceProvider
             ExtensionManager::class,
             ManagerRegistry::class
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isLumen()
+    {
+        return !function_exists('config_path');
     }
 }
