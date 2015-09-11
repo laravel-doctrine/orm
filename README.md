@@ -2,12 +2,12 @@
 
 <img src="https://cloud.githubusercontent.com/assets/7728097/8503648/de6beb86-21c2-11e5-9d70-ed4c24185a7e.jpg"/>
 
-[![GitHub release](https://img.shields.io/github/release/laravel-doctrine/orm.svg?style=flat)](https://packagist.org/packages/brouwers/laravel-doctrine)
+[![GitHub release](https://img.shields.io/github/release/laravel-doctrine/orm.svg?style=flat)](https://packagist.org/packages/laravel-doctrine/orm)
 [![Travis](https://img.shields.io/travis/laravel-doctrine/orm.svg?style=flat)](https://travis-ci.org/laravel-doctrine/orm)
 [![Scrutinizer](https://img.shields.io/scrutinizer/g/laravel-doctrine/orm.svg?style=flat)](https://github.com/laravel-doctrine/orm)
-[![Packagist](https://img.shields.io/packagist/dd/brouwers/Laravel-Doctrine.svg?style=flat)](https://packagist.org/packages/brouwers/laravel-doctrine)
-[![Packagist](https://img.shields.io/packagist/dm/brouwers/Laravel-Doctrine.svg?style=flat)](https://packagist.org/packages/brouwers/laravel-doctrine)
-[![Packagist](https://img.shields.io/packagist/dt/brouwers/Laravel-Doctrine.svg?style=flat)](https://packagist.org/packages/brouwers/laravel-doctrine)
+[![Packagist](https://img.shields.io/packagist/dd/laravel-doctrine/orm.svg?style=flat)](https://packagist.org/packages/laravel-doctrine/orm)
+[![Packagist](https://img.shields.io/packagist/dm/laravel-doctrine/orm.svg?style=flat)](https://packagist.org/packages/laravel-doctrine/orm)
+[![Packagist](https://img.shields.io/packagist/dt/laravel-doctrine/orm.svg?style=flat)](https://packagist.org/packages/laravel-doctrine/orm)
 
 ### This software is STILL IN DEVELOPMENT.
 
