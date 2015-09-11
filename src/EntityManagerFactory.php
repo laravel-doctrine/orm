@@ -78,7 +78,7 @@ class EntityManagerFactory
         );
 
         $connection = $this->connection->driver(
-            array_get($settings, 'connection')
+            $this->getConnectionDriverName($settings)
         );
 
         $this->setNamingStrategy($settings, $configuration);
@@ -285,7 +285,7 @@ class EntityManagerFactory
      *
      * @return mixed
      */
-    protected function decorateManager($settings, $manager)
+    protected function decorateManager(array $settings = [], $manager)
     {
         if ($decorator = array_get($settings, 'decorator', false)) {
             if (!class_exists($decorator)) {
@@ -296,5 +296,15 @@ class EntityManagerFactory
         }
 
         return $manager;
+    }
+
+    /**
+     * @param array $settings
+     *
+     * @return string|null
+     */
+    protected function getConnectionDriverName(array $settings = [])
+    {
+        return $this->config->get('database.' . array_get($settings, 'connection') . '.driver');
     }
 }
