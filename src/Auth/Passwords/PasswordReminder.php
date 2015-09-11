@@ -50,27 +50,27 @@ class PasswordReminder
 
     /**
      * Metadata definition for static_php metadata driver.
-     * @param \Doctrine\ORM\Mapping\ClassMetadata $metadata
+     * @param  \Doctrine\ORM\Mapping\ClassMetadata $metadata
      * @return void
      */
     public static function loadMetadata(\Doctrine\ORM\Mapping\ClassMetadata $metadata)
     {
         $metadata->setTableName('password_resets');
 
-        $metadata->mapField(array(
-            'id' => true,
+        $metadata->mapField([
+            'id'        => true,
             'fieldName' => 'email',
-            'type' => 'string',
-        ));
-        $metadata->mapField(array(
+            'type'      => 'string',
+        ]);
+        $metadata->mapField([
             'fieldName' => 'token',
-            'type' => 'string',
-        ));
-        $metadata->mapField(array(
+            'type'      => 'string',
+        ]);
+        $metadata->mapField([
             'columnName' => 'created_at',
-            'fieldName' => 'createdAt',
-            'type' => 'datetime',
-            'nullable' => false,
-        ));
+            'fieldName'  => 'createdAt',
+            'type'       => 'datetime',
+            'nullable'   => false,
+        ]);
     }
 }

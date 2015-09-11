@@ -7,8 +7,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Illuminate\Auth\AuthManager;
-use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Support\ServiceProvider;
+use InvalidArgumentException;
 use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
@@ -205,11 +205,17 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function extendAuthManager()
     {
         $this->app->make('auth')->extend('doctrine', function ($app) {
-            $entity = $this->app->make('config')->get('auth.model');
+            $entity = $app->make('config')->get('auth.model');
+
+            $em = $app['registry']->getManagerForClass($entity);
+
+            if (!$em) {
+                throw new InvalidArgumentException("No EntityManager is set-up for {$entity}");
+            }
 
             return new DoctrineUserProvider(
-                $app['hasher'],
-                $app['registry']->getManagerForClass($entity),
+                $app['hash'],
+                $em,
                 $entity
             );
         });
@@ -252,8 +258,8 @@ class DoctrineServiceProvider extends ServiceProvider
         return [
             'auth',
             'em',
+            'registry',
             'validation.presence',
-            'migration.repository',
             AuthManager::class,
             EntityManager::class,
             DoctrineManager::class,
