@@ -15,12 +15,12 @@ class DoctrineFileLogger implements SQLLogger
     protected $logger;
 
     /**
-     * @var ReplaceQueryParams
+     * @var FormatQueryKeywords
      */
     protected $formatter;
 
     /**
-     * @var int
+     * @var float
      */
     protected $start;
 

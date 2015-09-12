@@ -2,24 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-use Illuminate\Contracts\Config\Repository;
-use LaravelDoctrine\ORM\Configuration\Driver;
-
-class PgsqlConnection implements Driver
+class PgsqlConnection extends Connection
 {
-    /**
-     * @var Repository
-     */
-    protected $config;
-
-    /**
-     * @param Repository $config
-     */
-    public function __construct(Repository $config)
-    {
-        $this->config = $config;
-    }
-
     /**
      * @param array $settings
      *

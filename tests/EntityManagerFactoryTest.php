@@ -251,7 +251,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
             'name' => FilterStub::class
         ];
 
-        $this->mappingDriver->shouldReceive('addFilter')
+        $this->configuration->shouldReceive('addFilter')
                             ->with('name', FilterStub::class)
                             ->once();
 

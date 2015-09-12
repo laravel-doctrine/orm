@@ -88,8 +88,7 @@ class RedisCache extends CacheProvider
             Cache::STATS_HITS              => isset($stats['keyspace_hits']) ? $stats['keyspace_hits'] : $stats['Stats']['keyspace_hits'],
             Cache::STATS_MISSES            => isset($stats['keyspace_misses']) ? $stats['keyspace_misses'] : $stats['Stats']['keyspace_misses'],
             Cache::STATS_UPTIME            => isset($stats['uptime_in_seconds']) ? $stats['uptime_in_seconds'] : $stats['Server']['uptime_in_seconds'],
-            Cache::STATS_MEMORY_USAGE      => isset($stats['used_memory']) ? $stats['used_memory'] : $stats['Memory']['used_memory'],
-            Cache::STATS_MEMORY_AVAILIABLE => false,
+            Cache::STATS_MEMORY_USAGE      => isset($stats['used_memory']) ? $stats['used_memory'] : $stats['Memory']['used_memory']
         ];
     }
 }

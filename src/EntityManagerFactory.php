@@ -14,7 +14,6 @@ use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
-use LaravelDoctrine\ORM\Exceptions\ClassNotFound;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 
 class EntityManagerFactory
@@ -115,11 +114,11 @@ class EntityManagerFactory
     {
         if (isset($settings['events']['listeners'])) {
             foreach ($settings['events']['listeners'] as $event => $listener) {
-                if (class_exists($listener, false)) {
-                    $manager->getEventManager()->addEventListener($event, new $listener);
-                } else {
-                    throw new ClassNotFound($listener);
+                if (!class_exists($listener, false)) {
+                    throw new InvalidArgumentException("Listener {$listener} does not exist");
                 }
+
+                $manager->getEventManager()->addEventListener($event, new $listener);
             }
         }
     }
@@ -132,11 +131,11 @@ class EntityManagerFactory
     {
         if (isset($settings['events']['subscribers'])) {
             foreach ($settings['events']['subscribers'] as $subscriber) {
-                if (class_exists($subscriber, false)) {
-                    $manager->getEventManager()->addEventSubscriber(new $subscriber);
-                } else {
-                    throw new ClassNotFound($subscriber);
+                if (!class_exists($subscriber, false)) {
+                    throw new InvalidArgumentException("Subscriber $subscriber does not exist");
                 }
+
+                $manager->getEventManager()->addEventSubscriber(new $subscriber);
             }
         }
     }
@@ -149,11 +148,11 @@ class EntityManagerFactory
     protected function registerFilters(
         $settings = [],
         Configuration $configuration,
-        EntityManagerInterface $manager = null
+        EntityManagerInterface $manager
     ) {
         if (isset($settings['filters'])) {
             foreach ($settings['filters'] as $name => $filter) {
-                $configuration->getMetadataDriverImpl()->addFilter($name, $filter);
+                $configuration->addFilter($name, $filter);
                 $manager->getFilters()->enable($name);
             }
         }

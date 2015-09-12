@@ -20,7 +20,9 @@ trait Authenticatable
      */
     public function getAuthIdentifier()
     {
-        return method_exists($this, 'getKey') ? $this->getKey() : $this->id;
+        $name = $this->getAuthIdentifierName();
+
+        return $this->{$name};
     }
 
     /**

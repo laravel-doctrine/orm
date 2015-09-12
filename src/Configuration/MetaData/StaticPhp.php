@@ -4,24 +4,9 @@ namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver;
 use Doctrine\ORM\Tools\Setup;
-use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
-use LaravelDoctrine\ORM\Configuration\Driver;
 
-class StaticPhp implements Driver
+class StaticPhp extends MetaData
 {
-    /**
-     * @var CacheManager
-     */
-    protected $cacheManager;
-
-    /**
-     * @param CacheManager $cacheManager
-     */
-    public function __construct(CacheManager $cacheManager)
-    {
-        $this->cacheManager = $cacheManager;
-    }
-
     /**
      * @param array $settings
      *
@@ -32,7 +17,7 @@ class StaticPhp implements Driver
         $configuration = Setup::createConfiguration(
             array_get($settings, 'dev'),
             array_get($settings, 'proxies.path'),
-            $this->cacheManager->driver()
+            $this->cache->driver()
         );
 
         $configuration->setMetadataDriverImpl(

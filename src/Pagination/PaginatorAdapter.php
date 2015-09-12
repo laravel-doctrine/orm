@@ -10,7 +10,7 @@ use Illuminate\Pagination\Paginator;
 class PaginatorAdapter
 {
     /**
-     * @var Query
+     * @var AbstractQuery
      */
     protected $query;
 

@@ -13,7 +13,7 @@ class Config implements Driver
     /**
      * @var CacheManager
      */
-    protected $cacheManager;
+    protected $cache;
 
     /**
      * @var Repository
@@ -21,13 +21,13 @@ class Config implements Driver
     protected $config;
 
     /**
-     * @param CacheManager $cacheManager
+     * @param CacheManager $cache
      * @param Repository   $config
      */
-    public function __construct(CacheManager $cacheManager, Repository $config)
+    public function __construct(CacheManager $cache, Repository $config)
     {
-        $this->cacheManager = $cacheManager;
-        $this->config       = $config;
+        $this->cache  = $cache;
+        $this->config = $config;
     }
 
     /**
@@ -40,7 +40,7 @@ class Config implements Driver
         $configuration = Setup::createConfiguration(
             array_get($settings, 'dev'),
             array_get($settings, 'proxies.path'),
-            $this->cacheManager->driver()
+            $this->cache->driver()
         );
 
         $configuration->setMetadataDriverImpl(

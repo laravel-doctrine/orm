@@ -72,7 +72,7 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
 
         $this->queryExtraConditions($extra, $builder);
 
-        return $builder->getQuery()->presence();
+        return $builder->getQuery()->getSingleScalarResult();
     }
 
     /**

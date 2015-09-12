@@ -96,7 +96,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $registry = $this->app->make('registry');
 
         // Add all managers into the registry
-        foreach ($this->app->config->get('doctrine.managers', []) as $manager => $settings) {
+        foreach ($this->app->make('config')->get('doctrine.managers', []) as $manager => $settings) {
             $registry->addManager($manager, $settings);
             $registry->addConnection($manager);
         }

@@ -8,12 +8,12 @@ use Exception;
 class ReplaceQueryParams implements QueryFormatter
 {
     /**
-     * @param string $sql
-     * @param array  $params
+     * @param string     $sql
+     * @param array|null $params
      *
      * @return string
      */
-    public function format($sql, $params)
+    public function format($sql, array $params = null)
     {
         if (is_array($params)) {
             foreach ($params as $param) {

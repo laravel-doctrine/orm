@@ -4,6 +4,7 @@ namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * @ORM\Entity
@@ -50,12 +51,14 @@ class PasswordReminder
 
     /**
      * Metadata definition for static_php metadata driver.
-     * @param  \Doctrine\ORM\Mapping\ClassMetadata $metadata
+     * @param  ClassMetadata $metadata
      * @return void
      */
-    public static function loadMetadata(\Doctrine\ORM\Mapping\ClassMetadata $metadata)
+    public static function loadMetadata(ClassMetadata $metadata)
     {
-        $metadata->setTableName('password_resets');
+        $metadata->setPrimaryTable([
+            'name' => 'password_resets'
+        ]);
 
         $metadata->mapField([
             'id'        => true,

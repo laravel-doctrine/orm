@@ -44,12 +44,12 @@ class FormatQueryKeywords implements QueryFormatter
     }
 
     /**
-     * @param string $sql
-     * @param array  $params
+     * @param string     $sql
+     * @param array|null $params
      *
      * @return string
      */
-    public function format($sql, $params)
+    public function format($sql, array $params = null)
     {
         $sql = $this->formatter->format($sql, $params);
 

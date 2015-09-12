@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 
@@ -74,11 +75,7 @@ class DoctrineManager
         $connections = $connection ? [$connection] : $this->registry->getManagerNames();
 
         foreach ($connections as $connection) {
-            $manager = $this->registry->getManager($connection);
-
-            $manager->getConfiguration()
-                    ->getMetadataDriverImpl()
-                    ->addNamespace($namespace);
+            $this->getMetaDataDriver($connection)->addNamespace($namespace);
         }
     }
 
@@ -91,11 +88,19 @@ class DoctrineManager
         $connections = $connection ? [$connection] : $this->registry->getManagerNames();
 
         foreach ($connections as $connection) {
-            $manager = $this->registry->getManager($connection);
-
-            $manager->getConfiguration()
-                    ->getMetadataDriverImpl()
-                    ->addPaths($paths);
+            $this->getMetaDataDriver($connection)->addPaths($paths);
         }
+    }
+
+    /**
+     * @param null $connection
+     *
+     * @return MappingDriver
+     */
+    public function getMetaDataDriver($connection = null)
+    {
+        $manager = $this->registry->getManager($connection);
+
+        return $manager->getConfiguration()->getMetadataDriverImpl();
     }
 }
