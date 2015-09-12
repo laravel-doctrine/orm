@@ -178,7 +178,7 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
         $this->builder->shouldReceive('getQuery')
                       ->once()->andReturn($this->query);
 
-        $this->query->shouldReceive('presence');
+        $this->query->shouldReceive('getSingleScalarResult');
     }
 
     protected function tearDown()
