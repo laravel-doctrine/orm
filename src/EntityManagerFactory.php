@@ -280,11 +280,11 @@ class EntityManagerFactory
 
     /**
      * @param $settings
-     * @param $manager
+     * @param EntityManagerInterface $manager
      *
      * @return mixed
      */
-    protected function decorateManager(array $settings = [], $manager)
+    protected function decorateManager(array $settings = [], EntityManagerInterface $manager)
     {
         if ($decorator = array_get($settings, 'decorator', false)) {
             if (!class_exists($decorator)) {

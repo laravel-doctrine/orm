@@ -124,7 +124,7 @@ final class IlluminateRegistry implements ManagerRegistry
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return bool
      */
@@ -194,7 +194,7 @@ final class IlluminateRegistry implements ManagerRegistry
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return bool
      */
