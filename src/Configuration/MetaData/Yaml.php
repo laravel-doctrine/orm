@@ -4,40 +4,20 @@ namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Tools\Setup;
 
-class Yaml extends AbstractMetaData
+class Yaml extends MetaData
 {
     /**
-     * @var string
-     */
-    protected $name = 'yaml';
-
-    /**
      * @param array $settings
-     * @param bool  $dev
      *
-     * @return static
+     * @return \Doctrine\ORM\Configuration
      */
-    public function configure(array $settings = [], $dev = false)
-    {
-        $this->settings = [
-            'dev'        => $dev,
-            'paths'      => array_get($settings, 'paths', []),
-            'proxy_path' => array_get($settings, 'proxies.path'),
-        ];
-
-        return $this;
-    }
-
-    /**
-     * @return \Doctrine\ORM\Configuration|mixed
-     */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
         return Setup::createYAMLMetadataConfiguration(
-            array_get($this->settings, 'paths'),
-            array_get($this->settings, 'dev'),
-            array_get($this->settings, 'proxy_path'),
-            $this->getCache()
+            array_get($settings, 'paths'),
+            array_get($settings, 'dev'),
+            array_get($settings, 'proxies.path'),
+            $this->cache->driver()
         );
     }
 }

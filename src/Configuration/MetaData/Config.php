@@ -3,46 +3,49 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Tools\Setup;
+use Illuminate\Contracts\Config\Repository;
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
+use LaravelDoctrine\ORM\Configuration\Driver;
 use LaravelDoctrine\ORM\Configuration\MetaData\Config\ConfigDriver;
 
-class Config extends AbstractMetaData
+class Config implements Driver
 {
     /**
-     * @var string
+     * @var CacheManager
      */
-    protected $name = 'config';
+    protected $cache;
 
     /**
-     * @param array $settings
-     * @param bool  $dev
-     *
-     * @return static
+     * @var Repository
      */
-    public function configure(array $settings = [], $dev = false)
-    {
-        $this->settings = [
-            'dev'          => $dev,
-            'proxy_path'   => array_get($settings, 'proxies.path'),
-            'mapping_file' => array_get($settings, 'mapping_file')
-        ];
+    protected $config;
 
-        return $this;
+    /**
+     * @param CacheManager $cache
+     * @param Repository   $config
+     */
+    public function __construct(CacheManager $cache, Repository $config)
+    {
+        $this->cache  = $cache;
+        $this->config = $config;
     }
 
     /**
+     * @param array $settings
+     *
      * @return \Doctrine\ORM\Configuration|mixed
      */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
         $configuration = Setup::createConfiguration(
-            array_get($this->settings, 'dev'),
-            array_get($this->settings, 'proxy_path'),
-            $this->getCache()
+            array_get($settings, 'dev'),
+            array_get($settings, 'proxies.path'),
+            $this->cache->driver()
         );
 
         $configuration->setMetadataDriverImpl(
             new ConfigDriver(
-                config(array_get($this->settings, 'mapping_file'), [])
+                $this->config->get(array_get($settings, 'mapping_file'), [])
             )
         );
 

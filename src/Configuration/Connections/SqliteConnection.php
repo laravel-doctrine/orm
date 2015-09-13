@@ -2,27 +2,40 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-class SqliteConnection extends AbstractConnection
+class SqliteConnection extends Connection
 {
     /**
-     * @var string
+     * @param array $settings
+     *
+     * @return array
      */
-    protected $name = 'sqlite';
+    public function resolve(array $settings = [])
+    {
+        return [
+            'driver'   => 'pdo_sqlite',
+            'user'     => $this->config->get('database.connections.sqlite.username'),
+            'password' => $this->config->get('database.connections.sqlite.password'),
+            'prefix'   => $this->config->get('database.connections.sqlite.prefix'),
+            'memory'   => $this->getMemory(),
+            'path'     => $this->getPath()
+        ];
+    }
 
     /**
-     * @param array $config
-     *
-     * @return SqliteConnection
+     * @return bool
      */
-    public function configure($config = [])
+    protected function getMemory()
     {
-        return new static ([
-            'driver'   => 'pdo_sqlite',
-            'user'     => array_get($config, 'username'),
-            'password' => array_get($config, 'password'),
-            'prefix'   => array_get($config, 'prefix'),
-            'memory'   => $config['database'] == ':memory' ? true : false,
-            'path'     => $config['database'] == ':memory' ? null : $config['database']
-        ]);
+        return $this->config->get('database.connections.sqlite.database') == ':memory' ? true : false;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPath()
+    {
+        return $this->config->get('database.connections.sqlite.database') == ':memory'
+            ? null
+            : $this->config->get('database.connections.sqlite.database');
     }
 }

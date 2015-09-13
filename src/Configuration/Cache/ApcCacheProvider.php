@@ -2,37 +2,33 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Doctrine\Common\Cache\ApcCache;
-use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
+use Illuminate\Cache\ApcStore;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
-class ApcCacheProvider extends AbstractCacheProvider
+class ApcCacheProvider implements Driver
 {
     /**
-     * @var string
+     * @var ApcStore
      */
-    protected $name = 'apc';
+    protected $store;
 
     /**
-     * @param array $config
-     *
-     * @throws DriverNotFound
-     * @return ApcCacheProvider
+     * @param ApcStore $store
      */
-    public function configure($config = [])
+    public function __construct(ApcStore $store)
     {
-        return $this;
+        $this->store = $store;
     }
 
     /**
-     * @throws DriverNotFound
+     * @param array $settings
+     *
      * @return ApcCache
      */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
-        if (extension_loaded('apc')) {
-            return new ApcCache();
-        }
-
-        throw new DriverNotFound('Apc extension not loaded');
+        return new ApcCache(
+            $this->store
+        );
     }
 }

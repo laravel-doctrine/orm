@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Pagination;
 
-use Doctrine\ORM\Query;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -10,23 +10,23 @@ use Illuminate\Pagination\Paginator;
 class PaginatorAdapter
 {
     /**
-     * @var Query
+     * @var AbstractQuery
      */
     protected $query;
 
     /**
-     * @param Query  $query
-     * @param string $perPage
-     * @param string $pageName
-     * @param bool   $fetchJoinCollection
+     * @param AbstractQuery $query
+     * @param int           $perPage
+     * @param string        $pageName
+     * @param bool          $fetchJoinCollection
      *
      * @return LengthAwarePaginator
      */
-    public function make(Query $query, $perPage = '15', $pageName = 'page', $fetchJoinCollection = true)
+    public function make(AbstractQuery $query, $perPage = 15, $pageName = 'page', $fetchJoinCollection = true)
     {
         $this->query($query)
-                ->skip($this->getSkipAmount($perPage, $pageName))
-                ->take($perPage);
+             ->skip($this->getSkipAmount($perPage, $pageName))
+             ->take($perPage);
 
         return $this->convertToLaravelPaginator(
             $this->getDoctrinePaginator($fetchJoinCollection),
@@ -36,11 +36,11 @@ class PaginatorAdapter
     }
 
     /**
-     * @param   $query
+     * @param AbstractQuery $query
      *
      * @return $this
      */
-    protected function query($query)
+    protected function query(AbstractQuery $query)
     {
         $this->query = $query;
 
@@ -48,7 +48,7 @@ class PaginatorAdapter
     }
 
     /**
-     * @return Query
+     * @return AbstractQuery
      */
     public function getQuery()
     {
@@ -56,7 +56,7 @@ class PaginatorAdapter
     }
 
     /**
-     * @param $start
+     * @param int $start
      *
      * @return $this
      */
@@ -68,7 +68,7 @@ class PaginatorAdapter
     }
 
     /**
-     * @param $perPage
+     * @param int $perPage
      *
      * @return $this
      */
@@ -80,7 +80,7 @@ class PaginatorAdapter
     }
 
     /**
-     * @param        $perPage
+     * @param int    $perPage
      * @param string $pageName
      *
      * @return int
@@ -91,7 +91,7 @@ class PaginatorAdapter
     }
 
     /**
-     * @param $fetchJoinCollection
+     * @param bool $fetchJoinCollection
      *
      * @return DoctrinePaginator
      */
@@ -105,7 +105,7 @@ class PaginatorAdapter
 
     /**
      * @param DoctrinePaginator $doctrinePaginator
-     * @param                   $perPage
+     * @param int               $perPage
      * @param string            $pageName
      *
      * @return LengthAwarePaginator
@@ -141,7 +141,7 @@ class PaginatorAdapter
     }
 
     /**
-     * @param $pageName
+     * @param int $pageName
      *
      * @return int
      */

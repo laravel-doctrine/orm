@@ -2,10 +2,10 @@
 
 namespace LaravelDoctrine\ORM\Extensions;
 
-use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\EventManager;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
-use Gedmo\DoctrineExtensions;
 
 class ExtensionManager
 {
@@ -15,26 +15,6 @@ class ExtensionManager
     protected $extensions = [];
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    /**
-     * @var \Doctrine\Common\EventManager
-     */
-    protected $evm;
-
-    /**
-     * @var \Doctrine\ORM\Configuration
-     */
-    protected $metadata;
-
-    /**
-     * @var Reader
-     */
-    protected $reader;
-
-    /**
      * @var ManagerRegistry
      */
     protected $registry;
@@ -42,21 +22,14 @@ class ExtensionManager
     /**
      * @var array
      */
-    protected $subscribedExtensions = [];
-
-    /**
-     * @var DriverChain
-     */
-    private $driverChain;
+    protected $bootedExtensions = [];
 
     /**
      * @param ManagerRegistry $registry
-     * @param DriverChain     $driverChain
      */
-    public function __construct(ManagerRegistry $registry, DriverChain $driverChain)
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->registry    = $registry;
-        $this->driverChain = $driverChain;
+        $this->registry = $registry;
     }
 
     /**
@@ -64,19 +37,17 @@ class ExtensionManager
      */
     public function boot()
     {
-        foreach ($this->registry->getManagers() as $em) {
-            $this->em       = $em;
-            $this->evm      = $this->em->getEventManager();
-            $this->metadata = $this->em->getConfiguration();
-            $this->reader   = $this->driverChain->getReader();
-
-            $hash = spl_object_hash($em);
-            if (!isset($this->subscribedExtensions[$hash])) {
-                $this->subscribedExtensions[$hash] = [];
-            }
-
+        foreach ($this->registry->getManagers() as $connection => $em) {
             foreach ($this->extensions as $extension) {
-                $this->bootExtension($extension);
+                if ($this->notBootedYet($connection, $extension)) {
+                    $this->bootExtension(
+                        $connection,
+                        $extension,
+                        $em,
+                        $em->getEventManager(),
+                        $em->getConfiguration()
+                    );
+                }
             }
         }
     }
@@ -90,43 +61,68 @@ class ExtensionManager
     }
 
     /**
-     * @param Extension $extension
+     * @param                        $connection
+     * @param Extension              $extension
+     * @param EntityManagerInterface $em
+     * @param EventManager           $evm
+     * @param Configuration          $configuration
      */
-    public function bootExtension(Extension $extension)
-    {
-        $hash = spl_object_hash($this->em);
-        if (isset($this->subscribedExtensions[$hash][get_class($extension)])) { //This extension is already subscribed to this entity manager.
-
-            return;
-        }
-
-        $extension->addSubscribers($this->evm, $this->em, $this->reader);
+    protected function bootExtension(
+        $connection,
+        Extension $extension,
+        EntityManagerInterface $em,
+        EventManager $evm,
+        Configuration $configuration
+    ) {
+        $extension->addSubscribers(
+            $evm,
+            $em,
+            $configuration->getMetadataDriverImpl()->getReader()
+        );
 
         if (is_array($extension->getFilters())) {
             foreach ($extension->getFilters() as $name => $filter) {
-                $this->metadata->addFilter($name, $filter);
-                $this->em->getFilters()->enable($name);
+                $configuration->addFilter($name, $filter);
+                $em->getFilters()->enable($name);
             }
         }
-        $this->subscribedExtensions[$hash][get_class($extension)] = true;
+
+        $this->markAsBooted($connection, $extension);
     }
 
     /**
-     * Todo: Should be removed once GedmoExtension in the laravel-doctrine/extensions repo is tested to work
-     * @param bool $all
+     * @param           $connection
+     * @param Extension $extension
+     *
+     * @return bool
      */
-    public function enableGedmoExtensions($all = true)
+    protected function notBootedYet($connection, Extension $extension)
     {
-        if ($all) {
-            DoctrineExtensions::registerMappingIntoDriverChainORM(
-                $this->driverChain->getChain(),
-                $this->driverChain->getReader()
-            );
-        } else {
-            DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
-                $this->driverChain->getChain(),
-                $this->driverChain->getReader()
-            );
-        }
+        return !isset($this->bootedExtensions[$connection][get_class($extension)]);
+    }
+
+    /**
+     * @param           $connection
+     * @param Extension $extension
+     */
+    protected function markAsBooted($connection, Extension $extension)
+    {
+        $this->bootedExtensions[$connection][get_class($extension)] = true;
+    }
+
+    /**
+     * @return array|Extension[]
+     */
+    public function getExtensions()
+    {
+        return $this->extensions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBootedExtensions()
+    {
+        return $this->bootedExtensions;
     }
 }

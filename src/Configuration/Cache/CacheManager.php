@@ -2,73 +2,32 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Closure;
-use LaravelDoctrine\ORM\Configuration\Extendable;
-use LaravelDoctrine\ORM\Configuration\ExtendableTrait;
-use LaravelDoctrine\ORM\Exceptions\CouldNotExtend;
-use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
+use LaravelDoctrine\ORM\Configuration\Manager;
 
-class CacheManager implements Extendable
+class CacheManager extends Manager
 {
-    use ExtendableTrait;
-
     /**
-     * @var array
+     * Get the default driver name.
+     * @return string
      */
-    protected $excluded = [
-        'database'
-    ];
-
-    /**
-     * @param array $drivers
-     *
-     * @throws DriverNotFound
-     */
-    public static function registerDrivers(array $drivers = [])
+    public function getDefaultDriver()
     {
-        $manager = static::getInstance();
-
-        foreach ($drivers as $name => $driver) {
-            if (!in_array($name, $manager->excluded)) {
-                $class = __NAMESPACE__ . '\\' . studly_case($name) . 'CacheProvider';
-
-                if (class_exists($class)) {
-                    $driver = (new $class())->configure($driver);
-                    $manager->register($driver);
-                } else {
-                    throw new DriverNotFound("Cache driver {$name} is not supported");
-                }
-            }
-        }
+        return $this->container->make('config')->get('doctrine.cache.default', 'array');
     }
 
     /**
-     * @param          $driver
-     * @param callable $callback
-     * @param null     $class
-     *
-     * @throws CouldNotExtend
-     * @return CustomCacheProvider
+     * @return string
      */
-    public function transformToDriver($driver, Closure $callback = null, $class = null)
+    public function getNamespace()
     {
-        if ($callback) {
-            $result = call_user_func($callback, $this->get($driver));
+        return __NAMESPACE__;
+    }
 
-            return new CustomCacheProvider($result, $driver);
-        }
-
-        if (class_exists($class)) {
-            $result = new $class;
-
-            if ($result instanceof CacheProvider) {
-                $result->configure();
-                $result->setName($driver);
-
-                return $result;
-            }
-        }
-
-        throw new CouldNotExtend('Expected an instance of Cache or Doctrine\Common\Cache');
+    /**
+     * @return string
+     */
+    public function getClassSuffix()
+    {
+        return 'CacheProvider';
     }
 }

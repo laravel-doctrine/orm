@@ -1,79 +1,94 @@
 <?php
 
-use Doctrine\Common\Cache\FilesystemCache;
-use LaravelDoctrine\ORM\Configuration\Cache\AbstractCacheProvider;
+use Doctrine\Common\Cache\ArrayCache;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Container\Container;
+use LaravelDoctrine\ORM\Configuration\Cache\ArrayCacheProvider;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Cache\FileCacheProvider;
+use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
+use Mockery as m;
 
 class CacheManagerTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var CacheManager
+     */
+    protected $manager;
+
+    /**
+     * @var Container
+     */
+    protected $app;
+
+    /**
+     * @var Repository
+     */
+    protected $config;
+
     protected function setUp()
     {
-        CacheManager::registerDrivers([
-            'file' => [
-                'path' => 'path'
-            ]
-        ]);
+        $this->app = m::mock(Container::class);
+        $this->app->shouldReceive('make')->andReturn(m::self());
+        $this->app->shouldReceive('get')->with('doctrine.cache.default', 'array')->andReturn('array');
+
+        $this->manager = new CacheManager(
+            $this->app
+        );
     }
 
-    public function test_register_caches()
+    public function test_driver_returns_the_default_driver()
     {
-        $drivers = CacheManager::getDrivers();
-        $this->assertCount(1, $drivers);
-        $this->assertInstanceOf(FileCacheProvider::class, head($drivers));
+        $this->app->shouldReceive('resolve')->andReturn(new ArrayCacheProvider());
+
+        $this->assertInstanceOf(ArrayCacheProvider::class, $this->manager->driver());
+        $this->assertInstanceOf(ArrayCache::class, $this->manager->driver()->resolve());
     }
 
-    public function test_cache_can_be_extended()
+    public function test_driver_can_return_a_given_driver()
     {
-        CacheManager::extend('file', function ($driver) {
+        $config = m::mock(Repository::class);
 
-            // Should give instance of the already registered driver
-            $this->assertInstanceOf(FilesystemCache::class, $driver);
+        $this->app->shouldReceive('resolve')->andReturn(new FileCacheProvider(
+            $config
+        ));
 
-            return $driver;
+        $this->assertInstanceOf(FileCacheProvider::class, $this->manager->driver());
+    }
+
+    public function test_cant_resolve_unsupported_drivers()
+    {
+        $this->setExpectedException(DriverNotFound::class);
+        $this->manager->driver('non-existing');
+    }
+
+    public function test_can_create_custom_drivers()
+    {
+        $this->manager->extend('new', function () {
+            return 'provider';
         });
 
-        $driver = CacheManager::resolve('file');
-
-        $this->assertInstanceOf(FilesystemCache::class, $driver);
+        $this->assertEquals('provider', $this->manager->driver('new'));
     }
 
-    public function test_custom_cache_can_be_set()
+    public function test_can_use_application_when_extending()
     {
-        CacheManager::extend('custom', function () {
-            return new FilesystemCache('path');
+        $this->manager->extend('new', function ($app) {
+            $this->assertInstanceOf(Container::class, $app);
+        });
+    }
+
+    public function test_can_replace_an_existing_driver()
+    {
+        $this->manager->extend('memcache', function () {
+            return 'provider';
         });
 
-        $driver = CacheManager::resolve('custom');
-        $this->assertInstanceOf(FilesystemCache::class, $driver);
+        $this->assertEquals('provider', $this->manager->driver('memcache'));
     }
 
-    public function test_a_string_class_can_be_use_as_extend()
+    protected function tearDown()
     {
-        CacheManager::extend('custom3', StubCacheProvider::class);
-
-        $driver = CacheManager::resolve('custom3');
-        $this->assertEquals('stub', $driver);
-    }
-}
-
-class StubCacheProvider extends AbstractCacheProvider
-{
-    /**
-     * @param array $config
-     *
-     * @return array
-     */
-    public function configure($config = [])
-    {
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function resolve()
-    {
-        return 'stub';
+        m::close();
     }
 }

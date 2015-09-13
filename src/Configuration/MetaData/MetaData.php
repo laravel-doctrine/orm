@@ -2,20 +2,21 @@
 
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Driver;
 
-interface MetaData extends Driver
+abstract class MetaData implements Driver
 {
     /**
-     * @param array $settings
-     * @param bool  $dev
-     *
-     * @return static
+     * @var CacheManager
      */
-    public function configure(array $settings = [], $dev = false);
+    protected $cache;
 
     /**
-     * @return mixed
+     * @param CacheManager $cache
      */
-    public function getCache();
+    public function __construct(CacheManager $cache)
+    {
+        $this->cache = $cache;
+    }
 }

@@ -4,6 +4,7 @@ namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * @ORM\Entity
@@ -46,5 +47,33 @@ class PasswordReminder
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Metadata definition for static_php metadata driver.
+     * @param  ClassMetadata $metadata
+     * @return void
+     */
+    public static function loadMetadata(ClassMetadata $metadata)
+    {
+        $metadata->setPrimaryTable([
+            'name' => 'password_resets'
+        ]);
+
+        $metadata->mapField([
+            'id'        => true,
+            'fieldName' => 'email',
+            'type'      => 'string',
+        ]);
+        $metadata->mapField([
+            'fieldName' => 'token',
+            'type'      => 'string',
+        ]);
+        $metadata->mapField([
+            'columnName' => 'created_at',
+            'fieldName'  => 'createdAt',
+            'type'       => 'datetime',
+            'nullable'   => false,
+        ]);
     }
 }

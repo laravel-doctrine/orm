@@ -4,7 +4,7 @@ namespace LaravelDoctrine\ORM\Extensions\TablePrefix;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventManager;
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use LaravelDoctrine\ORM\Extensions\Extension;
 

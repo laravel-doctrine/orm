@@ -2,14 +2,21 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
+use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Driver;
 
-interface Connection extends Driver
+abstract class Connection implements Driver
 {
     /**
-     * @param array $config
-     *
-     * @return Connection
+     * @var Repository
      */
-    public function configure($config = []);
+    protected $config;
+
+    /**
+     * @param Repository $config
+     */
+    public function __construct(Repository $config)
+    {
+        $this->config = $config;
+    }
 }

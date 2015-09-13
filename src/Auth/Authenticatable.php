@@ -20,7 +20,18 @@ trait Authenticatable
      */
     public function getAuthIdentifier()
     {
-        return method_exists($this, 'getKey') ? $this->getKey() : $this->id;
+        $name = $this->getAuthIdentifierName();
+
+        return $this->{$name};
+    }
+
+    /**
+     * Get the column name for the primary key
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'id';
     }
 
     /**

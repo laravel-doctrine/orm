@@ -1,96 +1,89 @@
 <?php
 
-use Doctrine\ORM\Configuration;
-use Doctrine\ORM\Tools\Setup;
-use LaravelDoctrine\ORM\Configuration\MetaData\AbstractMetaData;
+use Illuminate\Contracts\Container\Container;
+use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
+use LaravelDoctrine\ORM\Configuration\MetaData\Yaml;
+use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
+use Mockery as m;
 
 class MetaDataManagerTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var MetaDataManager
+     */
+    protected $manager;
+
+    /**
+     * @var CacheManager
+     */
+    protected $cache;
+
+    /**
+     * @var Container
+     */
+    protected $app;
+
     protected function setUp()
     {
-        MetaDataManager::registerDrivers([
-            'annotations' => [
-                'paths' => []
-            ]
-        ], true);
+        $this->app = m::mock(Container::class);
+        $this->app->shouldReceive('make')->andReturn(m::self());
+
+        $this->cache = m::mock(CacheManager::class);
+
+        $this->manager = new MetaDataManager(
+            $this->app
+        );
     }
 
-    public function test_register_metadatas()
+    public function test_driver_returns_the_default_driver()
     {
-        $drivers = MetaDataManager::getDrivers();
-        $this->assertCount(1, $drivers);
-        $this->assertInstanceOf(Annotations::class, head($drivers));
+        $this->app->shouldReceive('resolve')->andReturn(new Annotations($this->cache));
+
+        $this->assertInstanceOf(Annotations::class, $this->manager->driver());
     }
 
-    public function test_metadata_can_be_extended()
+    public function test_driver_can_return_a_given_driver()
     {
-        MetaDataManager::extend('annotations', function ($driver) {
+        $this->app->shouldReceive('resolve')->andReturn(new Yaml($this->cache));
 
-            // Should give instance of the already registered driver
-            $this->assertInstanceOf(Configuration::class, $driver);
+        $this->assertInstanceOf(Yaml::class, $this->manager->driver('yaml'));
+    }
 
-            return $driver;
+    public function test_cant_resolve_unsupported_drivers()
+    {
+        $this->setExpectedException(DriverNotFound::class);
+        $this->manager->driver('non-existing');
+    }
+
+    public function test_can_create_custom_drivers()
+    {
+        $this->manager->extend('new', function () {
+            return 'configuration';
         });
 
-        $driver = MetaDataManager::resolve('annotations');
-
-        $this->assertInstanceOf(Configuration::class, $driver);
+        $this->assertEquals('configuration', $this->manager->driver('new'));
     }
 
-    public function test_custom_metadata_can_be_set()
+    public function test_can_use_application_when_extending()
     {
-        MetaDataManager::extend('custom', function () {
-            return Setup::createAnnotationMetadataConfiguration([], true);
+        $this->manager->extend('new', function ($app) {
+            $this->assertInstanceOf(Container::class, $app);
+        });
+    }
+
+    public function test_can_replace_an_existing_driver()
+    {
+        $this->manager->extend('annotations', function () {
+            return 'configuration';
         });
 
-        $driver = MetaDataManager::resolve('custom');
-        $this->assertInstanceOf(Configuration::class, $driver);
+        $this->assertEquals('configuration', $this->manager->driver('annotations'));
     }
 
-    public function test_a_string_class_can_be_use_as_extend()
+    protected function tearDown()
     {
-        MetaDataManager::extend('custom3', StubMetaData::class);
-
-        $driver = MetaDataManager::resolve('custom3');
-        $this->assertEquals('stub', $driver);
-    }
-}
-
-function config()
-{
-    return null;
-}
-
-function event()
-{
-    return null;
-}
-
-function app()
-{
-    return null;
-}
-
-class StubMetaData extends AbstractMetaData
-{
-    /**
-     * @return mixed
-     */
-    public function resolve()
-    {
-        return 'stub';
-    }
-
-    /**
-     * @param array $settings
-     * @param bool  $dev
-     *
-     * @return static
-     */
-    public function configure(array $settings = [], $dev = false)
-    {
-        return $this;
+        m::close();
     }
 }

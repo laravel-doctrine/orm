@@ -3,32 +3,33 @@
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
 use Doctrine\Common\Cache\FilesystemCache;
+use Illuminate\Contracts\Config\Repository;
+use LaravelDoctrine\ORM\Configuration\Driver;
 
-class FileCacheProvider extends AbstractCacheProvider
+class FileCacheProvider implements Driver
 {
     /**
-     * @var string
+     * @var Repository
      */
-    protected $name = 'file';
+    protected $config;
 
     /**
-     * @param array $config
-     *
-     * @throws DriverNotFound
-     * @return FileCacheProvider
+     * @param Repository $config
      */
-    public function configure($config = [])
+    public function __construct(Repository $config)
     {
         $this->config = $config;
-
-        return $this;
     }
 
     /**
+     * @param array $settings
+     *
      * @return FilesystemCache
      */
-    public function resolve()
+    public function resolve(array $settings = [])
     {
-        return new FilesystemCache($this->config['path']);
+        return new FilesystemCache(
+            $this->config->get('cache.stores.file.path', storage_path('framework/cache'))
+        );
     }
 }

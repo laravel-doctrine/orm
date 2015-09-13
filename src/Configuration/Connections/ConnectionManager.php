@@ -2,65 +2,32 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-use Closure;
-use LaravelDoctrine\ORM\Configuration\Extendable;
-use LaravelDoctrine\ORM\Configuration\ExtendableTrait;
-use LaravelDoctrine\ORM\Exceptions\CouldNotExtend;
-use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
+use LaravelDoctrine\ORM\Configuration\Manager;
 
-class ConnectionManager implements Extendable
+class ConnectionManager extends Manager
 {
-    use ExtendableTrait;
-
     /**
-     * @param $connections
-     *
-     * @throws DriverNotFound
+     * Get the default driver name.
+     * @return string
      */
-    public static function registerConnections(array $connections)
+    public function getDefaultDriver()
     {
-        $manager = static::getInstance();
-
-        foreach ($connections as $name => $connection) {
-            $class = __NAMESPACE__ . '\\' . studly_case($connection['driver']) . 'Connection';
-
-            if (class_exists($class)) {
-                $driver = (new $class())->configure($connection);
-                $driver->setName($name);
-                $manager->register($driver);
-            } else {
-                throw new DriverNotFound("Driver {$connection['driver']} in connection '{$name}' is not supported");
-            }
-        }
+        return 'mysql';
     }
 
     /**
-     * @param         $driver
-     * @param Closure $callback
-     * @param null    $class
-     *
-     * @throws CouldNotExtend
-     * @return Connection
+     * @return string
      */
-    public function transformToDriver($driver, Closure $callback = null, $class = null)
+    public function getNamespace()
     {
-        if ($callback) {
-            $result = call_user_func($callback, $this->get($driver));
+        return __NAMESPACE__;
+    }
 
-            return new CustomConnection($result, $driver);
-        }
-
-        if (class_exists($class)) {
-            $result = new $class;
-
-            if ($result instanceof Connection) {
-                $result = $result->configure();
-                $result->setName($driver);
-
-                return $result;
-            }
-        }
-
-        throw new CouldNotExtend('Expected an instance of Connection or Doctrine\ORM\Configuration');
+    /**
+     * @return string
+     */
+    public function getClassSuffix()
+    {
+        return 'Connection';
     }
 }

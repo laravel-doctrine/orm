@@ -2,28 +2,23 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-class SqlsrvConnection extends AbstractConnection
+class SqlsrvConnection extends Connection
 {
     /**
-     * @var string
-     */
-    protected $name = 'sqlsrv';
-
-    /**
-     * @param array $config
+     * @param array $settings
      *
-     * @return SqlsrvConnection
+     * @return array
      */
-    public function configure($config = [])
+    public function resolve(array $settings = [])
     {
-        return new static ([
+        return [
             'driver'   => 'pdo_sqlsrv',
-            'host'     => array_get($config, 'host'),
-            'dbname'   => array_get($config, 'database'),
-            'user'     => array_get($config, 'username'),
-            'password' => array_get($config, 'password'),
-            'prefix'   => array_get($config, 'prefix'),
-            'port'     => array_get($config, 'port'),
-        ]);
+            'host'     => $this->config->get('database.connections.sqlsrv.host'),
+            'dbname'   => $this->config->get('database.connections.sqlsrv.database'),
+            'user'     => $this->config->get('database.connections.sqlsrv.username'),
+            'password' => $this->config->get('database.connections.sqlsrv.password'),
+            'port'     => $this->config->get('database.connections.sqlsrv.port'),
+            'prefix'   => $this->config->get('database.connections.sqlsrv.prefix'),
+        ];
     }
 }

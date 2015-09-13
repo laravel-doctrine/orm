@@ -2,30 +2,25 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-class MysqlConnection extends AbstractConnection
+class MysqlConnection extends Connection
 {
     /**
-     * @var string
-     */
-    protected $name = 'mysql';
-
-    /**
-     * @param array $config
+     * @param array $settings
      *
-     * @return MysqlConnection
+     * @return array
      */
-    public function configure($config = [])
+    public function resolve(array $settings = [])
     {
-        return new static ([
+        return [
             'driver'      => 'pdo_mysql',
-            'host'        => array_get($config, 'host'),
-            'dbname'      => array_get($config, 'database'),
-            'user'        => array_get($config, 'username'),
-            'password'    => array_get($config, 'password'),
-            'charset'     => array_get($config, 'charset'),
-            'port'        => array_get($config, 'port'),
-            'unix_socket' => array_get($config, 'unix_socket'),
-            'prefix'      => array_get($config, 'prefix'),
-        ]);
+            'host'        => $this->config->get('database.connections.mysql.host'),
+            'dbname'      => $this->config->get('database.connections.mysql.database'),
+            'user'        => $this->config->get('database.connections.mysql.username'),
+            'password'    => $this->config->get('database.connections.mysql.password'),
+            'charset'     => $this->config->get('database.connections.mysql.charset'),
+            'port'        => $this->config->get('database.connections.mysql.port'),
+            'unix_socket' => $this->config->get('database.connections.mysql.unix_socket'),
+            'prefix'      => $this->config->get('database.connections.mysql.prefix'),
+        ];
     }
 }

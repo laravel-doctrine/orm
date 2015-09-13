@@ -2,30 +2,25 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-class PgsqlConnection extends AbstractConnection
+class PgsqlConnection extends Connection
 {
     /**
-     * @var string
-     */
-    protected $name = 'pgsql';
-
-    /**
-     * @param array $config
+     * @param array $settings
      *
-     * @return PgsqlConnection
+     * @return array
      */
-    public function configure($config = [])
+    public function resolve(array $settings = [])
     {
-        return new static ([
+        return [
             'driver'   => 'pdo_pgsql',
-            'host'     => array_get($config, 'host'),
-            'dbname'   => array_get($config, 'database'),
-            'user'     => array_get($config, 'username'),
-            'password' => array_get($config, 'password'),
-            'charset'  => array_get($config, 'charset'),
-            'port'     => array_get($config, 'port'),
-            'sslmode'  => array_get($config, 'sslmode'),
-            'prefix'   => array_get($config, 'prefix'),
-        ]);
+            'host'     => $this->config->get('database.connections.pgsql.host'),
+            'dbname'   => $this->config->get('database.connections.pgsql.database'),
+            'user'     => $this->config->get('database.connections.pgsql.username'),
+            'password' => $this->config->get('database.connections.pgsql.password'),
+            'charset'  => $this->config->get('database.connections.pgsql.charset'),
+            'port'     => $this->config->get('database.connections.pgsql.port'),
+            'sslmode'  => $this->config->get('database.connections.pgsql.sslmode'),
+            'prefix'   => $this->config->get('database.connections.pgsql.prefix'),
+        ];
     }
 }
