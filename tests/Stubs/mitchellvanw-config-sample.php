@@ -31,7 +31,7 @@ return [
     ],
     'proxy' => [
         'auto_generate' => true,
-        'directory' => 'storage/proxies',
+        'directory' => storage_path() . '/proxies',
         'namespace' => null
     ],
     'cache_provider' => null,

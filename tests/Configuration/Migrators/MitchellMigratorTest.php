@@ -28,3 +28,6 @@ class MitchellMigratorTest extends PHPUnit_Framework_TestCase
         ]);
     }
 }
+function storage_path(){
+    return __DIR__ . DIRECTORY_SEPARATOR . '../../../tests/Stubs/storage';
+}

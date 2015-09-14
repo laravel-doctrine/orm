@@ -153,7 +153,7 @@ class ConvertConfigCommand extends Command
 
         $dispatcher = new Dispatcher(new Container);
 
-        $compiler = new BladeCompiler(new Filesystem(), $this->getCachePath() . '/framework/views');
+        $compiler = new BladeCompiler(new Filesystem(), storage_path() . '/framework/views');
         $bladeEngine = new CompilerEngine($compiler);
         $engineResolver = new EngineResolver();
         $engineResolver->register('blade', function() use(&$bladeEngine){
@@ -162,13 +162,5 @@ class ConvertConfigCommand extends Command
 
         $viewFactory = new \Illuminate\View\Factory($engineResolver, $FileViewFinder, $dispatcher);
         return $viewFactory;
-    }
-
-    protected function getCachePath(){
-        if(!function_exists('storage_path')){
-            return __DIR__ . DIRECTORY_SEPARATOR . '../../tests/Stubs/storage';
-        } else {
-            return storage_path('');
-        }
     }
 }
