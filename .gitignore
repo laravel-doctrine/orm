@@ -4,6 +4,8 @@ composer.lock
 .DS_Store
 .php_cs.cache
 
-/tests/Stubs/storage
+/tests/Stubs/storage/framework/views/*
+!/tests/Stubs/storage/framework/views/.gitkeep
+/tests/Stubs/storage/doctrine.generated.php
 .idea
 laravel-doctrine-orm.iml
