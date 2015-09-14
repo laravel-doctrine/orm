@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelDoctrine\ORM\ConfigMigrations;
+namespace LaravelDoctrine\ORM\Console\ConfigMigrations;
 
 use Illuminate\Contracts\View\Factory;
 use LaravelDoctrine\ORM\Utilities\ArrayUtil;
@@ -17,6 +17,7 @@ class MitchellMigrator implements ConfigurationMigrator
         $this->viewFactory = $viewFactory;
         //add namespace for views
         $this->viewFactory->addNamespace('mitchell', realpath(__DIR__ . '/templates/mitchell'));
+        $this->viewFactory->addNamespace('laraveldoctrine', realpath(__DIR__ . '/templates/laraveldoctrine'));
     }
 
     /**
@@ -36,6 +37,7 @@ class MitchellMigrator implements ConfigurationMigrator
 
         if ($isFork) {
             foreach ($sourceArray['entity_managers'] as $key => $manager) {
+                $manager['proxy'] = $sourceArray['proxy'];
                 $managers[$key] = $this->convertManager($manager, $isFork);
             }
         } else {
@@ -48,7 +50,7 @@ class MitchellMigrator implements ConfigurationMigrator
 
         $cache    = $this->convertCache($sourceArray);
 
-        $results   = $this->viewFactory->make('mitchell.master', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls])->render();
+        $results   = $this->viewFactory->make('laraveldoctrine.master', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
 
         return $unescaped;
