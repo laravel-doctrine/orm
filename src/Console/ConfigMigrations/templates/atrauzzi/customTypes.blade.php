@@ -1,6 +1,6 @@
-@if(\LaravelDoctrine\ORM\Utilities\ArrayUtil::get($sourceArray['custom_types']) !== null)
+@if(isset($sourceArray['custom_types']))
     'custom_types' => [
-    @foreach($sourceArray['custom_Types'] as $key => $val)
+    @foreach($sourceArray['custom_types'] as $key => $val)
         '{{$key}}' => '{{$val}}'
     @endforeach
     ],

@@ -24,7 +24,7 @@ class AtrauzziMigrator implements ConfigurationMigrator
     {
         $this->viewFactory = $viewFactory;
         //add namespace for views
-        $this->viewFactory->addNamespace('atruazzi', realpath(__DIR__ . '/templates/atruazzi'));
+        $this->viewFactory->addNamespace('atrauzzi', realpath(__DIR__ . '/templates/atrauzzi'));
         $this->viewFactory->addNamespace('laraveldoctrine', realpath(__DIR__ . '/templates/laraveldoctrine'));
     }
 
@@ -36,9 +36,10 @@ class AtrauzziMigrator implements ConfigurationMigrator
      */
     public function convertConfiguration($sourceArray)
     {
-        $dqls = $this->convertDQL($sourceArray['entity_managers']);
+        $dqls = $this->convertDQL($sourceArray);
         $cache    = $this->convertCache($sourceArray);
         $customTypes = $this->convertCustomTypes($sourceArray);
+        $managers = [$this->convertManager($sourceArray)];
 
         $results   = $this->viewFactory->make('laraveldoctrine.master', ['managers' => $managers, 'cache' => $cache, 'dqls' => $dqls, 'customTypes' => $customTypes])->render();
         $unescaped = html_entity_decode($results, ENT_QUOTES);
@@ -50,41 +51,64 @@ class AtrauzziMigrator implements ConfigurationMigrator
     {
         $proxySettings = ArrayUtil::get($sourceArray['proxy_classes']);
         $defaultRepo   = ArrayUtil::get($sourceArray['default_repository']);
+        $namespaces = [];
+        $driver = null;
+        $connection = ArrayUtil::get($sourceArray['default']);
 
         //non default configuration
         if (count($sourceArray['metadata']) > 1) {
-            $isChained = false;
-            foreach ($sourceArray['metadata'] as $item) {
-                if (is_array($item)) {
-                    $isChained = true;
+            $hasNamespaces = false;
+            $index = 0;
+            $driver = null;
+            $sameDriver = true;
+
+            foreach ($sourceArray['metadata'] as $key => $item) {
+                //get first driver
+                if(is_null($driver)){
+                    if(is_array($item)){
+                        $driver = $item['driver'];
+                    } else if($key == 'driver') {
+                        $driver = $item;
+                    }
+
+                } else {
+                    if(is_array($item) && $item['driver'] != $driver){
+                      $sameDriver = false;
+                    }
+                }
+                if (is_array($item) && isset($item['namespace'])) {
+                    $hasNamespaces = true;
                 }
             }
-            //if it's chained we need to treat each chain as a separate EM
-            if ($isChained) {
+            //only do this if all the same driver
+            if ($hasNamespaces && $sameDriver) {
+                $driver = $sourceArray['metadata'][0]['driver'];
+
                 foreach ($sourceArray['metadata'] as $item) {
-                    //convert each chained metadata array EM
+                    //convert each metadata entry into a namespace entry
+                    if(isset($item['alias'])){
+                        $namespaces[$item['alias']] = $item['namespace'];
+                    } else{
+                        array_push($namespaces, $item['namespace']);
+                    }
                 }
             } //only specifying one non-default EM
-            else {
-                //convert metadata array to EM
+            else  {
+                if(isset($sourceArray['metadata']['namespace'])){
+                    if(isset($sourceArray['metadata']['alias'])){
+                        $namespaces[$sourceArray['metadata']['alias']] = $sourceArray['metadata']['namespace'];
+                    } else {
+                        $namespaces[] = $sourceArray['metadata']['namespace'];
+                    }
+                }
             }
         } //one EM, default
         else {
-
+            $driver = $sourceArray['metadata']['driver'];
         }
-    }
-
-    protected function getProxySettings($sourceArray)
-    {
-        if (isset($sourceArray['proxy_classes'])) {
-            return [
-                'auto_generate' => ArrayUtil::get($sourceArray['proxy_classes']['auto_generate']),
-                'namespace' => ArrayUtil::get($sourceArray['proxy_classes']['namespace']),
-                'path' => ArrayUtil::get($sourceArray['proxy_classes']['directory'])
-            ];
-        } else {
-            return null;
-        }
+        $results   = $this->viewFactory->make('atrauzzi.manager', ['namespaces' => $namespaces, 'proxySettings' => $proxySettings, 'defaultRepo' => $defaultRepo, 'driver' => $driver, 'connection' => $connection])->render();
+        $unescaped = html_entity_decode($results, ENT_QUOTES);
+        return $unescaped;
     }
 
     public function convertCustomTypes($sourceArray){
@@ -103,7 +127,7 @@ class AtrauzziMigrator implements ConfigurationMigrator
     {
         if (isset($sourceArray['cache']['provider'])) {
             $cacheProvider = ArrayUtil::get($sourceArray['cache']['provider']);
-            $results       = $this->viewFactory->make('atruazzi.cache', [
+            $results       = $this->viewFactory->make('atrauzzi.cache', [
                 'cacheProvider' => $cacheProvider,
                 'extras' => count($sourceArray['cache']) > 1 //if user is mimicking cache arrays here we need to tell them to move these to cache.php
             ])->render();
