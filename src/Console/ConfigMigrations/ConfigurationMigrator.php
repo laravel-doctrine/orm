@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelDoctrine\ORM\ConfigMigrations;
+namespace LaravelDoctrine\ORM\Console\ConfigMigrations;
 
 use Illuminate\Contracts\View\Factory;
 
