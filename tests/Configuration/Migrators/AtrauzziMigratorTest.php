@@ -29,6 +29,8 @@ class AtrauzziMigratorTest extends PHPUnit_Framework_TestCase
     }
 }
 
-function storage_path(){
-    return __DIR__ . DIRECTORY_SEPARATOR . '../../../tests/Stubs/storage';
+if(!function_exists('storage_path')){
+    function storage_path($path = null){
+        return __DIR__ . DIRECTORY_SEPARATOR . '../../../tests/Stubs/storage';
+    }
 }
