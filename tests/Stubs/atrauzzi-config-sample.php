@@ -6,30 +6,26 @@
 
 	'metadata' => [
 
-		'driver' => 'config',
-
-		//
-		// Alternatively, if you want to use a chain, specify multiple drivers as nested arrays.
-		//
 		[
-			'driver' => 'config'
+			'driver' => 'annotation',
+			'namespace' => 'SysPRO\\Model\\Controller\\Entity',
+			'alias' => 'Controller'
 		],
 		[
 			'driver' => 'annotation',
-		//	'namespace' => 'App'
-		//  'alias'  => 'DoctrineModel'
+			'namespace' => 'SysPRO\\Model\\Operacoes\\Entity',
+			'alias' => 'Operacoes'
 		],
 		[
-			'driver'=>'yaml',
+			'driver' => 'annotation',
+			'namespace' => 'SysPRO\\Model\\Parametros\\Entity',
+			'alias' => 'Parametros'
 		],
 		[
-			'driver'=>'xml'
-		],
-		[
-			'driver'=>'static'
+			'driver' => 'annotation',
+			'namespace' => 'SysPRO\\Model\\Sistema\\Entity',
+			'alias' => 'Sistema'
 		]
-		//
-		// ...accepting PRs for more!
 
 	],
 	/*
@@ -66,20 +62,7 @@
 
 	],
 */
-	/*
-	 * By default, this package mimics the database configuration from Laravel.
-	 *
-	 * You can override it in whole or in part here. The 'database' and 'username'
-	 * laravel settings will be automatically converted to the proper doctrine 'dbname'
-	 * and 'user' settings. Other custom laravel to doctrine mappings can be added on
-	 * a per configuration basis by including a 'mappings' entry with 'laravel'=>'doctrine'
-	 * mappings (see the sqlite configuration for an example).
-	 *
-	 * This array passes right through to the EntityManager factory. For
-	 * example, here you can set additional connection details like "charset".
-	 *
-	 * http://doctrine-dbal.readthedocs.org/en/latest/reference/configuration.html#connection-details
-	 */
+
 	'connections' => [
         // Override your laravel environment database selection here if desired
         // 'default' => 'mysql',
@@ -117,13 +100,13 @@
 	 */
 	'cache' => [
         // Remove or set to null for no cache
-		'provider' => env('CACHE_DRIVER', 'array'),
+		'provider' => 'array',
 
                 'file' => [
-                    'directory' => storage_path('framework/cache'),
+                    'directory' => 'framework/cache',
                     'extension' => '.doctrinecache.data'
                 ],
-            
+
 		'redis' => [
 			'host'     => '127.0.0.1',
 			'port'     => 6379,
@@ -158,13 +141,13 @@
 	| http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/configuration.html
 	|
 	*/
-	/*
+
 	'proxy_classes' => [
 		'auto_generate' => false,
 		'directory' => null,
 		'namespace' => null,
 	],
-	*/
+
 
 
 	'migrations' => [
@@ -179,9 +162,9 @@
 	| http://doctrine-orm.readthedocs.org/en/latest/reference/working-with-objects.html#custom-repositories
 	|--------------------------------------------------------------------------
 	*/
-	/*
+
 	'default_repository' => '\Doctrine\ORM\EntityRepository',
-	*/
+
 
 	/*
 	|--------------------------------------------------------------------------
@@ -199,7 +182,7 @@
 	/*
 	 * In some circumstances, you may wish to diverge from what's configured in Laravel.
 	 */
-	//'debug' => false,
+	'debug' => false,
 
     /*
     | ---------------------------------
