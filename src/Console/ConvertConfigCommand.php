@@ -168,7 +168,7 @@ class ConvertConfigCommand extends Command
         if(!function_exists('storage_path')){
             return __DIR__ . DIRECTORY_SEPARATOR . '../../tests/Stubs/storage';
         } else {
-            return storage_path();
+            return storage_path('');
         }
     }
 }
