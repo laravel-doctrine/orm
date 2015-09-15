@@ -47,6 +47,9 @@
     ]
   },
   "suggest": {
+    "laravel-doctrine/acl": "to integrate Doctrine roles & permissions with Laravel's Authorization system (~1.0)",
+    "laravel-doctrine/extensions": "to add Behavioral and Query/Type Extensions for Laravel Doctrine (~1.0)",
+    "laravel-doctrine/migrations": "to add support for migrations in Laravel Doctrine (~1.0)",
     "yajra/laravel-oci8": "Support for Laravel native queue and session database drivers in Oracle (~2.0)."
   }
 }
