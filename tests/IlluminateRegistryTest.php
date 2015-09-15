@@ -29,6 +29,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->container = m::mock(Container::class);
+        $this->container->shouldReceive('bound')->andReturn(false);
         $this->factory   = m::mock(EntityManagerFactory::class);
 
         $this->registry = new IlluminateRegistry(
