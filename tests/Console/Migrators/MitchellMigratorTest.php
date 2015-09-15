@@ -3,7 +3,7 @@
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class MitchellMigratorTest extends PHPUnit_Framework_TestCase
+class MitchellMigratorTest extends MigratorBase
 {
     public function test_convert_mitchell_config()
     {
@@ -20,12 +20,8 @@ class MitchellMigratorTest extends PHPUnit_Framework_TestCase
             '--source-file' => realpath(__DIR__ . '/../../Stubs/mitchellvanw-config-sample.php'),
             '--dest-path'   => realpath(__DIR__ . '/../../Stubs/storage')
         ]);
-    }
-}
 
-if (!function_exists('storage_path')) {
-    function storage_path($path = null)
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . '../../../tests/Stubs/storage';
+        $this->sanityCheck();
     }
+
 }
