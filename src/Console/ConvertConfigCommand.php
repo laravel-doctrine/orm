@@ -57,9 +57,6 @@ class ConvertConfigCommand extends SymfonyCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        //add config templates directory to view locations
-        //$viewFactory->addLocation(realpath(__DIR__ . '/ConfigMigrations/templates'));
-
         if (($destPath = $input->getOption('dest-path')) === null) {
             $destPath = 'config';
         }
@@ -101,8 +98,6 @@ class ConvertConfigCommand extends SymfonyCommand
 
         $viewFactory = $this->createViewFactory();
 
-        //TODO make this relative
-
         switch ($author) {
             case 'atrauzzi':
                 $convertedConfigString = $this->convertAtrauzzi($sourceArrayConfig, $viewFactory);
@@ -115,6 +110,7 @@ class ConvertConfigCommand extends SymfonyCommand
         }
 
         file_put_contents($destFilePath, '<?php ' . $convertedConfigString);
+
         $output->writeln('Conversion successful. File generated at ' . $destFilePath);
     }
 
