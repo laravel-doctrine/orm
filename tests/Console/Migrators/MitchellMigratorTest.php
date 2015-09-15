@@ -23,5 +23,4 @@ class MitchellMigratorTest extends MigratorBase
 
         $this->sanityCheck();
     }
-
 }

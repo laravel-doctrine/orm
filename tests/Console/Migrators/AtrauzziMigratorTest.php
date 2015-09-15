@@ -3,13 +3,10 @@
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-
-
 class AtrauzziMigratorTest extends MigratorBase
 {
     public function test_convert_atrauzzi_config()
     {
-
         $mitchellMigrator = new \LaravelDoctrine\ORM\Console\ConvertConfigCommand();
         $application      = new Application();
         $application->add($mitchellMigrator);

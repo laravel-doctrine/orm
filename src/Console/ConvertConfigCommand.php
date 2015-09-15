@@ -3,7 +3,6 @@
 namespace LaravelDoctrine\ORM\Console;
 
 use Illuminate\Container\Container as Container;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem as Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -11,8 +10,6 @@ use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\FileViewFinder;
 use InvalidArgumentException;
-use LaravelDoctrine\ORM\Console\ConfigMigrations\AtrauzziMigrator;
-use LaravelDoctrine\ORM\Console\ConfigMigrations\MitchellMigrator;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -50,7 +47,7 @@ class ConvertConfigCommand extends SymfonyCommand
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return int|null|void
