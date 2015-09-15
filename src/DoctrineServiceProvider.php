@@ -263,6 +263,7 @@ class DoctrineServiceProvider extends ServiceProvider
             AuthManager::class,
             EntityManager::class,
             DoctrineManager::class,
+            ConnectionManager::class,
             ClassMetadataFactory::class,
             EntityManagerInterface::class,
             ExtensionManager::class,
