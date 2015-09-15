@@ -53,13 +53,13 @@ Require this package
 After adding the package, add the ServiceProvider to the providers array in `config/app.php`
 
 ```php
-'LaravelDoctrine\ORM\DoctrineServiceProvider',
+LaravelDoctrine\ORM\DoctrineServiceProvider::class,
 ```
 
 Optionally you can register the EntityManager facade:
 
 ```php
-'EntityManager' => 'LaravelDoctrine\ORM\Facades\EntityManager'
+'EntityManager' => LaravelDoctrine\ORM\Facades\EntityManager::class
 ```
 
 To publish the config use:
