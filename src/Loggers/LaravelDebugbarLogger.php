@@ -29,10 +29,13 @@ class LaravelDebugbarLogger implements Logger
      */
     public function register(EntityManagerInterface $em, Configuration $configuration)
     {
-        $debugStack = new DebugStack;
-        $configuration->setSQLLogger($debugStack);
-        $this->debugbar->addCollector(
-            new DoctrineCollector($debugStack)
-        );
+        if (!$this->debugbar->hasCollector('doctrine')) {
+            $debugStack = new DebugStack;
+            $configuration->setSQLLogger($debugStack);
+
+            $this->debugbar->addCollector(
+                new DoctrineCollector($debugStack)
+            );
+        }
     }
 }
