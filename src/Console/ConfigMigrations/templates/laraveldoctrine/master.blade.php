@@ -117,7 +117,7 @@ return [
         | Available: acp|array|file|memcached|redis
         |
         */
-        {{$cache}}
+        'cache' => {{$cache}}
         /*
         |--------------------------------------------------------------------------
         | Gedmo extensions
