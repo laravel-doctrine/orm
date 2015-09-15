@@ -16,7 +16,7 @@ class MitchellMigratorTest extends MigratorBase
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command'       => $command->getName(),
-            'author'        => 'mitchellvanw',
+            'author'        => 'mitchell',
             '--source-file' => realpath(__DIR__ . '/../../Stubs/mitchellvanw-config-sample.php'),
             '--dest-path'   => realpath(__DIR__ . '/../../Stubs/storage')
         ]);
