@@ -2,11 +2,10 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Filesystem\Filesystem as Filesystem;
-use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container as Container;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Filesystem\Filesystem as Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Engines\EngineResolver;
@@ -14,32 +13,50 @@ use Illuminate\View\FileViewFinder;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Console\ConfigMigrations\AtrauzziMigrator;
 use LaravelDoctrine\ORM\Console\ConfigMigrations\MitchellMigrator;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConvertConfigCommand extends Command
+class ConvertConfigCommand extends SymfonyCommand
 {
+    /**
+     * @var string
+     */
     protected $name = 'doctrine:config:convert';
 
+    /**
+     * @var string
+     */
     protected $description = 'Convert the configuration file for another laravel-doctrine implementation into a valid configuration for LaravelDoctrine\ORM.';
 
-    protected function configure(){
+    /**
+     * Configure the command
+     */
+    protected function configure()
+    {
         $this->setName('doctrine:config:convert')
-            ->setAliases(['doctrine:config:convert'])
-            ->setDescription('Convert the configuration file for another laravel-doctrine implementation into a valid configuration for LaravelDoctrine\ORM')
-            ->setDefinition([
-                new InputArgument('author', InputArgument::REQUIRED, 'The name of the author of the repository being migrated from. Options are "atrauzzi" and "mitchellvanw"'),
-                new InputOption('dest-path', null, InputOption::VALUE_OPTIONAL, 'Where the generated configuration should be placed', 'config'),
-                new InputOption('source-file', null, InputOption::VALUE_OPTIONAL, 'Where the source configuration file is located.','config/doctrine.php')
-            ]);
+             ->setAliases(['doctrine:config:convert'])
+             ->setDescription('Convert the configuration file for another laravel-doctrine implementation into a valid configuration for LaravelDoctrine\ORM')
+             ->setDefinition([
+                 new InputArgument('author', InputArgument::REQUIRED,
+                     'The name of the author of the repository being migrated from. Options are "atrauzzi" and "mitchellvanw"'),
+                 new InputOption('dest-path', null, InputOption::VALUE_OPTIONAL,
+                     'Where the generated configuration should be placed', 'config'),
+                 new InputOption('source-file', null, InputOption::VALUE_OPTIONAL,
+                     'Where the source configuration file is located.', 'config/doctrine.php')
+             ]);
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return int|null|void
+     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-
         //add config templates directory to view locations
         //$viewFactory->addLocation(realpath(__DIR__ . '/ConfigMigrations/templates'));
 
@@ -104,8 +121,9 @@ class ConvertConfigCommand extends Command
     /**
      * Convert a configuration file from mitchellvanw/laravel-doctrine to a string representation of a php array configuration for this project
      *
-     * @param  array   $sourceConfig
-     * @param  Factory $viewFactory
+     * @param array   $sourceConfig
+     * @param Factory $viewFactory
+     *
      * @return string
      */
     private function convertMitchell($sourceConfig, $viewFactory)
@@ -118,49 +136,77 @@ class ConvertConfigCommand extends Command
     /**
      * Convert a configuration file from atrauzzi/laravel-doctrine to a string representation of a php array configuration for this project
      *
-     * @param  array   $sourceConfig
-     * @param  Factory $viewFactory
+     * @param array   $sourceConfig
+     * @param Factory $viewFactory
+     *
      * @return string
      */
     private function convertAtrauzzi($sourceConfig, $viewFactory)
     {
-       $aMigrator = new AtrauzziMigrator($viewFactory);
+        $aMigrator = new AtrauzziMigrator($viewFactory);
 
         return $aMigrator->convertConfiguration($sourceConfig);
     }
 
+    /**
+     * @return array
+     */
     public function getArguments()
     {
         return [
-            ['author', InputArgument::REQUIRED, 'The name of the author of the repository being migrated from. Options are "atrauzzi" and "mitchellvanw"'],
+            [
+                'author',
+                InputArgument::REQUIRED,
+                'The name of the author of the repository being migrated from. Options are "atrauzzi" and "mitchellvanw"'
+            ],
 
         ];
     }
 
+    /**
+     * @return array
+     */
     protected function getOptions()
     {
         return [
-            ['dest-path', null, InputOption::VALUE_OPTIONAL, 'Where the generated configuration should be placed. Default is config.', 'config'],
-            ['source-file', null, InputOption::VALUE_OPTIONAL, 'Where the source configuration file is located. Default is config/doctrine.php', 'config/doctrine.php']
+            [
+                'dest-path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Where the generated configuration should be placed. Default is config.',
+                'config'
+            ],
+            [
+                'source-file',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Where the source configuration file is located. Default is config/doctrine.php',
+                'config/doctrine.php'
+            ]
         ];
     }
 
-    protected function createViewFactory(){
+    /**
+     * @return \Illuminate\View\Factory
+     */
+    protected function createViewFactory()
+    {
         $FileViewFinder = new FileViewFinder(
             new Filesystem,
-            array(realpath(__DIR__ . '/ConfigMigrations/templates'))
+            [realpath(__DIR__ . '/ConfigMigrations/templates')]
         );
 
         $dispatcher = new Dispatcher(new Container);
 
-        $compiler = new BladeCompiler(new Filesystem(), storage_path() . '/framework/views');
-        $bladeEngine = new CompilerEngine($compiler);
+        $compiler       = new BladeCompiler(new Filesystem(), storage_path() . '/framework/views');
+        $bladeEngine    = new CompilerEngine($compiler);
         $engineResolver = new EngineResolver();
-        $engineResolver->register('blade', function() use(&$bladeEngine){
+        $engineResolver->register('blade', function () use (&$bladeEngine) {
             return $bladeEngine;
         });
 
         $viewFactory = new \Illuminate\View\Factory($engineResolver, $FileViewFinder, $dispatcher);
+
         return $viewFactory;
     }
 }

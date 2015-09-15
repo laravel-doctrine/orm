@@ -38,7 +38,7 @@ class MitchellMigrator implements ConfigurationMigrator
         if ($isFork) {
             foreach ($sourceArray['entity_managers'] as $key => $manager) {
                 $manager['proxy'] = $sourceArray['proxy'];
-                $managers[$key] = $this->convertManager($manager, $isFork);
+                $managers[$key]   = $this->convertManager($manager, $isFork);
             }
         } else {
             $managers['default'] = $this->convertManager($sourceArray, $isFork);
