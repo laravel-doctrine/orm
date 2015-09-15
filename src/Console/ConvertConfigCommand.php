@@ -37,20 +37,20 @@ class ConvertConfigCommand extends SymfonyCommand
     protected function configure()
     {
         $this->setName('doctrine:config:convert')
-             ->setAliases(['doctrine:config:convert'])
-             ->setDescription('Convert the configuration file for another laravel-doctrine implementation into a valid configuration for LaravelDoctrine\ORM')
-             ->setDefinition([
-                 new InputArgument('author', InputArgument::REQUIRED,
-                     'The name of the author of the repository being migrated from. Options are "atrauzzi" and "mitchellvanw"'),
-                 new InputOption('dest-path', null, InputOption::VALUE_OPTIONAL,
-                     'Where the generated configuration should be placed', 'config'),
-                 new InputOption('source-file', null, InputOption::VALUE_OPTIONAL,
-                     'Where the source configuration file is located.', 'config/doctrine.php')
-             ]);
+            ->setAliases(['doctrine:config:convert'])
+            ->setDescription('Convert the configuration file for another laravel-doctrine implementation into a valid configuration for LaravelDoctrine\ORM')
+            ->setDefinition([
+                new InputArgument('author', InputArgument::REQUIRED,
+                    'The name of the author of the repository being migrated from. Options are "atrauzzi" and "mitchellvanw"'),
+                new InputOption('dest-path', null, InputOption::VALUE_OPTIONAL,
+                    'Where the generated configuration should be placed', 'config'),
+                new InputOption('source-file', null, InputOption::VALUE_OPTIONAL,
+                    'Where the source configuration file is located.', 'config/doctrine.php')
+            ]);
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|null|void
@@ -98,88 +98,18 @@ class ConvertConfigCommand extends SymfonyCommand
 
         $viewFactory = $this->createViewFactory();
 
-        switch ($author) {
-            case 'atrauzzi':
-                $convertedConfigString = $this->convertAtrauzzi($sourceArrayConfig, $viewFactory);
-                break;
-            case 'mitchellvanw':
-                $convertedConfigString = $this->convertMitchell($sourceArrayConfig, $viewFactory);
-                break;
-            default:
-                throw new InvalidArgumentException('Author provided was not a valid choice.');
+        $className = __NAMESPACE__ . '\ConfigMigrations\\' . ucfirst($author) . 'Migrator';
+
+        if (!class_exists($className)) {
+            throw new InvalidArgumentException('Author provided was not a valid choice.');
+        } else {
+            $configMigrator        = new $className($viewFactory);
+            $convertedConfigString = $configMigrator->convertConfiguration($sourceArrayConfig);
         }
 
         file_put_contents($destFilePath, '<?php ' . $convertedConfigString);
 
         $output->writeln('Conversion successful. File generated at ' . $destFilePath);
-    }
-
-    /**
-     * Convert a configuration file from mitchellvanw/laravel-doctrine to a string representation of a php array configuration for this project
-     *
-     * @param array   $sourceConfig
-     * @param Factory $viewFactory
-     *
-     * @return string
-     */
-    private function convertMitchell($sourceConfig, $viewFactory)
-    {
-        $mMigrator = new MitchellMigrator($viewFactory);
-
-        return $mMigrator->convertConfiguration($sourceConfig);
-    }
-
-    /**
-     * Convert a configuration file from atrauzzi/laravel-doctrine to a string representation of a php array configuration for this project
-     *
-     * @param array   $sourceConfig
-     * @param Factory $viewFactory
-     *
-     * @return string
-     */
-    private function convertAtrauzzi($sourceConfig, $viewFactory)
-    {
-        $aMigrator = new AtrauzziMigrator($viewFactory);
-
-        return $aMigrator->convertConfiguration($sourceConfig);
-    }
-
-    /**
-     * @return array
-     */
-    public function getArguments()
-    {
-        return [
-            [
-                'author',
-                InputArgument::REQUIRED,
-                'The name of the author of the repository being migrated from. Options are "atrauzzi" and "mitchellvanw"'
-            ],
-
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            [
-                'dest-path',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Where the generated configuration should be placed. Default is config.',
-                'config'
-            ],
-            [
-                'source-file',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Where the source configuration file is located. Default is config/doctrine.php',
-                'config/doctrine.php'
-            ]
-        ];
     }
 
     /**
