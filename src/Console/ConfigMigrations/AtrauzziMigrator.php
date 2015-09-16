@@ -56,7 +56,6 @@ class AtrauzziMigrator implements ConfigurationMigrator
         $proxySettings = ArrayUtil::get($sourceArray['proxy_classes']);
         $defaultRepo   = ArrayUtil::get($sourceArray['default_repository']);
         $namespaces    = [];
-        $driver        = null;
         $connection    = ArrayUtil::get($sourceArray['default']);
 
         // Non default configuration

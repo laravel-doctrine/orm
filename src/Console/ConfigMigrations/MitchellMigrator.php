@@ -8,7 +8,7 @@ use LaravelDoctrine\ORM\Utilities\ArrayUtil;
 class MitchellMigrator implements ConfigurationMigrator
 {
     /**
-     * @var FactoryFactory
+     * @var Factory
      */
     protected $viewFactory;
 

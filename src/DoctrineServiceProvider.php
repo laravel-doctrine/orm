@@ -107,7 +107,7 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerManagerRegistry()
     {
-        $this->app->singleton('registry', function($app) {
+        $this->app->singleton('registry', function ($app) {
 
             $registry = new IlluminateRegistry($app, $app->make(EntityManagerFactory::class));
 
