@@ -93,17 +93,9 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerEntityManager()
     {
-        $registry = $this->app->make('registry');
-
-        // Add all managers into the registry
-        foreach ($this->app->make('config')->get('doctrine.managers', []) as $manager => $settings) {
-            $registry->addManager($manager, $settings);
-            $registry->addConnection($manager);
-        }
-
         // Bind the default Entity Manager
-        $this->app->singleton('em', function () use ($registry) {
-            return $registry->getManager();
+        $this->app->singleton('em', function ($app) {
+            return $app->make('registry')->getManager();
         });
 
         $this->app->alias('em', EntityManager::class);
@@ -115,9 +107,21 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerManagerRegistry()
     {
-        $this->app->singleton('registry', IlluminateRegistry::class);
+        $this->app->singleton('registry', function($app) {
+
+            $registry = new IlluminateRegistry($app, $app->make(EntityManagerFactory::class));
+
+            // Add all managers into the registry
+            foreach ($app->make('config')->get('doctrine.managers', []) as $manager => $settings) {
+                $registry->addManager($manager, $settings);
+                $registry->addConnection($manager);
+            }
+
+            return $registry;
+        });
+
         $this->app->alias('registry', ManagerRegistry::class);
-        $this->app->alias('registry', ManagerRegistry::class);
+        $this->app->alias('registry', IlluminateRegistry::class);
     }
 
     /**
