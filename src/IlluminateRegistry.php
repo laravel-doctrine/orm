@@ -81,7 +81,7 @@ final class IlluminateRegistry implements ManagerRegistry
      */
     public function addConnection($connection)
     {
-        if (!$this->container->bound($this->getManagerBindingName($connection))) {
+        if (!$this->container->bound($this->getConnectionBindingName($connection))) {
             $this->container->singleton($this->getConnectionBindingName($connection), function () use ($connection) {
                 return $this->getManager($connection)->getConnection();
             });
