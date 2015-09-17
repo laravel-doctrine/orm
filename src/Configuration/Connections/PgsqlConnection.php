@@ -13,14 +13,14 @@ class PgsqlConnection extends Connection
     {
         return [
             'driver'   => 'pdo_pgsql',
-            'host'     => $this->config->get('database.connections.pgsql.host'),
-            'dbname'   => $this->config->get('database.connections.pgsql.database'),
-            'user'     => $this->config->get('database.connections.pgsql.username'),
-            'password' => $this->config->get('database.connections.pgsql.password'),
-            'charset'  => $this->config->get('database.connections.pgsql.charset'),
-            'port'     => $this->config->get('database.connections.pgsql.port'),
-            'sslmode'  => $this->config->get('database.connections.pgsql.sslmode'),
-            'prefix'   => $this->config->get('database.connections.pgsql.prefix'),
+            'host'     => array_get($settings, 'host'),
+            'dbname'   => array_get($settings, 'database'),
+            'user'     => array_get($settings, 'username'),
+            'password' => array_get($settings, 'password'),
+            'charset'  => array_get($settings, 'charset'),
+            'port'     => array_get($settings, 'port'),
+            'sslmode'  => array_get($settings, 'sslmode'),
+            'prefix'   => array_get($settings, 'prefix'),
         ];
     }
 }

@@ -26,16 +26,13 @@ class SqliteConnectionTest extends PHPUnit_Framework_TestCase
 
     public function test_can_resolve()
     {
-        $this->config->shouldReceive('get')->with('database.connections.sqlite.database')->times(3)
-                     ->andReturn('path');
-        $this->config->shouldReceive('get')->with('database.connections.sqlite.username')->once()
-                     ->andReturn('username');
-        $this->config->shouldReceive('get')->with('database.connections.sqlite.password')->once()
-                     ->andReturn('password');
-        $this->config->shouldReceive('get')->with('database.connections.sqlite.prefix')->once()
-                     ->andReturn('prefix');
-
-        $resolved = $this->connection->resolve();
+        $resolved = $this->connection->resolve([
+            'driver'   => 'pdo_sqlite',
+            'database' => 'path',
+            'username' => 'username',
+            'password' => 'password',
+            'prefix'   => 'prefix',
+        ]);
 
         $this->assertEquals('pdo_sqlite', $resolved['driver']);
         $this->assertEquals('username', $resolved['user']);
@@ -47,16 +44,13 @@ class SqliteConnectionTest extends PHPUnit_Framework_TestCase
 
     public function test_can_resolve_with_in_memory_database()
     {
-        $this->config->shouldReceive('get')->with('database.connections.sqlite.database')->times(2)
-                     ->andReturn(':memory');
-        $this->config->shouldReceive('get')->with('database.connections.sqlite.username')->once()
-                     ->andReturn('username');
-        $this->config->shouldReceive('get')->with('database.connections.sqlite.password')->once()
-                     ->andReturn('password');
-        $this->config->shouldReceive('get')->with('database.connections.sqlite.prefix')->once()
-                     ->andReturn('prefix');
-
-        $resolved = $this->connection->resolve();
+        $resolved = $this->connection->resolve([
+            'driver'   => 'pdo_sqlite',
+            'database' => ':memory',
+            'username' => 'username',
+            'password' => 'password',
+            'prefix'   => 'prefix',
+        ]);
 
         $this->assertEquals('pdo_sqlite', $resolved['driver']);
         $this->assertEquals('username', $resolved['user']);

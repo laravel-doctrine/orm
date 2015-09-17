@@ -13,13 +13,13 @@ class OracleConnection extends Connection
     {
         return [
             'driver'   => 'oci8',
-            'host'     => $this->config->get('database.connections.oracle.host'),
-            'dbname'   => $this->config->get('database.connections.oracle.database'),
-            'user'     => $this->config->get('database.connections.oracle.username'),
-            'password' => $this->config->get('database.connections.oracle.password'),
-            'charset'  => $this->config->get('database.connections.oracle.charset'),
-            'port'     => $this->config->get('database.connections.oracle.port'),
-            'prefix'   => $this->config->get('database.connections.oracle.prefix'),
+            'host'     => array_get($settings, 'host'),
+            'dbname'   => array_get($settings, 'database'),
+            'user'     => array_get($settings, 'username'),
+            'password' => array_get($settings, 'password'),
+            'charset'  => array_get($settings, 'charset'),
+            'port'     => array_get($settings, 'port'),
+            'prefix'   => array_get($settings, 'prefix'),
         ];
     }
 }
