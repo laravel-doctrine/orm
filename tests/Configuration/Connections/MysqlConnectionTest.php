@@ -37,15 +37,15 @@ class MysqlConnectionTest extends PHPUnit_Framework_TestCase
 
         $resolved = $this->connection->resolve();
 
-        $this->assertEquals('pdo_mysql',    $resolved['driver']);
-        $this->assertEquals('host',         $resolved['host']);
-        $this->assertEquals('database',     $resolved['dbname']);
-        $this->assertEquals('username',     $resolved['user']);
-        $this->assertEquals('password',     $resolved['password']);
-        $this->assertEquals('charset',      $resolved['charset']);
-        $this->assertEquals('port',         $resolved['port']);
-        $this->assertEquals('unix_socket',  $resolved['unix_socket']);
-        $this->assertEquals('prefix',       $resolved['prefix']);
+        $this->assertEquals('pdo_mysql', $resolved['driver']);
+        $this->assertEquals('host', $resolved['host']);
+        $this->assertEquals('database', $resolved['dbname']);
+        $this->assertEquals('username', $resolved['user']);
+        $this->assertEquals('password', $resolved['password']);
+        $this->assertEquals('charset', $resolved['charset']);
+        $this->assertEquals('port', $resolved['port']);
+        $this->assertEquals('unix_socket', $resolved['unix_socket']);
+        $this->assertEquals('prefix', $resolved['prefix']);
     }
 
     protected function tearDown()
