@@ -23,7 +23,7 @@ class PasswordResetServiceProvider extends ServiceProvider
         // The path to PasswordReminder should be added, so the entity can be found
         $manager->addPaths([
             __DIR__
-        ]);
+        ], $manager->getDefaultManagerName());
     }
 
     /**
