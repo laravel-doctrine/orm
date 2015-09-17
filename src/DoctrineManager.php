@@ -80,11 +80,9 @@ class DoctrineManager
      */
     public function addNamespace($namespace, $connection = false)
     {
-        $connections = $connection ? [$connection] : $this->registry->getManagerNames();
+        $connection = $connection ?: $this->registry->getDefaultManagerName();
 
-        foreach ($connections as $connection) {
-            $this->getMetaDataDriver($connection)->addNamespace($namespace);
-        }
+        $this->getMetaDataDriver($connection)->addNamespace($namespace);
     }
 
     /**
@@ -93,11 +91,9 @@ class DoctrineManager
      */
     public function addPaths(array $paths = [], $connection = false)
     {
-        $connections = $connection ? [$connection] : $this->registry->getManagerNames();
+        $connection = $connection ?: $this->registry->getDefaultManagerName();
 
-        foreach ($connections as $connection) {
-            $this->getMetaDataDriver($connection)->addPaths($paths);
-        }
+        $this->getMetaDataDriver($connection)->addPaths($paths);
     }
 
     /**
