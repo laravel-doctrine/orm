@@ -156,39 +156,6 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->addNamespace('NewNamespace', 'default');
     }
 
-    public function test_can_add_a_new_namespace_to_all_connections()
-    {
-        $this->registry->shouldReceive('getManagerNames')->once()->andReturn([
-            'default',
-            'custom'
-        ]);
-
-        $this->registry->shouldReceive('getManager')
-                       ->once()
-                       ->with('default')
-                       ->andReturn($this->em);
-
-        $this->registry->shouldReceive('getManager')
-                       ->once()
-                       ->with('custom')
-                       ->andReturn($this->em);
-
-        $configuration = m::mock(Configuration::class);
-
-        $mappingDriver = m::mock(MappingDriverChain::class);
-        $mappingDriver->shouldReceive('addNamespace')
-            ->twice()->with('NewNamespace');
-
-        $configuration->shouldReceive('getMetadataDriverImpl')
-                      ->twice()
-                      ->andReturn($mappingDriver);
-
-        $this->em->shouldReceive('getConfiguration')
-                 ->twice()->andReturn($configuration);
-
-        $this->manager->addNamespace('NewNamespace');
-    }
-
     public function test_can_add_paths_to_default_connection()
     {
         $this->registry->shouldReceive('getManager')
@@ -209,39 +176,6 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
                  ->once()->andReturn($configuration);
 
         $this->manager->addPaths(['paths'], 'default');
-    }
-
-    public function test_can_add_paths_to_all_connections()
-    {
-        $this->registry->shouldReceive('getManagerNames')->once()->andReturn([
-            'default',
-            'custom'
-        ]);
-
-        $this->registry->shouldReceive('getManager')
-                       ->once()
-                       ->with('default')
-                       ->andReturn($this->em);
-
-        $this->registry->shouldReceive('getManager')
-                       ->once()
-                       ->with('custom')
-                       ->andReturn($this->em);
-
-        $configuration = m::mock(Configuration::class);
-
-        $mappingDriver = m::mock(MappingDriverChain::class);
-        $mappingDriver->shouldReceive('addPaths')
-                      ->twice()->with(['paths']);
-
-        $configuration->shouldReceive('getMetadataDriverImpl')
-                      ->twice()
-                      ->andReturn($mappingDriver);
-
-        $this->em->shouldReceive('getConfiguration')
-                 ->twice()->andReturn($configuration);
-
-        $this->manager->addPaths(['paths']);
     }
 
     protected function tearDown()
