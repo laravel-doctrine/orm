@@ -19,4 +19,23 @@ class DoctrineCollector extends DebugbarDoctrineCollector
     {
         return $this->debugStack;
     }
+
+    /**
+     * @return array
+     */
+    public function getWidgets()
+    {
+        return [
+            "queries" => [
+                "icon"    => "arrow-right",
+                "widget"  => "PhpDebugBar.Widgets.SQLQueriesWidget",
+                "map"     => "doctrine",
+                "default" => "[]"
+            ],
+            "queries:badge" => [
+                "map"     => "doctrine.nb_statements",
+                "default" => 0
+            ]
+        ];
+    }
 }
