@@ -8,7 +8,7 @@ return Symfony\CS\Config\Config::create()
     ->setUsingCache(true)
     ->level(Symfony\CS\FixerInterface::PSR2_LEVEL)
     ->fixers(array(
-        'psr0',
+        'psr4',
         'encoding',
         'short_tag',
         'blankline_after_open_tag',
