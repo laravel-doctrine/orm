@@ -304,6 +304,6 @@ class EntityManagerFactory
      */
     protected function getConnectionDriverName(array $settings = [])
     {
-        return $this->config->get('database.' . array_get($settings, 'connection') . '.driver');
+        return $this->config->get('database.connections.' . array_get($settings, 'connection') . '.driver');
     }
 }
