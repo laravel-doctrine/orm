@@ -350,7 +350,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->config = m::mock(Repository::class);
 
         $this->config->shouldReceive('get')
-                     ->with('database.mysql.driver')
+                     ->with('database.connections.mysql.driver')
                      ->once()->andReturn('mysql');
 
         $this->config->shouldReceive('get')
