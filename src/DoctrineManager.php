@@ -30,6 +30,14 @@ class DoctrineManager
     }
 
     /**
+     * @return string
+     */
+    public function getDefaultManagerName()
+    {
+        return $this->registry->getDefaultManagerName();
+    }
+
+    /**
      * @param string          $connection
      * @param string|callable $callback
      */
