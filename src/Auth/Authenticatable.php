@@ -15,6 +15,15 @@ trait Authenticatable
     protected $rememberToken;
 
     /**
+     * Get the column name for the primary key
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'id';
+    }
+
+    /**
      * Get the unique identifier for the user.
      * @return mixed
      */
@@ -23,15 +32,6 @@ trait Authenticatable
         $name = $this->getAuthIdentifierName();
 
         return $this->{$name};
-    }
-
-    /**
-     * Get the column name for the primary key
-     * @return string
-     */
-    public function getAuthIdentifierName()
-    {
-        return 'id';
     }
 
     /**
