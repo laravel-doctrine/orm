@@ -318,7 +318,11 @@ final class IlluminateRegistry implements ManagerRegistry
             $manager = $this->getManager($name);
 
             if (!$manager->getMetadataFactory()->isTransient($class)) {
-                return $manager;
+                foreach ($manager->getMetadataFactory()->getAllMetadata() as $metadata) {
+                    if ($metadata->getName() === $class) {
+                        return $manager;
+                    }
+                }
             }
         }
     }

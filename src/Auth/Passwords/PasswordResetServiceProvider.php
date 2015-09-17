@@ -10,12 +10,6 @@ use LaravelDoctrine\ORM\DoctrineManager;
 class PasswordResetServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     * @var bool
-     */
-    protected $defer = true;
-
-    /**
      * @param DoctrineManager $manager
      */
     public function boot(DoctrineManager $manager)
