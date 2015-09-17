@@ -72,7 +72,7 @@ class PasswordResetServiceProvider extends ServiceProvider
             return new DoctrineTokenRepository(
                 $this->app->make(ManagerRegistry::class)->getManagerForClass(PasswordReminder::class),
                 $app['config']['app.key'],
-                $app['config']->get('auth.reminder.expire', 60)
+                $app['config']->get('auth.password.expire', 60)
             );
         });
     }
