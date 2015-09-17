@@ -41,11 +41,11 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(
             Exception::class,
-            'Given query param is an instance of Object and could not be converted to a string'
+            'Given query param is an instance of ObjectClass and could not be converted to a string'
         );
 
         $sql    = 'SELECT * FROM table WHERE column = ?';
-        $params = [new Object];
+        $params = [new ObjectClass];
 
         $this->formatter->format($sql, $params);
     }
@@ -53,7 +53,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
     public function test_can_replace_object_params_with__toString()
     {
         $sql    = 'SELECT * FROM table WHERE column = ?';
-        $params = [new String];
+        $params = [new StringClass];
 
         $this->assertEquals(
             'SELECT * FROM table WHERE column = "string"',
@@ -79,11 +79,11 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
     }
 }
 
-class Object
+class ObjectClass
 {
 }
 
-class String
+class StringClass
 {
     public function __toString()
     {

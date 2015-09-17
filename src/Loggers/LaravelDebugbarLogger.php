@@ -3,10 +3,10 @@
 namespace LaravelDoctrine\ORM\Loggers;
 
 use Barryvdh\Debugbar\LaravelDebugbar;
-use DebugBar\Bridge\DoctrineCollector;
 use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
+use LaravelDoctrine\ORM\Loggers\Debugbar\DoctrineCollector;
 
 class LaravelDebugbarLogger implements Logger
 {
@@ -29,10 +29,16 @@ class LaravelDebugbarLogger implements Logger
      */
     public function register(EntityManagerInterface $em, Configuration $configuration)
     {
-        $debugStack = new DebugStack;
+        if ($this->debugbar->hasCollector('doctrine')) {
+            $debugStack = $this->debugbar->getCollector('doctrine')->getDebugStack();
+        } else {
+            $debugStack = new DebugStack;
+
+            $this->debugbar->addCollector(
+                new DoctrineCollector($debugStack)
+            );
+        }
+
         $configuration->setSQLLogger($debugStack);
-        $this->debugbar->addCollector(
-            new DoctrineCollector($debugStack)
-        );
     }
 }

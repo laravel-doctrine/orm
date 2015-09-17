@@ -17,10 +17,16 @@ class LaravelDebugbarLoggerTest extends PHPUnit_Framework_TestCase
         $configuration->shouldReceive('setSQLLogger')
                       ->once();
 
+        $debugbar->shouldReceive('hasCollector')->with('doctrine')->once()->andReturn(false);
         $debugbar->shouldReceive('addCollector')->once();
 
         $logger = new LaravelDebugbarLogger($debugbar);
 
         $logger->register($em, $configuration);
+    }
+
+    protected function tearDown()
+    {
+        m::close();
     }
 }

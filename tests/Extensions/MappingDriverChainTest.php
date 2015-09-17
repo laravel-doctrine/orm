@@ -34,10 +34,10 @@ class MappingDriverChainTest extends PHPUnit_Framework_TestCase
         $this->chain->addNamespace('NewNamespace2');
         $this->chain->addNamespace('NewNamespace3');
 
-        $this->assertArrayHasKey('Namespace',      $this->chain->getDrivers());
-        $this->assertArrayHasKey('NewNamespace',   $this->chain->getDrivers());
-        $this->assertArrayHasKey('NewNamespace2',  $this->chain->getDrivers());
-        $this->assertArrayHasKey('NewNamespace3',  $this->chain->getDrivers());
+        $this->assertArrayHasKey('Namespace', $this->chain->getDrivers());
+        $this->assertArrayHasKey('NewNamespace', $this->chain->getDrivers());
+        $this->assertArrayHasKey('NewNamespace2', $this->chain->getDrivers());
+        $this->assertArrayHasKey('NewNamespace3', $this->chain->getDrivers());
         $this->assertArrayNotHasKey('NonExisting', $this->chain->getDrivers());
     }
 

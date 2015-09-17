@@ -26,7 +26,9 @@ class FileCacheProviderTest extends AbstractCacheProviderTest
     }
 }
 
-function storage_path($path)
+function storage_path($path = null)
 {
-    return $path;
+    $storage = __DIR__ . DIRECTORY_SEPARATOR . '../../Stubs/storage';
+
+    return is_null($path) ? $storage : $storage . DIRECTORY_SEPARATOR . $path;
 }

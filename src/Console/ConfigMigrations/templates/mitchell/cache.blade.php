@@ -1,4 +1,4 @@
 [
-    'default' => {{{is_null($cacheProvider) ? 'config("cache.default")' : 'config("cache.'.$cacheProvider.'")'}}},
+    'default' => {{{is_null($cacheProvider) ? 'env(\'DOCTRINE_CACHE\', \'array\')' : 'config(\'cache.'.$cacheProvider.'\')'}}},
     'second_level' => false,
-]
+],
