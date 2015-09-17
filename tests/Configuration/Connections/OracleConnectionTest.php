@@ -26,15 +26,16 @@ class OracleConnectionTest extends PHPUnit_Framework_TestCase
 
     public function test_can_resolve()
     {
-        $this->config->shouldReceive('get')->with('database.connections.oracle.host')->once()->andReturn('host');
-        $this->config->shouldReceive('get')->with('database.connections.oracle.database')->once()->andReturn('database');
-        $this->config->shouldReceive('get')->with('database.connections.oracle.username')->once()->andReturn('username');
-        $this->config->shouldReceive('get')->with('database.connections.oracle.password')->once()->andReturn('password');
-        $this->config->shouldReceive('get')->with('database.connections.oracle.charset')->once()->andReturn('charset');
-        $this->config->shouldReceive('get')->with('database.connections.oracle.port')->once()->andReturn('port');
-        $this->config->shouldReceive('get')->with('database.connections.oracle.prefix')->once()->andReturn('prefix');
-
-        $resolved = $this->connection->resolve();
+        $resolved = $this->connection->resolve([
+            'driver'      => 'oci8',
+            'host'        => 'host',
+            'database'    => 'database',
+            'username'    => 'username',
+            'password'    => 'password',
+            'charset'     => 'charset',
+            'port'        => 'port',
+            'prefix'      => 'prefix'
+        ]);
 
         $this->assertEquals('oci8', $resolved['driver']);
         $this->assertEquals('host', $resolved['host']);

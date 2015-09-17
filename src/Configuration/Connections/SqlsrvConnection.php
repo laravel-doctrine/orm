@@ -13,12 +13,12 @@ class SqlsrvConnection extends Connection
     {
         return [
             'driver'   => 'pdo_sqlsrv',
-            'host'     => $this->config->get('database.connections.sqlsrv.host'),
-            'dbname'   => $this->config->get('database.connections.sqlsrv.database'),
-            'user'     => $this->config->get('database.connections.sqlsrv.username'),
-            'password' => $this->config->get('database.connections.sqlsrv.password'),
-            'port'     => $this->config->get('database.connections.sqlsrv.port'),
-            'prefix'   => $this->config->get('database.connections.sqlsrv.prefix'),
+            'host'     => array_get($settings, 'host'),
+            'dbname'   => array_get($settings, 'database'),
+            'user'     => array_get($settings, 'username'),
+            'password' => array_get($settings, 'password'),
+            'port'     => array_get($settings, 'port'),
+            'prefix'   => array_get($settings, 'prefix'),
         ];
     }
 }

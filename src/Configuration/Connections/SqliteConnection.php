@@ -13,29 +13,29 @@ class SqliteConnection extends Connection
     {
         return [
             'driver'   => 'pdo_sqlite',
-            'user'     => $this->config->get('database.connections.sqlite.username'),
-            'password' => $this->config->get('database.connections.sqlite.password'),
-            'prefix'   => $this->config->get('database.connections.sqlite.prefix'),
-            'memory'   => $this->getMemory(),
-            'path'     => $this->getPath()
+            'user'     => array_get($settings, 'username'),
+            'password' => array_get($settings, 'password'),
+            'prefix'   => array_get($settings, 'prefix'),
+            'memory'   => $this->getMemory($settings),
+            'path'     => $this->getPath($settings)
         ];
     }
 
     /**
      * @return bool
      */
-    protected function getMemory()
+    protected function getMemory(array $settings = [])
     {
-        return $this->config->get('database.connections.sqlite.database') == ':memory' ? true : false;
+        return array_get($settings, 'database') == ':memory' ? true : false;
     }
 
     /**
      * @return string
      */
-    protected function getPath()
+    protected function getPath(array $settings = [])
     {
-        return $this->config->get('database.connections.sqlite.database') == ':memory'
+        return array_get($settings, 'database') == ':memory'
             ? null
-            : $this->config->get('database.connections.sqlite.database');
+            : array_get($settings, 'database');
     }
 }

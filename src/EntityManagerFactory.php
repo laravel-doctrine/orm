@@ -76,8 +76,11 @@ class EntityManagerFactory
             $settings
         );
 
+        $driver = $this->getConnectionDriver($settings);
+
         $connection = $this->connection->driver(
-            $this->getConnectionDriverName($settings)
+            $driver['driver'],
+            $driver
         );
 
         $this->setNamingStrategy($settings, $configuration);
@@ -279,7 +282,7 @@ class EntityManagerFactory
     }
 
     /**
-     * @param $settings
+     * @param                        $settings
      * @param EntityManagerInterface $manager
      *
      * @return mixed
@@ -302,8 +305,8 @@ class EntityManagerFactory
      *
      * @return string|null
      */
-    protected function getConnectionDriverName(array $settings = [])
+    protected function getConnectionDriver(array $settings = [])
     {
-        return $this->config->get('database.connections.' . array_get($settings, 'connection') . '.driver');
+        return $this->config->get('database.connections.' . array_get($settings, 'connection'));
     }
 }

@@ -13,14 +13,14 @@ class MysqlConnection extends Connection
     {
         return [
             'driver'      => 'pdo_mysql',
-            'host'        => $this->config->get('database.connections.mysql.host'),
-            'dbname'      => $this->config->get('database.connections.mysql.database'),
-            'user'        => $this->config->get('database.connections.mysql.username'),
-            'password'    => $this->config->get('database.connections.mysql.password'),
-            'charset'     => $this->config->get('database.connections.mysql.charset'),
-            'port'        => $this->config->get('database.connections.mysql.port'),
-            'unix_socket' => $this->config->get('database.connections.mysql.unix_socket'),
-            'prefix'      => $this->config->get('database.connections.mysql.prefix'),
+            'host'        => array_get($settings, 'host'),
+            'dbname'      => array_get($settings, 'database'),
+            'user'        => array_get($settings, 'username'),
+            'password'    => array_get($settings, 'password'),
+            'charset'     => array_get($settings, 'charset'),
+            'port'        => array_get($settings, 'port'),
+            'unix_socket' => array_get($settings, 'unix_socket'),
+            'prefix'      => array_get($settings, 'prefix'),
         ];
     }
 }
