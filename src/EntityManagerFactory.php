@@ -7,6 +7,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Setup;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
@@ -44,7 +45,13 @@ class EntityManagerFactory
     protected $container;
 
     /**
+     * @var Setup
+     */
+    private $setup;
+
+    /**
      * @param Container         $container
+     * @param Setup             $setup
      * @param MetaDataManager   $meta
      * @param ConnectionManager $connection
      * @param CacheManager      $cache
@@ -52,6 +59,7 @@ class EntityManagerFactory
      */
     public function __construct(
         Container $container,
+        Setup $setup,
         MetaDataManager $meta,
         ConnectionManager $connection,
         CacheManager $cache,
@@ -62,6 +70,7 @@ class EntityManagerFactory
         $this->config     = $config;
         $this->cache      = $cache;
         $this->container  = $container;
+        $this->setup      = $setup;
     }
 
     /**
@@ -71,10 +80,16 @@ class EntityManagerFactory
      */
     public function create($settings = [])
     {
-        $configuration = $this->meta->driver(
+        $configuration = $this->setup->createConfiguration(
+            array_get($settings, 'dev', false),
+            array_get($settings, 'proxies.path'),
+            $this->cache->driver()
+        );
+
+        $configuration->setMetadataDriverImpl($this->meta->driver(
             array_get($settings, 'meta'),
             $settings
-        );
+        ));
 
         $driver = $this->getConnectionDriver($settings);
 

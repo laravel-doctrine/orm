@@ -1,21 +1,14 @@
 <?php
 
-use Doctrine\ORM\Configuration;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Illuminate\Contracts\Config\Repository;
-use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use LaravelDoctrine\ORM\Configuration\MetaData\Config;
-use LaravelDoctrine\ORM\Configuration\MetaData\Config\ConfigDriver;
 use Mockery as m;
 use Mockery\Mock;
 
 class ConfigTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Mock
-     */
-    protected $cache;
-
     /**
      * @var Mock
      */
@@ -28,15 +21,12 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->cache = m::mock(CacheManager::class);
-        $this->cache->shouldReceive('driver')->once();
-
         $this->config = m::mock(Repository::class);
         $this->config->shouldReceive('get')->with('mappings', [])->once()->andReturn([
             'App\User' => []
         ]);
 
-        $this->meta = new Config($this->cache, $this->config);
+        $this->meta = new Config($this->config);
     }
 
     public function test_can_resolve()
@@ -48,9 +38,6 @@ class ConfigTest extends PHPUnit_Framework_TestCase
             'mapping_file' => 'mappings'
         ]);
 
-        $this->assertInstanceOf(Configuration::class, $resolved);
-
-        $this->assertEquals('path', $resolved->getProxyDir());
-        $this->assertInstanceOf(ConfigDriver::class, $resolved->getMetadataDriverImpl());
+        $this->assertInstanceOf(MappingDriver::class, $resolved);
     }
 }

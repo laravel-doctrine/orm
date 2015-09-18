@@ -1,8 +1,8 @@
 <?php
 
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Cache\CacheFactory;
@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\EntityListenerResolver;
 use Doctrine\ORM\Query\FilterCollection;
 use Doctrine\ORM\Repository\RepositoryFactory;
+use Doctrine\ORM\Tools\Setup;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
@@ -65,6 +66,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
      */
     protected $mappingDriver;
 
+    protected $setup;
+
     /**
      * @var array
      */
@@ -80,6 +83,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         'repository' => 'Repo'
     ];
 
+    protected $cacheImpl;
+
     protected function setUp()
     {
         $this->mockApp();
@@ -88,8 +93,12 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->mockCache();
         $this->mockConfig();
 
+        $this->setup = m::mock(Setup::class);
+        $this->setup->shouldReceive('createConfiguration')->once()->andReturn($this->configuration);
+
         $this->factory = new EntityManagerFactory(
             $this->container,
+            $this->setup,
             $this->meta,
             $this->connection,
             $this->cache,
@@ -189,8 +198,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->configuration->shouldReceive('getSecondLevelCacheConfiguration')
                             ->atLeast()->once()->andReturn($cacheConfig);
 
-        $cache = m::mock(Cache::class);
-        $this->cache->shouldReceive('driver')->once()->andReturn($cache);
+        $this->cacheImpl = m::mock(Cache::class);
+        $this->cache->shouldReceive('driver')->once()->andReturn($this->cacheImpl);
 
         $this->configuration->shouldReceive('isSecondLevelCacheEnabled')
                             ->atLeast()->once()
@@ -229,10 +238,6 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
-
-        $this->mappingDriver->shouldReceive('addPaths')
-                            ->once()
-                            ->with($this->settings['paths']);
 
         $manager = $this->factory->create($this->settings);
 
@@ -372,6 +377,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected function mockCache()
     {
         $this->cache = m::mock(CacheManager::class);
+        $this->cache->shouldReceive('driver')->once()->andReturn(new ArrayCache());
     }
 
     protected function mockConnection()
@@ -389,11 +395,15 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
     protected function mockMeta()
     {
+        $this->mappingDriver = m::mock(MappingDriver::class);
+        $this->mappingDriver->shouldReceive('addPaths')->with($this->settings['paths']);
+
         $this->mockORMConfiguration();
+
         $this->meta = m::mock(MetaDataManager::class);
         $this->meta->shouldReceive('driver')
                    ->once()
-                   ->andReturn($this->configuration);
+                   ->andReturn($this->mappingDriver);
     }
 
     protected function mockApp()
@@ -438,9 +448,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->configuration = m::mock(Configuration::class);
         $this->configuration->shouldReceive('setSQLLogger');
 
-        $this->mappingDriver = m::mock(AnnotationDriver::class)->makePartial();
         $this->configuration->shouldReceive('getMetadataDriverImpl')
-                            ->atLeast()->once()
                             ->andReturn($this->mappingDriver);
 
         $this->configuration->shouldReceive('setMetadataDriverImpl')

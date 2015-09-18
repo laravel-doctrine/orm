@@ -1,19 +1,12 @@
 <?php
 
-use Doctrine\ORM\Configuration;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
-use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\Yaml;
 use Mockery as m;
-use Mockery\Mock;
 
 class YamlTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Mock
-     */
-    protected $cache;
-
     /**
      * @var Yaml
      */
@@ -21,10 +14,7 @@ class YamlTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->cache = m::mock(CacheManager::class);
-        $this->cache->shouldReceive('driver')->once();
-
-        $this->meta = new Yaml($this->cache);
+        $this->meta = new Yaml();
     }
 
     public function test_can_resolve()
@@ -35,10 +25,12 @@ class YamlTest extends PHPUnit_Framework_TestCase
             'proxies' => ['path' => 'path']
         ]);
 
-        $this->assertInstanceOf(Configuration::class, $resolved);
+        $this->assertInstanceOf(MappingDriver::class, $resolved);
+        $this->assertInstanceOf(YamlDriver::class, $resolved);
+    }
 
-        $this->assertEquals('path', $resolved->getProxyDir());
-        $this->assertInstanceOf(YamlDriver::class, $resolved->getMetadataDriverImpl());
-        $this->assertContains('entities', $resolved->getMetadataDriverImpl()->getLocator()->getPaths());
+    protected function tearDown()
+    {
+        m::close();
     }
 }

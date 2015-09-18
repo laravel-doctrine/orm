@@ -35,7 +35,7 @@ class DoctrineServiceProvider extends ServiceProvider
      * Indicates if loading of the provider is deferred.
      * @var bool
      */
-    protected $defer = true;
+    //protected $defer = true;
 
     /**
      * Boot service provider.
