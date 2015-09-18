@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Contracts\Container\Container;
-use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\Yaml;
@@ -16,11 +15,6 @@ class MetaDataManagerTest extends PHPUnit_Framework_TestCase
     protected $manager;
 
     /**
-     * @var CacheManager
-     */
-    protected $cache;
-
-    /**
      * @var Container
      */
     protected $app;
@@ -30,8 +24,6 @@ class MetaDataManagerTest extends PHPUnit_Framework_TestCase
         $this->app = m::mock(Container::class);
         $this->app->shouldReceive('make')->andReturn(m::self());
 
-        $this->cache = m::mock(CacheManager::class);
-
         $this->manager = new MetaDataManager(
             $this->app
         );
@@ -39,14 +31,14 @@ class MetaDataManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_driver_returns_the_default_driver()
     {
-        $this->app->shouldReceive('resolve')->andReturn(new Annotations($this->cache));
+        $this->app->shouldReceive('resolve')->andReturn(new Annotations());
 
         $this->assertInstanceOf(Annotations::class, $this->manager->driver());
     }
 
     public function test_driver_can_return_a_given_driver()
     {
-        $this->app->shouldReceive('resolve')->andReturn(new Yaml($this->cache));
+        $this->app->shouldReceive('resolve')->andReturn(new Yaml());
 
         $this->assertInstanceOf(Yaml::class, $this->manager->driver('yaml'));
     }

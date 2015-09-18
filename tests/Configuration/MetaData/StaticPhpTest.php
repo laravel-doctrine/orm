@@ -1,19 +1,12 @@
 <?php
 
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver;
-use Doctrine\ORM\Configuration;
-use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\StaticPhp;
 use Mockery as m;
-use Mockery\Mock;
 
 class StaticPhpTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Mock
-     */
-    protected $cache;
-
     /**
      * @var StaticPhp
      */
@@ -21,10 +14,7 @@ class StaticPhpTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->cache = m::mock(CacheManager::class);
-        $this->cache->shouldReceive('driver')->once();
-
-        $this->meta = new StaticPhp($this->cache);
+        $this->meta = new StaticPhp();
     }
 
     public function test_can_resolve()
@@ -35,9 +25,12 @@ class StaticPhpTest extends PHPUnit_Framework_TestCase
             'proxies' => ['path' => 'path']
         ]);
 
-        $this->assertInstanceOf(Configuration::class, $resolved);
+        $this->assertInstanceOf(MappingDriver::class, $resolved);
+        $this->assertInstanceOf(StaticPHPDriver::class, $resolved);
+    }
 
-        $this->assertEquals('path', $resolved->getProxyDir());
-        $this->assertInstanceOf(StaticPHPDriver::class, $resolved->getMetadataDriverImpl());
+    protected function tearDown()
+    {
+        m::close();
     }
 }

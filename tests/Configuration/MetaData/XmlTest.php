@@ -1,19 +1,12 @@
 <?php
 
-use Doctrine\ORM\Configuration;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
-use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\Xml;
 use Mockery as m;
-use Mockery\Mock;
 
 class XmlTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Mock
-     */
-    protected $cache;
-
     /**
      * @var Xml
      */
@@ -21,10 +14,7 @@ class XmlTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->cache = m::mock(CacheManager::class);
-        $this->cache->shouldReceive('driver')->once();
-
-        $this->meta = new Xml($this->cache);
+        $this->meta = new Xml();
     }
 
     public function test_can_resolve()
@@ -35,10 +25,12 @@ class XmlTest extends PHPUnit_Framework_TestCase
             'proxies' => ['path' => 'path']
         ]);
 
-        $this->assertInstanceOf(Configuration::class, $resolved);
+        $this->assertInstanceOf(MappingDriver::class, $resolved);
+        $this->assertInstanceOf(XmlDriver::class, $resolved);
+    }
 
-        $this->assertEquals('path', $resolved->getProxyDir());
-        $this->assertInstanceOf(XmlDriver::class, $resolved->getMetadataDriverImpl());
-        $this->assertContains('entities', $resolved->getMetadataDriverImpl()->getLocator()->getPaths());
+    protected function tearDown()
+    {
+        m::close();
     }
 }

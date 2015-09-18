@@ -1,19 +1,12 @@
 <?php
 
-use Doctrine\ORM\Configuration;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use Mockery as m;
-use Mockery\Mock;
 
 class AnnotationsTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Mock
-     */
-    protected $cache;
-
     /**
      * @var Annotations
      */
@@ -21,10 +14,7 @@ class AnnotationsTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->cache = m::mock(CacheManager::class);
-        $this->cache->shouldReceive('driver')->once();
-
-        $this->meta = new Annotations($this->cache);
+        $this->meta = new Annotations();
     }
 
     public function test_can_resolve()
@@ -36,10 +26,12 @@ class AnnotationsTest extends PHPUnit_Framework_TestCase
             'simple'  => false
         ]);
 
-        $this->assertInstanceOf(Configuration::class, $resolved);
+        $this->assertInstanceOf(MappingDriver::class, $resolved);
+        $this->assertInstanceOf(AnnotationDriver::class, $resolved);
+    }
 
-        $this->assertEquals('path', $resolved->getProxyDir());
-        $this->assertInstanceOf(AnnotationDriver::class, $resolved->getMetadataDriverImpl());
-        $this->assertContains('entities', $resolved->getMetadataDriverImpl()->getPaths());
+    protected function tearDown()
+    {
+        m::close();
     }
 }

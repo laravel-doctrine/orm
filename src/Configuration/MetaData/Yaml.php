@@ -2,22 +2,19 @@
 
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Mapping\Driver\YamlDriver;
 
 class Yaml extends MetaData
 {
     /**
      * @param array $settings
      *
-     * @return \Doctrine\ORM\Configuration
+     * @return \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
      */
     public function resolve(array $settings = [])
     {
-        return Setup::createYAMLMetadataConfiguration(
-            array_get($settings, 'paths'),
-            array_get($settings, 'dev'),
-            array_get($settings, 'proxies.path'),
-            $this->cache->driver()
+        return new YamlDriver(
+            array_get($settings, 'paths')
         );
     }
 }

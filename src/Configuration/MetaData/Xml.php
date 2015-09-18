@@ -2,22 +2,19 @@
 
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Mapping\Driver\XmlDriver;
 
 class Xml extends MetaData
 {
     /**
      * @param array $settings
      *
-     * @return \Doctrine\ORM\Configuration|mixed
+     * @return \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
      */
     public function resolve(array $settings = [])
     {
-        return Setup::createXMLMetadataConfiguration(
-            array_get($settings, 'paths'),
-            array_get($settings, 'dev'),
-            array_get($settings, 'proxies.path'),
-            $this->cache->driver()
+        return new XmlDriver(
+            array_get($settings, 'paths')
         );
     }
 }
