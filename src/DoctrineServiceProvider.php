@@ -282,6 +282,6 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function isLumen()
     {
-        return !function_exists('config_path');
+        return str_contains($this->app->version(), 'Lumen');
     }
 }
