@@ -6,7 +6,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
-use Illuminate\Auth\AuthManager;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
@@ -32,19 +31,13 @@ use LaravelDoctrine\ORM\Validation\DoctrinePresenceVerifier;
 class DoctrineServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     * @var bool
-     */
-    //protected $defer = true;
-
-    /**
      * Boot service provider.
      */
     public function boot()
     {
-        $this->app->make(ExtensionManager::class)->boot();
-
         $this->extendAuthManager();
+
+        $this->app->make(ExtensionManager::class)->boot();
 
         if (!$this->isLumen()) {
             $this->publishes([
@@ -251,30 +244,6 @@ class DoctrineServiceProvider extends ServiceProvider
             GenerateProxiesCommand::class,
             ConvertConfigCommand::class
         ]);
-    }
-
-    /**
-     * Get the services provided by the provider.
-     * @return string[]
-     */
-    public function provides()
-    {
-        return [
-            'auth',
-            'em',
-            'registry',
-            'validation.presence',
-            AuthManager::class,
-            EntityManager::class,
-            DoctrineManager::class,
-            ConnectionManager::class,
-            CacheManager::class,
-            MetaDataManager::class,
-            ClassMetadataFactory::class,
-            EntityManagerInterface::class,
-            ExtensionManager::class,
-            ManagerRegistry::class
-        ];
     }
 
     /**

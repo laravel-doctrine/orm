@@ -82,7 +82,7 @@ abstract class Manager
         // will check for a custom driver creator, which allows developers to create
         // drivers using their own customized driver creator Closure to create it.
         if (isset($this->customCreators[$driver])) {
-            return $this->callCustomCreator($driver);
+            return $this->callCustomCreator($driver, $settings);
         } elseif (class_exists($class)) {
             return $this->container->make($class)->resolve($settings);
         }
@@ -94,12 +94,13 @@ abstract class Manager
      * Call a custom driver creator.
      *
      * @param string $driver
+     * @param array  $settings
      *
      * @return mixed
      */
-    protected function callCustomCreator($driver)
+    protected function callCustomCreator($driver, array $settings = [])
     {
-        return $this->customCreators[$driver]($this->container);
+        return $this->customCreators[$driver]($settings, $this->container);
     }
 
     /**
