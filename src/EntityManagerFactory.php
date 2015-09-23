@@ -145,7 +145,6 @@ class EntityManagerFactory
     private function registerListener($event, $listener, EntityManagerInterface $manager)
     {
         if (is_array($listener)) {
-
             foreach ($listener as $individualListener) {
                 $this->registerListener($event, $individualListener, $manager);
             }
@@ -158,8 +157,6 @@ class EntityManagerFactory
         }
 
         $manager->getEventManager()->addEventListener($event, new $listener);
-
-
     }
 
     /**
