@@ -272,6 +272,11 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
     public function test_can_set_listeners()
     {
+        $this->container->shouldReceive('make')
+                ->with(ListenerStub::class)
+                ->once()
+                ->andReturn(new ListenerStub());
+
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
         $this->disableCustomCacheNamespace();
@@ -291,6 +296,15 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
     public function test_can_set_multiple_listeners()
     {
+        $this->container->shouldReceive('make')
+                        ->with(ListenerStub::class)
+                        ->once()
+                        ->andReturn(new ListenerStub())
+                        ->shouldReceive('make')
+                        ->with(AnotherListenerStub::class)
+                        ->once()
+                        ->andReturn(new AnotherListenerStub());
+
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
         $this->disableCustomCacheNamespace();
@@ -314,6 +328,11 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
     public function test_can_set_subscribers()
     {
+        $this->container->shouldReceive('make')
+                ->with(SubscriberStub::class)
+                ->once()
+                ->andReturn(new SubscriberStub);
+
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
         $this->disableCustomCacheNamespace();
