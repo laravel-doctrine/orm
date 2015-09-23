@@ -137,7 +137,7 @@ class EntityManagerFactory
             }
         }
     }
-    
+
     /**
      * @param string                 $event
      * @param string|string[]        $listener

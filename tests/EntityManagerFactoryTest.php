@@ -326,6 +326,30 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertCount(2, $manager->getEventManager()->getListeners('name'));
     }
 
+    public function test_setting_non_existent_listener_throws_exception()
+    {
+        $reflectionException = new ReflectionException();
+
+        $this->container->shouldReceive('make')
+                ->with('ClassDoesNotExist')
+                ->once()
+                ->andThrow($reflectionException);
+
+        $this->setExpectedException(InvalidArgumentException::class);
+
+        $this->disableDebugbar();
+        $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
+        $this->disableCustomFunctions();
+        $this->enableLaravelNamingStrategy();
+
+        $this->settings['events']['listeners'] = [
+            'name' => 'ClassDoesNotExist'
+        ];
+
+        $this->factory->create($this->settings);
+    }
+
     public function test_can_set_subscribers()
     {
         $this->container->shouldReceive('make')
@@ -348,6 +372,30 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEntityManager($manager);
         $this->assertCount(1, $manager->getEventManager()->getListeners());
         $this->assertTrue(array_key_exists('onFlush', $manager->getEventManager()->getListeners()));
+    }
+
+    public function test_setting_non_existent_subscriber_throws_exception()
+    {
+        $reflectionException = new ReflectionException();
+
+        $this->container->shouldReceive('make')
+                        ->with('ClassDoesNotExist')
+                        ->once()
+                        ->andThrow($reflectionException);
+
+        $this->setExpectedException(InvalidArgumentException::class);
+
+        $this->disableDebugbar();
+        $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
+        $this->disableCustomFunctions();
+        $this->enableLaravelNamingStrategy();
+
+        $this->settings['events']['subscribers'] = [
+            'name' => 'ClassDoesNotExist'
+        ];
+
+        $this->factory->create($this->settings);
     }
 
     public function test_can_set_custom_naming_strategy()
