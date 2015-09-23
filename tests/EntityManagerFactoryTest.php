@@ -289,6 +289,29 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(array_key_exists('name', $manager->getEventManager()->getListeners()));
     }
 
+    public function test_can_set_multiple_listeners()
+    {
+        $this->disableDebugbar();
+        $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
+        $this->disableCustomFunctions();
+        $this->enableLaravelNamingStrategy();
+
+        $this->settings['events']['listeners'] = [
+            'name' => [
+                ListenerStub::class,
+                AnotherListenerStub::class
+            ]
+        ];
+
+        $manager = $this->factory->create($this->settings);
+
+        $this->assertEntityManager($manager);
+        $this->assertCount(1, $manager->getEventManager()->getListeners());
+        $this->assertTrue(array_key_exists('name', $manager->getEventManager()->getListeners()));
+        $this->assertCount(2, $manager->getEventManager()->getListeners('name'));
+    }
+
     public function test_can_set_subscribers()
     {
         $this->disableDebugbar();
@@ -528,6 +551,10 @@ class FilterStub
 }
 
 class ListenerStub
+{
+}
+
+class AnotherListenerStub
 {
 }
 

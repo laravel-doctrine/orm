@@ -132,13 +132,34 @@ class EntityManagerFactory
     {
         if (isset($settings['events']['listeners'])) {
             foreach ($settings['events']['listeners'] as $event => $listener) {
-                if (!class_exists($listener, false)) {
-                    throw new InvalidArgumentException("Listener {$listener} does not exist");
-                }
-
-                $manager->getEventManager()->addEventListener($event, new $listener);
+                $this->registerListener($event, $listener, $manager);
             }
         }
+    }
+
+    /**
+     * @param string                 $event
+     * @param string|string[]        $listener
+     * @param EntityManagerInterface $manager
+     */
+    private function registerListener($event, $listener, EntityManagerInterface $manager)
+    {
+        if (is_array($listener)) {
+
+            foreach ($listener as $individualListener) {
+                $this->registerListener($event, $individualListener, $manager);
+            }
+
+            return;
+        }
+
+        if (!class_exists($listener, false)) {
+            throw new InvalidArgumentException("Listener {$listener} does not exist");
+        }
+
+        $manager->getEventManager()->addEventListener($event, new $listener);
+
+
     }
 
     /**
