@@ -16,6 +16,7 @@ use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
+use ReflectionException;
 
 class EntityManagerFactory
 {
@@ -152,11 +153,17 @@ class EntityManagerFactory
             return;
         }
 
-        if (!class_exists($listener, false)) {
-            throw new InvalidArgumentException("Listener {$listener} does not exist");
+        try {
+            $resolvedListener = $this->container->make($listener);
+        } catch (ReflectionException $e) {
+            throw new InvalidArgumentException(
+                "Listener {$listener} could not be resolved: {$e->getMessage()}",
+                0,
+                $e
+            );
         }
 
-        $manager->getEventManager()->addEventListener($event, new $listener);
+        $manager->getEventManager()->addEventListener($event, $resolvedListener);
     }
 
     /**
@@ -167,11 +174,13 @@ class EntityManagerFactory
     {
         if (isset($settings['events']['subscribers'])) {
             foreach ($settings['events']['subscribers'] as $subscriber) {
-                if (!class_exists($subscriber, false)) {
-                    throw new InvalidArgumentException("Subscriber $subscriber does not exist");
+                try {
+                    $resolvedSubscriber = $this->container->make($subscriber);
+                } catch (ReflectionException $e) {
+                    throw new InvalidArgumentException("Listener {$subscriber} could not be resolved: {$e->getMessage()}");
                 }
 
-                $manager->getEventManager()->addEventSubscriber(new $subscriber);
+                $manager->getEventManager()->addEventSubscriber($resolvedSubscriber);
             }
         }
     }
