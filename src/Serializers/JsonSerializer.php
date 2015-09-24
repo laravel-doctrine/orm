@@ -26,11 +26,12 @@ class JsonSerializer
     /**
      * @param $entity
      *
+     * @param  int    $jsonEncodeOptions
      * @return string
      */
-    public function serialize($entity)
+    public function serialize($entity, $jsonEncodeOptions = 0)
     {
-        return $this->serializer->serialize($entity, 'json');
+        return $this->serializer->serialize($entity, 'json', ['json_encode_options' => $jsonEncodeOptions]);
     }
 
     /**

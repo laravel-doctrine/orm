@@ -15,11 +15,20 @@ class JsonSerializerTest extends PHPUnit_Framework_TestCase
         $this->serializer = new JsonSerializer;
     }
 
-    public function test_can_serialize_to_array()
+    public function test_can_serialize_to_json()
     {
-        $array = $this->serializer->serialize(new JsonableEntity);
+        $json = $this->serializer->serialize(new JsonableEntity);
 
-        $this->assertEquals('{"id":"IDVALUE","name":"NAMEVALUE"}', $array);
+        $this->assertJson($json);
+        $this->assertEquals('{"id":"IDVALUE","name":"NAMEVALUE","numeric":"1"}', $json);
+    }
+
+    public function test_can_serialize_to_json_with_numeric_check()
+    {
+        $json = $this->serializer->serialize(new JsonableEntity(), JSON_NUMERIC_CHECK);
+
+        $this->assertJson($json);
+        $this->assertEquals('{"id":"IDVALUE","name":"NAMEVALUE","numeric":1}', $json);
     }
 }
 
@@ -31,6 +40,8 @@ class JsonableEntity
 
     protected $name = 'NAMEVALUE';
 
+    protected $numeric = "1";
+
     public function getId()
     {
         return $this->id;
@@ -39,5 +50,10 @@ class JsonableEntity
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getNumeric()
+    {
+        return $this->numeric;
     }
 }
