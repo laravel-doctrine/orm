@@ -5,11 +5,12 @@ namespace LaravelDoctrine\ORM\Serializers;
 trait Jsonable
 {
     /**
+     * @param  int    $options
      * @return string
      */
-    public function toJson()
+    public function toJson($options = 0)
     {
-        return (new JsonSerializer)->serialize($this);
+        return (new JsonSerializer)->serialize($this, $options);
     }
 
     /**
