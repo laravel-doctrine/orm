@@ -36,20 +36,20 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
     public function getCount($collection, $column, $value, $excludeId = null, $idColumn = null, array $extra = [])
     {
         $builder = $this->select($collection);
-        $builder->where("e.{$column} = :{$column}");
+        $builder->where("e.{$column} = :" . $this->prepareParam($column));
 
         if (!is_null($excludeId) && $excludeId != 'NULL') {
             $idColumn = $idColumn ?: 'id';
-            $builder->andWhere("e.{$idColumn} <> :{$idColumn}");
+            $builder->andWhere("e.{$idColumn} <> :" . $this->prepareParam($idColumn));
         }
 
         $this->queryExtraConditions($extra, $builder);
 
         $query = $builder->getQuery();
-        $query->setParameter($column, $value);
+        $query->setParameter($this->prepareParam($column), $value);
 
         if (!is_null($excludeId) && $excludeId != 'NULL') {
-            $query->setParameter($idColumn, $excludeId);
+            $query->setParameter($this->prepareParam($idColumn), $excludeId);
         }
 
         return $query->getSingleScalarResult();
@@ -97,8 +97,8 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
     protected function queryExtraConditions(array $extra, QueryBuilder $builder)
     {
         foreach ($extra as $key => $extraValue) {
-            $builder->andWhere("e.{$key} = :{$key}");
-            $builder->setParameter($key, $extraValue);
+            $builder->andWhere("e.{$key} = :" . $this->prepareParam($key));
+            $builder->setParameter($this->prepareParam($key), $extraValue);
         }
     }
 
@@ -110,5 +110,15 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
     protected function getEntityManager($entity)
     {
         return $this->registry->getManagerForClass($entity);
+    }
+
+    /**
+     * @param string $column
+     *
+     * @return string
+     */
+    protected function prepareParam($column)
+    {
+        return str_replace('.', '', $column);
     }
 }
