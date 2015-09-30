@@ -27,6 +27,11 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
     protected $provider;
 
     /**
+     * @var DoctrineUserProvider
+     */
+    protected $providerNonEmpty;
+
+    /**
      * @var Mock
      */
     protected $repo;
@@ -41,6 +46,11 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
             $this->hasher,
             $this->em,
             AuthenticableMock::class
+        );
+        $this->providerNonEmpty = new DoctrineUserProvider(
+            $this->hasher,
+            $this->em,
+            AuthenticableWithNonEmptyConstructorMock::class
         );
     }
 
@@ -69,6 +79,21 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
                    ->once()->andReturn($user);
 
         $this->assertEquals($user, $this->provider->retrieveByToken(1, 'myToken'));
+    }
+
+    public function test_can_retrieve_by_token_with_non_empty_constructor()
+    {
+        $this->mockGetRepository(AuthenticableWithNonEmptyConstructorMock::class);
+
+        $user = new AuthenticableWithNonEmptyConstructorMock(['myPassword']);
+        $this->repo->shouldReceive('findOneBy')
+                   ->with([
+                       'id'            => 1,
+                       'rememberToken' => 'myToken'
+                   ])
+                   ->once()->andReturn($user);
+
+        $this->assertEquals($user, $this->providerNonEmpty->retrieveByToken(1, 'myToken'));
     }
 
     public function test_can_update_remember_token()
@@ -114,10 +139,10 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
         ));
     }
 
-    protected function mockGetRepository()
+    protected function mockGetRepository($class = AuthenticableMock::class)
     {
         $this->em->shouldReceive('getRepository')
-                 ->with(AuthenticableMock::class)
+                 ->with($class)
                  ->once()->andReturn($this->repo);
     }
 
@@ -134,5 +159,15 @@ class AuthenticableMock implements AuthenticatableContract
     public function __construct()
     {
         $this->password = 'myPassword';
+    }
+}
+
+class AuthenticableWithNonEmptyConstructorMock implements AuthenticatableContract
+{
+    use Authenticatable;
+
+    public function __construct(array $passwords)
+    {
+        $this->password = $passwords[0];
     }
 }

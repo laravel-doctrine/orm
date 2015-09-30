@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable as IlluminateAuthenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher;
 use LaravelDoctrine\ORM\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use ReflectionClass;
 
 class DoctrineUserProvider implements UserProvider
 {
@@ -128,6 +129,8 @@ class DoctrineUserProvider implements UserProvider
      */
     protected function getEntity()
     {
-        return new $this->entity;
+        $refEntity = new ReflectionClass($this->entity);
+
+        return $refEntity->newInstanceWithoutConstructor();
     }
 }
