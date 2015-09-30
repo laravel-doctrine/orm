@@ -57,7 +57,17 @@ class SqliteConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('password', $resolved['password']);
         $this->assertEquals('prefix', $resolved['prefix']);
         $this->assertTrue($resolved['memory']);
-        $this->assertNull($resolved['path']);
+        $this->assertEquals(':memory', $resolved['path']);
+    }
+
+    public function test_can_resolve_with_full_in__memory_database()
+    {
+        $resolved = $this->connection->resolve([
+            'database' => ':memory:',
+        ]);
+
+        $this->assertTrue($resolved['memory']);
+        $this->assertEquals(':memory:', $resolved['path']);
     }
 
     protected function tearDown()

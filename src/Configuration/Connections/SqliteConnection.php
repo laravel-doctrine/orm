@@ -2,6 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
+use Illuminate\Support\Str;
+
 class SqliteConnection extends Connection
 {
     /**
@@ -16,26 +18,18 @@ class SqliteConnection extends Connection
             'user'     => array_get($settings, 'username'),
             'password' => array_get($settings, 'password'),
             'prefix'   => array_get($settings, 'prefix'),
-            'memory'   => $this->getMemory($settings),
-            'path'     => $this->getPath($settings)
+            'memory'   => $this->isMemory($settings),
+            'path'     => array_get($settings, 'database')
         ];
     }
 
     /**
+     * @param array $settings
+     *
      * @return bool
      */
-    protected function getMemory(array $settings = [])
+    protected function isMemory(array $settings = [])
     {
-        return array_get($settings, 'database') == ':memory' ? true : false;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getPath(array $settings = [])
-    {
-        return array_get($settings, 'database') == ':memory'
-            ? null
-            : array_get($settings, 'database');
+        return Str::startsWith(array_get($settings, 'database'), ':memory');
     }
 }
