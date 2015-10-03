@@ -20,10 +20,10 @@ class SimplifiedXmlTest extends PHPUnit_Framework_TestCase
     public function test_can_resolve()
     {
         $resolved = $this->meta->resolve([
-            'paths'   => ['entities' => 'App\Entities'],
-            'dev'     => true,
+            'paths'     => ['entities' => 'App\Entities'],
+            'dev'       => true,
             'extension' => '.xml',
-            'proxies' => ['path' => 'path']
+            'proxies'   => ['path' => 'path']
         ]);
 
         $this->assertInstanceOf(MappingDriver::class, $resolved);
