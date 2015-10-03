@@ -49,7 +49,7 @@ class SchemaUpdateCommand extends Command
             // Check if there are updates available
             $sql = $tool->getUpdateSchemaSql(
                 $em->getMetadataFactory()->getAllMetadata(),
-                $this->option('clean')
+                !$this->option('clean')
             );
 
             if (0 === count($sql)) {
@@ -63,7 +63,7 @@ class SchemaUpdateCommand extends Command
                     $this->message('Updating database schema...', 'blue');
                     $tool->updateSchema(
                         $em->getMetadataFactory()->getAllMetadata(),
-                        $this->option('clean')
+                        !$this->option('clean')
                     );
 
                     $pluralization = (1 === count($sql)) ? 'query was' : 'queries were';
