@@ -23,16 +23,17 @@ use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\EntityManagerFactory;
 use LaravelDoctrine\ORM\Loggers\Logger;
 use Mockery as m;
+use Mockery\Mock;
 
 class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var CacheManager
+     * @var CacheManager|Mock
      */
     protected $cache;
 
     /**
-     * @var Repository
+     * @var Repository|Mock
      */
     protected $config;
 
@@ -47,7 +48,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected $meta;
 
     /**
-     * @var Container
+     * @var Container|Mock
      */
     protected $container;
 
@@ -57,7 +58,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected $factory;
 
     /**
-     * @var Configuration
+     * @var Configuration|Mock
      */
     protected $configuration;
 
@@ -435,6 +436,31 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEntityManager($manager);
         $this->assertInstanceOf(Decorator::class, $manager);
         $this->assertInstanceOf(EntityManagerDecorator::class, $manager);
+    }
+
+    public function test_can_set_repository_factory()
+    {
+        $this->disableDebugbar();
+        $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
+        $this->disableCustomFunctions();
+        $this->enableLaravelNamingStrategy();
+
+        $this->settings['repository_factory'] = 'RepositoryFactory';
+
+        $repositoryFactory = m::mock(RepositoryFactory::class);
+
+        $this->container->shouldReceive('make')
+            ->with('RepositoryFactory')
+            ->once()->andReturn($repositoryFactory);
+
+        $this->configuration->shouldReceive('setRepositoryFactory')
+            ->once()
+            ->with($repositoryFactory);
+
+        $manager = $this->factory->create($this->settings);
+
+        $this->assertEntityManager($manager);
     }
 
     /**

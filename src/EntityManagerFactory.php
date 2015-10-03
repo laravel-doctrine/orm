@@ -105,6 +105,7 @@ class EntityManagerFactory
         $this->configureProxies($settings, $configuration);
         $this->setCustomMappingDriverChain($settings, $configuration);
         $this->registerPaths($settings, $configuration);
+        $this->setRepositoryFactory($settings, $configuration);
 
         $configuration->setDefaultRepositoryClassName(
             array_get($settings, 'repository', EntityRepository::class)
@@ -212,6 +213,19 @@ class EntityManagerFactory
         $configuration->getMetadataDriverImpl()->addPaths(
             array_get($settings, 'paths', [])
         );
+    }
+
+    /**
+     * @param array         $settings
+     * @param Configuration $configuration
+     */
+    protected function setRepositoryFactory($settings, Configuration $configuration)
+    {
+        if (array_get($settings, 'repository_factory', false)) {
+            $configuration->setRepositoryFactory(
+                $this->container->make(array_get($settings, 'repository_factory', false))
+            );
+        }
     }
 
     /**
