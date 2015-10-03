@@ -14,7 +14,8 @@ class Xml extends MetaData
     public function resolve(array $settings = [])
     {
         return new XmlDriver(
-            array_get($settings, 'paths')
+            array_get($settings, 'paths'),
+            array_get($settings, 'extension', XmlDriver::DEFAULT_FILE_EXTENSION)
         );
     }
 }

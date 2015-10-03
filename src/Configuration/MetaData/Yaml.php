@@ -14,7 +14,8 @@ class Yaml extends MetaData
     public function resolve(array $settings = [])
     {
         return new YamlDriver(
-            array_get($settings, 'paths')
+            array_get($settings, 'paths'),
+            array_get($settings, 'extension', YamlDriver::DEFAULT_FILE_EXTENSION)
         );
     }
 }
