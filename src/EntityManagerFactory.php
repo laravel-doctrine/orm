@@ -79,7 +79,7 @@ class EntityManagerFactory
      *
      * @return EntityManagerInterface
      */
-    public function create($settings = [])
+    public function create(array $settings = [])
     {
         $configuration = $this->setup->createConfiguration(
             array_get($settings, 'dev', false),
@@ -130,7 +130,7 @@ class EntityManagerFactory
      * @param array                  $settings
      * @param EntityManagerInterface $manager
      */
-    protected function registerListeners($settings = [], EntityManagerInterface $manager)
+    protected function registerListeners(array $settings = [], EntityManagerInterface $manager)
     {
         if (isset($settings['events']['listeners'])) {
             foreach ($settings['events']['listeners'] as $event => $listener) {
@@ -171,7 +171,7 @@ class EntityManagerFactory
      * @param array                  $settings
      * @param EntityManagerInterface $manager
      */
-    protected function registerSubscribers($settings = [], EntityManagerInterface $manager)
+    protected function registerSubscribers(array $settings = [], EntityManagerInterface $manager)
     {
         if (isset($settings['events']['subscribers'])) {
             foreach ($settings['events']['subscribers'] as $subscriber) {
@@ -192,7 +192,7 @@ class EntityManagerFactory
      * @param EntityManagerInterface $manager
      */
     protected function registerFilters(
-        $settings = [],
+        array $settings = [],
         Configuration $configuration,
         EntityManagerInterface $manager
     ) {
@@ -208,7 +208,7 @@ class EntityManagerFactory
      * @param array         $settings
      * @param Configuration $configuration
      */
-    protected function registerPaths($settings = [], Configuration $configuration)
+    protected function registerPaths(array $settings = [], Configuration $configuration)
     {
         $configuration->getMetadataDriverImpl()->addPaths(
             array_get($settings, 'paths', [])
@@ -232,7 +232,7 @@ class EntityManagerFactory
      * @param array         $settings
      * @param Configuration $configuration
      */
-    protected function configureProxies($settings = [], Configuration $configuration)
+    protected function configureProxies(array $settings = [], Configuration $configuration)
     {
         $configuration->setProxyDir(
             array_get($settings, 'proxies.path')
@@ -317,7 +317,7 @@ class EntityManagerFactory
      * @param array         $settings
      * @param Configuration $configuration
      */
-    protected function setCustomMappingDriverChain($settings = [], Configuration $configuration)
+    protected function setCustomMappingDriverChain(array $settings = [], Configuration $configuration)
     {
         $chain = new MappingDriverChain(
             $configuration->getMetadataDriverImpl(),
