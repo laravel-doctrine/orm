@@ -444,6 +444,11 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->config = m::mock(Repository::class);
 
+        $this->config->shouldReceive('has')
+                     ->with('database.connections.mysql')
+                     ->once()
+                     ->andReturn(true);
+
         $this->config->shouldReceive('get')
                      ->with('database.connections.mysql')
                      ->once()

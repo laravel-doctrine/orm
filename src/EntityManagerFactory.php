@@ -349,6 +349,13 @@ class EntityManagerFactory
      */
     protected function getConnectionDriver(array $settings = [])
     {
-        return $this->config->get('database.connections.' . array_get($settings, 'connection'));
+        $connection = array_get($settings, 'connection');
+        $key        = 'database.connections.' . $connection;
+
+        if (!$this->config->has($key)) {
+            throw new InvalidArgumentException("Connection [{$connection}] has no configuration in [{$key}]");
+        }
+
+        return $this->config->get($key);
     }
 }
