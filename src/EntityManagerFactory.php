@@ -4,7 +4,6 @@ namespace LaravelDoctrine\ORM;
 
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Setup;
@@ -101,6 +100,7 @@ class EntityManagerFactory
 
         $this->setNamingStrategy($settings, $configuration);
         $this->setCustomFunctions($configuration);
+        $this->setCustomHydrators($settings, $configuration);
         $this->setCacheSettings($configuration);
         $this->configureProxies($settings, $configuration);
         $this->setCustomMappingDriverChain($settings, $configuration);
@@ -271,6 +271,17 @@ class EntityManagerFactory
         $configuration->setNamingStrategy(
             $this->container->make($strategy)
         );
+    }
+
+    /**
+     * @param array         $settings
+     * @param Configuration $configuration
+     */
+    protected function setCustomHydrators(array $settings = [], Configuration $configuration)
+    {
+        foreach (array_get($settings, 'hydrators', []) as $mode => $hydrator) {
+            $configuration->addCustomHydrationMode($mode, $hydrator);
+        }
     }
 
     /**
