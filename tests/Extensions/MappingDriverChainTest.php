@@ -1,6 +1,10 @@
 <?php
 
+use Doctrine\Common\Persistence\Mapping\Driver\DefaultFileLocator;
+use Doctrine\Common\Persistence\Mapping\Driver\SymfonyFileLocator;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
+use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use Mockery as m;
 use Mockery\Mock;
@@ -50,11 +54,39 @@ class MappingDriverChainTest extends PHPUnit_Framework_TestCase
         $this->chain->addPaths(['paths2']);
     }
 
+    public function test_can_add_paths_to_filedriver()
+    {
+        $driver  = m::mock(XmlDriver::class);
+        $locator = m::mock(DefaultFileLocator::class);
+        $chain   = new MappingDriverChain($driver, 'Namespace');
+
+        $driver->shouldReceive('getLocator')->andReturn($locator);
+        $locator->shouldReceive('addPaths')->with(['paths'])->once();
+        $locator->shouldReceive('addPaths')->with(['paths2'])->once();
+
+        $chain->addPaths(['paths']);
+        $chain->addPaths(['paths2']);
+    }
+
+    public function test_can_add_paths_to_simplified_filedriver()
+    {
+        $driver  = m::mock(SimplifiedXmlDriver::class);
+        $locator = m::mock(SymfonyFileLocator::class);
+        $chain   = new MappingDriverChain($driver, 'Namespace');
+
+        $driver->shouldReceive('getLocator')->andReturn($locator);
+        $locator->shouldReceive('addNamespacePrefixes')->with(['paths'])->once();
+        $locator->shouldReceive('addNamespacePrefixes')->with(['paths2'])->once();
+
+        $chain->addPaths(['paths']);
+        $chain->addPaths(['paths2']);
+    }
+
     public function test_can_get_annotation_reader()
     {
         $this->driver->shouldReceive('getReader')
-            ->once()
-            ->andReturn('reader');
+                     ->once()
+                     ->andReturn('reader');
 
         $this->assertEquals('reader', $this->chain->getReader());
     }

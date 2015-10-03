@@ -2,10 +2,12 @@
 
 namespace LaravelDoctrine\ORM\Extensions;
 
+use Doctrine\Common\Persistence\Mapping\Driver\DefaultFileLocator;
 use Doctrine\Common\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain as DoctrineMappingDriverChain;
 use Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver;
+use Doctrine\Common\Persistence\Mapping\Driver\SymfonyFileLocator;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
 class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDriver
@@ -38,7 +40,11 @@ class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDr
         if ($driver instanceof AnnotationDriver || $driver instanceof StaticPHPDriver) {
             $driver->addPaths($paths);
         } elseif ($driver instanceof FileDriver) {
-            $driver->getLocator()->addPaths($paths);
+            if ($driver->getLocator() instanceof DefaultFileLocator) {
+                $driver->getLocator()->addPaths($paths);
+            } elseif ($driver->getLocator() instanceof SymfonyFileLocator) {
+                $driver->getLocator()->addNamespacePrefixes($paths);
+            }
         }
     }
 
