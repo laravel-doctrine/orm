@@ -39,7 +39,7 @@ class ConfigDriver extends YamlDriver implements MappingDriver
      */
     public function isTransient($className)
     {
-        return array_key_exists($className, $this->mappings);
+        return !array_key_exists($className, $this->mappings);
     }
 
     /**
