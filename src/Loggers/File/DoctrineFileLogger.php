@@ -3,9 +3,9 @@
 namespace LaravelDoctrine\ORM\Loggers\File;
 
 use Doctrine\DBAL\Logging\SQLLogger;
-use Illuminate\Contracts\Logging\Log;
 use LaravelDoctrine\ORM\Loggers\Formatters\FormatQueryKeywords;
 use LaravelDoctrine\ORM\Loggers\Formatters\ReplaceQueryParams;
+use Psr\Log\LoggerInterface as Log;
 
 class DoctrineFileLogger implements SQLLogger
 {

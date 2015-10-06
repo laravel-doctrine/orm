@@ -2,9 +2,9 @@
 
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
-use Illuminate\Contracts\Logging\Log;
 use LaravelDoctrine\ORM\Loggers\FileLogger;
 use Mockery as m;
+use Psr\Log\LoggerInterface as Log;
 
 class FileLoggerTest extends PHPUnit_Framework_TestCase
 {
