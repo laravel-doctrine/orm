@@ -42,8 +42,8 @@ class ConfigDriverTest extends PHPUnit_Framework_TestCase
 
     public function test_can_check_if_is_transient()
     {
-        $this->assertTrue($this->driver->isTransient('App\User'));
-        $this->assertFalse($this->driver->isTransient('App\NonExisting'));
+        $this->assertFalse($this->driver->isTransient('App\User'));
+        $this->assertTrue($this->driver->isTransient('App\NonExisting'));
     }
 
     public function test_can_element()
