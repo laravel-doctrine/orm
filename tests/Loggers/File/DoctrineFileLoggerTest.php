@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Contracts\Logging\Log;
 use LaravelDoctrine\ORM\Loggers\File\DoctrineFileLogger;
 use Mockery as m;
 use Mockery\Mock;
+use Psr\Log\LoggerInterface as Log;
 
 class DoctrineFileLoggerTest extends PHPUnit_Framework_TestCase
 {

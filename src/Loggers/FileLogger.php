@@ -4,8 +4,8 @@ namespace LaravelDoctrine\ORM\Loggers;
 
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
-use Illuminate\Contracts\Logging\Log;
 use LaravelDoctrine\ORM\Loggers\File\DoctrineFileLogger;
+use Psr\Log\LoggerInterface as Log;
 
 class FileLogger implements Logger
 {
