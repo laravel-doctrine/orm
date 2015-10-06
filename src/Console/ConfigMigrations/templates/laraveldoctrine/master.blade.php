@@ -82,7 +82,7 @@ return [
         | Configure meta-data, query and result caching here.
         | Optionally you can enable second level caching.
         |
-        | Available: acp|array|file|memcached|redis
+        | Available: apc|array|file|memcached|redis
         |
         */
         'cache' => {{$cache}}
