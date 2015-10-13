@@ -463,6 +463,30 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEntityManager($manager);
     }
 
+    public function test_can_set_entity_manager()
+    {
+        $this->disableDebugbar();
+        $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
+        $this->disableCustomFunctions();
+        $this->enableLaravelNamingStrategy();
+
+
+        $manager = m::mock('CustomEntityManager');
+        $manager
+            ->shouldReceive('create')
+            ->once()
+            ->andReturnUsing(function ($connection, $configuration) {
+                return \Doctrine\ORM\EntityManager::create($connection, $configuration);
+            });
+
+        $this->settings['entity_manager'] = get_class($manager);
+
+        $manager = $this->factory->create($this->settings);
+
+        $this->assertInstanceOf(EntityManagerInterface::class, $manager);
+    }
+
     /**
      * MOCKS
      */
