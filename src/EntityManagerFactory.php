@@ -111,10 +111,7 @@ class EntityManagerFactory
             array_get($settings, 'repository', EntityRepository::class)
         );
 
-        $manager = EntityManager::create(
-            $connection,
-            $configuration
-        );
+        $manager = $this->getEntityManager($settings, $connection, $configuration);
 
         $manager = $this->decorateManager($settings, $manager);
 
@@ -371,5 +368,26 @@ class EntityManagerFactory
         }
 
         return $this->config->get($key);
+    }
+
+    /**
+     * @param array $settings
+     * @param       $connection
+     * @param       $configuration
+     *
+     * @return EntityManager
+     * @throws \Doctrine\ORM\ORMException
+     */
+    protected function getEntityManager(array $settings = [], $connection, $configuration)
+    {
+        if ($manager = array_get($settings, 'entity_manager', false)) {
+            if (!class_exists($manager)) {
+                throw new InvalidArgumentException("EntityManager {$manager} does not exist");
+            }
+
+            return $manager::create($connection, $configuration);
+        }
+
+        return EntityManager::create($connection, $configuration);
     }
 }
