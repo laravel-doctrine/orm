@@ -22,6 +22,16 @@ final class IlluminateRegistry implements ManagerRegistry
     const CONNECTION_BINDING_PREFIX = 'doctrine.connections.';
 
     /**
+     * @var string
+     */
+    protected $defaultManager = 'default';
+
+    /**
+     * @var string
+     */
+    protected $defaultConnection = 'default';
+
+    /**
      * @var Container
      */
     protected $container;
@@ -92,12 +102,13 @@ final class IlluminateRegistry implements ManagerRegistry
 
     /**
      * Gets the default connection name.
+     *
      * @return string The default connection name.
      */
     public function getDefaultConnectionName()
     {
-        if (isset($this->connections['default'])) {
-            return 'default';
+        if (isset($this->connections[$this->defaultConnection])) {
+            return $this->defaultConnection;
         }
 
         return head($this->connections);
@@ -139,6 +150,7 @@ final class IlluminateRegistry implements ManagerRegistry
 
     /**
      * Gets an array of all registered connections.
+     *
      * @return array An array of Connection instances.
      */
     public function getConnections()
@@ -153,6 +165,7 @@ final class IlluminateRegistry implements ManagerRegistry
 
     /**
      * Gets all connection names.
+     *
      * @return array An array of connection names.
      */
     public function getConnectionNames()
@@ -162,12 +175,13 @@ final class IlluminateRegistry implements ManagerRegistry
 
     /**
      * Gets the default object manager name.
+     *
      * @return string The default object manager name.
      */
     public function getDefaultManagerName()
     {
-        if (isset($this->managers['default'])) {
-            return 'default';
+        if (isset($this->managers[$this->defaultManager])) {
+            return $this->defaultManager;
         }
 
         return head($this->managers);
@@ -209,6 +223,7 @@ final class IlluminateRegistry implements ManagerRegistry
 
     /**
      * Gets all connection names.
+     *
      * @return array An array of connection names.
      */
     public function getManagerNames()
@@ -218,6 +233,7 @@ final class IlluminateRegistry implements ManagerRegistry
 
     /**
      * Gets an array of all registered object managers.
+     *
      * @return \Doctrine\Common\Persistence\ObjectManager[] An array of ObjectManager instances
      */
     public function getManagers()
@@ -306,7 +322,7 @@ final class IlluminateRegistry implements ManagerRegistry
         // Check for namespace alias
         if (strpos($class, ':') !== false) {
             list($namespaceAlias, $simpleClassName) = explode(':', $class, 2);
-            $class                                  = $this->getAliasNamespace($namespaceAlias) . '\\' . $simpleClassName;
+            $class = $this->getAliasNamespace($namespaceAlias) . '\\' . $simpleClassName;
         }
 
         $proxyClass = new ReflectionClass($class);
@@ -371,5 +387,21 @@ final class IlluminateRegistry implements ManagerRegistry
     protected function getConnectionBindingName($connection)
     {
         return self::CONNECTION_BINDING_PREFIX . $connection;
+    }
+
+    /**
+     * @param string $defaultManager
+     */
+    public function setDefaultManager($defaultManager)
+    {
+        $this->defaultManager = $defaultManager;
+    }
+
+    /**
+     * @param string $defaultConnection
+     */
+    public function setDefaultConnection($defaultConnection)
+    {
+        $this->defaultConnection = $defaultConnection;
     }
 }
