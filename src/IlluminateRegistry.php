@@ -322,7 +322,7 @@ final class IlluminateRegistry implements ManagerRegistry
         // Check for namespace alias
         if (strpos($class, ':') !== false) {
             list($namespaceAlias, $simpleClassName) = explode(':', $class, 2);
-            $class = $this->getAliasNamespace($namespaceAlias) . '\\' . $simpleClassName;
+            $class                                  = $this->getAliasNamespace($namespaceAlias) . '\\' . $simpleClassName;
         }
 
         $proxyClass = new ReflectionClass($class);

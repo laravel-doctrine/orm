@@ -43,7 +43,7 @@ class Fluent extends MetaData
     }
 
     /**
-     * @param array $settings
+     * @param  array $settings
      * @return mixed
      */
     protected function getNamingStrategy(array $settings = [])
