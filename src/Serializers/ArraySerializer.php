@@ -2,7 +2,6 @@
 
 namespace LaravelDoctrine\ORM\Serializers;
 
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -42,7 +41,7 @@ class ArraySerializer
     }
 
     /**
-     * @return JsonEncoder
+     * @return ArrayEncoder
      */
     protected function getEncoder()
     {
