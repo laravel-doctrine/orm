@@ -6,6 +6,8 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as FakerGenerator;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
@@ -26,6 +28,7 @@ use LaravelDoctrine\ORM\Console\SchemaUpdateCommand;
 use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
+use LaravelDoctrine\ORM\Testing\Factory as EntityFactory;
 use LaravelDoctrine\ORM\Validation\DoctrinePresenceVerifier;
 
 class DoctrineServiceProvider extends ServiceProvider
@@ -48,6 +51,7 @@ class DoctrineServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
+     *
      * @return void
      */
     public function register()
@@ -63,6 +67,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerPresenceVerifier();
         $this->registerConsoleCommands();
         $this->registerCustomTypes();
+        $this->registerEntityFactory();
     }
 
     /**
@@ -119,6 +124,7 @@ class DoctrineServiceProvider extends ServiceProvider
 
     /**
      * Register the connections
+     *
      * @return array
      */
     protected function setupConnection()
@@ -214,6 +220,26 @@ class DoctrineServiceProvider extends ServiceProvider
                 $app['hash'],
                 $em,
                 $entity
+            );
+        });
+    }
+
+    /**
+     * Register the Entity factory instance in the container.
+     *
+     * @return void
+     */
+    protected function registerEntityFactory()
+    {
+        $this->app->singleton(FakerGenerator::class, function () {
+            return FakerFactory::create();
+        });
+
+        $this->app->singleton(EntityFactory::class, function ($app) {
+            return EntityFactory::construct(
+                $app->make(FakerGenerator::class),
+                $app->make('registry'),
+                database_path('factories')
             );
         });
     }

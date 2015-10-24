@@ -22,7 +22,6 @@
     "illuminate/console": "~5.1",
     "illuminate/container": "~5.1",
     "illuminate/contracts": "~5.1",
-    "illuminate/database": "~5.1",
     "illuminate/pagination": "~5.1",
     "illuminate/support": "~5.1",
     "illuminate/validation": "~5.1",
@@ -39,7 +38,10 @@
   "autoload": {
     "psr-4": {
       "LaravelDoctrine\\ORM\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "autoload-dev": {
     "classmap": [
@@ -47,6 +49,7 @@
     ]
   },
   "suggest": {
+    "fzaninotto/faker": "Required to use the entity factory builder (~1.4).",
     "laravel-doctrine/acl": "to integrate Doctrine roles & permissions with Laravel's Authorization system (~1.0)",
     "laravel-doctrine/extensions": "to add Behavioral and Query/Type Extensions for Laravel Doctrine (~1.0)",
     "laravel-doctrine/migrations": "to add support for migrations in Laravel Doctrine (~1.0)",
