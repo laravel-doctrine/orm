@@ -41,6 +41,8 @@ class ReplaceQueryParams implements QueryFormatter
                     throw new Exception('Given query param is an instance of ' . get_class($param) . ' and could not be converted to a string');
                 }
             }
+        } elseif (is_array($param)) {
+            $param = implode(',', $param);
         }
 
         return (string) e($param);
