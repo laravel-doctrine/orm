@@ -333,7 +333,8 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
     /**
      * Verify that getManager() returns a new instance after a call to resetManager().
      */
-    public function test_get_manager_after_reset_should_return_new_manager() {
+    public function test_get_manager_after_reset_should_return_new_manager()
+    {
         $this->container->shouldReceive('singleton');
         $this->registry->addManager('default');
 
