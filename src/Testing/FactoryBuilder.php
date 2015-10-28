@@ -147,6 +147,6 @@ class FactoryBuilder
             return $definition;
         }
 
-        return SimpleHydrator::hydrate($this->class, $definition);
+        return SimpleHydrator::hydrate($this->class, array_merge($definition, $attributes));
     }
 }
