@@ -330,6 +330,26 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Namespace', $this->registry->getAliasNamespace('Alias'));
     }
 
+    /**
+     * Verify that getManager() returns a new instance after a call to resetManager().
+     */
+    public function test_get_manager_after_reset_should_return_new_manager() {
+        $this->container->shouldReceive('singleton');
+        $this->registry->addManager('default');
+
+        $this->container->shouldReceive('make')
+            ->with('doctrine.managers.default')
+            ->andReturn(new stdClass(), new stdClass());
+
+        $first = $this->registry->getManager();
+
+        $this->container->shouldReceive('forgetInstance');
+        $this->registry->resetManager();
+
+        $second = $this->registry->getManager();
+        $this->assertNotSame($first, $second);
+    }
+
     protected function tearDown()
     {
         m::close();

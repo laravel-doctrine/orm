@@ -274,6 +274,8 @@ final class IlluminateRegistry implements ManagerRegistry
         $this->resetService(
             $this->getManagerBindingName($this->managers[$name])
         );
+
+        unset($this->managersMap[$name]);
     }
 
     /**
