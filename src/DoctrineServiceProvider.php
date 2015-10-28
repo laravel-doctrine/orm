@@ -40,7 +40,7 @@ class DoctrineServiceProvider extends ServiceProvider
     {
         $this->extendAuthManager();
 
-         $this->app['events']->listen('router.matched', function () {
+        $this->app['events']->listen('router.matched', function () {
             $this->app->make(ExtensionManager::class)->boot();
         });
 
