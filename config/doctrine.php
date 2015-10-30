@@ -123,7 +123,7 @@ return [
     | Configure meta-data, query and result caching here.
     | Optionally you can enable second level caching.
     |
-    | Available: acp|array|file|memcached|redis
+    | Available: acp|array|file|memcached|redis|void
     |
     */
     'cache'                     => [
