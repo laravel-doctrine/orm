@@ -47,7 +47,7 @@ EntityManager::flush();
 Require this package  
 
 ```php
-"composer require laravel-doctrine/orm"
+composer require "laravel-doctrine/orm:1.0.*"
 ```
 
 After adding the package, add the ServiceProvider to the providers array in `config/app.php`
