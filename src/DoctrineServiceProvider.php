@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
+use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
@@ -28,6 +29,7 @@ use LaravelDoctrine\ORM\Console\SchemaUpdateCommand;
 use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
+use LaravelDoctrine\ORM\Http\Middleware\BootExtensionsMiddleware;
 use LaravelDoctrine\ORM\Testing\Factory as EntityFactory;
 use LaravelDoctrine\ORM\Validation\DoctrinePresenceVerifier;
 
@@ -40,9 +42,7 @@ class DoctrineServiceProvider extends ServiceProvider
     {
         $this->extendAuthManager();
 
-        $this->app['events']->listen('router.matched', function () {
-            $this->app->make(ExtensionManager::class)->boot();
-        });
+        $this->bootExtensionManager();
 
         if (!$this->isLumen()) {
             $this->publishes([
@@ -224,6 +224,32 @@ class DoctrineServiceProvider extends ServiceProvider
                 $entity
             );
         });
+    }
+
+    /**
+     * Boots the extension manager at the appropriate time depending on if the app
+     * is running as Laravel HTTP, Lumen HTTP or in a console environment
+     */
+    protected function bootExtensionManager()
+    {
+        // If running in console we can boot immediately
+        if (php_sapi_name() === 'cli') {
+            $this->app->make(ExtensionManager::class)->boot();
+
+            return;
+        }
+
+        // If running a HTTP Request in Laravel we want to push in middleware so we
+        // boot after the session start. Some extensions make use of the session
+        // to find out who the currently authenticated user is, e.g Loggable
+        if (!$this->isLumen()) {
+            $this->app->make(HttpKernel::class)->pushMiddleware(BootExtensionsMiddleware::class);
+
+            return;
+        }
+
+        // Add the BootExtensionMiddleware to the end of the Lumen middleware stack
+        $this->app->middleware([BootExtensionsMiddleware::class]);
     }
 
     /**
