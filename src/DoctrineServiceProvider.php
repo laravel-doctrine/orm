@@ -29,7 +29,7 @@ use LaravelDoctrine\ORM\Console\SchemaUpdateCommand;
 use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
-use LaravelDoctrine\ORM\Http\Middleware\BootExtensionsMiddleware;
+use LaravelDoctrine\ORM\Http\Middleware\BootExtensions;
 use LaravelDoctrine\ORM\Testing\Factory as EntityFactory;
 use LaravelDoctrine\ORM\Validation\DoctrinePresenceVerifier;
 
@@ -243,13 +243,13 @@ class DoctrineServiceProvider extends ServiceProvider
         // boot after the session start. Some extensions make use of the session
         // to find out who the currently authenticated user is, e.g Loggable
         if (!$this->isLumen()) {
-            $this->app->make(HttpKernel::class)->pushMiddleware(BootExtensionsMiddleware::class);
+            $this->app->make(HttpKernel::class)->pushMiddleware(BootExtensions::class);
 
             return;
         }
 
-        // Add the BootExtensionMiddleware to the end of the Lumen middleware stack
-        $this->app->middleware([BootExtensionsMiddleware::class]);
+        // Add BootExtension to the end of the Lumen middleware stack
+        $this->app->middleware([BootExtensions::class]);
     }
 
     /**

@@ -1,9 +1,9 @@
 <?php
 
-use LaravelDoctrine\ORM\Http\Middleware\BootExtensionsMiddleware;
+use LaravelDoctrine\ORM\Http\Middleware\BootExtensions;
 use Mockery as m;
 
-class BootExtensionsMiddlewareTest extends PHPUnit_Framework_TestCase
+class BootExtensionsTest extends PHPUnit_Framework_TestCase
 {
     public function tearDown()
     {
@@ -26,7 +26,7 @@ class BootExtensionsMiddlewareTest extends PHPUnit_Framework_TestCase
         };
 
         /** @noinspection PhpParamsInspection */
-        $middleware = new BootExtensionsMiddleware($kernelMock);
+        $middleware = new BootExtensions($kernelMock);
 
         /** @noinspection PhpParamsInspection */
         $middleware->handle($requestMock, $nextMock);
