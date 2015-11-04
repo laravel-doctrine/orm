@@ -2,22 +2,22 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Illuminate\Cache\RedisStore;
+use Illuminate\Cache\CacheManager as Manager;
 use LaravelDoctrine\ORM\Configuration\Driver;
 
 class RedisCacheProvider implements Driver
 {
     /**
-     * @var RedisStore
+     * @var Manager
      */
-    protected $store;
+    protected $cache;
 
     /**
-     * @param RedisStore $store
+     * @param Manager $cache
      */
-    public function __construct(RedisStore $store)
+    public function __construct(Manager $cache)
     {
-        $this->store = $store;
+        $this->cache = $cache;
     }
 
     /**
@@ -27,8 +27,8 @@ class RedisCacheProvider implements Driver
      */
     public function resolve(array $settings = [])
     {
-        return new RedisCache(
-            $this->store
+        return new IlluminateCacheAdapter(
+            $this->cache->driver('redis')
         );
     }
 }

@@ -1,23 +1,28 @@
 <?php
 
-use Illuminate\Cache\ApcStore;
-use LaravelDoctrine\ORM\Configuration\Cache\ApcCache;
+use Illuminate\Cache\CacheManager;
+use Illuminate\Contracts\Cache\Repository;
 use LaravelDoctrine\ORM\Configuration\Cache\ApcCacheProvider;
+use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheAdapter;
 use Mockery as m;
 
 class ApcCacheProviderTest extends AbstractCacheProviderTest
 {
     public function getProvider()
     {
-        $store = m::mock(ApcStore::class);
+        $repo    = m::mock(Repository::class);
+        $manager = m::mock(CacheManager::class);
+        $manager->shouldReceive('driver')
+                ->with('apc')
+                ->once()->andReturn($repo);
 
         return new ApcCacheProvider(
-            $store
+            $manager
         );
     }
 
     public function getExpectedInstance()
     {
-        return ApcCache::class;
+        return IlluminateCacheAdapter::class;
     }
 }

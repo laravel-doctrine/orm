@@ -2,22 +2,22 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Illuminate\Cache\MemcachedStore;
+use Illuminate\Cache\CacheManager as Manager;
 use LaravelDoctrine\ORM\Configuration\Driver;
 
 class MemcachedCacheProvider implements Driver
 {
     /**
-     * @var MemcachedStore
+     * @var Manager
      */
-    protected $store;
+    protected $cache;
 
     /**
-     * @param MemcachedStore $store
+     * @param Manager $cache
      */
-    public function __construct(MemcachedStore $store)
+    public function __construct(Manager $cache)
     {
-        $this->store = $store;
+        $this->cache = $cache;
     }
 
     /**
@@ -27,8 +27,8 @@ class MemcachedCacheProvider implements Driver
      */
     public function resolve(array $settings = [])
     {
-        return new Memcached(
-            $this->store
+        return new IlluminateCacheAdapter(
+            $this->cache->driver('memcached')
         );
     }
 }

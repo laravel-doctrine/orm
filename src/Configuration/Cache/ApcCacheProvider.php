@@ -2,22 +2,22 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Illuminate\Cache\ApcStore;
+use Illuminate\Cache\CacheManager as Manager;
 use LaravelDoctrine\ORM\Configuration\Driver;
 
 class ApcCacheProvider implements Driver
 {
     /**
-     * @var ApcStore
+     * @var Manager
      */
-    protected $store;
+    protected $cache;
 
     /**
-     * @param ApcStore $store
+     * @param Manager $cache
      */
-    public function __construct(ApcStore $store)
+    public function __construct(Manager $cache)
     {
-        $this->store = $store;
+        $this->cache = $cache;
     }
 
     /**
@@ -27,8 +27,8 @@ class ApcCacheProvider implements Driver
      */
     public function resolve(array $settings = [])
     {
-        return new ApcCache(
-            $this->store
+        return new IlluminateCacheAdapter(
+            $this->cache->driver('apc')
         );
     }
 }
