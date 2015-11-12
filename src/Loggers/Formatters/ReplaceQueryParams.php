@@ -42,7 +42,11 @@ class ReplaceQueryParams implements QueryFormatter
                 }
             }
         } elseif (is_array($param)) {
-            $param = implode(',', $param);
+            if (count($param) === count($param, COUNT_RECURSIVE)) {
+                $param = implode(',', $param);
+            } else {
+                $param = json_encode($param);
+            }
         }
 
         return (string) e($param);
