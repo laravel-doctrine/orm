@@ -147,6 +147,10 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function setupCache()
     {
+        // Alias the cache, so the class is injectable in Lumen too
+        $this->app->alias('cache', \Illuminate\Cache\CacheManager::class);
+
+        // Bind Doctrine CacheManager
         $this->app->singleton(CacheManager::class);
     }
 
