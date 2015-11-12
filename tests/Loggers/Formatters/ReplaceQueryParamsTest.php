@@ -73,6 +73,28 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function test_can_replace_array_param()
+    {
+        $sql    = 'SELECT * FROM table WHERE column IN ?';
+        $params = [['value1', 'value2']];
+
+        $this->assertEquals(
+            'SELECT * FROM table WHERE column IN ("value1", "value2")',
+            $this->formatter->format($sql, $params)
+        );
+    }
+
+    public function test_can_replace_nested_array_param()
+    {
+        $sql    = 'SELECT * FROM table WHERE column = ?';
+        $params = [['key1' => 'value1', 'key2' => ['key21' => 'value22']]];
+
+        $this->assertEquals(
+            'SELECT * FROM table WHERE column = "' . json_encode(reset($params), JSON_UNESCAPED_UNICODE) . '"',
+            $this->formatter->format($sql, $params)
+        );
+    }
+
     protected function tearDown()
     {
         m::close();
