@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Cache\CacheManager;
+use Illuminate\Contracts\Cache\Factory;
 use Illuminate\Contracts\Cache\Repository;
 use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheAdapter;
 use LaravelDoctrine\ORM\Configuration\Cache\MemcachedCacheProvider;
@@ -11,8 +11,8 @@ class MemcachedCacheProviderTest extends AbstractCacheProviderTest
     public function getProvider()
     {
         $repo    = m::mock(Repository::class);
-        $manager = m::mock(CacheManager::class);
-        $manager->shouldReceive('driver')
+        $manager = m::mock(Factory::class);
+        $manager->shouldReceive('store')
                 ->with('memcached')
                 ->once()->andReturn($repo);
 

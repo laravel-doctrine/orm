@@ -11,4 +11,9 @@ abstract class AbstractCacheProviderTest extends PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf($this->getExpectedInstance(), $this->getProvider()->resolve());
     }
+
+    public function tearDown()
+    {
+        Mockery::close();
+    }
 }

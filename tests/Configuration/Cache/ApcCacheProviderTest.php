@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Cache\CacheManager;
+use Illuminate\Contracts\Cache\Factory;
 use Illuminate\Contracts\Cache\Repository;
 use LaravelDoctrine\ORM\Configuration\Cache\ApcCacheProvider;
 use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheAdapter;
@@ -11,8 +11,8 @@ class ApcCacheProviderTest extends AbstractCacheProviderTest
     public function getProvider()
     {
         $repo    = m::mock(Repository::class);
-        $manager = m::mock(CacheManager::class);
-        $manager->shouldReceive('driver')
+        $manager = m::mock(Factory::class);
+        $manager->shouldReceive('store')
                 ->with('apc')
                 ->once()->andReturn($repo);
 
