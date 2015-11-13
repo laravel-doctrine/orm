@@ -57,6 +57,8 @@ class ReplaceQueryParams implements QueryFormatter
 
                 return '(' . $param . ')';
             }
+        } else {
+            $param = e($param);
         }
 
         return '"' . (string) $param . '"';
