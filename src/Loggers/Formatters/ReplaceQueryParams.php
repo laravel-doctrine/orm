@@ -18,7 +18,7 @@ class ReplaceQueryParams implements QueryFormatter
         if (is_array($params)) {
             foreach ($params as $param) {
                 $param = $this->convertParam($param);
-                $sql   = preg_replace('/\?/', "\"$param\"", $sql, 1);
+                $sql   = preg_replace('/\?/', "$param", $sql, 1);
             }
         }
 
@@ -42,9 +42,25 @@ class ReplaceQueryParams implements QueryFormatter
                 }
             }
         } elseif (is_array($param)) {
-            $param = implode(',', $param);
+            if (count($param) !== count($param, COUNT_RECURSIVE)) {
+                $param = json_encode($param, JSON_UNESCAPED_UNICODE);
+            } else {
+                $param = implode(
+                    ', ',
+                    array_map(
+                        function ($part) {
+                            return '"' . (string) $part . '"';
+                        },
+                        $param
+                    )
+                );
+
+                return '(' . $param . ')';
+            }
+        } else {
+            $param = e($param);
         }
 
-        return (string) e($param);
+        return '"' . (string) $param . '"';
     }
 }
