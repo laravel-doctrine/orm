@@ -50,7 +50,32 @@ return [
                 'listeners'   => [],
                 'subscribers' => []
             ],
-            'filters'    => []
+            'filters'    => [],
+            /*
+            |--------------------------------------------------------------------------
+            | Doctrine mapping types
+            |--------------------------------------------------------------------------
+            | 
+            | Link a Database Type to a Local Doctrine Type
+            | 
+            | Using 'enum' => 'string' is the same of:
+            | $doctrineManager->extendAll(function (\Doctrine\ORM\Configuration $configuration,
+            |         \Doctrine\DBAL\Connection $connection,
+            |         \Doctrine\Common\EventManager $eventManager) {
+            |     $connection->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+            | });
+            | 
+            | References:
+            | http://doctrine-orm.readthedocs.org/en/latest/cookbook/custom-mapping-types.html
+            | http://doctrine-dbal.readthedocs.org/en/latest/reference/types.html#custom-mapping-types
+            | http://doctrine-orm.readthedocs.org/en/latest/cookbook/advanced-field-value-conversion-using-custom-mapping-types.html
+            | http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#reference-mapping-types
+            | http://symfony.com/doc/current/cookbook/doctrine/dbal.html#registering-custom-mapping-types-in-the-schematool
+            |--------------------------------------------------------------------------
+            */
+            'mapping_types'              => [
+                //'enum' => 'string'
+            ],
         ]
     ],
     /*
@@ -79,6 +104,9 @@ return [
     /*
     |--------------------------------------------------------------------------
     | Doctrine custom types
+    |--------------------------------------------------------------------------
+    | 
+    | Create a custom Local Type
     |--------------------------------------------------------------------------
     */
     'custom_types'              => [
