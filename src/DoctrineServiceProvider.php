@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
@@ -28,6 +29,7 @@ use LaravelDoctrine\ORM\Console\SchemaDropCommand;
 use LaravelDoctrine\ORM\Console\SchemaUpdateCommand;
 use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
+use LaravelDoctrine\ORM\Exceptions\TypeNotFound;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
 use LaravelDoctrine\ORM\Http\Middleware\BootExtensions;
 use LaravelDoctrine\ORM\Testing\Factory as EntityFactory;
@@ -202,6 +204,22 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function registerCustomTypes()
     {
         (new CustomTypeManager)->addCustomTypes($this->app->make('config')->get('doctrine.custom_types', []));
+    }
+
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    protected function registerOverridedTypes()
+    {
+        $overridedTypes = $this->app->make('config')->get('doctrine.overrided_types', []);
+
+        foreach ($overridedTypes as $originalType => $newType) {
+            if (! Type::hasType($originalType)) {
+                throw new TypeNotFound("Type {$originalType} not found");
+            }
+
+            Type::overrideType($originalType, $newType);
+        }
     }
 
     /**
