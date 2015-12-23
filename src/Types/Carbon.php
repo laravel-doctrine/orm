@@ -18,8 +18,8 @@ class Carbon extends DateTimeType
      * @param mixed            $value
      * @param AbstractPlatform $platform
      *
-     * @return CarbonDateTime|mixed
      * @throws \Doctrine\DBAL\Types\ConversionException
+     * @return CarbonDateTime|mixed
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
