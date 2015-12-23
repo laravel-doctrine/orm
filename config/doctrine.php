@@ -75,7 +75,7 @@ return [
             */
             'mapping_types'              => [
                 //'enum' => 'string'
-            ],
+            ]
         ]
     ],
     /*
@@ -106,7 +106,7 @@ return [
     | Doctrine custom types
     |--------------------------------------------------------------------------
     | 
-    | Create a custom Local Type
+    | Create a custom or override a Doctrine Type
     |--------------------------------------------------------------------------
     */
     'custom_types'              => [

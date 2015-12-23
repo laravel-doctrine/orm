@@ -383,13 +383,9 @@ class EntityManagerFactory
      */
     protected function registerMappingTypes(array $settings = [], EntityManagerInterface $manager)
     {
-        $platform = $manager->getConnection()->getDatabasePlatform();
-
         foreach (array_get($settings, 'mapping_types', []) as $dbType => $doctrineType) {
-            // Throw DBALException if Database Type is not found.
-            $platform->getDoctrineTypeMapping($dbType);
             // Throw DBALException if Doctrine Type is not found.
-            $platform->registerDoctrineTypeMapping($dbType, $doctrineType);
+            $manager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($dbType, $doctrineType);
         }
     }
 }

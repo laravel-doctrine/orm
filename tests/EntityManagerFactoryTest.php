@@ -38,7 +38,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected $config;
 
     /**
-     * @var CacheManager
+     * @var ConnectionManager
      */
     protected $connection;
 
@@ -461,24 +461,6 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $manager = $this->factory->create($this->settings);
 
         $this->assertEntityManager($manager);
-    }
-
-    public function test_can_register_mapping_types()
-    {
-        $this->disableDebugbar();
-        $this->disableSecondLevelCaching();
-        $this->disableCustomCacheNamespace();
-        $this->disableCustomFunctions();
-        $this->enableLaravelNamingStrategy();
-
-        $this->settings['mapping_types'] = [
-            'enum' => 'string'
-        ];
-
-        $manager = $this->factory->create($this->settings);
-
-        $this->assertEntityManager($manager);
-        $this->assertTrue(array_key_exists('string', $manager->getConnection()->getDatabasePlatform()->getDoctrineTypeMapping('enum')));
     }
 
     /**
