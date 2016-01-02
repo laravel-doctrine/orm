@@ -378,7 +378,7 @@ class EntityManagerFactory
     /**
      * @param                        $settings
      * @param EntityManagerInterface $manager
-     * 
+     *
      * @throws \Doctrine\DBAL\DBALException If Database Type or Doctrine Type is not found.
      */
     protected function registerMappingTypes(array $settings = [], EntityManagerInterface $manager)
