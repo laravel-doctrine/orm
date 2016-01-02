@@ -209,8 +209,9 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function extendAuthManager()
     {
-        $this->app->make('auth')->extend('doctrine', function ($app) {
-            $entity = $app->make('config')->get('auth.model');
+        $this->app->make('auth')->provider('doctrine', function ($app, $config) {
+
+            $entity = $config['model'];
 
             $em = $app['registry']->getManagerForClass($entity);
 

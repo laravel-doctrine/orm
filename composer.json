@@ -16,16 +16,16 @@
     }
   ],
   "require": {
-    "php": ">=5.5.0",
+    "php": ">=5.5.9",
     "doctrine/orm": "2.5.*",
-    "illuminate/auth": "~5.1",
-    "illuminate/console": "~5.1",
-    "illuminate/container": "~5.1",
-    "illuminate/contracts": "~5.1",
-    "illuminate/pagination": "~5.1",
-    "illuminate/support": "~5.1",
-    "illuminate/validation": "~5.1",
-    "illuminate/view": "~5.1",
+    "illuminate/auth": "5.2.*",
+    "illuminate/console": "5.2.*",
+    "illuminate/container": "5.2.*",
+    "illuminate/contracts": "5.2.*",
+    "illuminate/pagination": "5.2.*",
+    "illuminate/support": "5.2.*",
+    "illuminate/validation": "5.2.*",
+    "illuminate/view": "5.2.*",
     "symfony/serializer": "^2.7"
   },
   "require-dev": {
@@ -33,7 +33,7 @@
     "mockery/mockery": "~0.9",
     "barryvdh/laravel-debugbar": "~2.0",
     "itsgoingd/clockwork": "~1.9",
-    "illuminate/log": "~5.1"
+    "illuminate/log": "5.2.*"
   },
   "autoload": {
     "psr-4": {

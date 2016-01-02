@@ -55,16 +55,16 @@ return [
             |--------------------------------------------------------------------------
             | Doctrine mapping types
             |--------------------------------------------------------------------------
-            | 
+            |
             | Link a Database Type to a Local Doctrine Type
-            | 
+            |
             | Using 'enum' => 'string' is the same of:
             | $doctrineManager->extendAll(function (\Doctrine\ORM\Configuration $configuration,
             |         \Doctrine\DBAL\Connection $connection,
             |         \Doctrine\Common\EventManager $eventManager) {
             |     $connection->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
             | });
-            | 
+            |
             | References:
             | http://doctrine-orm.readthedocs.org/en/latest/cookbook/custom-mapping-types.html
             | http://doctrine-dbal.readthedocs.org/en/latest/reference/types.html#custom-mapping-types
@@ -105,7 +105,7 @@ return [
     |--------------------------------------------------------------------------
     | Doctrine custom types
     |--------------------------------------------------------------------------
-    | 
+    |
     | Create a custom or override a Doctrine Type
     |--------------------------------------------------------------------------
     */
