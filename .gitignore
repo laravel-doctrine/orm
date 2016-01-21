@@ -3,9 +3,11 @@ composer.phar
 composer.lock
 .DS_Store
 .php_cs.cache
+/coverage
 
 /tests/Stubs/storage/framework/views/*
 !/tests/Stubs/storage/framework/views/.gitkeep
 /tests/Stubs/storage/doctrine.generated.php
 .idea
+.phpstorm.meta.php
 laravel-doctrine-orm.iml
