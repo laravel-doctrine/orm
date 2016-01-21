@@ -3,8 +3,9 @@
 namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Support\ServiceProvider;
+use InvalidArgumentException;
+use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
 use LaravelDoctrine\ORM\DoctrineManager;
 
 class PasswordResetServiceProvider extends ServiceProvider
@@ -26,48 +27,55 @@ class PasswordResetServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerPasswordBroker();
-
-        $this->registerTokenRepository();
+        $this->registerPasswordBrokerManager();
     }
 
     /**
      * Register the password broker instance.
      * @return void
      */
-    protected function registerPasswordBroker()
+    protected function registerPasswordBrokerManager()
     {
         $this->app->singleton('auth.password', function ($app) {
-            // The password token repository is responsible for storing the email addresses
-            // and password reset tokens. It will be used to verify the tokens are valid
-            // for the given e-mail addresses. We will resolve an implementation here.
-            $tokens = $app['auth.password.tokens'];
 
-            $users = $app['auth']->driver()->getProvider();
+            $manager = new PasswordBrokerManager($app);
 
-            $view = $app['config']['auth.password.email'];
+            // This is a repeat of extendAuthManager from the main package service provider
+            // We need to do this here as well because the PasswordBrokerManager keep its
+            // own list of custom user providers definitions. See CreateUserProviders.
+            $manager->provider('doctrine', function ($app, $config) {
 
-            // The password broker uses a token repository to validate tokens and send user
-            // password e-mails, as well as validating that password reset process as an
-            // aggregate service of sorts providing a convenient interface for resets.
-            return new PasswordBroker(
-                $tokens, $users, $app['mailer'], $view
-            );
-        });
-    }
+                // We could use the AuthManager to retrieve the UserProvider already declared by
+                // the main package service provider, but I've avoided doing that here so as
+                // to avoid further indirection and a deeper stack.
 
-    /**
-     * Register the token repository implementation.
-     * @return void
-     */
-    protected function registerTokenRepository()
-    {
-        $this->app->singleton('auth.password.tokens', function ($app) {
-            return new DoctrineTokenRepository(
-                $this->app->make(ManagerRegistry::class)->getManagerForClass(PasswordReminder::class),
-                $app['config']['app.key'],
-                $app['config']->get('auth.password.expire', 60)
-            );
+                $entity = $config['model'];
+
+                $em = $app['registry']->getManagerForClass($entity);
+
+                if (!$em) {
+                    throw new InvalidArgumentException("No EntityManager is set-up for {$entity}");
+                }
+
+                return new DoctrineUserProvider(
+                    $app['hash'],
+                    $em,
+                    $entity
+                );
+            });
+
+            // We have extended the Laravel PasswordBrokerManager to allow us to register a
+            // custom TokenRepository definition. The token repository stores the tokens
+            // and is used to verify they are valid when users reset their credentials
+            $manager->tokenRepository('doctrine', function ($app, $config) {
+                return new DoctrineTokenRepository(
+                    $app->make(ManagerRegistry::class)->getManagerForClass(PasswordReminder::class),
+                    $app['config']['app.key'],
+                    $config['expire']
+                );
+            });
+
+            return $manager;
         });
     }
 
@@ -77,6 +85,6 @@ class PasswordResetServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['auth.password', 'auth.password.tokens'];
+        return ['auth.password'];
     }
 }
