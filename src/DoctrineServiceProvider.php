@@ -31,6 +31,7 @@ use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
 use LaravelDoctrine\ORM\Http\Middleware\BootExtensions;
 use LaravelDoctrine\ORM\Testing\Factory as EntityFactory;
+use LaravelDoctrine\ORM\Validation\PresenceVerifierProvider;
 
 class DoctrineServiceProvider extends ServiceProvider
 {
