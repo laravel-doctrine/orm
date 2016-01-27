@@ -14,6 +14,13 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
     protected $registry;
 
     /**
+     * The database connection to use.
+     *
+     * @var string
+     */
+    protected $connection = null;
+
+    /**
      * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
@@ -109,6 +116,10 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
      */
     protected function getEntityManager($entity)
     {
+        if (!is_null($this->connection)) {
+            return $this->registry->getManager($this->connection);
+        }
+
         return $this->registry->getManagerForClass($entity);
     }
 
@@ -120,5 +131,17 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
     protected function prepareParam($column)
     {
         return str_replace('.', '', $column);
+    }
+
+    /**
+     * Set the connection to be used.
+     *
+     * @param string $connection
+     *
+     * @return void
+     */
+    public function setConnection($connection)
+    {
+        $this->connection = $connection;
     }
 }
