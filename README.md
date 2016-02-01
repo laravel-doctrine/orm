@@ -1,6 +1,6 @@
 # Laravel Doctrine ORM
 
-<img src="https://cloud.githubusercontent.com/assets/7728097/9831648/1827b704-5960-11e5-982d-98c8fc8dcacd.jpg"/>
+<img src="https://cloud.githubusercontent.com/assets/7728097/12726966/cf009822-c91a-11e5-8f19-63ce1d77e8b2.jpg"/>
 
 [![GitHub release](https://img.shields.io/github/release/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
 [![Travis](https://img.shields.io/travis/laravel-doctrine/orm.svg?style=flat-square)](https://travis-ci.org/laravel-doctrine/orm)
