@@ -21,6 +21,7 @@ use LaravelDoctrine\ORM\Console\ClearQueryCacheCommand;
 use LaravelDoctrine\ORM\Console\ClearResultCacheCommand;
 use LaravelDoctrine\ORM\Console\ConvertConfigCommand;
 use LaravelDoctrine\ORM\Console\EnsureProductionSettingsCommand;
+use LaravelDoctrine\ORM\Console\GenerateEntitiesCommand;
 use LaravelDoctrine\ORM\Console\GenerateProxiesCommand;
 use LaravelDoctrine\ORM\Console\InfoCommand;
 use LaravelDoctrine\ORM\Console\MappingImportCommand;
@@ -298,7 +299,8 @@ class DoctrineServiceProvider extends ServiceProvider
             EnsureProductionSettingsCommand::class,
             GenerateProxiesCommand::class,
             ConvertConfigCommand::class,
-            MappingImportCommand::class
+            MappingImportCommand::class,
+            GenerateEntitiesCommand::class
         ]);
     }
 
