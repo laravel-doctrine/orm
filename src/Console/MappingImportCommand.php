@@ -39,7 +39,7 @@ class MappingImportCommand extends Command
         $emName = $this->option('em');
         $em     = $registry->getManager($emName);
 
-        $destPath = base_path($this->argument('dest-path') ? $this->argument('dest-path') : 'storage/app/mappings');
+        $destPath = base_path($this->argument('dest-path') ? $this->argument('dest-path') : 'app/Mappings');
 
         $type = $this->argument('mapping-type');
 
