@@ -189,7 +189,7 @@ class FluentExporter extends AbstractExporter
             $lines[] = '$builder->table(\'' . $metadata->table['name'] . '\');';
         }
 
-        if ($metadata->inheritanceType) {
+        if ($metadata->inheritanceType && $this->_getInheritanceTypeString($metadata->inheritanceType) !== 'NONE') {
             $dColumn = '';
             if ($metadata->discriminatorColumn) {
                 $dColumn = '->column(\'' . $metadata->discriminatorColumn['name'] . '\', \'' . $metadata->discriminatorColumn['type'] . '\', \'' . $metadata->discriminatorColumn['length'] . '\')';
@@ -214,7 +214,7 @@ class FluentExporter extends AbstractExporter
         $lines[] = null;
 
         foreach ($metadata->fieldMappings as $fieldMapping) {
-            $lines[] = $this->convertField($fieldMapping, $lines);
+            $lines[] = $this->convertField($metadata, $fieldMapping, $lines);
         }
 
         $lines[] = null;
@@ -229,10 +229,11 @@ class FluentExporter extends AbstractExporter
     }
 
     /**
-     * @param $fieldMapping
+     * @param  ClassMetadataInfo $metadata
+     * @param                    $fieldMapping
      * @return array
      */
-    private function convertField($fieldMapping)
+    private function convertField(ClassMetadataInfo $metadata, $fieldMapping)
     {
         $type = $fieldMapping['type'];
         $name = $fieldMapping['fieldName'];
@@ -246,7 +247,7 @@ class FluentExporter extends AbstractExporter
         $length = '';
         if (isset($fieldMapping['length']) && !is_null($fieldMapping['length'])) {
             $length = $fieldMapping['length'];
-            $length = "->length('$length')";
+            $length = "->length($length)";
         }
 
         $nullable = '';
@@ -267,16 +268,27 @@ class FluentExporter extends AbstractExporter
         $scale = '';
         if (isset($fieldMapping['scale']) && $fieldMapping['scale'] != 0) {
             $scale = $fieldMapping['scale'];
-            $scale = "->scale('$scale')";
+            $scale = "->scale($scale)";
         }
 
         $precision = '';
         if (isset($fieldMapping['precision']) && $fieldMapping['precision'] != 0) {
             $precision = $fieldMapping['precision'];
-            $precision = "->precision('$precision')";
+            $precision = "->precision($precision)";
         }
 
-        return "\$builder->$type('$name')$column$length$nullable$unique$primary$scale$precision;";
+        $generatedValue = '';
+        if (isset($fieldMapping['id']) && $fieldMapping['id'] === true && !$metadata->isIdentifierComposite && $generatorType = $this->_getIdGeneratorTypeString($metadata->generatorType)) {
+            $type    = 'increments';
+            $primary = false;
+
+            if ($generatorType != 'AUTO' && $generatorType != 'IDENTITY') {
+                $generatorType  = strtolower($generatorType);
+                $generatedValue = '->generatedValue()->' . $generatorType . '()';
+            }
+        }
+
+        return "\$builder->$type('$name')$column$length$nullable$unique$primary$scale$precision$generatedValue;";
     }
 
     /**
