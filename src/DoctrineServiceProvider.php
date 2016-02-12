@@ -20,6 +20,7 @@ use LaravelDoctrine\ORM\Console\ClearMetadataCacheCommand;
 use LaravelDoctrine\ORM\Console\ClearQueryCacheCommand;
 use LaravelDoctrine\ORM\Console\ClearResultCacheCommand;
 use LaravelDoctrine\ORM\Console\ConvertConfigCommand;
+use LaravelDoctrine\ORM\Console\ConvertMappingCommand;
 use LaravelDoctrine\ORM\Console\EnsureProductionSettingsCommand;
 use LaravelDoctrine\ORM\Console\GenerateEntitiesCommand;
 use LaravelDoctrine\ORM\Console\GenerateProxiesCommand;
@@ -301,7 +302,8 @@ class DoctrineServiceProvider extends ServiceProvider
             GenerateProxiesCommand::class,
             ConvertConfigCommand::class,
             MappingImportCommand::class,
-            GenerateEntitiesCommand::class
+            GenerateEntitiesCommand::class,
+            ConvertMappingCommand::class
         ]);
     }
 
