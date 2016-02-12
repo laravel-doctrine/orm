@@ -32,6 +32,7 @@ class MappingImportCommand extends Command
      * Fire the command
      * @param  ManagerRegistry                            $registry
      * @throws \Doctrine\ORM\Tools\Export\ExportException
+     * @return int
      */
     public function fire(ManagerRegistry $registry)
     {
