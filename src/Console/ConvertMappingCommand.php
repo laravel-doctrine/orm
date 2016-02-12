@@ -7,6 +7,7 @@ use Doctrine\ORM\Tools\Console\MetadataFilter;
 use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
+use LaravelDoctrine\ORM\Console\Exporters\FluentExporter;
 
 class ConvertMappingCommand extends Command
 {
@@ -126,8 +127,7 @@ class ConvertMappingCommand extends Command
     {
         $cme = new ClassMetadataExporter();
 
-        // TODO: add fluent exporter
-        //$cme->registerExportDriver('fluent', '');
+        $cme->registerExportDriver('fluent', FluentExporter::class);
 
         return $cme->getExporter($toType, $destPath);
     }
