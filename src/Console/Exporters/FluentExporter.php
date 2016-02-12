@@ -33,7 +33,7 @@ class FluentExporter extends AbstractExporter
         }
 
         $lines[] = null;
-        $lines[] = 'class ' . $this->getClassName($metadata) . 'Mapping extends ' . $this->getExtendShort($metadata) . ' {';
+        $lines[] = 'class ' . $this->getClassNameShort($metadata) . 'Mapping extends ' . $this->getExtendShort($metadata) . ' {';
         $lines[] = null;
 
         foreach ($this->exportMapFor($metadata) as $line) {
@@ -101,7 +101,20 @@ class FluentExporter extends AbstractExporter
      */
     private function getExtendShort(ClassMetadataInfo $metadata)
     {
-        return str_replace('LaravelDoctrine\\Fluent\\', '', $this->getExtend($metadata));
+        return $this->classBaseName($this->getExtend($metadata));
+    }
+
+    /**
+     * @param  string $className
+     * @return string
+     */
+    private function classBaseName($className)
+    {
+        if (strpos($className, '\\') === false) {
+            return $className;
+        }
+
+        return substr($className, strrpos($className, '\\') + 1);
     }
 
     /**
@@ -142,7 +155,7 @@ class FluentExporter extends AbstractExporter
             ' */',
             'public function mapFor()',
             '{',
-            self::TAB . 'return ' . $this->getClassName($metadata) . '::class;',
+            self::TAB . 'return ' . $this->getClassNameShort($metadata) . '::class;',
             '}',
         ];
 
@@ -439,5 +452,10 @@ class FluentExporter extends AbstractExporter
         }
 
         return "\$builder->$method('$targetEntity', '$fieldName')$mappedBy$inversedBy$cascadeChain$fetch$joinColumn$orphanRemoval$orderBy$joinTableChain;";
+    }
+
+    private function getClassNameShort(ClassMetadataInfo $metadata)
+    {
+        return $this->classBaseName($metadata->name);
     }
 }
