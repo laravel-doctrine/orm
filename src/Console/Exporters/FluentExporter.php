@@ -133,16 +133,18 @@ class FluentExporter extends AbstractExporter
      */
     protected function exportMapFor(ClassMetadataInfo $metadata)
     {
-        $lines[] = '/**';
-        $lines[] = '*';
-        $lines[] = '* Returns the fully qualified name of the class that this mapper maps.';
-        $lines[] = '*';
-        $lines[] = ' @return string';
-        $lines[] = '*/';
-        $lines[] = 'public function mapFor()';
-        $lines[] = '{';
-        $lines[] = self::TAB . 'return ' . $this->getClassName($metadata) . '::class;';
-        $lines[] = '}';
+        $lines = [
+            '/**',
+            ' *',
+            ' * Returns the fully qualified name of the class that this mapper maps.',
+            ' *',
+            ' * @return string',
+            ' */',
+            'public function mapFor()',
+            '{',
+            self::TAB . 'return ' . $this->getClassName($metadata) . '::class;',
+            '}',
+        ];
 
         return array_map(function ($line) {
             return self::TAB . $line;
@@ -155,14 +157,16 @@ class FluentExporter extends AbstractExporter
      */
     private function exportMap(ClassMetadataInfo $metadata)
     {
-        $lines[] = '/**';
-        $lines[] = '*';
-        $lines[] = '* Load the object\'s metadata through the Metadata Builder object.';
-        $lines[] = '*';
-        $lines[] = '* @param Fluent $builder';
-        $lines[] = '*/';
-        $lines[] = 'public function map(Fluent $builder)';
-        $lines[] = '{';
+        $lines = [
+            '/**',
+            ' *',
+            ' * Load the object\'s metadata through the Metadata Builder object.',
+            ' *',
+            ' * @param Fluent $builder',
+            ' */',
+            'public function map(Fluent $builder)',
+            '{',
+        ];
 
         foreach ($this->exportMapMethodContent($metadata) as $line) {
             $lines[] = $line;
@@ -214,7 +218,7 @@ class FluentExporter extends AbstractExporter
         $lines[] = null;
 
         foreach ($metadata->fieldMappings as $fieldMapping) {
-            $lines[] = $this->convertField($metadata, $fieldMapping, $lines);
+            $lines[] = $this->convertField($metadata, $fieldMapping);
         }
 
         $lines[] = null;
