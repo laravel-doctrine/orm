@@ -14,6 +14,7 @@ use InvalidArgumentException;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
+use LaravelDoctrine\ORM\Configuration\MetaData\MetaData;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use ReflectionException;
@@ -87,10 +88,7 @@ class EntityManagerFactory
             $this->cache->driver()
         );
 
-        $configuration->setMetadataDriverImpl($this->meta->driver(
-            array_get($settings, 'meta'),
-            $settings
-        ));
+        $this->setMetadataDriver($settings, $configuration);
 
         $driver = $this->getConnectionDriver($settings);
 
@@ -125,6 +123,26 @@ class EntityManagerFactory
         $this->registerMappingTypes($settings, $manager);
 
         return $manager;
+    }
+
+    /**
+     * @param array $settings
+     * @param       $configuration
+     */
+    private function setMetadataDriver(array $settings, Configuration $configuration)
+    {
+        $metadata = $this->meta->driver(
+            array_get($settings, 'meta'),
+            $settings,
+            false
+        );
+
+        if ($metadata instanceof MetaData) {
+            $configuration->setMetadataDriverImpl($metadata->resolve($settings));
+            $configuration->setClassMetadataFactoryName($metadata->getClassMetadataFactoryName());
+        } else {
+            $configuration->setMetadataDriverImpl($metadata);
+        }
     }
 
     /**

@@ -46,13 +46,11 @@ class FooMapping extends EntityMapping {
      */
     public function map(Fluent \$builder)
     {
-        
         \$builder->integer('id')->primary();
-        
     }
 }
 PHP;
         $exporter = new FluentExporter();
-        $this->assertEquals($expected, $exporter->exportClassMetadata($metadata));
+        $this->assertEquals(str_replace(["\r", "\n", ' '], '', $expected), str_replace(["\r", "\n", ' '], '', $exporter->exportClassMetadata($metadata)));
     }
 }
