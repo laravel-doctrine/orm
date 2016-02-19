@@ -57,13 +57,14 @@ abstract class Manager
      * @param string $driver
      * @param array  $settings
      *
+     * @param  bool  $resolve
      * @return mixed
      */
-    public function driver($driver = null, array $settings = [])
+    public function driver($driver = null, array $settings = [], $resolve = true)
     {
         $driver = $driver ?: $this->getDefaultDriver();
 
-        return $this->createDriver($driver, $settings);
+        return $this->createDriver($driver, $settings, $resolve);
     }
 
     /**
@@ -72,9 +73,10 @@ abstract class Manager
      * @param string $driver
      * @param array  $settings
      *
+     * @param  bool  $resolve
      * @return mixed
      */
-    protected function createDriver($driver, array $settings = [])
+    protected function createDriver($driver, array $settings = [], $resolve = true)
     {
         $class = $this->getNamespace() . '\\' . studly_case($driver) . $this->getClassSuffix();
 
@@ -84,7 +86,13 @@ abstract class Manager
         if (isset($this->customCreators[$driver])) {
             return $this->callCustomCreator($driver, $settings);
         } elseif (class_exists($class)) {
-            return $this->container->make($class)->resolve($settings);
+            $instance = $this->container->make($class);
+
+            if ($resolve) {
+                return $instance->resolve($settings);
+            }
+
+            return $instance;
         }
 
         throw new DriverNotFound("Driver [$driver] not supported.");
