@@ -258,7 +258,7 @@ class FluentExporter extends AbstractExporter
         $column = '';
         if (isset($fieldMapping['columnName']) && $fieldMapping['columnName'] != $name) {
             $column = $fieldMapping['columnName'];
-            $column = "->column('$column')";
+            $column = "->name('$column')";
         }
 
         $length = '';
@@ -303,6 +303,10 @@ class FluentExporter extends AbstractExporter
                 $generatorType  = strtolower($generatorType);
                 $generatedValue = '->generatedValue()->' . $generatorType . '()';
             }
+        }
+
+        if ($type == 'smallint') {
+            $type = 'smallInteger';
         }
 
         return "\$builder->$type('$name')$column$length$nullable$unique$primary$scale$precision$generatedValue;";
