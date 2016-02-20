@@ -246,7 +246,7 @@ class DoctrineServiceProvider extends ServiceProvider
         // boot after the session start. Some extensions make use of the session
         // to find out who the currently authenticated user is, e.g Loggable
         if (!$this->isLumen()) {
-            $this->app->make(HttpKernel::class)->prependMiddleware(BootExtensions::class);
+            $this->app->make(HttpKernel::class)->pushMiddleware(BootExtensions::class);
 
             return;
         }
