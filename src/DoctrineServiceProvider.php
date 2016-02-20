@@ -43,7 +43,9 @@ class DoctrineServiceProvider extends ServiceProvider
     {
         $this->extendAuthManager();
 
-        $this->bootExtensionManager();
+        $this->app->booted(function () {
+            $this->bootExtensionManager();
+        });
 
         if (!$this->isLumen()) {
             $this->publishes([
