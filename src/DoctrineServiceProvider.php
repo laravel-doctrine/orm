@@ -43,9 +43,7 @@ class DoctrineServiceProvider extends ServiceProvider
     {
         $this->extendAuthManager();
 
-        $this->app->booted(function () {
-            $this->bootExtensionManager();
-        });
+        $this->bootExtensionManager();
 
         if (!$this->isLumen()) {
             $this->publishes([
@@ -236,7 +234,11 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function bootExtensionManager()
     {
+        $this->app['events']->fire('doctrine.extensions.booting');
+
         $this->app->make(ExtensionManager::class)->boot();
+
+        $this->app['events']->fire('doctrine.extensions.booted');
     }
 
     /**
