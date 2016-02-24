@@ -10,23 +10,24 @@ use InvalidArgumentException;
 class DoctrineManager
 {
     /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
-
-    /**
      * @var Container
      */
     protected $container;
 
     /**
-     * @param Container       $container
-     * @param ManagerRegistry $registry
+     * @var EntityManagerFactory
      */
-    public function __construct(Container $container, ManagerRegistry $registry)
+    private $factory;
+
+    /**
+     * @param Container            $container
+     * @param EntityManagerFactory $factory
+     * @internal param ManagerRegistry $registry
+     */
+    public function __construct(Container $container, EntityManagerFactory $factory)
     {
-        $this->registry  = $registry;
         $this->container = $container;
+        $this->factory   = $factory;
     }
 
     /**
@@ -34,16 +35,50 @@ class DoctrineManager
      */
     public function getDefaultManagerName()
     {
-        return $this->registry->getDefaultManagerName();
+        return $this->container->make('registry')->getDefaultManagerName();
     }
 
     /**
-     * @param string          $connection
+     * @param $callback
+     */
+    public function onResolve(callable $callback)
+    {
+        $this->factory->addResolveCallback(function (ManagerRegistry $registry) use ($callback) {
+            call_user_func_array($callback, [$registry, $this]);
+        });
+    }
+
+    /**
+     * @param string|null     $connection
      * @param string|callable $callback
      */
-    public function extend($connection, $callback)
+    public function extend($connection = null, $callback)
     {
-        $manager = $this->registry->getManager($connection);
+        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $callback) {
+            $this->callExtendOn($connection, $callback, $registry);
+        });
+    }
+
+    /**
+     * @param string|callable $callback
+     */
+    public function extendAll($callback)
+    {
+        $this->onResolve(function (ManagerRegistry $registry) use ($callback) {
+            foreach ($registry->getManagerNames() as $connection) {
+                $this->callExtendOn($connection, $callback, $registry);
+            }
+        });
+    }
+
+    /**
+     * @param string|null     $connection
+     * @param string|callback $callback
+     * @param ManagerRegistry $registry
+     */
+    private function callExtendOn($connection = null, $callback, ManagerRegistry $registry)
+    {
+        $manager = $registry->getManager($connection);
 
         if (!is_callable($callback)) {
             if (!class_exists($callback)) {
@@ -65,45 +100,37 @@ class DoctrineManager
     }
 
     /**
-     * @param string|callable $callback
+     * @param             $namespace
+     * @param string|null $connection
      */
-    public function extendAll($callback)
+    public function addNamespace($namespace, $connection = null)
     {
-        foreach ($this->registry->getManagerNames() as $connection) {
-            $this->extend($connection, $callback);
-        }
+        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $namespace) {
+            $this->getMetaDataDriver($connection, $registry)->addNamespace($namespace);
+        });
     }
 
     /**
-     * @param            $namespace
-     * @param bool|false $connection
+     * @param array       $paths
+     * @param string|null $connection
      */
-    public function addNamespace($namespace, $connection = false)
+    public function addPaths(array $paths = [], $connection = null)
     {
-        $connection = $connection ?: $this->registry->getDefaultManagerName();
-
-        $this->getMetaDataDriver($connection)->addNamespace($namespace);
-    }
-
-    /**
-     * @param array      $paths
-     * @param bool|false $connection
-     */
-    public function addPaths(array $paths = [], $connection = false)
-    {
-        $connection = $connection ?: $this->registry->getDefaultManagerName();
-
-        $this->getMetaDataDriver($connection)->addPaths($paths);
+        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $paths) {
+            $this->getMetaDataDriver($connection, $registry)->addPaths($paths);
+        });
     }
 
     /**
      * @param null $connection
      *
+     * @param  ManagerRegistry $registry
      * @return MappingDriver
      */
-    public function getMetaDataDriver($connection = null)
+    public function getMetaDataDriver($connection = null, ManagerRegistry $registry)
     {
-        $manager = $this->registry->getManager($connection);
+        $registry = $registry ?: $this->container->make('registry');
+        $manager  = $registry->getManager($connection);
 
         return $manager->getConfiguration()->getMetadataDriverImpl();
     }
