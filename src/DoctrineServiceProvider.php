@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
@@ -108,7 +109,10 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerManagerRegistry()
     {
+        $this->app->singleton(EntityManagerFactory::class);
+
         $this->app->singleton('registry', function ($app) {
+
             $registry = new IlluminateRegistry($app, $app->make(EntityManagerFactory::class));
 
             // Add all managers into the registry
@@ -118,6 +122,11 @@ class DoctrineServiceProvider extends ServiceProvider
             }
 
             return $registry;
+        });
+
+        // Once the registry get's resolved, we will call the resolve callbacks which were waiting for the registry
+        $this->app->afterResolving('registry', function (ManagerRegistry $registry, Container $container) {
+            $container->make(EntityManagerFactory::class)->callResolveCallbacks($registry);
         });
 
         $this->app->alias('registry', ManagerRegistry::class);
@@ -230,17 +239,19 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function bootExtensionManager()
     {
-        $this->app['events']->fire('doctrine.extensions.booting');
-
         $manager = $this->app->make(ExtensionManager::class);
 
         if ($manager->needsBooting()) {
-            $this->app->make(ExtensionManager::class)->boot(
-                $this->app['registry']
-            );
-        }
+            $this->app['events']->fire('doctrine.extensions.booting');
 
-        $this->app['events']->fire('doctrine.extensions.booted');
+            $this->app->make(DoctrineManager::class)->onResolve(function (ManagerRegistry $registry) {
+                $this->app->make(ExtensionManager::class)->boot(
+                    $registry
+                );
+            });
+
+            $this->app['events']->fire('doctrine.extensions.booted');
+        }
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace LaravelDoctrine\ORM;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -45,6 +46,11 @@ class EntityManagerFactory
      * @var Container
      */
     protected $container;
+
+    /**
+     * @var callable[]
+     */
+    protected $resolveCallbacks = [];
 
     /**
      * @var Setup
@@ -404,6 +410,26 @@ class EntityManagerFactory
         foreach (array_get($settings, 'mapping_types', []) as $dbType => $doctrineType) {
             // Throw DBALException if Doctrine Type is not found.
             $manager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($dbType, $doctrineType);
+        }
+    }
+
+    /**
+     * @param callable $callback
+     */
+    public function addResolveCallback(callable  $callback)
+    {
+        $this->resolveCallbacks[] = $callback;
+    }
+
+    /**
+     * @param ManagerRegistry $registry
+     */
+    public function callResolveCallbacks(ManagerRegistry $registry)
+    {
+        foreach ($this->resolveCallbacks as $callback) {
+            if (is_callable($callback)) {
+                call_user_func($callback, $registry);
+            }
         }
     }
 }
