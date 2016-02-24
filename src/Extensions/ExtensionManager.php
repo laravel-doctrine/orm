@@ -15,29 +15,17 @@ class ExtensionManager
     protected $extensions = [];
 
     /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
-
-    /**
      * @var array
      */
     protected $bootedExtensions = [];
 
     /**
+     * Boot the extensions
      * @param ManagerRegistry $registry
      */
-    public function __construct(ManagerRegistry $registry)
+    public function boot(ManagerRegistry $registry)
     {
-        $this->registry = $registry;
-    }
-
-    /**
-     * Boot the extensions
-     */
-    public function boot()
-    {
-        foreach ($this->registry->getManagers() as $connection => $em) {
+        foreach ($registry->getManagers() as $connection => $em) {
             foreach ($this->extensions as $extension) {
                 if ($this->notBootedYet($connection, $extension)) {
                     $this->bootExtension(
@@ -50,6 +38,14 @@ class ExtensionManager
                 }
             }
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function needsBooting()
+    {
+        return count($this->extensions) > 0;
     }
 
     /**

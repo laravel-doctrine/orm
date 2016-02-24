@@ -109,7 +109,6 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function registerManagerRegistry()
     {
         $this->app->singleton('registry', function ($app) {
-
             $registry = new IlluminateRegistry($app, $app->make(EntityManagerFactory::class));
 
             // Add all managers into the registry
@@ -170,9 +169,7 @@ class DoctrineServiceProvider extends ServiceProvider
         // so user can call it and add own extensions
         $this->app->singleton(ExtensionManager::class, function ($app) {
 
-            $manager = new ExtensionManager(
-                $this->app->make(ManagerRegistry::class)
-            );
+            $manager = new ExtensionManager();
 
             // Register the extensions
             foreach ($this->app->make('config')->get('doctrine.extensions', []) as $extension) {
@@ -236,7 +233,13 @@ class DoctrineServiceProvider extends ServiceProvider
     {
         $this->app['events']->fire('doctrine.extensions.booting');
 
-        $this->app->make(ExtensionManager::class)->boot();
+        $manager = $this->app->make(ExtensionManager::class);
+
+        if ($manager->needsBooting()) {
+            $this->app->make(ExtensionManager::class)->boot(
+                $this->app['registry']
+            );
+        }
 
         $this->app['events']->fire('doctrine.extensions.booted');
     }
