@@ -178,7 +178,7 @@ class DoctrineServiceProvider extends ServiceProvider
         // so user can call it and add own extensions
         $this->app->singleton(ExtensionManager::class, function ($app) {
 
-            $manager = new ExtensionManager();
+            $manager = new ExtensionManager($app);
 
             // Register the extensions
             foreach ($this->app->make('config')->get('doctrine.extensions', []) as $extension) {
@@ -186,9 +186,7 @@ class DoctrineServiceProvider extends ServiceProvider
                     throw new ExtensionNotFound("Extension {$extension} not found");
                 }
 
-                $manager->register(
-                    $app->make($extension)
-                );
+                $manager->register($extension);
             }
 
             return $manager;
@@ -243,15 +241,16 @@ class DoctrineServiceProvider extends ServiceProvider
         $manager = $this->app->make(ExtensionManager::class);
 
         if ($manager->needsBooting()) {
-            $this->app['events']->fire('doctrine.extensions.booting');
-
             $this->app->make(DoctrineManager::class)->onResolve(function (ManagerRegistry $registry) {
+
+                $this->app['events']->fire('doctrine.extensions.booting');
+
                 $this->app->make(ExtensionManager::class)->boot(
                     $registry
                 );
-            });
 
-            $this->app['events']->fire('doctrine.extensions.booted');
+                $this->app['events']->fire('doctrine.extensions.booted');
+            });
         }
     }
 

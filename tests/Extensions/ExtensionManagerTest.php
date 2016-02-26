@@ -7,6 +7,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Query\FilterCollection;
+use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Extensions\Extension;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
 use Mockery as m;
@@ -49,9 +50,15 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
      */
     protected $reader;
 
+    /**
+     * @var Mock
+     */
+    protected $container;
+
     protected function setUp()
     {
         $this->registry      = m::mock(ManagerRegistry::class);
+        $this->container     = m::mock(Container::class);
         $this->em            = m::mock(EntityManagerInterface::class);
         $this->evm           = m::mock(EventManager::class);
         $this->configuration = m::mock(Configuration::class);
@@ -83,7 +90,8 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
         $this->driver->shouldReceive('getReader')->once()->andReturn($this->reader);
 
         // Register
-        $this->manager->register(new ExtensionMock);
+        $this->container->shouldReceive('make')->with(ExtensionMock::class)->once()->andReturn(new ExtensionMock);
+        $this->manager->register(ExtensionMock::class);
 
         $this->manager->boot($this->registry);
 
@@ -106,7 +114,8 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
         $this->driver->shouldReceive('getReader')->twice()->andReturn($this->reader);
 
         // Register
-        $this->manager->register(new ExtensionMock);
+        $this->container->shouldReceive('make')->with(ExtensionMock::class)->twice()->andReturn(new ExtensionMock);
+        $this->manager->register(ExtensionMock::class);
 
         $this->manager->boot($this->registry);
 
@@ -129,8 +138,11 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
         $this->driver->shouldReceive('getReader')->twice()->andReturn($this->reader);
 
         // Register
-        $this->manager->register(new ExtensionMock);
-        $this->manager->register(new ExtensionMock2);
+        $this->container->shouldReceive('make')->with(ExtensionMock::class)->once()->andReturn(new ExtensionMock);
+        $this->manager->register(ExtensionMock::class);
+
+        $this->container->shouldReceive('make')->with(ExtensionMock2::class)->once()->andReturn(new ExtensionMock2);
+        $this->manager->register(ExtensionMock2::class);
 
         $this->manager->boot($this->registry);
 
@@ -153,9 +165,10 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
         $this->driver->shouldReceive('getReader')->once()->andReturn($this->reader);
 
         // Register
-        $this->manager->register(new ExtensionMock);
-        $this->manager->register(new ExtensionMock);
-        $this->manager->register(new ExtensionMock);
+        $this->container->shouldReceive('make')->with(ExtensionMock::class)->times(3)->andReturn(new ExtensionMock);
+        $this->manager->register(ExtensionMock::class);
+        $this->manager->register(ExtensionMock::class);
+        $this->manager->register(ExtensionMock::class);
 
         $this->manager->boot($this->registry);
 
@@ -164,7 +177,7 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($booted['default']['ExtensionMock']);
     }
 
-    public function test_filters_get_registerd_on_boot()
+    public function test_filters_get_registered_on_boot()
     {
         $this->registry->shouldReceive('getManagers')->andReturn([
             'default' => $this->em
@@ -187,7 +200,8 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
         $collection->shouldReceive('enable')->once()->with('filter2');
 
         // Register
-        $this->manager->register(new ExtensionWithFiltersMock);
+        $this->container->shouldReceive('make')->with(ExtensionWithFiltersMock::class)->once()->andReturn(new ExtensionWithFiltersMock);
+        $this->manager->register(ExtensionWithFiltersMock::class);
 
         $this->manager->boot($this->registry);
 
@@ -205,7 +219,7 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
 
     protected function newManager()
     {
-        return new ExtensionManager();
+        return new ExtensionManager($this->container);
     }
 }
 
