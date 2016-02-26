@@ -6,11 +6,12 @@ use Doctrine\Common\EventManager;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
+use Illuminate\Contracts\Container\Container;
 
 class ExtensionManager
 {
     /**
-     * @var array|Extension[]
+     * @var string[]
      */
     protected $extensions = [];
 
@@ -20,6 +21,20 @@ class ExtensionManager
     protected $bootedExtensions = [];
 
     /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * ExtensionManager constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
      * Boot the extensions
      * @param ManagerRegistry $registry
      */
@@ -27,6 +42,8 @@ class ExtensionManager
     {
         foreach ($registry->getManagers() as $connection => $em) {
             foreach ($this->extensions as $extension) {
+                $extension = $this->container->make($extension);
+
                 if ($this->notBootedYet($connection, $extension)) {
                     $this->bootExtension(
                         $connection,
@@ -49,9 +66,9 @@ class ExtensionManager
     }
 
     /**
-     * @param Extension $extension
+     * @param string $extension
      */
-    public function register(Extension $extension)
+    public function register($extension)
     {
         $this->extensions[] = $extension;
     }
