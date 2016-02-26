@@ -22,7 +22,6 @@ class DoctrineManager
     /**
      * @param Container            $container
      * @param EntityManagerFactory $factory
-     * @internal param ManagerRegistry $registry
      */
     public function __construct(Container $container, EntityManagerFactory $factory)
     {

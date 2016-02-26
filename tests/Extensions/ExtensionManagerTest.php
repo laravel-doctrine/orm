@@ -85,7 +85,7 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
         // Register
         $this->manager->register(new ExtensionMock);
 
-        $this->manager->boot();
+        $this->manager->boot($this->registry);
 
         // Should be inside booted extensions now
         $booted = $this->manager->getBootedExtensions();
@@ -108,7 +108,7 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
         // Register
         $this->manager->register(new ExtensionMock);
 
-        $this->manager->boot();
+        $this->manager->boot($this->registry);
 
         // Should be inside booted extensions now
         $booted = $this->manager->getBootedExtensions();
@@ -132,7 +132,7 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->register(new ExtensionMock);
         $this->manager->register(new ExtensionMock2);
 
-        $this->manager->boot();
+        $this->manager->boot($this->registry);
 
         // Should be inside booted extensions now
         $booted = $this->manager->getBootedExtensions();
@@ -157,7 +157,7 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->register(new ExtensionMock);
         $this->manager->register(new ExtensionMock);
 
-        $this->manager->boot();
+        $this->manager->boot($this->registry);
 
         // Should be inside booted extensions now
         $booted = $this->manager->getBootedExtensions();
@@ -189,7 +189,7 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
         // Register
         $this->manager->register(new ExtensionWithFiltersMock);
 
-        $this->manager->boot();
+        $this->manager->boot($this->registry);
 
         // Should be inside booted extensions now
         $booted = $this->manager->getBootedExtensions();
@@ -205,9 +205,7 @@ class ExtensionManagerTest extends PHPUnit_Framework_TestCase
 
     protected function newManager()
     {
-        return new ExtensionManager(
-            $this->registry
-        );
+        return new ExtensionManager();
     }
 }
 
