@@ -2,8 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\Fluent\Builders\Builder;
 use LaravelDoctrine\Fluent\Extensions\ExtensibleClassMetadataFactory;
@@ -36,7 +36,7 @@ class Fluent extends MetaData
 
         $namingStrategy = $this->getNamingStrategy($settings);
 
-        $driver->setFluentFactory(function (ClassMetadata $meta) use ($namingStrategy) {
+        $driver->setFluentFactory(function (ClassMetadataInfo $meta) use ($namingStrategy) {
             return new Builder(new ClassMetadataBuilder($meta), $namingStrategy);
         });
 

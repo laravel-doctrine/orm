@@ -385,7 +385,7 @@ class EntityManagerFactory
     /**
      * @param array $settings
      *
-     * @return string|null
+     * @return array
      */
     protected function getConnectionDriver(array $settings = [])
     {
