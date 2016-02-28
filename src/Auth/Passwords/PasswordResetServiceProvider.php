@@ -8,23 +8,16 @@ use LaravelDoctrine\ORM\DoctrineManager;
 class PasswordResetServiceProvider extends ServiceProvider
 {
     /**
-     * @param DoctrineManager $manager
-     */
-    public function boot(DoctrineManager $manager)
-    {
-        // The path to PasswordReminder should be added, so the entity can be found
-        $manager->addPaths([
-            __DIR__
-        ]);
-    }
-
-    /**
      * Register the service provider.
      * @return void
      */
     public function register()
     {
         $this->registerPasswordBroker();
+
+        $this->app->make(DoctrineManager::class)->addPaths([
+            __DIR__
+        ]);
     }
 
     /**
