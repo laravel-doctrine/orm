@@ -6,7 +6,7 @@ if (!function_exists('entity')) {
      *
      * @param  dynamic  class|class,name|class,amount|class,name,amount
      *
-     * @return \LaravelDoctrine\ORM\Testing\Factory
+     * @return \LaravelDoctrine\ORM\Testing\FactoryBuilder
      */
     function entity()
     {
