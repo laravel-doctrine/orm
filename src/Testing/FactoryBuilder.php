@@ -133,7 +133,7 @@ class FactoryBuilder
      *
      * @param array $attributes
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return mixed
      */
     protected function makeInstance(array $attributes = [])
     {
