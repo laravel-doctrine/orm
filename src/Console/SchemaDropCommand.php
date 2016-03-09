@@ -33,7 +33,7 @@ class SchemaDropCommand extends Command
         $this->error('ATTENTION: This operation should not be executed in a production environment.');
 
         $names = $this->option('em') ? [$this->option('em')] : $registry->getManagerNames();
-        $exit = 0;
+        $exit  = 0;
 
         foreach ($names as $name) {
             $em   = $registry->getManager($name);
