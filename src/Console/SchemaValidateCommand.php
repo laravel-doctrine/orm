@@ -30,6 +30,7 @@ class SchemaValidateCommand extends Command
     public function fire(ManagerRegistry $registry)
     {
         $names = $this->option('em') ? [$this->option('em')] : $registry->getManagerNames();
+        $exit = 0;
 
         foreach ($names as $name) {
             $em        = $registry->getManager($name);
@@ -49,6 +50,8 @@ class SchemaValidateCommand extends Command
                         $this->message('* ' . $errorMessage, 'red');
                     }
                 }
+
+                $exit += 1;
             } else {
                 $this->info('[Mapping]  OK - The mapping files are correct.');
             }
@@ -57,9 +60,13 @@ class SchemaValidateCommand extends Command
                 $this->comment('Database] SKIPPED - The database was not checked for synchronicity.');
             } elseif (!$validator->schemaInSyncWithMetadata()) {
                 $this->error('[Database] FAIL - The database schema is not in sync with the current mapping file.');
+
+                $exit += 2;
             } else {
                 $this->info('[Database] OK - The database schema is in sync with the mapping files.');
             }
         }
+
+        return $exit;
     }
 }
