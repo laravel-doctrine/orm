@@ -20,7 +20,8 @@ class MappingImportCommand extends Command
     {dest-path? : Location the mapping files should be imported to}
     {--em=default : Info for a specific entity manager }
     {--filter : A string pattern used to match entities that should be mapped}
-    {--force= : Force to overwrite existing mapping files}';
+    {--force= : Force to overwrite existing mapping files}
+    {--namespace= : Namespace to use}';
 
     /**
      * The console command description.
@@ -54,6 +55,13 @@ class MappingImportCommand extends Command
         }
 
         $databaseDriver = new DatabaseDriver($em->getConnection()->getSchemaManager());
+
+        // set namespace that will be used to generate metadata files
+        $namespace = $this->option('namespace');
+        if ($namespace) {
+            $databaseDriver->setNamespace($namespace);
+        }
+
         $em->getConfiguration()->setMetadataDriverImpl($databaseDriver);
 
         $cmf = new DisconnectedClassMetadataFactory();
