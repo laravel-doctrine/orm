@@ -9,7 +9,7 @@ return [
         | paths setting to the appropriate path and replace App namespace
         | by your own namespace.
         |
-        | Available meta drivers: annotations|yaml|xml|config|static_php
+        | Available meta drivers: annotations|yaml|xml|config|static_php|php
         |
         | Available connections: mysql|oracle|pgsql|sqlite|sqlsrv
         | (Connections can be configured in the database config)
