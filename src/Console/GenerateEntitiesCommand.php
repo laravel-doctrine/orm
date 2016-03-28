@@ -72,10 +72,10 @@ class GenerateEntitiesCommand extends Command
                 // Create EntityGenerator
                 $entityGenerator = new EntityGenerator();
 
-                $entityGenerator->setGenerateAnnotations($this->option('generate-annotations'));
-                $entityGenerator->setGenerateStubMethods($this->option('generate-methods'));
-                $entityGenerator->setRegenerateEntityIfExists($this->option('regenerate-entities'));
-                $entityGenerator->setUpdateEntityIfExists($this->option('update-entities'));
+                $entityGenerator->setGenerateAnnotations($this->option('generate-annotations') === null ? false : $this->option('generate-annotations'));
+                $entityGenerator->setGenerateStubMethods($this->option('generate-methods') === null ? true : $this->option('generate-methods'));
+                $entityGenerator->setRegenerateEntityIfExists($this->option('regenerate-entities') === null ? false : $this->option('regenerate-entities'));
+                $entityGenerator->setUpdateEntityIfExists($this->option('update-entities') === null ? true : $this->option('update-entities'));
                 $entityGenerator->setNumSpaces($this->option('num-spaces'));
                 $entityGenerator->setBackupExisting(!$this->option('no-backup'));
 
