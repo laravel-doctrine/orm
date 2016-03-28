@@ -52,7 +52,7 @@ class GenerateEntitiesCommand extends Command
             $metadatas = $cmf->getAllMetadata();
             $metadatas = MetadataFilter::filter($metadatas, $this->option('filter'));
 
-            $destPath = base_path('app/Entities');
+            $destPath = base_path($this->argument('dest-path') ? $this->argument('dest-path') : '.');
 
             if (!is_dir($destPath)) {
                 mkdir($destPath, 0777, true);
@@ -72,10 +72,10 @@ class GenerateEntitiesCommand extends Command
                 // Create EntityGenerator
                 $entityGenerator = new EntityGenerator();
 
-                $entityGenerator->setGenerateAnnotations($this->option('generate-annotations'));
-                $entityGenerator->setGenerateStubMethods($this->option('generate-methods'));
-                $entityGenerator->setRegenerateEntityIfExists($this->option('regenerate-entities'));
-                $entityGenerator->setUpdateEntityIfExists($this->option('update-entities'));
+                $entityGenerator->setGenerateAnnotations($this->option('generate-annotations') === null ? false : $this->option('generate-annotations'));
+                $entityGenerator->setGenerateStubMethods($this->option('generate-methods') === null ? true : $this->option('generate-methods'));
+                $entityGenerator->setRegenerateEntityIfExists($this->option('regenerate-entities') === null ? false : $this->option('regenerate-entities'));
+                $entityGenerator->setUpdateEntityIfExists($this->option('update-entities') === null ? true : $this->option('update-entities'));
                 $entityGenerator->setNumSpaces($this->option('num-spaces'));
                 $entityGenerator->setBackupExisting(!$this->option('no-backup'));
 
