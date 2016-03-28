@@ -52,7 +52,7 @@ class GenerateEntitiesCommand extends Command
             $metadatas = $cmf->getAllMetadata();
             $metadatas = MetadataFilter::filter($metadatas, $this->option('filter'));
 
-            $destPath = base_path('app/Entities');
+            $destPath = base_path($this->argument('dest-path') ? $this->argument('dest-path') : '.');
 
             if (!is_dir($destPath)) {
                 mkdir($destPath, 0777, true);
