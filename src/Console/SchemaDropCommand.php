@@ -33,6 +33,7 @@ class SchemaDropCommand extends Command
         $this->error('ATTENTION: This operation should not be executed in a production environment.');
 
         $names = $this->option('em') ? [$this->option('em')] : $registry->getManagerNames();
+        $exit  = 0;
 
         foreach ($names as $name) {
             $em   = $registry->getManager($name);
@@ -77,10 +78,14 @@ class SchemaDropCommand extends Command
                         $this->getName()));
                     $this->comment(sprintf('    <info>php artisan %s --sql</info> to dump the SQL statements to the screen',
                         $this->getName()));
+
+                    $exit = 1;
                 } else {
                     $this->error('Nothing to drop. The database is empty!');
                 }
             }
         }
+
+        return $exit;
     }
 }

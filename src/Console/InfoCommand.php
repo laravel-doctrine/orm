@@ -31,6 +31,7 @@ class InfoCommand extends Command
     public function fire(ManagerRegistry $registry)
     {
         $names = $this->option('em') ? [$this->option('em')] : $registry->getManagerNames();
+        $exit  = 0;
 
         foreach ($names as $name) {
             $em = $registry->getManager($name);
@@ -56,8 +57,12 @@ class InfoCommand extends Command
                     $this->comment("<error>[FAIL]</error> " . $entityClassName);
                     $this->comment(sprintf("<comment>%s</comment>", $e->getMessage()));
                     $this->comment('');
+
+                    $exit = 1;
                 }
             }
         }
+
+        return $exit;
     }
 }

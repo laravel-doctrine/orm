@@ -85,5 +85,7 @@ class SchemaUpdateCommand extends Command
             $this->comment(sprintf('    <info>php artisan %s --sql</info> to dump the SQL statements to the screen',
                 $this->getName()));
         }
+
+        return 1;
     }
 }

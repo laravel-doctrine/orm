@@ -43,7 +43,7 @@ class EnsureProductionSettingsCommand extends Command
                 $this->error('Error for ' . $name . ' entity manager');
                 $this->error($e->getMessage());
 
-                return;
+                return 1;
             }
 
             $this->comment('Environment for <info>' . $name . '</info> entity manager is correctly configured for production.');
