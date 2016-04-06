@@ -3,10 +3,9 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Illuminate\Contracts\Config\Repository;
-use LaravelDoctrine\ORM\Configuration\Driver;
 use LaravelDoctrine\ORM\Configuration\MetaData\Config\ConfigDriver;
 
-class Config implements Driver
+class Config extends MetaData
 {
     /**
      * @var Repository
