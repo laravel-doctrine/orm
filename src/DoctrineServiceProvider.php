@@ -42,6 +42,8 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->extendAuthManager();
+
         if (!$this->isLumen()) {
             $this->publishes([
                 $this->getConfigPath() => config_path('doctrine.php'),
@@ -120,8 +122,6 @@ class DoctrineServiceProvider extends ServiceProvider
 
         // Once the registry get's resolved, we will call the resolve callbacks which were waiting for the registry
         $this->app->afterResolving('registry', function (ManagerRegistry $registry, Container $container) {
-
-            $this->extendAuthManager();
 
             $this->bootExtensionManager();
 
