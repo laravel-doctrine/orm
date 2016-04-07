@@ -19,6 +19,7 @@ class SqlsrvConnection extends Connection
             'password' => array_get($settings, 'password'),
             'port'     => array_get($settings, 'port'),
             'prefix'   => array_get($settings, 'prefix'),
+            'charset'  => array_get($settings, 'charset'),
         ];
     }
 }
