@@ -433,7 +433,7 @@ class FluentExporter extends AbstractExporter
                 $onDelete             = isset($c['onDelete']) ? '\'' . $c['onDelete'] . '\'' : 'null';
                 $columnDefinition     = isset($c['columnDefinition']) ? '\'' . $c['columnDefinition'] . '\'' : 'null';
 
-                $joinColumn .= "->addJoinColumn('$columnName', '$referencedColumnName', $nullable, $unique, $onDelete, $columnDefinition)";
+                $joinColumn .= "->addJoinColumn('$fieldName', '$columnName', '$referencedColumnName', $nullable, $unique, $onDelete, $columnDefinition)";
             }
         }
 
