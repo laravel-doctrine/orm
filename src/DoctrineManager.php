@@ -15,18 +15,11 @@ class DoctrineManager
     protected $container;
 
     /**
-     * @var EntityManagerFactory
+     * @param Container $container
      */
-    private $factory;
-
-    /**
-     * @param Container            $container
-     * @param EntityManagerFactory $factory
-     */
-    public function __construct(Container $container, EntityManagerFactory $factory)
+    public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->factory   = $factory;
     }
 
     /**
@@ -42,7 +35,7 @@ class DoctrineManager
      */
     public function onResolve(callable $callback)
     {
-        $this->factory->addResolveCallback(function (ManagerRegistry $registry) use ($callback) {
+        BootChain::add(function (ManagerRegistry $registry) use ($callback) {
             call_user_func_array($callback, [$registry, $this]);
         });
     }

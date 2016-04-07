@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;
+use LaravelDoctrine\ORM\BootChain;
 use LaravelDoctrine\ORM\DoctrineExtender;
 use LaravelDoctrine\ORM\DoctrineManager;
 use LaravelDoctrine\ORM\EntityManagerFactory;
@@ -47,8 +48,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
         $this->factory   = m::mock(EntityManagerFactory::class)->makePartial();
 
         $this->manager = new DoctrineManager(
-            $this->container,
-            $this->factory
+            $this->container
         );
     }
 
@@ -65,7 +65,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
             $this->assertExtendedCorrectly($configuration, $connection, $eventManager);
         });
 
-        $this->factory->callResolveCallbacks($this->registry);
+        BootChain::boot($this->registry);
     }
 
     public function test_can_extend_doctrine_on_existing_connection_with_class()
@@ -84,7 +84,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
         $this->manager->extend('default', MyDoctrineExtender::class);
 
-        $this->factory->callResolveCallbacks($this->registry);
+        BootChain::boot($this->registry);
     }
 
     public function test_cant_extend_with_a_non_existing_extender_class()
@@ -98,7 +98,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
         $this->manager->extend('default', 'no_class');
 
-        $this->factory->callResolveCallbacks($this->registry);
+        BootChain::boot($this->registry);
     }
 
     public function test_cant_extend_with_an_invalid_class()
@@ -117,7 +117,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
         $this->manager->extend('default', InvalidDoctrineExtender::class);
 
-        $this->factory->callResolveCallbacks($this->registry);
+        BootChain::boot($this->registry);
     }
 
     public function test_can_extend_all_connections()
@@ -148,7 +148,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
             $this->assertExtendedCorrectly($configuration, $connection, $eventManager);
         });
 
-        $this->factory->callResolveCallbacks($this->registry);
+        BootChain::boot($this->registry);
     }
 
     public function test_can_add_a_new_namespace_to_default_connection()
@@ -172,7 +172,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
         $this->manager->addNamespace('NewNamespace', 'default');
 
-        $this->factory->callResolveCallbacks($this->registry);
+        BootChain::boot($this->registry);
     }
 
     public function test_can_add_paths_to_default_connection()
@@ -196,12 +196,13 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
         $this->manager->addPaths(['paths'], 'default');
 
-        $this->factory->callResolveCallbacks($this->registry);
+        BootChain::boot($this->registry);
     }
 
     protected function tearDown()
     {
         m::close();
+        BootChain::flush();
     }
 
     public function assertExtendedCorrectly($configuration, $connection, $eventManager)

@@ -42,10 +42,6 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->extendAuthManager();
-
-        $this->bootExtensionManager();
-
         if (!$this->isLumen()) {
             $this->publishes([
                 $this->getConfigPath() => config_path('doctrine.php'),
@@ -109,8 +105,6 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerManagerRegistry()
     {
-        $this->app->singleton(EntityManagerFactory::class);
-
         $this->app->singleton('registry', function ($app) {
 
             $registry = new IlluminateRegistry($app, $app->make(EntityManagerFactory::class));
@@ -126,7 +120,12 @@ class DoctrineServiceProvider extends ServiceProvider
 
         // Once the registry get's resolved, we will call the resolve callbacks which were waiting for the registry
         $this->app->afterResolving('registry', function (ManagerRegistry $registry, Container $container) {
-            $container->make(EntityManagerFactory::class)->callResolveCallbacks($registry);
+
+            $this->extendAuthManager();
+
+            $this->bootExtensionManager();
+
+            BootChain::boot($registry);
         });
 
         $this->app->alias('registry', ManagerRegistry::class);
@@ -240,16 +239,13 @@ class DoctrineServiceProvider extends ServiceProvider
         $manager = $this->app->make(ExtensionManager::class);
 
         if ($manager->needsBooting()) {
-            $this->app->make(DoctrineManager::class)->onResolve(function (ManagerRegistry $registry) {
+            $this->app['events']->fire('doctrine.extensions.booting');
 
-                $this->app['events']->fire('doctrine.extensions.booting');
+            $this->app->make(ExtensionManager::class)->boot(
+                $this->app['registry']
+            );
 
-                $this->app->make(ExtensionManager::class)->boot(
-                    $registry
-                );
-
-                $this->app['events']->fire('doctrine.extensions.booted');
-            });
+            $this->app['events']->fire('doctrine.extensions.booted');
         }
     }
 
