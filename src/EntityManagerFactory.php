@@ -16,6 +16,7 @@ use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
+use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
 use ReflectionException;
 
 class EntityManagerFactory
@@ -51,12 +52,18 @@ class EntityManagerFactory
     private $setup;
 
     /**
-     * @param Container         $container
-     * @param Setup             $setup
-     * @param MetaDataManager   $meta
-     * @param ConnectionManager $connection
-     * @param CacheManager      $cache
-     * @param Repository        $config
+     * @var EntityListenerResolver
+     */
+    private $resolver;
+
+    /**
+     * @param Container              $container
+     * @param Setup                  $setup
+     * @param MetaDataManager        $meta
+     * @param ConnectionManager      $connection
+     * @param CacheManager           $cache
+     * @param Repository             $config
+     * @param EntityListenerResolver $resolver
      */
     public function __construct(
         Container $container,
@@ -64,7 +71,8 @@ class EntityManagerFactory
         MetaDataManager $meta,
         ConnectionManager $connection,
         CacheManager $cache,
-        Repository $config
+        Repository $config,
+        EntityListenerResolver $resolver
     ) {
         $this->meta       = $meta;
         $this->connection = $connection;
@@ -72,6 +80,7 @@ class EntityManagerFactory
         $this->cache      = $cache;
         $this->container  = $container;
         $this->setup      = $setup;
+        $this->resolver   = $resolver;
     }
 
     /**
@@ -110,6 +119,8 @@ class EntityManagerFactory
         $configuration->setDefaultRepositoryClassName(
             array_get($settings, 'repository', EntityRepository::class)
         );
+
+        $configuration->setEntityListenerResolver($this->resolver);
 
         $manager = EntityManager::create(
             $connection,
