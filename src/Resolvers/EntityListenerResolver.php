@@ -17,6 +17,9 @@ class EntityListenerResolver implements ResolverContract
      */
     private $instances = [];
 
+    /**
+     * @param Container $container
+     */
     public function __construct(Container $container)
     {
         $this->container = $container;
