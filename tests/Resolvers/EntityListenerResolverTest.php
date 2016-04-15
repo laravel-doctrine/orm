@@ -11,6 +11,7 @@ class EntityListenerResolverTest extends PHPUnit_Framework_TestCase
      * @var m\MockInterface|Container
      */
     private $container;
+
     /**
      * @var EntityListenerResolver
      */

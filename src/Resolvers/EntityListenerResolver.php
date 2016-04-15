@@ -12,6 +12,9 @@ class EntityListenerResolver implements ResolverContract
      */
     private $container;
 
+    /**
+     * @var object[] Map of class name to entity listener instances.
+     */
     private $instances = [];
 
     public function __construct(Container $container)
@@ -20,11 +23,7 @@ class EntityListenerResolver implements ResolverContract
     }
 
     /**
-     * Clear all instances from the set, or a specific class when given.
-     *
-     * @param string $className The fully-qualified class name
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function clear($className = null)
     {
@@ -38,11 +37,7 @@ class EntityListenerResolver implements ResolverContract
     }
 
     /**
-     * Returns a entity listener instance for the given class name.
-     *
-     * @param string $className The fully-qualified class name
-     *
-     * @return object An entity listener
+     * {@inheritdoc}
      */
     public function resolve($className)
     {
@@ -54,9 +49,7 @@ class EntityListenerResolver implements ResolverContract
     }
 
     /**
-     * Register a entity listener instance.
-     *
-     * @param object $object An entity listener
+     * {@inheritdoc}
      */
     public function register($object)
     {
