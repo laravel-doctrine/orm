@@ -10,7 +10,6 @@ use Doctrine\ORM\Cache\RegionsConfiguration;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\EntityListenerResolver;
 use Doctrine\ORM\Query\FilterCollection;
 use Doctrine\ORM\Repository\RepositoryFactory;
 use Doctrine\ORM\Tools\Setup;
@@ -22,6 +21,7 @@ use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\EntityManagerFactory;
 use LaravelDoctrine\ORM\Loggers\Logger;
+use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver as LaravelDoctrineEntityListenerResolver;
 use Mockery as m;
 use Mockery\Mock;
 
@@ -63,6 +63,11 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected $configuration;
 
     /**
+     * @var LaravelDoctrineEntityListenerResolver|Mock
+     */
+    protected $listenerResolver;
+
+    /**
      * @var MappingDriver
      */
     protected $mappingDriver;
@@ -92,6 +97,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->mockMeta();
         $this->mockConnection();
         $this->mockCache();
+        $this->mockResolver();
         $this->mockConfig();
 
         $this->setup = m::mock(Setup::class);
@@ -103,7 +109,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
             $this->meta,
             $this->connection,
             $this->cache,
-            $this->config
+            $this->config,
+            $this->listenerResolver
         );
     }
 
@@ -532,6 +539,11 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->container = m::mock(Container::class);
     }
 
+    protected function mockResolver()
+    {
+        $this->listenerResolver = m::mock(LaravelDoctrineEntityListenerResolver::class);
+    }
+
     protected function disableDebugbar()
     {
         $this->config->shouldReceive('get')
@@ -593,10 +605,14 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                             ->atLeast()->once()
                             ->andReturn($repoFactory);
 
-        $entityListenerResolver = m::mock(EntityListenerResolver::class);
+        $entityListenerResolver = m::mock(LaravelDoctrineEntityListenerResolver::class);
         $this->configuration->shouldReceive('getEntityListenerResolver')
                             ->atLeast()->once()
                             ->andReturn($entityListenerResolver);
+
+        $this->configuration->shouldReceive('setEntityListenerResolver')
+                            ->atLeast()->once()
+                            ->with(m::type(LaravelDoctrineEntityListenerResolver::class));
 
         $this->configuration->shouldReceive('getProxyDir')
                             ->atLeast()->once()
