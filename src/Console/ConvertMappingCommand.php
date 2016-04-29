@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM\Console;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Mapping\Driver\DatabaseDriver;
 use Doctrine\ORM\Tools\Console\MetadataFilter;
 use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 use Doctrine\ORM\Tools\EntityGenerator;
@@ -21,7 +22,7 @@ class ConvertMappingCommand extends Command
     {--em= : Generate getter and setter for a specific entity manager. }
     {--filter= : A string pattern used to match entities that should be processed.}
     {--force= : Force to overwrite existing mapping files.}
-    {--from-database= : Whether or not to convert mapping information from existing database.}
+    {--from-database : Whether or not to convert mapping information from existing database.}
     {--extend= : Defines a base class to be extended by generated entity classes.}
     {--num-spaces=4 : Defines the number of indentation spaces}
     {--namespace= : Defines a namespace for the generated entity classes, if converted from database.}';
