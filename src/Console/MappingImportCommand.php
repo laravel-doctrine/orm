@@ -19,7 +19,7 @@ class MappingImportCommand extends Command
     {mapping-type=xml : The mapping type to export the imported mapping information to}
     {dest-path? : Location the mapping files should be imported to}
     {--em=default : Info for a specific entity manager }
-    {--filter : A string pattern used to match entities that should be mapped}
+    {--filter= : A string pattern used to match entities that should be mapped}
     {--force= : Force to overwrite existing mapping files}
     {--namespace= : Namespace to use}';
 
