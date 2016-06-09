@@ -40,7 +40,7 @@ class MappingImportCommand extends Command
         $emName = $this->option('em');
         $em     = $registry->getManager($emName);
 
-        $destPath = base_path($this->argument('dest-path') ? $this->argument('dest-path') : 'app/Mappings');
+        $destPath = $this->argument('dest-path') ? base_path($this->argument('dest-path')) : key(config("doctrine.managers.{$emName}.paths"));
 
         $type = $this->argument('mapping-type');
 
