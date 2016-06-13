@@ -8,4 +8,14 @@ class ArrayUtil
     {
         return isset($var) ? $var : $default;
     }
+
+    /**
+     * @param array $array
+     *
+     * @return string
+     */
+    public static function hashArray(array $array)
+    {
+        return md5(json_encode($array));
+    }
 }
