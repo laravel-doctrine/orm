@@ -33,7 +33,6 @@ use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
 use LaravelDoctrine\ORM\Testing\Factory as EntityFactory;
-use LaravelDoctrine\ORM\Validation\PresenceVerifierProvider;
 
 class DoctrineServiceProvider extends ServiceProvider
 {
@@ -66,7 +65,6 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerEntityManager();
         $this->registerClassMetaDataFactory();
         $this->registerExtensions();
-        $this->registerPresenceVerifierProvider();
         $this->registerConsoleCommands();
         $this->registerCustomTypes();
         $this->registerEntityFactory();
@@ -190,14 +188,6 @@ class DoctrineServiceProvider extends ServiceProvider
 
             return $manager;
         });
-    }
-
-    /**
-     * Register the deferred service provider for the validation presence verifier
-     */
-    protected function registerPresenceVerifierProvider()
-    {
-        $this->app->register(PresenceVerifierProvider::class);
     }
 
     /**
