@@ -108,7 +108,6 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function registerManagerRegistry()
     {
         $this->app->singleton('registry', function ($app) {
-
             $registry = new IlluminateRegistry($app, $app->make(EntityManagerFactory::class));
 
             // Add all managers into the registry
@@ -122,7 +121,6 @@ class DoctrineServiceProvider extends ServiceProvider
 
         // Once the registry get's resolved, we will call the resolve callbacks which were waiting for the registry
         $this->app->afterResolving('registry', function (ManagerRegistry $registry, Container $container) {
-
             $this->bootExtensionManager();
 
             BootChain::boot($registry);
@@ -176,7 +174,6 @@ class DoctrineServiceProvider extends ServiceProvider
         // Bind extension manager as singleton,
         // so user can call it and add own extensions
         $this->app->singleton(ExtensionManager::class, function ($app) {
-
             $manager = new ExtensionManager($app);
 
             // Register the extensions
