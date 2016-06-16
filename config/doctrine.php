@@ -171,5 +171,6 @@ return [
     */
     'gedmo'                     => [
         'all_mappings' => false
-    ]
+    ],
+    'doctrine_presence_verifier' => true,
 ];
