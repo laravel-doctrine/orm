@@ -6,8 +6,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
-use Faker\Factory as FakerFactory;
-use Faker\Generator as FakerGenerator;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
