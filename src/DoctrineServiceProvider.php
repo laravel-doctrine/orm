@@ -70,7 +70,8 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerCustomTypes();
         $this->registerEntityFactory();
 
-        if ($this->registerPresenceValidator()) {
+        
+        if ($this->shouldRegisterDoctrinePresenceValidator()) {
             $this->registerPresenceVerifierProvider();
         }
     }
@@ -309,10 +310,14 @@ class DoctrineServiceProvider extends ServiceProvider
     }
 
     /**
+     * Checks if configuration key "doctrine_presence_verifier" is defined and returns its value (true|false), if it
+     * doesn't returns true by default
+     *
      * @return bool
      */
-    protected function registerPresenceValidator()
+    protected function shouldRegisterDoctrinePresenceValidator()
     {
-        return (null !== @$this->app['config']['doctrine']['doctrine_presence_verifier']) ? $this->app['config']['doctrine']['doctrine_presence_verifier'] : true;
+        $configValue = @$this->app['config']['doctrine']['doctrine_presence_verifier'];
+        return (null !== $configValue) ? $configValue : true;
     }
 }
