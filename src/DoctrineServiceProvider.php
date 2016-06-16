@@ -70,7 +70,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerCustomTypes();
         $this->registerEntityFactory();
 
-        if($this->registerPresenceValidator()){
+        if ($this->registerPresenceValidator()) {
             $this->registerPresenceVerifierProvider();
         }
     }
