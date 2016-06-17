@@ -19,7 +19,7 @@ class MappingImportCommand extends Command
     {mapping-type=xml : The mapping type to export the imported mapping information to}
     {dest-path? : Location the mapping files should be imported to}
     {--em=default : Info for a specific entity manager }
-    {--filter= : A string pattern used to match entities that should be mapped}
+    {--filter : A string pattern used to match entities that should be mapped}
     {--force= : Force to overwrite existing mapping files}
     {--namespace= : Namespace to use}';
 
@@ -42,7 +42,18 @@ class MappingImportCommand extends Command
 
         $destPath = base_path($this->argument('dest-path') ? $this->argument('dest-path') : 'app/Mappings');
 
-        $type = $this->argument('mapping-type');
+        $simplified = false;
+        $type       = $this->argument('mapping-type');
+
+        if (starts_with($type, 'simplified')) {
+            $simplified = true;
+
+            if (str_contains($type, 'xml')) {
+                $type       = 'xml';
+            } elseif (str_contains($type, 'yaml')) {
+                $type       = 'yaml';
+            }
+        }
 
         $cme      = new ClassMetadataExporter();
         $exporter = $cme->getExporter($type);
@@ -77,6 +88,9 @@ class MappingImportCommand extends Command
                 $className = $class->name;
                 if ('annotation' === $type) {
                     $path = $destPath . '/' . str_replace('\\', '.', $className) . '.php';
+                } elseif ($simplified) {
+                    $element = explode('\\', $className);
+                    $path    = $destPath . '/' . end($element) . '.orm.' . $type;
                 } else {
                     $path = $destPath . '/' . str_replace('\\', '.', $className) . '.dcm.' . $type;
                 }
