@@ -66,10 +66,13 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerEntityManager();
         $this->registerClassMetaDataFactory();
         $this->registerExtensions();
-        $this->registerPresenceVerifierProvider();
         $this->registerConsoleCommands();
         $this->registerCustomTypes();
         $this->registerEntityFactory();
+
+        if ($this->shouldRegisterDoctrinePresenceValidator()) {
+            $this->registerPresenceVerifierProvider();
+        }
     }
 
     /**
@@ -303,5 +306,13 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function isLumen()
     {
         return str_contains($this->app->version(), 'Lumen');
+    }
+
+    /**
+     * @return bool
+     */
+    protected function shouldRegisterDoctrinePresenceValidator()
+    {
+        return $this->app['config']->get('doctrine.doctrine_presence_verifier', true);
     }
 }
