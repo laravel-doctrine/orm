@@ -78,7 +78,7 @@ class MappingImportCommand extends Command
                 if ('annotation' === $type) {
                     $path = $destPath . '/' . str_replace('\\', '.', $className) . '.php';
                 } else {
-                    $path = $destPath . '/' . str_replace('\\', '.', $className) . '.orm.' . $type;
+                    $path = $destPath . '/' . str_replace('\\', '.', $className) . '.dcm.' . $type;
                 }
                 $this->info(sprintf('  > writing <comment>%s</comment>', $path));
                 $code = $exporter->exportClassMetadata($class);
