@@ -77,13 +77,13 @@ final class IlluminateRegistry implements ManagerRegistry
      */
     public function addManager($manager, array $settings = [])
     {
-        if (!$this->container->bound($this->getManagerBindingName($manager))) {
-            $this->container->singleton($this->getManagerBindingName($manager), function () use ($settings) {
-                return $this->factory->create($settings);
-            });
+        $this->container->singleton($this->getManagerBindingName($manager), function () use ($settings) {
+            return $this->factory->create($settings);
+        });
 
-            $this->managers[$manager] = $manager;
-        }
+        $this->addConnection($manager);
+
+        $this->managers[$manager] = $manager;
     }
 
     /**
@@ -91,13 +91,11 @@ final class IlluminateRegistry implements ManagerRegistry
      */
     public function addConnection($connection)
     {
-        if (!$this->container->bound($this->getConnectionBindingName($connection))) {
-            $this->container->singleton($this->getConnectionBindingName($connection), function () use ($connection) {
-                return $this->getManager($connection)->getConnection();
-            });
+        $this->container->singleton($this->getConnectionBindingName($connection), function () use ($connection) {
+            return $this->getManager($connection)->getConnection();
+        });
 
-            $this->connections[$connection] = $connection;
-        }
+        $this->connections[$connection] = $connection;
     }
 
     /**
@@ -275,7 +273,12 @@ final class IlluminateRegistry implements ManagerRegistry
             $this->getManagerBindingName($this->managers[$name])
         );
 
+        $this->resetService(
+            $this->getConnectionBindingName($this->connections[$name])
+        );
+
         unset($this->managersMap[$name]);
+        unset($this->connectionsMap[$name]);
     }
 
     /**

@@ -29,7 +29,6 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->container = m::mock(Container::class);
-        $this->container->shouldReceive('bound')->andReturn(false);
         $this->factory   = m::mock(EntityManagerFactory::class);
 
         $this->registry = new IlluminateRegistry(
@@ -40,7 +39,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
 
     public function test_can_add_manager()
     {
-        $this->container->shouldReceive('singleton')->once();
+        $this->container->shouldReceive('singleton')->twice();
         $this->registry->addManager('default', ['settings']);
 
         $this->assertTrue($this->registry->managerExists('default'));
@@ -70,7 +69,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
     public function test_get_default_manager_name()
     {
         // Will return first, when no default name
-        $this->container->shouldReceive('singleton')->once();
+        $this->container->shouldReceive('singleton')->times(3);
         $this->registry->addManager('custom');
         $this->assertEquals('custom', $this->registry->getDefaultManagerName());
 
@@ -178,7 +177,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
 
     public function test_can_get_default_manager()
     {
-        $this->container->shouldReceive('singleton')->once();
+        $this->container->shouldReceive('singleton')->times(2);
         $this->registry->addManager('default');
 
         $this->container->shouldReceive('make')
@@ -191,7 +190,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
 
     public function test_can_get_custom_manager()
     {
-        $this->container->shouldReceive('singleton')->once();
+        $this->container->shouldReceive('singleton')->times(2);
         $this->registry->addManager('custom');
 
         $this->container->shouldReceive('make')
@@ -213,7 +212,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
 
     public function test_manager_gets_only_resolved_once()
     {
-        $this->container->shouldReceive('singleton')->once();
+        $this->container->shouldReceive('singleton')->times(2);
         $this->registry->addManager('default');
 
         $this->container->shouldReceive('make')
@@ -231,7 +230,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
 
     public function test_can_check_if_manager_exists()
     {
-        $this->container->shouldReceive('singleton')->once();
+        $this->container->shouldReceive('singleton')->times(2);
         $this->registry->addManager('default');
 
         $this->assertFalse($this->registry->managerExists('non-existing'));
@@ -240,7 +239,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
 
     public function test_can_get_manager_names()
     {
-        $this->container->shouldReceive('singleton')->twice();
+        $this->container->shouldReceive('singleton')->times(4);
 
         $this->registry->addManager('default');
         $this->registry->addManager('custom');
@@ -252,7 +251,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
 
     public function test_can_get_all_managers()
     {
-        $this->container->shouldReceive('singleton')->twice();
+        $this->container->shouldReceive('singleton')->times(4);
 
         $this->container->shouldReceive('make')
                         ->with('doctrine.managers.default')
@@ -302,7 +301,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->registry->resetManager('non-existing');
     }
 
-    public function test_get_alias_namespace_from_unkown_namespace()
+    public function test_get_alias_namespace_from_unknown_namespace()
     {
         $this->setExpectedException(
             ORMException::class,
