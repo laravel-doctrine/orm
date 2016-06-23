@@ -153,7 +153,7 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
     {
         $this->getTable()
              ->delete($this->table)
-             ->andWhere('token = :token')
+             ->where('token = :token')
              ->setParameter('token', $token)
              ->execute();
     }
