@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Database\ConnectionResolverInterface;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
@@ -140,6 +142,7 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function setupConnection()
     {
+        $this->app->bind(ConnectionResolverInterface::class, DatabaseManager::class);
         $this->app->singleton(ConnectionManager::class);
     }
 

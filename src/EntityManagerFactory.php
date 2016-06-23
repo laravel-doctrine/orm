@@ -2,6 +2,7 @@
 
 namespace LaravelDoctrine\ORM;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -99,11 +100,8 @@ class EntityManagerFactory
 
         $this->setMetadataDriver($settings, $configuration);
 
-        $driver = $this->getConnectionDriver($settings);
-
         $connection = $this->connection->driver(
-            $driver['driver'],
-            $driver
+            array_get($settings, 'connection')
         );
 
         $this->setNamingStrategy($settings, $configuration);
@@ -372,7 +370,7 @@ class EntityManagerFactory
      * @param                        $settings
      * @param EntityManagerInterface $manager
      *
-     * @return mixed
+     * @return EntityManagerInterface
      */
     protected function decorateManager(array $settings = [], EntityManagerInterface $manager)
     {
@@ -385,23 +383,6 @@ class EntityManagerFactory
         }
 
         return $manager;
-    }
-
-    /**
-     * @param array $settings
-     *
-     * @return array
-     */
-    protected function getConnectionDriver(array $settings = [])
-    {
-        $connection = array_get($settings, 'connection');
-        $key        = 'database.connections.' . $connection;
-
-        if (!$this->config->has($key)) {
-            throw new InvalidArgumentException("Connection [{$connection}] has no configuration in [{$key}]");
-        }
-
-        return $this->config->get($key);
     }
 
     /**
