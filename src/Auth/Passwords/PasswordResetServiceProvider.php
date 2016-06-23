@@ -3,7 +3,6 @@
 namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use Illuminate\Support\ServiceProvider;
-use LaravelDoctrine\ORM\DoctrineManager;
 
 class PasswordResetServiceProvider extends ServiceProvider
 {
@@ -14,10 +13,6 @@ class PasswordResetServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerPasswordBroker();
-
-        $this->app->make(DoctrineManager::class)->addPaths([
-            __DIR__
-        ]);
     }
 
     /**
