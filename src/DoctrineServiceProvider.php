@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Proxy\Autoloader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
@@ -70,6 +71,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerPresenceVerifier();
         $this->registerConsoleCommands();
         $this->registerCustomTypes();
+        $this->registerProxyAutoloader();
     }
 
     /**
@@ -218,6 +220,24 @@ class DoctrineServiceProvider extends ServiceProvider
                 $em,
                 $entity
             );
+        });
+    }
+
+    /**
+     * Register proxy autoloader
+     *
+     * @return void
+     */
+    public function registerProxyAutoloader()
+    {
+        $this->app->afterResolving(ManagerRegistry::class, function (ManagerRegistry $registry) {
+            /** @var EntityManagerInterface $manager */
+            foreach ($registry->getManagers() as $manager) {
+                Autoloader::register(
+                    $manager->getConfiguration()->getProxyDir(),
+                    $manager->getConfiguration()->getProxyNamespace()
+                );
+            }
         });
     }
 
