@@ -139,7 +139,7 @@ class DumpDatabaseCommand extends Command
         $dump   = base_path($this->option('dump'));
 
         $binary  = is_null($binary) ? 'sqlite3' : $binary;
-        $command = "$binary $db '.dump'";
+        $command = "$binary $db .dump";
         $command .= " > $dump";
         exec($command, $output, $status);
 
