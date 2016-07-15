@@ -2,6 +2,8 @@
 
 namespace LaravelDoctrine\ORM;
 
+use Doctrine\DBAL\Connections\MasterSlaveConnection;
+use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -18,6 +20,7 @@ use LaravelDoctrine\ORM\Configuration\MetaData\MetaData;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
+use LaravelDoctrine\ORM\Utilities\MasterSlaveConfigParser;
 use ReflectionException;
 
 class EntityManagerFactory
@@ -100,11 +103,31 @@ class EntityManagerFactory
         $this->setMetadataDriver($settings, $configuration);
 
         $driver = $this->getConnectionDriver($settings);
+        $slaveConfig = MasterSlaveConfigParser::hasValidConfig($driver)
+            ? MasterSlaveConfigParser::parseConfig($driver)
+            : [];
 
         $connection = $this->connection->driver(
             $driver['driver'],
             $driver
         );
+
+        if (empty($slaveConfig)) {
+            $conn = DriverManager::getConnection($connection, $configuration);
+        } else {
+            $conn = DriverManager::getConnection([
+                'wrapperClass' => MasterSlaveConnection::class,
+                'driver'       => $connection['driver'],
+                'master'       => [
+                    'user'     => array_get($slaveConfig, 'write.user', ''),
+                    'password' => array_get($slaveConfig, 'write.password', ''),
+                    'host'     => array_get($slaveConfig, 'write.host', ''),
+                    'dbname'   => array_get($slaveConfig, 'write.dbname', ''),
+                    'port'   => array_get($slaveConfig, 'write.port', ''),
+                ],
+                'slaves'       => $slaveConfig['read'],
+            ]);
+        }
 
         $this->setNamingStrategy($settings, $configuration);
         $this->setCustomFunctions($configuration);
@@ -121,7 +144,7 @@ class EntityManagerFactory
         $configuration->setEntityListenerResolver($this->resolver);
 
         $manager = EntityManager::create(
-            $connection,
+            $conn,
             $configuration
         );
 
