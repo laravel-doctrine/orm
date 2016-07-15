@@ -2,6 +2,8 @@
 
 namespace LaravelDoctrine\ORM;
 
+use Doctrine\DBAL\Connections\MasterSlaveConnection;
+use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -18,6 +20,8 @@ use LaravelDoctrine\ORM\Configuration\MetaData\MetaData;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
+use LaravelDoctrine\ORM\Utilities\ArrayUtil;
+use LaravelDoctrine\ORM\Utilities\MasterSlaveConfigParser;
 use ReflectionException;
 
 class EntityManagerFactory
@@ -46,6 +50,11 @@ class EntityManagerFactory
      * @var Container
      */
     protected $container;
+
+    /**
+     * @var array
+     */
+    protected $configCache = [];
 
     /**
      * @var Setup
@@ -91,37 +100,66 @@ class EntityManagerFactory
      */
     public function create(array $settings = [])
     {
-        $configuration = $this->setup->createConfiguration(
-            array_get($settings, 'dev', false),
-            array_get($settings, 'proxies.path'),
-            $this->cache->driver()
-        );
+        $settingsHash = ArrayUtil::hashArray($settings);
 
-        $this->setMetadataDriver($settings, $configuration);
+        if (array_key_exists($settingsHash, $this->configCache)) {
+            $configuration = $this->configCache[$settingsHash]['configuration'];
+            $connectionConfig = $this->configCache[$settingsHash]['connectionConfig'];
+            $slaveConfig = $this->configCache[$settingsHash]['slaveConfig'];
+        } else {
+            $configuration = $this->setup->createConfiguration(
+                array_get($settings, 'dev', false),
+                array_get($settings, 'proxies.path'),
+                $this->cache->driver()
+            );
+            $configuration->setDefaultRepositoryClassName(
+                array_get($settings, 'repository', EntityRepository::class)
+            );
+            $configuration->setEntityListenerResolver($this->resolver);
 
-        $driver = $this->getConnectionDriver($settings);
+            $this->setMetadataDriver($settings, $configuration);
+            $this->setNamingStrategy($settings, $configuration);
+            $this->setCustomFunctions($configuration);
+            $this->setCacheSettings($configuration);
+            $this->configureProxies($settings, $configuration);
+            $this->setCustomMappingDriverChain($settings, $configuration);
+            $this->registerPaths($settings, $configuration);
+            $this->setRepositoryFactory($settings, $configuration);
 
-        $connection = $this->connection->driver(
-            $driver['driver'],
-            $driver
-        );
+            $driverConfig = $this->getConnectionDriver($settings);
+            $slaveConfig = MasterSlaveConfigParser::hasValidConfig($driverConfig)
+                ? MasterSlaveConfigParser::parseConfig($driverConfig)
+                : [];
 
-        $this->setNamingStrategy($settings, $configuration);
-        $this->setCustomFunctions($configuration);
-        $this->setCacheSettings($configuration);
-        $this->configureProxies($settings, $configuration);
-        $this->setCustomMappingDriverChain($settings, $configuration);
-        $this->registerPaths($settings, $configuration);
-        $this->setRepositoryFactory($settings, $configuration);
+            $connectionConfig = $this->connection->driver(
+                $driverConfig['driver'],
+                $driverConfig
+            );
 
-        $configuration->setDefaultRepositoryClassName(
-            array_get($settings, 'repository', EntityRepository::class)
-        );
+            $this->configCache[$settingsHash]['configuration'] = $configuration;
+            $this->configCache[$settingsHash]['connectionConfig'] = $connectionConfig;
+            $this->configCache[$settingsHash]['slaveConfig'] = $slaveConfig;
+        }
 
-        $configuration->setEntityListenerResolver($this->resolver);
+        if (empty($slaveConfig)) {
+            $conn = DriverManager::getConnection($connectionConfig, $configuration);
+        } else {
+            $conn = DriverManager::getConnection([
+                'wrapperClass' => MasterSlaveConnection::class,
+                'driver'       => $connectionConfig['driver'],
+                'master'       => [
+                    'user'     => array_get($slaveConfig, 'write.user', ''),
+                    'password' => array_get($slaveConfig, 'write.password', ''),
+                    'host'     => array_get($slaveConfig, 'write.host', ''),
+                    'dbname'   => array_get($slaveConfig, 'write.dbname', ''),
+                    'port'   => array_get($slaveConfig, 'write.port', ''),
+                ],
+                'slaves'       => $slaveConfig['read'],
+            ]);
+        }
 
         $manager = EntityManager::create(
-            $connection,
+            $conn,
             $configuration
         );
 
