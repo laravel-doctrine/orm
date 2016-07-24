@@ -1,16 +1,21 @@
 <?php
 
 use Carbon\Carbon;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use LaravelDoctrine\ORM\Auth\Passwords\DoctrineTokenRepository;
-use LaravelDoctrine\ORM\Auth\Passwords\PasswordReminder;
 use Mockery as m;
 use Mockery\Mock;
 
 class DoctrineTokenRepositoryTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Mock
+     */
+    protected $schema;
+
     /**
      * @var DoctrineTokenRepository
      */
@@ -24,7 +29,7 @@ class DoctrineTokenRepositoryTest extends PHPUnit_Framework_TestCase
     /**
      * @var Mock
      */
-    protected $em;
+    protected $connection;
 
     /**
      * @var Mock
@@ -33,12 +38,20 @@ class DoctrineTokenRepositoryTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->em = m::mock(EntityManagerInterface::class);
+        $this->connection = m::mock(Connection::class);
+        $this->builder    = m::mock(QueryBuilder::class);
+        $this->schema     = m::mock(AbstractSchemaManager::class);
 
-        $this->builder = m::mock(QueryBuilder::class);
+        $this->connection->shouldReceive('getSchemaManager')
+                         ->andReturn($this->schema);
+
+        $this->schema->shouldReceive('tablesExist')
+                     ->with('password_resets')
+                     ->andReturn(true);
 
         $this->repository = new DoctrineTokenRepository(
-            $this->em,
+            $this->connection,
+            'password_resets',
             'hashkey',
             60
         );
@@ -46,144 +59,146 @@ class DoctrineTokenRepositoryTest extends PHPUnit_Framework_TestCase
 
     public function test_can_create_a_token()
     {
-        $this->em->shouldReceive('createQueryBuilder')
-                 ->once()
-                 ->andReturn($this->builder);
+        $this->connection->shouldReceive('createQueryBuilder')
+                         ->twice()
+                         ->andReturn($this->builder);
 
         $this->builder->shouldReceive('delete')
                       ->once()
-                      ->with(PasswordReminder::class, 'o')
-                      ->andReturn(m::self());
+                      ->with('password_resets')
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('where')
                       ->once()
-                      ->with('o.email = :email')
-                      ->andReturn(m::self());
+                      ->with('email = :email')
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('setParameter')
                       ->once()
                       ->with('email', 'user@mockery.mock')
-                      ->andReturn(m::self());
-
-        $this->builder->shouldReceive('getQuery')
-                      ->once()
-                      ->andReturn(m::self());
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('execute')
-                      ->once()
+                      ->twice()
                       ->andReturn(true);
 
-        $this->em->shouldReceive('persist')
-                 ->once();
+        $this->builder->shouldReceive('insert')
+                      ->with('password_resets')
+                      ->once()
+                      ->andReturnSelf();
 
-        $this->em->shouldReceive('flush')
-                 ->once();
+        $this->builder->shouldReceive('values')
+                      ->with([
+                          'email'      => ':email',
+                          'token'      => ':token',
+                          'created_at' => ':date'
+                      ])
+                      ->once()->andReturnSelf();
+
+        $this->builder->shouldReceive('setParameters')
+                      ->once()->andReturnSelf();
 
         $this->assertNotNull($this->repository->create(new UserMock));
     }
 
     public function test_can_check_if_exists()
     {
-        $this->em->shouldReceive('createQueryBuilder')
-                 ->once()
-                 ->andReturn($this->builder);
+        $this->connection->shouldReceive('createQueryBuilder')
+                         ->once()
+                         ->andReturn($this->builder);
 
         $this->builder->shouldReceive('select')
                       ->once()
-                      ->with('o')
-                      ->andReturn(m::self());
+                      ->with('*')
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('from')
                       ->once()
-                      ->with(PasswordReminder::class, 'o')
-                      ->andReturn(m::self());
+                      ->with('password_resets')
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('where')
                       ->once()
-                      ->with('o.email = :email')
-                      ->andReturn(m::self());
+                      ->with('email = :email')
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('andWhere')
                       ->once()
-                      ->with('o.token = :token')
-                      ->andReturn(m::self());
+                      ->with('token = :token')
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('setParameter')
                       ->once()
                       ->with('email', 'user@mockery.mock')
-                      ->andReturn(m::self());
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('setParameter')
                       ->once()
                       ->with('token', 'token')
-                      ->andReturn(m::self());
+                      ->andReturnSelf();
 
-        $this->builder->shouldReceive('getQuery')
+        $this->builder->shouldReceive('execute')
                       ->once()
-                      ->andReturn(m::self());
+                      ->andReturnSelf();
 
-        $this->builder->shouldReceive('getOneOrNullResult')
+        $this->builder->shouldReceive('fetch')
                       ->once()
-                      ->andReturn(new PasswordReminder('user@mockery.mock', 'token'));
+                      ->andReturn([
+                          'email'      => 'user@mockery.mock',
+                          'token'      => 'token',
+                          'created_at' => Carbon::now()
+                      ]);
 
         $this->assertTrue($this->repository->exists(new UserMock, 'token'));
     }
 
     public function test_can_delete()
     {
-        $this->em->shouldReceive('createQueryBuilder')
-                 ->once()
-                 ->andReturn($this->builder);
+        $this->connection->shouldReceive('createQueryBuilder')
+                         ->once()
+                         ->andReturn($this->builder);
 
         $this->builder->shouldReceive('delete')
                       ->once()
-                      ->with(PasswordReminder::class, 'o')
-                      ->andReturn(m::self());
+                      ->with('password_resets')
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('where')
                       ->once()
-                      ->with('o.token = :token')
-                      ->andReturn(m::self());
+                      ->with('token = :token')
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('setParameter')
                       ->once()
                       ->with('token', 'token')
-                      ->andReturn(m::self());
-
-        $this->builder->shouldReceive('getQuery')
-                      ->once()
-                      ->andReturn(m::self());
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('execute')
-                      ->once();
+                      ->once()
+                      ->andReturn(true);
 
         $this->repository->delete('token');
     }
 
     public function test_can_delete_expired()
     {
-        $this->em->shouldReceive('createQueryBuilder')
-                 ->once()
-                 ->andReturn($this->builder);
+        $this->connection->shouldReceive('createQueryBuilder')
+                         ->once()
+                         ->andReturn($this->builder);
 
         $this->builder->shouldReceive('delete')
                       ->once()
-                      ->with(PasswordReminder::class, 'o')
-                      ->andReturn(m::self());
+                      ->with('password_resets')
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('where')
                       ->once()
-                      ->with('o.createdAt < :expired')
-                      ->andReturn(m::self());
+                      ->with('created_at < :expiredAt')
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('setParameter')
                       ->once()
-                      ->with('expired', (string) Carbon::now()->subSeconds(3600))
-                      ->andReturn(m::self());
-
-        $this->builder->shouldReceive('getQuery')
-                      ->once()
-                      ->andReturn(m::self());
+                      ->andReturnSelf();
 
         $this->builder->shouldReceive('execute')
                       ->once();

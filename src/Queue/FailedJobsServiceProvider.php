@@ -2,8 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Queue;
 
+use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\ServiceProvider;
-use LaravelDoctrine\ORM\DoctrineManager;
 
 class FailedJobsServiceProvider extends ServiceProvider
 {
@@ -12,8 +12,19 @@ class FailedJobsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->make(DoctrineManager::class)->addPaths([
-            __DIR__,
-        ]);
+        $this->app['events']->listen(JobProcessing::class, function () {
+            $connection = $this->app['config']->get('queue.failed.database', 'default');
+            $tableName  = $this->app['config']->get('queue.failed.table', 'failed_jobs');
+
+            $schema = $this->app['registry']
+                ->getConnection($connection)
+                ->getSchemaManager();
+
+            if (!$schema->tablesExist($tableName)) {
+                $schema->createTable(
+                    (new FailedJobTable($tableName))->build()
+                );
+            }
+        });
     }
 }

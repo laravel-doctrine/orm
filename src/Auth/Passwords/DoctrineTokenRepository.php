@@ -3,46 +3,62 @@
 namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use Carbon\Carbon;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Table;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Support\Str;
 
 class DoctrineTokenRepository implements TokenRepositoryInterface
 {
     /**
-     * @var EntityManagerInterface
+     * The database connection instance.
+     *
+     * @var Connection
      */
-    protected $em;
+    protected $connection;
 
     /**
-     * @var int
+     * The token database table.
+     *
+     * @var string
      */
-    protected $expires;
+    protected $table;
 
     /**
+     * The hashing key.
+     *
      * @var string
      */
     protected $hashKey;
 
     /**
-     * Constructs the repository.
+     * The number of seconds a token should last.
      *
-     * @param EntityManagerInterface $em
-     * @param string                 $hashKey
-     * @param int                    $expires
+     * @var int
      */
-    public function __construct(EntityManagerInterface $em, $hashKey, $expires = 60)
+    protected $expires;
+
+    /**
+     * Create a new token repository instance.
+     *
+     * @param Connection $connection
+     * @param string     $table
+     * @param string     $hashKey
+     * @param int        $expires
+     */
+    public function __construct(Connection $connection, $table, $hashKey, $expires = 60)
     {
-        $this->hashKey = $hashKey;
-        $this->expires = $expires * 60;
-        $this->em      = $em;
+        $this->table      = $table;
+        $this->hashKey    = $hashKey;
+        $this->expires    = $expires * 60;
+        $this->connection = $connection;
     }
 
     /**
-     * Create a new reminder record and token.
+     * Create a new token record.
      *
-     * @param \Illuminate\Contracts\Auth\CanResetPassword $user
-     *
+     * @param  CanResetPassword $user
      * @return string
      */
     public function create(CanResetPassword $user)
@@ -54,135 +70,147 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
         // We will create a new, random token for the user so that we can e-mail them
         // a safe link to the password reset form. Then we will insert a record in
         // the database so that we can verify the token within the actual reset.
-        $token = $this->createNewToken($user);
+        $token = $this->createNewToken();
 
-        $reminder = new PasswordReminder(
-            $email,
-            $token
-        );
-
-        $this->em->persist($reminder);
-        $this->em->flush($reminder);
+        $this->getTable()
+             ->insert($this->table)
+             ->values([
+                 'email'      => ':email',
+                 'token'      => ':token',
+                 'created_at' => ':date'
+             ])
+             ->setParameters([
+                 'email' => $email,
+                 'token' => $token,
+                 'date'  => new Carbon('now')
+             ])
+             ->execute();
 
         return $token;
     }
 
     /**
-     * Create a new token for the user.
-     *
-     * @param \Illuminate\Contracts\Auth\CanResetPassword $user
-     *
-     * @return string
-     */
-    protected function createNewToken(CanResetPassword $user)
-    {
-        $email = $user->getEmailForPasswordReset();
-
-        $value = str_shuffle(sha1($email . spl_object_hash($this) . microtime(true)));
-
-        return hash_hmac('sha1', $value, $this->hashKey);
-    }
-
-    /**
      * Delete all existing reset tokens from the database.
      *
-     * @param \Illuminate\Contracts\Auth\CanResetPassword $user
-     *
+     * @param  CanResetPassword $user
      * @return int
      */
     protected function deleteExisting(CanResetPassword $user)
     {
-        return $this->makeDelete()
-                    ->where('o.email = :email')
+        return $this->getTable()
+                    ->delete($this->table)
+                    ->where('email = :email')
                     ->setParameter('email', $user->getEmailForPasswordReset())
-                    ->getQuery()
                     ->execute();
     }
 
     /**
-     * Determine if a reminder record exists and is valid.
+     * Determine if a token record exists and is valid.
      *
-     * @param \Illuminate\Contracts\Auth\CanResetPassword $user
-     * @param string                                      $token
-     *
+     * @param  CanResetPassword $user
+     * @param  string           $token
      * @return bool
      */
     public function exists(CanResetPassword $user, $token)
     {
         $email = $user->getEmailForPasswordReset();
 
-        $reminder = $this->makeSelect()
-                         ->where('o.email = :email')
-                         ->andWhere('o.token = :token')
-                         ->setParameter('email', $email)
-                         ->setParameter('token', $token)
-                         ->getQuery()
-                         ->getOneOrNullResult();
+        $token = $this->getTable()
+                      ->select('*')
+                      ->from($this->table)
+                      ->where('email = :email')
+                      ->andWhere('token = :token')
+                      ->setParameter('email', $email)
+                      ->setParameter('token', $token)
+                      ->execute()->fetch();
 
-        return $reminder != null && !$this->reminderExpired($reminder);
+        return $token && !$this->tokenExpired($token);
     }
 
     /**
-     * Determine if the reminder has expired.
+     * Determine if the token has expired.
      *
-     * @param PasswordReminder $reminder
-     *
+     * @param  array $token
      * @return bool
      */
-    protected function reminderExpired(PasswordReminder $reminder)
+    protected function tokenExpired($token)
     {
-        $createdPlusHour = $reminder->getCreatedAt()->getTimestamp() + $this->expires;
+        $expiresAt = Carbon::parse($token['created_at'])->addSeconds($this->expires);
 
-        return $createdPlusHour < time();
+        return $expiresAt->isPast();
     }
 
     /**
-     * Delete a reminder record by token.
+     * Delete a token record by token.
      *
-     * @param string $token
-     *
+     * @param  string $token
      * @return void
      */
     public function delete($token)
     {
-        $this->makeDelete()
-             ->where('o.token = :token')
+        $this->getTable()
+             ->delete($this->table)
+             ->where('token = :token')
              ->setParameter('token', $token)
-             ->getQuery()
              ->execute();
     }
 
     /**
-     * Delete expired reminders.
+     * Delete expired tokens.
+     *
      * @return void
      */
     public function deleteExpired()
     {
-        $expired = Carbon::now()->subSeconds($this->expires);
+        $expiredAt = Carbon::now()->subSeconds($this->expires);
 
-        $this->makeDelete()
-             ->where('o.createdAt < :expired')
-             ->setParameter('expired', (string) $expired)
-             ->getQuery()
+        $this->getTable()
+             ->delete($this->table)
+             ->where('created_at < :expiredAt')
+             ->setParameter('expiredAt', $expiredAt)
              ->execute();
     }
 
     /**
-     * @return \Doctrine\ORM\QueryBuilder
+     * Create a new token for the user.
+     *
+     * @return string
      */
-    protected function makeSelect()
+    public function createNewToken()
     {
-        return $this->em->createQueryBuilder()
-                        ->select('o')
-                        ->from(PasswordReminder::class, 'o');
+        return hash_hmac('sha256', Str::random(40), $this->hashKey);
     }
 
     /**
-     * @return \Doctrine\ORM\QueryBuilder
+     * Begin a new database query against the table.
+     * @return \Doctrine\DBAL\Query\QueryBuilder
      */
-    protected function makeDelete()
+    protected function getTable()
     {
-        return $this->em->createQueryBuilder()
-                        ->delete(PasswordReminder::class, 'o');
+        $schema = $this->connection->getSchemaManager();
+
+        if (!$schema->tablesExist($this->table)) {
+            $schema->createTable($this->getTableDefinition());
+        }
+
+        return $this->getConnection()->createQueryBuilder();
+    }
+
+    /**
+     * Get the database connection instance.
+     * @return Connection
+     */
+    public function getConnection()
+    {
+        return $this->connection;
+    }
+
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     * @return Table
+     */
+    protected function getTableDefinition()
+    {
+        return (new PasswordResetTable($this->table))->build();
     }
 }
