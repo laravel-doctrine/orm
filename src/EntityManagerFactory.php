@@ -2,6 +2,7 @@
 
 namespace LaravelDoctrine\ORM;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -99,11 +100,8 @@ class EntityManagerFactory
 
         $this->setMetadataDriver($settings, $configuration);
 
-        $driver = $this->getConnectionDriver($settings);
-
         $connection = $this->connection->driver(
-            $driver['driver'],
-            $driver
+            array_get($settings, 'connection')
         );
 
         $this->setNamingStrategy($settings, $configuration);
@@ -372,7 +370,7 @@ class EntityManagerFactory
      * @param                        $settings
      * @param EntityManagerInterface $manager
      *
-     * @return mixed
+     * @return EntityManagerInterface
      */
     protected function decorateManager(array $settings = [], EntityManagerInterface $manager)
     {
@@ -388,32 +386,14 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array $settings
-     *
-     * @return array
-     */
-    protected function getConnectionDriver(array $settings = [])
-    {
-        $connection = array_get($settings, 'connection');
-        $key        = 'database.connections.' . $connection;
-
-        if (!$this->config->has($key)) {
-            throw new InvalidArgumentException("Connection [{$connection}] has no configuration in [{$key}]");
-        }
-
-        return $this->config->get($key);
-    }
-
-    /**
      * @param                        $settings
      * @param EntityManagerInterface $manager
      *
-     * @throws \Doctrine\DBAL\DBALException If Database Type or Doctrine Type is not found.
+     * @throws \Doctrine\DBAL\DBALException when Database Type or Doctrine Type does not exist
      */
     protected function registerMappingTypes(array $settings = [], EntityManagerInterface $manager)
     {
         foreach (array_get($settings, 'mapping_types', []) as $dbType => $doctrineType) {
-            // Throw DBALException if Doctrine Type is not found.
             $manager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($dbType, $doctrineType);
         }
     }
