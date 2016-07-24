@@ -81,21 +81,40 @@ final class IlluminateRegistry implements ManagerRegistry
             return $this->factory->create($settings);
         });
 
-        $this->addConnection($manager);
-
         $this->managers[$manager] = $manager;
+
+        if (isset($settings['connection'])) {
+            $this->container->alias(
+                $this->getManagerBindingName($manager),
+                $this->getManagerBindingName($settings['connection'])
+            );
+
+            $this->managers[$settings['connection']] = $manager;
+        }
+
+        $this->addConnection($manager, $settings);
     }
 
     /**
-     * @param $connection
+     * @param       $connection
+     * @param array $settings
      */
-    public function addConnection($connection)
+    public function addConnection($connection, array $settings = [])
     {
         $this->container->singleton($this->getConnectionBindingName($connection), function () use ($connection) {
             return $this->getManager($connection)->getConnection();
         });
 
         $this->connections[$connection] = $connection;
+
+        if (isset($settings['connection'])) {
+            $this->container->alias(
+                $this->getConnectionBindingName($connection),
+                $this->getConnectionBindingName($settings['connection'])
+            );
+
+            $this->connections[$settings['connection']] = $connection;
+        }
     }
 
     /**

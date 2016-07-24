@@ -37,11 +37,15 @@ abstract class AbstractTable
     /**
      * @param  string $name
      * @param  string $type
+     * @param  bool   $autoincrement
      * @return Column
      */
-    protected function column($name, $type)
+    protected function column($name, $type, $autoincrement = false)
     {
-        return new Column($name, Type::getType($type));
+        $column = new Column($name, Type::getType($type));
+        $column->setAutoincrement($autoincrement);
+
+        return $column;
     }
 
     /**
