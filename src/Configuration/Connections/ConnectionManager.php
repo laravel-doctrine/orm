@@ -51,8 +51,8 @@ class ConnectionManager
     /**
      * Create a new driver instance.
      *
-     * @param string $driver
-     * @param array  $settings
+     * @param  string     $driver
+     * @param  array      $settings
      * @return Connection
      */
     protected function createDriver($driver, array $settings = [])
