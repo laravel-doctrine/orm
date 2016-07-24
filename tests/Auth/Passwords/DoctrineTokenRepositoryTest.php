@@ -6,7 +6,6 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use LaravelDoctrine\ORM\Auth\Passwords\DoctrineTokenRepository;
-use LaravelDoctrine\ORM\Auth\Passwords\PasswordReminder;
 use Mockery as m;
 use Mockery\Mock;
 

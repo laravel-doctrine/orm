@@ -4,10 +4,7 @@ namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use Carbon\Carbon;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Types\Type;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Support\Str;
@@ -214,16 +211,6 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
      */
     protected function getTableDefinition()
     {
-        return new Table(
-            $this->table,
-            [
-                new Column('email', Type::getType('string')),
-                new Column('token', Type::getType('string')),
-                new Column('created_at', Type::getType('datetime'))
-            ],
-            [
-                new Index('pk', ['email', 'token'], true, true)
-            ]
-        );
+        return (new PasswordResetTable($this->table))->build();
     }
 }
