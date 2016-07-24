@@ -389,12 +389,11 @@ class EntityManagerFactory
      * @param                        $settings
      * @param EntityManagerInterface $manager
      *
-     * @throws \Doctrine\DBAL\DBALException If Database Type or Doctrine Type is not found.
+     * @throws \Doctrine\DBAL\DBALException when Database Type or Doctrine Type does not exist
      */
     protected function registerMappingTypes(array $settings = [], EntityManagerInterface $manager)
     {
         foreach (array_get($settings, 'mapping_types', []) as $dbType => $doctrineType) {
-            // Throw DBALException if Doctrine Type is not found.
             $manager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($dbType, $doctrineType);
         }
     }

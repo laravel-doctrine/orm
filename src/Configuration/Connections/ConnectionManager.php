@@ -53,11 +53,9 @@ class ConnectionManager
      *
      * @param string $driver
      * @param array  $settings
-     *
-     * @param  bool       $resolve
      * @return Connection
      */
-    protected function createDriver($driver, array $settings = [], $resolve = true)
+    protected function createDriver($driver, array $settings = [])
     {
         // We'll check to see if a creator method exists for the given driver. If not we
         // will check for a custom driver creator, which allows developers to create
@@ -67,7 +65,6 @@ class ConnectionManager
         }
 
         return $this->resolver->connection($driver)->getDoctrineConnection();
-        ;
     }
 
     /**
