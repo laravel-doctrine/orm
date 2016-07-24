@@ -42,17 +42,18 @@ EntityManager::flush();
 
 [Read the full documentation](http://laraveldoctrine.org/docs/current/orm).
 
-## Installation
+## Versions
 
- Laravel  | Laravel Doctrine
-:---------|:----------
- 5.1.*    | 1.0.*
- 5.2.*    | 1.1.*
+Version | Supported Laravel Versions | Support
+:---------|:----------|:----------
+1.0.* |  5.1.* | Bugfix and security releases
+1.1.* | 5.2.* |  Bugfix and security releases
+1.2.* | 5.2.* | New features
 
 Require this package  
 
 ```php
-composer require "laravel-doctrine/orm:1.1.*"
+composer require "laravel-doctrine/orm:1.2.*"
 ```
 
 After adding the package, add the ServiceProvider to the providers array in `config/app.php`
