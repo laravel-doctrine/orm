@@ -477,6 +477,18 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->config = m::mock(Repository::class);
 
+        $this->config->shouldReceive('has')
+                     ->with('database.connections.mysql')
+                     ->once()
+                     ->andReturn(true);
+
+        $this->config->shouldReceive('get')
+                     ->with('database.connections.mysql')
+                     ->once()
+                     ->andReturn([
+                         'driver' => 'mysql'
+                     ]);
+
         $this->config->shouldReceive('get')
                      ->with('doctrine.custom_datetime_functions')
                      ->once()->andReturn(['datetime']);
@@ -501,7 +513,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->connection = m::mock(ConnectionManager::class);
         $this->connection->shouldReceive('driver')
                          ->once()
-                         ->with('mysql')
+                         ->with('mysql', [
+                             'driver' => 'mysql'
+                         ])
                          ->andReturn([
                              'driver' => 'pdo_mysql'
                          ]);
