@@ -83,15 +83,6 @@ final class IlluminateRegistry implements ManagerRegistry
 
         $this->managers[$manager] = $manager;
 
-        if (isset($settings['connection'])) {
-            $this->container->alias(
-                $this->getManagerBindingName($manager),
-                $this->getManagerBindingName($settings['connection'])
-            );
-
-            $this->managers[$settings['connection']] = $manager;
-        }
-
         $this->addConnection($manager, $settings);
     }
 
@@ -106,15 +97,6 @@ final class IlluminateRegistry implements ManagerRegistry
         });
 
         $this->connections[$connection] = $connection;
-
-        if (isset($settings['connection'])) {
-            $this->container->alias(
-                $this->getConnectionBindingName($connection),
-                $this->getConnectionBindingName($settings['connection'])
-            );
-
-            $this->connections[$settings['connection']] = $connection;
-        }
     }
 
     /**
