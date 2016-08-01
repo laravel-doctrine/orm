@@ -46,9 +46,9 @@ EntityManager::flush();
 
 Version | Supported Laravel Versions | Support
 :---------|:----------|:----------
-1.0.* |  5.1.* | Bugfix and security releases
-1.1.* | 5.2.* |  Bugfix and security releases
-1.2.* | 5.2.*, 5.3.* | New features
+1.0.x |  5.1.x | Bugfix and security releases
+1.1.x | 5.2.x |  Bugfix and security releases
+1.2.x | 5.2.x, 5.3.x | New features
 
 Require this package  
 
