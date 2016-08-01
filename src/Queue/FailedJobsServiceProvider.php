@@ -13,7 +13,7 @@ class FailedJobsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app['events']->listen(JobProcessing::class, function () {
-            $connection = $this->app['config']->get('queue.failed.connection', 'default');
+            $connection = $this->app['config']->get('queue.failed.connection', null);
             $tableName  = $this->app['config']->get('queue.failed.table', 'failed_jobs');
 
             $schema = $this->app['registry']
