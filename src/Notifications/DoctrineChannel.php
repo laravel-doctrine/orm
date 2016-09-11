@@ -24,7 +24,7 @@ class DoctrineChannel
     /**
      * Send the given notification.
      *
-     * @param mixed        $notifiable
+     * @param mixed               $notifiable
      * @param LaravelNotification $notification
      */
     public function send($notifiable, LaravelNotification $notification)
