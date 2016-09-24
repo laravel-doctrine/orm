@@ -5,6 +5,7 @@ namespace LaravelDoctrine\ORM\Notifications;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Illuminate\Notifications\Notification;
 use LaravelDoctrine\ORM\Exceptions\NoEntityManagerFound;
+use RuntimeException;
 
 class DoctrineChannel
 {
@@ -29,7 +30,7 @@ class DoctrineChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        $entity = $notification->toEntity($notifiable);
+        $entity = $this->getEntity($notifiable, $notification);
 
         if ($channel = $notifiable->routeNotificationFor('doctrine')) {
             $em = $this->registry->getManager($channel);
@@ -43,5 +44,23 @@ class DoctrineChannel
 
         $em->persist($entity);
         $em->flush();
+    }
+
+    /**
+     * @param  mixed        $notifiable
+     * @param  Notification $notification
+     * @return object
+     */
+    public function getEntity($notifiable, Notification $notification)
+    {
+        if (method_exists($notification, 'toEntity')) {
+            return $notification->toEntity($notifiable);
+        } elseif (method_exists($notification, 'toDatabase')) {
+            return $notification->toDatabase($notifiable);
+        }
+
+        throw new RuntimeException(
+            'Notification is missing toDatabase / toEntity method.'
+        );
     }
 }

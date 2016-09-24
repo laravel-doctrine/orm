@@ -20,19 +20,19 @@ return [
     | --> Warning: Proxy auto generation should only be enabled in dev!
     |
     */
-    'managers'                  => [
+    'managers'                   => [
         'default' => [
-            'dev'        => env('APP_DEBUG'),
-            'meta'       => env('DOCTRINE_METADATA', 'annotations'),
-            'connection' => env('DB_CONNECTION', 'mysql'),
-            'namespaces' => [
+            'dev'           => env('APP_DEBUG'),
+            'meta'          => env('DOCTRINE_METADATA', 'annotations'),
+            'connection'    => env('DB_CONNECTION', 'mysql'),
+            'namespaces'    => [
                 'App'
             ],
-            'paths'      => [
+            'paths'         => [
                 base_path('app')
             ],
-            'repository' => Doctrine\ORM\EntityRepository::class,
-            'proxies'    => [
+            'repository'    => Doctrine\ORM\EntityRepository::class,
+            'proxies'       => [
                 'namespace'     => false,
                 'path'          => storage_path('proxies'),
                 'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', false)
@@ -46,11 +46,11 @@ return [
             | e.g. Doctrine\ORM\Events::onFlush
             |
             */
-            'events'     => [
+            'events'        => [
                 'listeners'   => [],
                 'subscribers' => []
             ],
-            'filters'    => [],
+            'filters'       => [],
             /*
             |--------------------------------------------------------------------------
             | Doctrine mapping types
@@ -73,7 +73,7 @@ return [
             | http://symfony.com/doc/current/cookbook/doctrine/dbal.html#registering-custom-mapping-types-in-the-schematool
             |--------------------------------------------------------------------------
             */
-            'mapping_types'              => [
+            'mapping_types' => [
                 //'enum' => 'string'
             ]
         ]
@@ -89,7 +89,7 @@ return [
     | laravel-doctrine/extensions in your composer.json
     |
     */
-    'extensions'                => [
+    'extensions'                 => [
         //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
         //LaravelDoctrine\Extensions\Timestamps\TimestampableExtension::class,
         //LaravelDoctrine\Extensions\SoftDeletes\SoftDeleteableExtension::class,
@@ -109,7 +109,7 @@ return [
     | Create a custom or override a Doctrine Type
     |--------------------------------------------------------------------------
     */
-    'custom_types'              => [
+    'custom_types'               => [
         'json' => LaravelDoctrine\ORM\Types\Json::class
     ],
     /*
@@ -117,19 +117,19 @@ return [
     | DQL custom datetime functions
     |--------------------------------------------------------------------------
     */
-    'custom_datetime_functions' => [],
+    'custom_datetime_functions'  => [],
     /*
     |--------------------------------------------------------------------------
     | DQL custom numeric functions
     |--------------------------------------------------------------------------
     */
-    'custom_numeric_functions'  => [],
+    'custom_numeric_functions'   => [],
     /*
     |--------------------------------------------------------------------------
     | DQL custom string functions
     |--------------------------------------------------------------------------
     */
-    'custom_string_functions'   => [],
+    'custom_string_functions'    => [],
     /*
     |--------------------------------------------------------------------------
     | Enable query logging with laravel file logging,
@@ -142,7 +142,7 @@ return [
     | - LaravelDoctrine\ORM\Loggers\FileLogger
     |--------------------------------------------------------------------------
     */
-    'logger'                    => env('DOCTRINE_LOGGER', false),
+    'logger'                     => env('DOCTRINE_LOGGER', false),
     /*
     |--------------------------------------------------------------------------
     | Cache
@@ -154,10 +154,10 @@ return [
     | Available: apc|array|file|memcached|redis|void
     |
     */
-    'cache'                     => [
-        'default'                => env('DOCTRINE_CACHE', 'array'),
-        'namespace'              => null,
-        'second_level'           => false,
+    'cache'                      => [
+        'default'      => env('DOCTRINE_CACHE', 'array'),
+        'namespace'    => null,
+        'second_level' => false,
     ],
     /*
     |--------------------------------------------------------------------------
@@ -169,7 +169,7 @@ return [
     | laravel-doctrine/extensions in your composer.json
     |
     */
-    'gedmo'                     => [
+    'gedmo'                      => [
         'all_mappings' => false
     ],
     /*
@@ -181,4 +181,16 @@ return [
      |
      */
     'doctrine_presence_verifier' => true,
+
+    /*
+     |--------------------------------------------------------------------------
+     | Notifications
+     |--------------------------------------------------------------------------
+     |
+     |  Doctrine notifications channel
+     |
+     */
+    'notifications'              => [
+        'channel' => 'database'
+    ]
 ];

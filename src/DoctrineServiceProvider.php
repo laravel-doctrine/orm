@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
@@ -34,6 +35,7 @@ use LaravelDoctrine\ORM\Console\SchemaUpdateCommand;
 use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
+use LaravelDoctrine\ORM\Notifications\DoctrineChannel;
 use LaravelDoctrine\ORM\Testing\Factory as EntityFactory;
 use LaravelDoctrine\ORM\Validation\PresenceVerifierProvider;
 
@@ -45,6 +47,7 @@ class DoctrineServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->extendAuthManager();
+        $this->extendNotificationChannel();
 
         if (!$this->isLumen()) {
             $this->publishes([
@@ -249,6 +252,18 @@ class DoctrineServiceProvider extends ServiceProvider
 
             $this->app['events']->fire('doctrine.extensions.booted');
         }
+    }
+
+    /**
+     * Extend the database channel
+     */
+    public function extendNotificationChannel()
+    {
+        $channel = $this->app['config']->get('doctrine.notifications.channel', 'database');
+
+        $this->app->make(ChannelManager::class)->extend($channel, function ($app) {
+            return new DoctrineChannel($app['registry']);
+        });
     }
 
     /**
