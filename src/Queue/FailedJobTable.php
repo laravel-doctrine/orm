@@ -18,7 +18,8 @@ class FailedJobTable extends AbstractTable
             $this->column('connection', 'string'),
             $this->column('queue', 'string'),
             $this->column('payload', 'text'),
-            $this->column('failed_at', 'datetime')
+            $this->column('failed_at', 'datetime'),
+            $this->column('exception', 'text')->setNotnull(false),
         ];
     }
 

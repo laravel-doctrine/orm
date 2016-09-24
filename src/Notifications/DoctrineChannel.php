@@ -3,7 +3,7 @@
 namespace LaravelDoctrine\ORM\Notifications;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Notification as LaravelNotification;
 use LaravelDoctrine\ORM\Exceptions\NoEntityManagerFound;
 use RuntimeException;
 
@@ -25,10 +25,10 @@ class DoctrineChannel
     /**
      * Send the given notification.
      *
-     * @param mixed        $notifiable
-     * @param Notification $notification
+     * @param mixed               $notifiable
+     * @param LaravelNotification $notification
      */
-    public function send($notifiable, Notification $notification)
+    public function send($notifiable, LaravelNotification $notification)
     {
         $entity = $this->getEntity($notifiable, $notification);
 
