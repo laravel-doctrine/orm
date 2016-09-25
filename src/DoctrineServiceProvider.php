@@ -259,11 +259,13 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     public function extendNotificationChannel()
     {
-        $channel = $this->app['config']->get('doctrine.notifications.channel', 'database');
+        if ($this->app->bound(ChannelManager::class)) {
+            $channel = $this->app['config']->get('doctrine.notifications.channel', 'database');
 
-        $this->app->make(ChannelManager::class)->extend($channel, function ($app) {
-            return new DoctrineChannel($app['registry']);
-        });
+            $this->app->make(ChannelManager::class)->extend($channel, function ($app) {
+                return new DoctrineChannel($app['registry']);
+            });
+        }
     }
 
     /**
