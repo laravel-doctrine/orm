@@ -47,11 +47,11 @@ class DoctrineChannel
     }
 
     /**
-     * @param  mixed        $notifiable
-     * @param  Notification $notification
+     * @param  mixed               $notifiable
+     * @param  LaravelNotification $notification
      * @return object
      */
-    public function getEntity($notifiable, Notification $notification)
+    public function getEntity($notifiable, LaravelNotification $notification)
     {
         if (method_exists($notification, 'toEntity')) {
             return $notification->toEntity($notifiable);
