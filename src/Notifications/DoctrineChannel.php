@@ -47,7 +47,7 @@ class DoctrineChannel
     }
 
     /**
-     * @param  mixed        $notifiable
+     * @param  mixed               $notifiable
      * @param  LaravelNotification $notification
      * @return object
      */
