@@ -199,7 +199,7 @@ class FluentExporter extends AbstractExporter
     private function exportMapMethodContent(ClassMetadataInfo $metadata)
     {
         if ($metadata->customRepositoryClassName) {
-            $lines[] = "\$builder->entity()->setRepositoryClass('" . $metadata->customRepositoryClassName . ")';";
+            $lines[] = "\$builder->entity()->setRepositoryClass('" . $metadata->customRepositoryClassName . "');";
         }
 
         if ($metadata->table) {
@@ -341,10 +341,13 @@ class FluentExporter extends AbstractExporter
         $orderBy       = '';
 
         if ($associationMapping['type'] & ClassMetadataInfo::ONE_TO_ONE) {
-            $method        = 'oneToOne';
-            $mappedBy      = $associationMapping['mappedBy'];
-            $inversedBy    = $associationMapping['inversedBy'];
-            $joinColumns   = $associationMapping['joinColumns'];
+	        $method        = 'oneToOne';
+	        if(isset($associationMapping['mappedBy'])) {
+		        $mappedBy      = $associationMapping['mappedBy'];
+	        } else {
+		        $inversedBy    = $associationMapping['inversedBy'];
+		        $joinColumns   = $associationMapping['joinColumns'];
+	        }
             $orphanRemoval = $associationMapping['orphanRemoval'];
         } elseif ($associationMapping['type'] & ClassMetadataInfo::MANY_TO_ONE) {
             $method        = 'manyToOne';
@@ -429,7 +432,7 @@ class FluentExporter extends AbstractExporter
                 $columnName           = $c['name'];
                 $referencedColumnName = $c['referencedColumnName'];
                 $nullable             = !isset($c['nullable']) || $c['nullable'] == true ? 'true' : 'false';
-                $unique               = !isset($c['unique']) || $c['nullable'] == false ? 'false' : 'true';
+                $unique               = !isset($c['unique']) || $c['unique'] == false ? 'false' : 'true';
                 $onDelete             = isset($c['onDelete']) ? '\'' . $c['onDelete'] . '\'' : 'null';
                 $columnDefinition     = isset($c['columnDefinition']) ? '\'' . $c['columnDefinition'] . '\'' : 'null';
 
