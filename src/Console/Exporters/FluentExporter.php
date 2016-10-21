@@ -4,6 +4,7 @@ namespace LaravelDoctrine\ORM\Console\Exporters;
 
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\Tools\Export\Driver\AbstractExporter;
+use Doctrine\ORM\Tools\Export\ExportException;
 
 class FluentExporter extends AbstractExporter
 {
@@ -11,6 +12,8 @@ class FluentExporter extends AbstractExporter
      * @var string
      */
     protected $_extension = '.php';
+
+	protected $_mappingClassName;
 
     /**
      * @const
@@ -50,6 +53,29 @@ class FluentExporter extends AbstractExporter
 
         return implode("\n", $lines);
     }
+
+	public function export()
+	{
+		if ( ! is_dir($this->_outputDir)) {
+			mkdir($this->_outputDir, 0775, true);
+		}
+
+		foreach ($this->_metadata as $metadata) {
+			// In case output is returned, write it to a file, skip otherwise
+			if($output = $this->exportClassMetadata($metadata)){
+				$path = $this->_outputDir . '/' . str_replace('\\', '.', $this->_mappingClassName) . $this->_extension;
+				$dir = dirname($path);
+				if ( ! is_dir($dir)) {
+					mkdir($dir, 0775, true);
+				}
+				if (file_exists($path) && !$this->_overwriteExistingFiles) {
+					throw ExportException::attemptOverwriteExistingFile($path);
+				}
+				file_put_contents($path, $output);
+				chmod($path, 0664);
+			}
+		}
+	}
 
     /**
      * @param mixed $var
