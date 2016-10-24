@@ -13,7 +13,7 @@ class FluentExporter extends AbstractExporter
      */
     protected $_extension = '.php';
 
-	protected $_mappingClassName;
+    protected $_mappingClassName;
 
     /**
      * @const
@@ -25,7 +25,7 @@ class FluentExporter extends AbstractExporter
      */
     public function exportClassMetadata(ClassMetadataInfo $metadata)
     {
-        $lines   = [];
+        $lines = [];
         $lines[] = '<?php';
         $lines[] = null;
         $lines[] = 'namespace App\Mappings;';
@@ -36,7 +36,7 @@ class FluentExporter extends AbstractExporter
         }
 
         $lines[] = null;
-        $lines[] = 'class ' . $this->getClassNameShort($metadata) . 'Mapping extends ' . $this->getExtendShort($metadata) . ' {';
+        $lines[] = 'class '.$this->getClassNameShort($metadata).'Mapping extends '.$this->getExtendShort($metadata).' {';
         $lines[] = null;
 
         foreach ($this->exportMapFor($metadata) as $line) {
@@ -54,28 +54,28 @@ class FluentExporter extends AbstractExporter
         return implode("\n", $lines);
     }
 
-	public function export()
-	{
-		if ( ! is_dir($this->_outputDir)) {
-			mkdir($this->_outputDir, 0775, true);
-		}
+    public function export()
+    {
+        if (!is_dir($this->_outputDir)) {
+            mkdir($this->_outputDir, 0775, true);
+        }
 
-		foreach ($this->_metadata as $metadata) {
-			// In case output is returned, write it to a file, skip otherwise
-			if($output = $this->exportClassMetadata($metadata)){
-				$path = $this->_outputDir . '/' . str_replace('\\', '.', $this->_mappingClassName) . $this->_extension;
-				$dir = dirname($path);
-				if ( ! is_dir($dir)) {
-					mkdir($dir, 0775, true);
-				}
-				if (file_exists($path) && !$this->_overwriteExistingFiles) {
-					throw ExportException::attemptOverwriteExistingFile($path);
-				}
-				file_put_contents($path, $output);
-				chmod($path, 0664);
-			}
-		}
-	}
+        foreach ($this->_metadata as $metadata) {
+            // In case output is returned, write it to a file, skip otherwise
+            if ($output = $this->exportClassMetadata($metadata)) {
+                $path = $this->_outputDir.'/'.str_replace('\\', '.', $this->_mappingClassName).$this->_extension;
+                $dir = dirname($path);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0775, true);
+                }
+                if (file_exists($path) && !$this->_overwriteExistingFiles) {
+                    throw ExportException::attemptOverwriteExistingFile($path);
+                }
+                file_put_contents($path, $output);
+                chmod($path, 0664);
+            }
+        }
+    }
 
     /**
      * @param mixed $var
@@ -85,7 +85,7 @@ class FluentExporter extends AbstractExporter
     protected function _varExport($var)
     {
         $export = var_export($var, true);
-        $export = str_replace("\n", PHP_EOL . str_repeat(' ', 8), $export);
+        $export = str_replace("\n", PHP_EOL.str_repeat(' ', 8), $export);
         $export = str_replace('  ', ' ', $export);
         $export = str_replace('array (', 'array(', $export);
         $export = str_replace('array( ', 'array(', $export);
@@ -97,7 +97,8 @@ class FluentExporter extends AbstractExporter
     }
 
     /**
-     * @param  ClassMetadataInfo $metadata
+     * @param ClassMetadataInfo $metadata
+     *
      * @return string
      */
     protected function getClassName(ClassMetadataInfo $metadata)
@@ -122,7 +123,8 @@ class FluentExporter extends AbstractExporter
     }
 
     /**
-     * @param  ClassMetadataInfo $metadata
+     * @param ClassMetadataInfo $metadata
+     *
      * @return mixed
      */
     private function getExtendShort(ClassMetadataInfo $metadata)
@@ -131,7 +133,8 @@ class FluentExporter extends AbstractExporter
     }
 
     /**
-     * @param  string $className
+     * @param string $className
+     *
      * @return string
      */
     private function classBaseName($className)
@@ -144,7 +147,8 @@ class FluentExporter extends AbstractExporter
     }
 
     /**
-     * @param  ClassMetadataInfo $metadata
+     * @param ClassMetadataInfo $metadata
+     *
      * @return array
      */
     private function getImports(ClassMetadataInfo $metadata)
@@ -155,19 +159,20 @@ class FluentExporter extends AbstractExporter
             'LaravelDoctrine\Fluent\Fluent',
             'Doctrine\ORM\Mapping\ClassMetadataInfo',
             $extend,
-            $metadata->name
+            $metadata->name,
         ];
 
         // Sort alphabetically
         asort($imports);
 
         return array_map(function ($import) {
-            return 'use ' . $import . ';';
+            return 'use '.$import.';';
         }, $imports);
     }
 
     /**
-     * @param  ClassMetadataInfo $metadata
+     * @param ClassMetadataInfo $metadata
+     *
      * @return array
      */
     protected function exportMapFor(ClassMetadataInfo $metadata)
@@ -181,17 +186,18 @@ class FluentExporter extends AbstractExporter
             ' */',
             'public function mapFor()',
             '{',
-            self::TAB . 'return ' . $this->getClassNameShort($metadata) . '::class;',
+            self::TAB.'return '.$this->getClassNameShort($metadata).'::class;',
             '}',
         ];
 
         return array_map(function ($line) {
-            return self::TAB . $line;
+            return self::TAB.$line;
         }, $lines);
     }
 
     /**
-     * @param  ClassMetadataInfo $metadata
+     * @param ClassMetadataInfo $metadata
+     *
      * @return array
      */
     private function exportMap(ClassMetadataInfo $metadata)
@@ -214,36 +220,37 @@ class FluentExporter extends AbstractExporter
         $lines[] = '}';
 
         return array_map(function ($line) {
-            return self::TAB . $line;
+            return self::TAB.$line;
         }, $lines);
     }
 
     /**
-     * @param  ClassMetadataInfo $metadata
+     * @param ClassMetadataInfo $metadata
+     *
      * @return array
      */
     private function exportMapMethodContent(ClassMetadataInfo $metadata)
     {
         if ($metadata->customRepositoryClassName) {
-            $lines[] = "\$builder->entity()->setRepositoryClass('" . $metadata->customRepositoryClassName . "');";
+            $lines[] = "\$builder->entity()->setRepositoryClass('".$metadata->customRepositoryClassName."');";
         }
 
         if ($metadata->table) {
-            $lines[] = '$builder->table(\'' . $metadata->table['name'] . '\');';
+            $lines[] = '$builder->table(\''.$metadata->table['name'].'\');';
         }
 
         if ($metadata->inheritanceType && $this->_getInheritanceTypeString($metadata->inheritanceType) !== 'NONE') {
             $dColumn = '';
             if ($metadata->discriminatorColumn) {
-                $dColumn = '->column(\'' . $metadata->discriminatorColumn['name'] . '\', \'' . $metadata->discriminatorColumn['type'] . '\', \'' . $metadata->discriminatorColumn['length'] . '\')';
+                $dColumn = '->column(\''.$metadata->discriminatorColumn['name'].'\', \''.$metadata->discriminatorColumn['type'].'\', \''.$metadata->discriminatorColumn['length'].'\')';
             }
 
             $dMap = '';
             if ($metadata->discriminatorMap) {
-                $dMap = '->map(' . $this->_varExport($metadata->discriminatorMap) . ')';
+                $dMap = '->map('.$this->_varExport($metadata->discriminatorMap).')';
             }
 
-            $lines[] = '$builder->inheritance(ClassMetadataInfo::INHERITANCE_TYPE_' . $this->_getInheritanceTypeString($metadata->inheritanceType) . ')' . $dColumn . $dMap . ';';
+            $lines[] = '$builder->inheritance(ClassMetadataInfo::INHERITANCE_TYPE_'.$this->_getInheritanceTypeString($metadata->inheritanceType).')'.$dColumn.$dMap.';';
         }
 
         if ($metadata->lifecycleCallbacks) {
@@ -267,13 +274,14 @@ class FluentExporter extends AbstractExporter
         }
 
         return array_map(function ($line) {
-            return self::TAB . $line;
+            return self::TAB.$line;
         }, $lines);
     }
 
     /**
-     * @param  ClassMetadataInfo $metadata
-     * @param                    $fieldMapping
+     * @param ClassMetadataInfo $metadata
+     * @param                   $fieldMapping
+     *
      * @return array
      */
     private function convertField(ClassMetadataInfo $metadata, $fieldMapping)
@@ -295,17 +303,17 @@ class FluentExporter extends AbstractExporter
 
         $nullable = '';
         if (isset($fieldMapping['nullable']) && $fieldMapping['nullable'] === true) {
-            $nullable = "->nullable()";
+            $nullable = '->nullable()';
         }
 
         $unique = '';
         if (isset($fieldMapping['unique']) && $fieldMapping['unique'] === true) {
-            $unique = "->unique()";
+            $unique = '->unique()';
         }
 
         $primary = '';
         if (isset($fieldMapping['id']) && $fieldMapping['id'] === true) {
-            $primary = "->primary()";
+            $primary = '->primary()';
         }
 
         $scale = '';
@@ -322,12 +330,12 @@ class FluentExporter extends AbstractExporter
 
         $generatedValue = '';
         if (isset($fieldMapping['id']) && $fieldMapping['id'] === true && !$metadata->isIdentifierComposite && $generatorType = $this->_getIdGeneratorTypeString($metadata->generatorType)) {
-            $type    = 'increments';
+            $type = 'increments';
             $primary = false;
 
             if ($generatorType != 'AUTO' && $generatorType != 'IDENTITY') {
-                $generatorType  = strtolower($generatorType);
-                $generatedValue = '->generatedValue()->' . $generatorType . '()';
+                $generatorType = strtolower($generatorType);
+                $generatedValue = '->generatedValue()->'.$generatorType.'()';
             }
         }
 
@@ -339,14 +347,15 @@ class FluentExporter extends AbstractExporter
     }
 
     /**
-     * @param  array $associationMapping
+     * @param array $associationMapping
+     *
      * @return array
      */
     private function exportAssociations(array $associationMapping)
     {
         $cascade = ['remove', 'persist', 'refresh', 'merge', 'detach'];
         foreach ($cascade as $key => $value) {
-            if (!$associationMapping['isCascade' . ucfirst($value)]) {
+            if (!$associationMapping['isCascade'.ucfirst($value)]) {
                 unset($cascade[$key]);
             }
         }
@@ -355,34 +364,34 @@ class FluentExporter extends AbstractExporter
             $cascade = ['all'];
         }
 
-        $fieldName    = $associationMapping['fieldName'];
+        $fieldName = $associationMapping['fieldName'];
         $targetEntity = $associationMapping['targetEntity'];
-        $fetch        = isset($associationMapping['fetch']) ? $associationMapping['fetch'] : '';
+        $fetch = isset($associationMapping['fetch']) ? $associationMapping['fetch'] : '';
 
-        $mappedBy      = '';
-        $inversedBy    = '';
-        $joinColumns   = [];
-        $joinTable     = '';
+        $mappedBy = '';
+        $inversedBy = '';
+        $joinColumns = [];
+        $joinTable = '';
         $orphanRemoval = '';
-        $orderBy       = '';
+        $orderBy = '';
 
         if ($associationMapping['type'] & ClassMetadataInfo::ONE_TO_ONE) {
-	        $method        = 'oneToOne';
-	        if(isset($associationMapping['mappedBy'])) {
-		        $mappedBy      = $associationMapping['mappedBy'];
-	        } else {
-		        $inversedBy    = $associationMapping['inversedBy'];
-		        $joinColumns   = $associationMapping['joinColumns'];
-	        }
+            $method = 'oneToOne';
+            if (isset($associationMapping['mappedBy'])) {
+                $mappedBy = $associationMapping['mappedBy'];
+            } else {
+                $inversedBy = $associationMapping['inversedBy'];
+                $joinColumns = $associationMapping['joinColumns'];
+            }
             $orphanRemoval = $associationMapping['orphanRemoval'];
         } elseif ($associationMapping['type'] & ClassMetadataInfo::MANY_TO_ONE) {
-            $method        = 'manyToOne';
-            $mappedBy      = $associationMapping['mappedBy'];
-            $inversedBy    = $associationMapping['inversedBy'];
-            $joinColumns   = $associationMapping['joinColumns'];
+            $method = 'manyToOne';
+            $mappedBy = $associationMapping['mappedBy'];
+            $inversedBy = $associationMapping['inversedBy'];
+            $joinColumns = $associationMapping['joinColumns'];
             $orphanRemoval = $associationMapping['orphanRemoval'];
         } elseif ($associationMapping['type'] == ClassMetadataInfo::ONE_TO_MANY) {
-            $method                             = 'oneToMany';
+            $method = 'oneToMany';
             $potentialAssociationMappingIndexes = [
                 'mappedBy',
                 'orphanRemoval',
@@ -404,7 +413,7 @@ class FluentExporter extends AbstractExporter
                 $orderBy = $oneToManyMappingArray['orderBy'];
             }
         } elseif ($associationMapping['type'] == ClassMetadataInfo::MANY_TO_MANY) {
-            $method                             = 'manyToMany';
+            $method = 'manyToMany';
             $potentialAssociationMappingIndexes = [
                 'mappedBy',
                 'joinTable',
@@ -443,11 +452,11 @@ class FluentExporter extends AbstractExporter
                     break;
 
                 case ClassMetadataInfo::FETCH_EAGER:
-                    $fetch = "->fetchEager()";
+                    $fetch = '->fetchEager()';
                     break;
 
                 case ClassMetadataInfo::FETCH_EXTRA_LAZY:
-                    $fetch = "->fetchExtraLazy()";
+                    $fetch = '->fetchExtraLazy()';
                     break;
             }
         }
@@ -455,32 +464,32 @@ class FluentExporter extends AbstractExporter
         $joinColumn = '';
         if ($joinColumns) {
             foreach ($joinColumns as $c) {
-                $columnName           = $c['name'];
+                $columnName = $c['name'];
                 $referencedColumnName = $c['referencedColumnName'];
-                $nullable             = !isset($c['nullable']) || $c['nullable'] == true ? 'true' : 'false';
-                $unique               = !isset($c['unique']) || $c['unique'] == false ? 'false' : 'true';
-                $onDelete             = isset($c['onDelete']) ? '\'' . $c['onDelete'] . '\'' : 'null';
-                $columnDefinition     = isset($c['columnDefinition']) ? '\'' . $c['columnDefinition'] . '\'' : 'null';
+                $nullable = !isset($c['nullable']) || $c['nullable'] == true ? 'true' : 'false';
+                $unique = !isset($c['unique']) || $c['unique'] == false ? 'false' : 'true';
+                $onDelete = isset($c['onDelete']) ? '\''.$c['onDelete'].'\'' : 'null';
+                $columnDefinition = isset($c['columnDefinition']) ? '\''.$c['columnDefinition'].'\'' : 'null';
 
                 $joinColumn .= "->addJoinColumn('$fieldName', '$columnName', '$referencedColumnName', $nullable, $unique, $onDelete, $columnDefinition)";
             }
         }
 
         if ($orphanRemoval != '' && $orphanRemoval == true) {
-            $orphanRemoval = "->orphanRemoval()";
+            $orphanRemoval = '->orphanRemoval()';
         }
 
         $cascadeChain = '';
         if (count($cascade) > 0) {
             foreach ($cascade as $option) {
-                $cascadeChain .= '->cascade' . ucfirst($option) . '()';
+                $cascadeChain .= '->cascade'.ucfirst($option).'()';
             }
         }
 
         $joinTableChain = '';
         if ($joinTable != '') {
             if (isset($joinTable['name'])) {
-                $joinTableChain .= '->joinTable(\'' . $joinTable['name'] . '\')';
+                $joinTableChain .= '->joinTable(\''.$joinTable['name'].'\')';
             }
         }
 
