@@ -35,8 +35,9 @@ class FluentExporter extends AbstractExporter
             $lines[] = $import;
         }
 
+        $this->_mappingClassName = $this->getClassNameShort($metadata).'Mapping';
         $lines[] = null;
-        $lines[] = 'class '.$this->getClassNameShort($metadata).'Mapping extends '.$this->getExtendShort($metadata).' {';
+        $lines[] = 'class '.$this->_mappingClassName.' extends '.$this->getExtendShort($metadata).' {';
         $lines[] = null;
 
         foreach ($this->exportMapFor($metadata) as $line) {
