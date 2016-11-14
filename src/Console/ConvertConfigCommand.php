@@ -34,7 +34,7 @@ class ConvertConfigCommand extends SymfonyCommand
     protected function configure()
     {
         $this->setName('doctrine:config:convert')
-            ->setAliases(['doctrine:config:convert'])
+            ->setAliases(['doctrine:config:convert', 'doctrine:mapping:convert'])
             ->setDescription('Convert the configuration file for another laravel-doctrine implementation into a valid configuration for LaravelDoctrine\ORM')
             ->setDefinition([
                 new InputArgument('author', InputArgument::REQUIRED,
