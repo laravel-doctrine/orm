@@ -51,8 +51,8 @@ class GenerateEntitiesCommand extends Command
             $cmf->setEntityManager($em);
             $metadatas = $cmf->getAllMetadata();
             $metadatas = MetadataFilter::filter($metadatas, $this->option('filter'));
-
-            $destPath = base_path($this->argument('dest-path') ?:'app/Entities');
+			
+            $destPath = base_path($this->argument('dest-path') ? $this->argument('dest-path') : current(config("doctrine.managers.{$name}.paths")));
 
             if (!is_dir($destPath)) {
                 mkdir($destPath, 0777, true);
