@@ -6,8 +6,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
-use Faker\Factory as FakerFactory;
-use Faker\Generator as FakerGenerator;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
@@ -34,7 +32,6 @@ use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
 use LaravelDoctrine\ORM\Testing\Factory as EntityFactory;
-use LaravelDoctrine\ORM\Validation\PresenceVerifierProvider;
 
 class DoctrineServiceProvider extends ServiceProvider
 {
@@ -190,14 +187,6 @@ class DoctrineServiceProvider extends ServiceProvider
 
             return $manager;
         });
-    }
-
-    /**
-     * Register the deferred service provider for the validation presence verifier
-     */
-    protected function registerPresenceVerifierProvider()
-    {
-        $this->app->register(PresenceVerifierProvider::class);
     }
 
     /**
