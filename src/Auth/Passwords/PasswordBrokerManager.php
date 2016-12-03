@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Auth\Passwords;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PasswordBrokerManager extends \Illuminate\Auth\Passwords\PasswordBrokerManager
 {
@@ -16,7 +16,7 @@ class PasswordBrokerManager extends \Illuminate\Auth\Passwords\PasswordBrokerMan
     protected function createTokenRepository(array $config)
     {
         return new DoctrineTokenRepository(
-            $this->app->make(ManagerRegistry::class)->getManagerForClass(PasswordReminder::class),
+            $this->app->make(EntityManagerInterface::class),
             $this->app['config']['app.key'],
             $config['expire']
         );
