@@ -237,4 +237,14 @@ class Factory implements ArrayAccess
     {
         unset($this->definitions[$offset]);
     }
+
+    /**
+     * Temporary fix to prevent Fatal on Laravel 5.3.17
+     *
+     * @return $this
+     */
+    public function state()
+    {
+        return $this;
+    }
 }
