@@ -175,7 +175,7 @@ class PaginatorAdapter
     protected function convertToLaravelPaginator(DoctrinePaginator $doctrinePaginator, $perPage, $page)
     {
         $results     = iterator_to_array($doctrinePaginator);
-        $path        = $this->resolveCurrentPath();
+        $path        = Paginator::resolveCurrentPath();
 
         return new LengthAwarePaginator(
             $results,
@@ -194,13 +194,5 @@ class PaginatorAdapter
         $page = call_user_func($this->pageResolver);
 
         return $page > 0 ? $page : 1;
-    }
-
-    /**
-     * @return string
-     */
-    protected function resolveCurrentPath(): string
-    {
-        return Paginator::resolveCurrentPath();
     }
 }
