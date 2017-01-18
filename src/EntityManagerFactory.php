@@ -93,9 +93,16 @@ class EntityManagerFactory
     {
         $configuration = $this->setup->createConfiguration(
             array_get($settings, 'dev', false),
-            array_get($settings, 'proxies.path'),
-            $this->cache->driver()
+            array_get($settings, 'proxies.path')
         );
+
+        $queryDriver = $this->cache->driver($this->config->get('doctrine.cache.query.type'));
+        $resultDriver = $this->cache->driver($this->config->get('doctrine.cache.result.type'));
+        $metaDriver = $this->cache->driver($this->config->get('doctrine.cache.metadata.type'));
+
+        $configuration->setQueryCacheImpl($queryDriver);
+        $configuration->setResultCacheImpl($resultDriver);
+        $configuration->setMetadataCacheImpl($metaDriver);
 
         $this->setMetadataDriver($settings, $configuration);
 
@@ -319,7 +326,8 @@ class EntityManagerFactory
     protected function setCacheSettings(Configuration $configuration)
     {
         if ($namespace = $this->config->get('doctrine.cache.namespace', null)) {
-            $this->cache->driver()->setNamespace($namespace);
+            $drv = $this->cache->driver();
+            $drv->setNamespace($namespace);
         }
 
         $this->setSecondLevelCaching($configuration);
