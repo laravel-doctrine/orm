@@ -244,7 +244,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableSecondLevelCaching();
 
         $this->config->shouldReceive('get')
-            ->with('doctrine.cache.default.namespace', null)
+            ->with('doctrine.cache.namespace', null)
             ->andReturn('namespace');
 
         foreach($this->caches as $cache)
@@ -506,7 +506,12 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->config = m::mock(Repository::class);
 
-        foreach(array_merge($this->caches, ['default']) as $cache)
+        $this->config->shouldReceive('get')
+            ->with('doctrine.cache.default', 'array')
+            ->atLeast()->once()
+            ->andReturn('array');
+
+        foreach($this->caches as $cache)
         {
             $this->config->shouldReceive('get')
                          ->with('doctrine.cache.'.$cache.'.type', 'array')
@@ -604,7 +609,12 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
     protected function disableCustomCacheNamespace()
     {
-        foreach(array_merge($this->caches, ['default']) as $cache)
+        $this->config->shouldReceive('get')
+                     ->with('doctrine.cache.namespace', null)
+                     ->atLeast()->once()
+                     ->andReturn(null);
+
+        foreach($this->caches as $cache)
         {
             $this->config->shouldReceive('get')
                          ->with('doctrine.cache.'.$cache.'.namespace', null)

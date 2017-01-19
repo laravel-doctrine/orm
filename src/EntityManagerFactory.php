@@ -334,8 +334,8 @@ class EntityManagerFactory
 
     private function applyNamedCacheConfiguration($cacheName)
     {
-        $defaultDriver = $this->config->get('doctrine.cache.default.type', $this->defaultCache['type']);
-        $defaultNamespace = $this->config->get('doctrine.cache.default.namespace', $this->defaultCache['namespace']);
+        $defaultDriver = $this->config->get('doctrine.cache.default', $this->defaultCache['type']);
+        $defaultNamespace = $this->config->get('doctrine.cache.namespace', $this->defaultCache['namespace']);
 
         $driverType = $this->config->get('doctrine.cache.'.$cacheName.'.type', $defaultDriver);
 
