@@ -58,6 +58,14 @@ class EntityManagerFactory
     private $resolver;
 
     /**
+     * @var array
+     */
+    private $defaultCache = [
+        'type'      => 'array',
+        'namespace' => null
+    ];
+
+    /**
      * @param Container              $container
      * @param Setup                  $setup
      * @param MetaDataManager        $meta
@@ -95,14 +103,6 @@ class EntityManagerFactory
             array_get($settings, 'dev', false),
             array_get($settings, 'proxies.path')
         );
-
-        $queryDriver = $this->cache->driver($this->config->get('doctrine.cache.query.type'));
-        $resultDriver = $this->cache->driver($this->config->get('doctrine.cache.result.type'));
-        $metaDriver = $this->cache->driver($this->config->get('doctrine.cache.metadata.type'));
-
-        $configuration->setQueryCacheImpl($queryDriver);
-        $configuration->setResultCacheImpl($resultDriver);
-        $configuration->setMetadataCacheImpl($metaDriver);
 
         $this->setMetadataDriver($settings, $configuration);
 
@@ -325,12 +325,25 @@ class EntityManagerFactory
      */
     protected function setCacheSettings(Configuration $configuration)
     {
-        if ($namespace = $this->config->get('doctrine.cache.namespace', null)) {
-            $drv = $this->cache->driver();
-            $drv->setNamespace($namespace);
-        }
+        $configuration->setQueryCacheImpl($this->applyNamedCacheConfiguration('query'));
+        $configuration->setResultCacheImpl($this->applyNamedCacheConfiguration('result'));
+        $configuration->setMetadataCacheImpl($this->applyNamedCacheConfiguration('metadata'));
 
         $this->setSecondLevelCaching($configuration);
+    }
+
+    private function applyNamedCacheConfiguration($cacheName)
+    {
+        $defaultDriver = $this->config->get('doctrine.cache.default.type', $this->defaultCache['type']);
+        $defaultNamespace = $this->config->get('doctrine.cache.default.namespace', $this->defaultCache['namespace']);
+
+        $driverType = $this->config->get('doctrine.cache.'.$cacheName.'.type', $defaultDriver);
+
+        if ($namespace = $this->config->get('doctrine.cache.'.$cacheName.'.namespace', $defaultNamespace)) {
+            $this->cache->driver($driverType)->setNamespace($namespace);
+        }
+
+        return $this->cache->driver($driverType);
     }
 
     /**
@@ -349,6 +362,7 @@ class EntityManagerFactory
                 )
             );
         }
+
     }
 
     /**
