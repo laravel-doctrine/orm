@@ -334,12 +334,12 @@ class EntityManagerFactory
 
     private function applyNamedCacheConfiguration($cacheName)
     {
-        $defaultDriver = $this->config->get('doctrine.cache.default', $this->defaultCache['type']);
+        $defaultDriver    = $this->config->get('doctrine.cache.default', $this->defaultCache['type']);
         $defaultNamespace = $this->config->get('doctrine.cache.namespace', $this->defaultCache['namespace']);
 
-        $driverType = $this->config->get('doctrine.cache.'.$cacheName.'.type', $defaultDriver);
+        $driverType = $this->config->get('doctrine.cache.' . $cacheName . '.type', $defaultDriver);
 
-        if ($namespace = $this->config->get('doctrine.cache.'.$cacheName.'.namespace', $defaultNamespace)) {
+        if ($namespace = $this->config->get('doctrine.cache.' . $cacheName . '.namespace', $defaultNamespace)) {
             $this->cache->driver($driverType)->setNamespace($namespace);
         }
 
@@ -362,7 +362,6 @@ class EntityManagerFactory
                 )
             );
         }
-
     }
 
     /**
