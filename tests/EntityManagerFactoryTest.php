@@ -128,7 +128,6 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
             $this->config,
             $this->listenerResolver
         );
-
     }
 
     protected function assertEntityManager(EntityManagerInterface $manager)
@@ -648,7 +647,6 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->configuration->shouldReceive('setMetadataCacheImpl')->once();
         $this->configuration->shouldReceive('setQueryCacheImpl')->once();
         $this->configuration->shouldReceive('setResultCacheImpl')->once();
-
 
         $cache = m::mock(Cache::class);
         $this->configuration->shouldReceive('getMetadataCacheImpl')
