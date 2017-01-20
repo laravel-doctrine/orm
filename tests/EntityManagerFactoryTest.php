@@ -247,7 +247,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                      ->with('doctrine.cache.namespace', null)
                      ->andReturn('namespace');
 
-        foreach($this->caches as $cache) {
+        foreach ($this->caches as $cache) {
             $this->config->shouldReceive('get')
                          ->with('doctrine.cache.' . $cache . '.namespace', 'namespace')
                          ->once()
@@ -506,17 +506,16 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->config = m::mock(Repository::class);
 
         $this->config->shouldReceive('get')
-            ->with('doctrine.cache.default', 'array')
-            ->atLeast()->once()
-            ->andReturn('array');
+                     ->with('doctrine.cache.default', 'array')
+                     ->atLeast()->once()
+                     ->andReturn('array');
 
-        foreach($this->caches as $cache) {
+        foreach ($this->caches as $cache) {
             $this->config->shouldReceive('get')
                          ->with('doctrine.cache.' . $cache . '.type', 'array')
                          ->atLeast()->once()
                          ->andReturn('array');
         }
-
 
         $this->config->shouldReceive('has')
                      ->with('database.connections.mysql')
@@ -612,14 +611,12 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                      ->atLeast()->once()
                      ->andReturn(null);
 
-        foreach($this->caches as $cache)
-        {
+        foreach ($this->caches as $cache) {
             $this->config->shouldReceive('get')
-                         ->with('doctrine.cache.'.$cache.'.namespace', null)
+                         ->with('doctrine.cache.' . $cache . '.namespace', null)
                          ->atLeast()->once()
                          ->andReturn(null);
         }
-
     }
 
     protected function disableCustomFunctions()
