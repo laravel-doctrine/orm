@@ -32,7 +32,7 @@ class SubstituteBindings
      */
     public function __construct(Registrar $router, IlluminateRegistry $registry)
     {
-        $this->router = $router;
+        $this->router   = $router;
         $this->registry = $registry;
     }
 
