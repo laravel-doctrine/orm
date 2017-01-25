@@ -3,15 +3,22 @@
 namespace LaravelDoctrine\ORM\Middleware;
 
 use Closure;
-use Doctrine\Common\Persistence\Proxy;
+use Doctrine\ORM\EntityNotFoundException;
 use Illuminate\Contracts\Routing\Registrar;
-use Illuminate\Routing\Middleware\SubstituteBindings as IllumintateSubstituteBindings;
+use Illuminate\Routing\Route;
 use LaravelDoctrine\ORM\IlluminateRegistry;
 use ReflectionFunction;
 use ReflectionMethod;
 
-class SubstituteBindings extends IllumintateSubstituteBindings
+class SubstituteBindings
 {
+    /**
+     * The router instance.
+     *
+     * @var \Illuminate\Contracts\Routing\Registrar
+     */
+    protected $router;
+
     /**
      * @var IlluminateRegistry
      */
@@ -25,8 +32,7 @@ class SubstituteBindings extends IllumintateSubstituteBindings
      */
     public function __construct(Registrar $router, IlluminateRegistry $registry)
     {
-        parent::__construct($router);
-
+        $this->router = $router;
         $this->registry = $registry;
     }
 
@@ -39,11 +45,7 @@ class SubstituteBindings extends IllumintateSubstituteBindings
      */
     public function handle($request, Closure $next)
     {
-        $this->router->substituteBindings($route = $request->route());
-
-        $this->router->substituteImplicitBindings($route);
-
-        $this->substituteImplicitBindings($route);
+        $this->substituteImplicitBindings($request->route());
 
         return $next($request);
     }
@@ -51,35 +53,47 @@ class SubstituteBindings extends IllumintateSubstituteBindings
     /**
      * Substitute the implicit Doctrine entity bindings for the route.
      *
-     * @param  \Illuminate\Routing\Route $route
-     * @return void
+     * @param Route $route
      */
-    protected function substituteImplicitBindings($route)
+    protected function substituteImplicitBindings(Route $route)
     {
         $parameters = $route->parameters();
 
         $action = $route->getAction();
 
         foreach ($this->getParameters($action['uses']) as $parameter) {
-            $class = $parameter->getClass()->getName();
-
-            // Try to find the entity manager for the given class.
-            if (is_null($entityManager = $this->getDoctrineEntityManagerByClass($class))) {
+            if (! array_key_exists($parameter->name, $parameters)) {
                 continue;
             }
 
-            if (array_key_exists($parameter->name, $parameters)) {
-                $entity = $entityManager->find($class, $parameters[$parameter->name]);
-
-                $route->setParameter($parameter->name, $entity);
+            // Make sure this parameter is a class.
+            if (! $parameter->getClass()) {
+                continue;
             }
+
+            $class = $parameter->getClass()->getName();
+
+            // Try to find the entity manager for the given class.
+            if (is_null($entityManager = $this->registry->getManagerForClass($class))) {
+                continue;
+            }
+
+            // Find the entity by route parameter value.
+            $entity = $entityManager->find($class, $parameters[$parameter->name]);
+
+            // When no entity is found check if the route excepts an empty entity.
+            if (is_null($entity) && ! $parameter->isDefaultValueAvailable()) {
+                throw new EntityNotFoundException(sprintf('No query results for entity [%s]', $class));
+            }
+
+            $route->setParameter($parameter->name, $entity);
         }
     }
 
     /**
      * Reflect the parameters of the method or function of the route.
      *
-     * @param  string | Closure       $uses
+     * @param  string|callable        $uses
      * @return \ReflectionParameter[]
      */
     protected function getParameters($uses)
@@ -91,20 +105,5 @@ class SubstituteBindings extends IllumintateSubstituteBindings
         }
 
         return $parameters = (new ReflectionFunction($uses))->getParameters();
-    }
-
-    /**
-     * Try to fetch the entity manager of the given class.
-     *
-     * @param  string                                     $class
-     * @return \Doctrine\Common\Persistence\ObjectManager | null
-     */
-    protected function getDoctrineEntityManagerByClass($class)
-    {
-        if (is_object($class)) {
-            $class = ($class instanceof Proxy) ? get_parent_class($class) : get_class($class);
-        }
-
-        return $this->registry->getManagerForClass($class);
     }
 }
