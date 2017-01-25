@@ -3,12 +3,12 @@
 namespace LaravelDoctrine\ORM\Middleware;
 
 use Closure;
-use LaravelDoctrine\ORM\IlluminateRegistry;
-use ReflectionMethod;
-use ReflectionFunction;
 use Doctrine\Common\Persistence\Proxy;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Routing\Middleware\SubstituteBindings as IllumintateSubstituteBindings;
+use LaravelDoctrine\ORM\IlluminateRegistry;
+use ReflectionMethod;
+use ReflectionFunction;
 
 class SubstituteBindings extends IllumintateSubstituteBindings
 {
@@ -20,8 +20,8 @@ class SubstituteBindings extends IllumintateSubstituteBindings
     /**
      * Create a new bindings substitutor.
      *
-     * @param  Registrar          $router
-     * @param  IlluminateRegistry $registry
+     * @param Registrar          $router
+     * @param IlluminateRegistry $registry
      */
     public function __construct(Registrar $router, IlluminateRegistry $registry)
     {
@@ -79,7 +79,7 @@ class SubstituteBindings extends IllumintateSubstituteBindings
     /**
      * Reflect the parameters of the method or function of the route.
      *
-     * @param  string | Closure $uses
+     * @param  string | Closure       $uses
      * @return \ReflectionParameter[]
      */
     protected function getParameters($uses)
@@ -96,7 +96,7 @@ class SubstituteBindings extends IllumintateSubstituteBindings
     /**
      * Try to fetch the entity manager of the given class.
      *
-     * @param  string $class
+     * @param  string                                     $class
      * @return \Doctrine\Common\Persistence\ObjectManager | null
      */
     protected function getDoctrineEntityManagerByClass($class)
