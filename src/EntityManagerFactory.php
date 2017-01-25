@@ -333,7 +333,7 @@ class EntityManagerFactory
     }
 
     /**
-     * @param string $cacheName
+     * @param  string $cacheName
      * @return mixed
      */
     private function applyNamedCacheConfiguration($cacheName)

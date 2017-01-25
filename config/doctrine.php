@@ -155,9 +155,9 @@ return [
     |
     */
     'cache' => [
-        'second_level'  => false,
-        'default'       => 'array',
-        'namespace'     => null,
+        'second_level'     => false,
+        'default'          => 'array',
+        'namespace'        => null,
         'metadata'         => [
             'driver'       => env('DOCTRINE_METADATA_CACHE', 'array'),
             'namespace'    => null,
