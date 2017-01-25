@@ -45,7 +45,9 @@ class SubstituteBindings
      */
     public function handle($request, Closure $next)
     {
-        $this->substituteImplicitBindings($request->route());
+        $this->router->substituteBindings($route = $request->route());
+
+        $this->substituteImplicitBindings($route);
 
         return $next($request);
     }
