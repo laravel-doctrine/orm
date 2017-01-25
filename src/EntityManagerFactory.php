@@ -332,18 +332,22 @@ class EntityManagerFactory
         $this->setSecondLevelCaching($configuration);
     }
 
+    /**
+     * @param string $cacheName
+     * @return mixed
+     */
     private function applyNamedCacheConfiguration($cacheName)
     {
         $defaultDriver    = $this->config->get('doctrine.cache.default', $this->defaultCache['type']);
         $defaultNamespace = $this->config->get('doctrine.cache.namespace', $this->defaultCache['namespace']);
 
-        $driverType = $this->config->get('doctrine.cache.' . $cacheName . '.type', $defaultDriver);
+        $driver = $this->config->get('doctrine.cache.' . $cacheName . '.driver', $defaultDriver);
 
         if ($namespace = $this->config->get('doctrine.cache.' . $cacheName . '.namespace', $defaultNamespace)) {
-            $this->cache->driver($driverType)->setNamespace($namespace);
+            $this->cache->driver($driver)->setNamespace($namespace);
         }
 
-        return $this->cache->driver($driverType);
+        return $this->cache->driver($driver);
     }
 
     /**

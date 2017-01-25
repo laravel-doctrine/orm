@@ -511,7 +511,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
         foreach ($this->caches as $cache) {
             $this->config->shouldReceive('get')
-                         ->with('doctrine.cache.' . $cache . '.type', 'array')
+                         ->with('doctrine.cache.' . $cache . '.driver', 'array')
                          ->atLeast()->once()
                          ->andReturn('array');
         }
