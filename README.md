@@ -52,7 +52,7 @@ Version | Supported Laravel Versions | Support
 
 Require this package  
 
-```php
+```bash
 composer require "laravel-doctrine/orm:1.2.*"
 ```
 
@@ -70,7 +70,7 @@ Optionally you can register the EntityManager facade:
 
 To publish the config use:
 
-```php
+```bash
 php artisan vendor:publish --tag="config"
 ```
 
