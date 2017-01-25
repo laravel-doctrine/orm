@@ -7,8 +7,8 @@ use Doctrine\Common\Persistence\Proxy;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Routing\Middleware\SubstituteBindings as IllumintateSubstituteBindings;
 use LaravelDoctrine\ORM\IlluminateRegistry;
-use ReflectionMethod;
 use ReflectionFunction;
+use ReflectionMethod;
 
 class SubstituteBindings extends IllumintateSubstituteBindings
 {
