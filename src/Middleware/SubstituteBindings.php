@@ -81,7 +81,7 @@ class SubstituteBindings
             // Find the entity by route parameter value.
             $entity = $entityManager->find($class, $parameters[$parameter->name]);
 
-            // When no entity is found check if the route excepts an empty entity.
+            // When no entity is found check if the route accepts an empty entity.
             if (is_null($entity) && ! $parameter->isDefaultValueAvailable()) {
                 throw new EntityNotFoundException(sprintf('No query results for entity [%s]', $class));
             }
