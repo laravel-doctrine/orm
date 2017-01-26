@@ -106,6 +106,6 @@ class SubstituteBindings
             return (new ReflectionMethod($class, $method))->getParameters();
         }
 
-        return $parameters = (new ReflectionFunction($uses))->getParameters();
+        return (new ReflectionFunction($uses))->getParameters();
     }
 }
