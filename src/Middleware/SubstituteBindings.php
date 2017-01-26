@@ -3,10 +3,10 @@
 namespace LaravelDoctrine\ORM\Middleware;
 
 use Closure;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityNotFoundException;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Routing\Route;
-use LaravelDoctrine\ORM\IlluminateRegistry;
 use ReflectionFunction;
 use ReflectionMethod;
 
@@ -15,22 +15,22 @@ class SubstituteBindings
     /**
      * The router instance.
      *
-     * @var \Illuminate\Contracts\Routing\Registrar
+     * @var Registrar
      */
     protected $router;
 
     /**
-     * @var IlluminateRegistry
+     * @var ManagerRegistry
      */
     protected $registry;
 
     /**
      * Create a new bindings substitutor.
      *
-     * @param Registrar          $router
-     * @param IlluminateRegistry $registry
+     * @param Registrar       $router
+     * @param ManagerRegistry $registry
      */
-    public function __construct(Registrar $router, IlluminateRegistry $registry)
+    public function __construct(Registrar $router, ManagerRegistry $registry)
     {
         $this->router   = $router;
         $this->registry = $registry;
