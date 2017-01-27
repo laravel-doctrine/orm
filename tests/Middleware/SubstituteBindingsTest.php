@@ -8,6 +8,7 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use LaravelDoctrine\ORM\Middleware\SubstituteBindings;
+use Mockery as m;
 use Mockery\Mock;
 
 class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
@@ -24,8 +25,8 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->registry = Mockery::mock(ManagerRegistry::class);
-        $this->em       = Mockery::mock(EntityManager::class);
+        $this->registry = m::mock(ManagerRegistry::class);
+        $this->em       = m::mock(EntityManager::class);
     }
 
     protected function getRouter()
@@ -139,6 +140,11 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
         $this->em->shouldReceive('find')->once()->with('BindableEntity', 1)->andReturn($entity);
 
         $this->assertEquals('namevalue', $router->dispatch(Request::create('foo/1', 'GET'))->getContent());
+    }
+
+    protected function tearDown()
+    {
+        m::close();
     }
 }
 
