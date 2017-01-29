@@ -6,7 +6,6 @@ use Doctrine\Common\Persistence\Mapping\Driver\DefaultFileLocator;
 use Doctrine\Common\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain as DoctrineMappingDriverChain;
-use Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\SymfonyFileLocator;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
@@ -37,7 +36,7 @@ class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDr
     {
         $driver = $this->getDefaultDriver();
 
-        if ($driver instanceof AnnotationDriver || $driver instanceof StaticPHPDriver) {
+        if (method_exists($driver, 'addPaths')) {
             $driver->addPaths($paths);
         } elseif ($driver instanceof FileDriver) {
             if ($driver->getLocator() instanceof DefaultFileLocator) {
@@ -45,6 +44,18 @@ class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDr
             } elseif ($driver->getLocator() instanceof SymfonyFileLocator) {
                 $driver->getLocator()->addNamespacePrefixes($paths);
             }
+        }
+    }
+
+    /**
+     * @param array $mappings
+     */
+    public function addMappings(array $mappings = [])
+    {
+        $driver = $this->getDefaultDriver();
+
+        if (method_exists($driver, 'addMappings')) {
+            $driver->addMappings($mappings);
         }
     }
 

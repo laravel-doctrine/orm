@@ -32,7 +32,7 @@ class Fluent extends MetaData
      */
     public function resolve(array $settings = [])
     {
-        $driver         = new FluentDriver(array_get($settings, 'mappings'));
+        $driver         = new FluentDriver(array_get($settings, 'mappings', []));
 
         $namingStrategy = $this->getNamingStrategy($settings);
 

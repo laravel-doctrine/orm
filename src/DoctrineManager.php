@@ -114,6 +114,17 @@ class DoctrineManager
     }
 
     /**
+     * @param array       $mappings
+     * @param string|null $connection
+     */
+    public function addMappings(array $mappings = [], $connection = null)
+    {
+        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $mappings) {
+            $this->getMetaDataDriver($connection, $registry)->addMappings($mappings);
+        });
+    }
+
+    /**
      * @param null $connection
      *
      * @param  ManagerRegistry $registry
