@@ -94,21 +94,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         'repository' => 'Repo'
     ];
 
-    protected $cacheImpl;
-
-    /**
-     * @Notes This just holds the length of $caches
-     *        It's just here so we don't have to call count($caches) over and over.
-     * @var int
-     */
-    private $cachesCount;
-
     protected function setUp()
     {
-
-        //Just store the count of caches
-        $this->cachesCount = count($this->caches);
-
         $this->mockApp();
         $this->mockMeta();
         $this->mockConnection();
@@ -222,9 +209,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->configuration->shouldReceive('getSecondLevelCacheConfiguration')
                             ->atLeast()->once()->andReturn($cacheConfig);
 
-        $this->cacheImpl = m::mock(Cache::class);
+        $cacheImpl = m::mock(Cache::class);
         $this->cache->shouldReceive('driver')
-                    ->once()->andReturn($this->cacheImpl);
+                    ->once()->andReturn($cacheImpl);
 
         $this->configuration->shouldReceive('isSecondLevelCacheEnabled')
                             ->atLeast()->once()
@@ -243,7 +230,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableSecondLevelCaching();
 
         $this->config->shouldReceive('get')
-                     ->with('doctrine.cache.namespace', null)
+                     ->with('doctrine.cache.namespace')
                      ->andReturn('namespace');
 
         foreach ($this->caches as $cache) {
@@ -255,9 +242,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
         $cache = m::mock(Cache::class);
 
-        $this->cache->shouldReceive('driver')
-                    ->times($this->cachesCount)
-                    ->andReturn($cache);
+        $this->cache->shouldReceive('driver')->andReturn($cache);
 
         $cache->shouldReceive('setNamespace')->with('namespace');
 
@@ -545,7 +530,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->cache = m::mock(CacheManager::class);
         $this->cache->shouldReceive('driver')
-                    ->times($this->cachesCount)
+                    ->times(count($this->caches))
                     ->andReturn(new ArrayCache());
     }
 
@@ -606,7 +591,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected function disableCustomCacheNamespace()
     {
         $this->config->shouldReceive('get')
-                     ->with('doctrine.cache.namespace', null)
+                     ->with('doctrine.cache.namespace')
                      ->atLeast()->once()
                      ->andReturn(null);
 
