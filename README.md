@@ -54,7 +54,7 @@ Version | Supported Laravel Versions | Support
 Require this package  
 
 ```bash
-composer require "laravel-doctrine/orm:1.2.*"
+composer require "laravel-doctrine/orm:1.3.*"
 ```
 
 After adding the package, add the ServiceProvider to the providers array in `config/app.php`
