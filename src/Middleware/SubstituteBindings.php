@@ -7,8 +7,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityNotFoundException;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Routing\Route;
-use ReflectionFunction;
-use ReflectionMethod;
+use ReflectionParameter;
 
 class SubstituteBindings
 {
@@ -25,8 +24,6 @@ class SubstituteBindings
     protected $registry;
 
     /**
-     * Create a new bindings substitutor.
-     *
      * @param Registrar       $router
      * @param ManagerRegistry $registry
      */
@@ -45,7 +42,9 @@ class SubstituteBindings
      */
     public function handle($request, Closure $next)
     {
-        $this->router->substituteBindings($route = $request->route());
+        $route = $request->route();
+
+        $this->router->substituteBindings($route);
 
         $this->substituteImplicitBindings($route);
 
@@ -56,56 +55,42 @@ class SubstituteBindings
      * Substitute the implicit Doctrine entity bindings for the route.
      *
      * @param Route $route
+     *
+     * @throws EntityNotFoundException
      */
     protected function substituteImplicitBindings(Route $route)
     {
         $parameters = $route->parameters();
 
-        $action = $route->getAction();
-
-        foreach ($this->getParameters($action['uses']) as $parameter) {
-            if (! array_key_exists($parameter->name, $parameters)) {
-                continue;
-            }
-
-            // Make sure this parameter is a class.
-            if (! $parameter->getClass()) {
-                continue;
-            }
-
+        foreach ($this->signatureParameters($route) as $parameter) {
+            $id    = $parameters[$parameter->name];
             $class = $parameter->getClass()->getName();
 
-            // Try to find the entity manager for the given class.
-            if (is_null($entityManager = $this->registry->getManagerForClass($class))) {
-                continue;
+            if ($em = $this->registry->getManagerForClass($class)) {
+                $entity = $em->find($class, $id);
+
+                if (is_null($entity) && !$parameter->isDefaultValueAvailable()) {
+                    throw EntityNotFoundException::fromClassNameAndIdentifier($class, ['id' => $id]);
+                }
+
+                $route->setParameter($parameter->name, $entity);
             }
-
-            // Find the entity by route parameter value.
-            $entity = $entityManager->find($class, $parameters[$parameter->name]);
-
-            // When no entity is found check if the route accepts an empty entity.
-            if (is_null($entity) && ! $parameter->isDefaultValueAvailable()) {
-                throw new EntityNotFoundException(sprintf('No query results for entity [%s]', $class));
-            }
-
-            $route->setParameter($parameter->name, $entity);
         }
     }
 
     /**
-     * Reflect the parameters of the method or function of the route.
+     * @param Route $route
      *
-     * @param  string|callable        $uses
-     * @return \ReflectionParameter[]
+     * @return ReflectionParameter[]
      */
-    protected function getParameters($uses)
+    private function signatureParameters(Route $route)
     {
-        if (is_string($uses)) {
-            list($class, $method) = explode('@', $uses);
-
-            return (new ReflectionMethod($class, $method))->getParameters();
-        }
-
-        return (new ReflectionFunction($uses))->getParameters();
+        return collect($route->signatureParameters())
+            ->reject(function (ReflectionParameter $parameter) use ($route) {
+                return !array_key_exists($parameter->name, $route->parameters());
+            })
+            ->reject(function (ReflectionParameter $parameter) {
+                return !$parameter->getClass();
+            })->toArray();
     }
 }
