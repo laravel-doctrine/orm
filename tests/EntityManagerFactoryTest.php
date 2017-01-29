@@ -77,6 +77,11 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     /**
      * @var array
      */
+    protected $caches = [ 'query', 'result', 'metadata' ];
+
+    /**
+     * @var array
+     */
     protected $settings = [
         'meta'       => 'annotations',
         'connection' => 'mysql',
@@ -91,8 +96,19 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
     protected $cacheImpl;
 
+    /**
+     * @Notes This just holds the length of $caches
+     *        It's just here so we don't have to call count($caches) over and over.
+     * @var int
+     */
+    private $cachesCount;
+
     protected function setUp()
     {
+
+        //Just store the count of caches
+        $this->cachesCount = count($this->caches);
+
         $this->mockApp();
         $this->mockMeta();
         $this->mockConnection();
@@ -207,7 +223,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                             ->atLeast()->once()->andReturn($cacheConfig);
 
         $this->cacheImpl = m::mock(Cache::class);
-        $this->cache->shouldReceive('driver')->once()->andReturn($this->cacheImpl);
+        $this->cache->shouldReceive('driver')
+                    ->once()->andReturn($this->cacheImpl);
 
         $this->configuration->shouldReceive('isSecondLevelCacheEnabled')
                             ->atLeast()->once()
@@ -226,13 +243,23 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableSecondLevelCaching();
 
         $this->config->shouldReceive('get')
-                     ->with('doctrine.cache.namespace', null)->once()
+                     ->with('doctrine.cache.namespace', null)
                      ->andReturn('namespace');
 
-        $cache = m::mock(Cache::class);
-        $this->cache->shouldReceive('driver')->once()->andReturn($cache);
+        foreach ($this->caches as $cache) {
+            $this->config->shouldReceive('get')
+                         ->with('doctrine.cache.' . $cache . '.namespace', 'namespace')
+                         ->once()
+                         ->andReturn('namespace');
+        }
 
-        $cache->shouldReceive('setNamespace')->once()->with('namespace');
+        $cache = m::mock(Cache::class);
+
+        $this->cache->shouldReceive('driver')
+                    ->times($this->cachesCount)
+                    ->andReturn($cache);
+
+        $cache->shouldReceive('setNamespace')->with('namespace');
 
         $manager = $this->factory->create($this->settings);
 
@@ -477,6 +504,18 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->config = m::mock(Repository::class);
 
+        $this->config->shouldReceive('get')
+                     ->with('doctrine.cache.default', 'array')
+                     ->atLeast()->once()
+                     ->andReturn('array');
+
+        foreach ($this->caches as $cache) {
+            $this->config->shouldReceive('get')
+                         ->with('doctrine.cache.' . $cache . '.driver', 'array')
+                         ->atLeast()->once()
+                         ->andReturn('array');
+        }
+
         $this->config->shouldReceive('has')
                      ->with('database.connections.mysql')
                      ->once()
@@ -505,7 +544,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected function mockCache()
     {
         $this->cache = m::mock(CacheManager::class);
-        $this->cache->shouldReceive('driver')->once()->andReturn(new ArrayCache());
+        $this->cache->shouldReceive('driver')
+                    ->times($this->cachesCount)
+                    ->andReturn(new ArrayCache());
     }
 
     protected function mockConnection()
@@ -565,8 +606,16 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected function disableCustomCacheNamespace()
     {
         $this->config->shouldReceive('get')
-                     ->with('doctrine.cache.namespace', null)->atLeast()->once()
-                     ->andReturn(false);
+                     ->with('doctrine.cache.namespace', null)
+                     ->atLeast()->once()
+                     ->andReturn(null);
+
+        foreach ($this->caches as $cache) {
+            $this->config->shouldReceive('get')
+                         ->with('doctrine.cache.' . $cache . '.namespace', null)
+                         ->atLeast()->once()
+                         ->andReturn(null);
+        }
     }
 
     protected function disableCustomFunctions()
@@ -594,6 +643,10 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->configuration->shouldReceive('getClassMetadataFactoryName')
                             ->atLeast()->once()
                             ->andReturn('Doctrine\ORM\Mapping\ClassMetadataFactory');
+
+        $this->configuration->shouldReceive('setMetadataCacheImpl')->once();
+        $this->configuration->shouldReceive('setQueryCacheImpl')->once();
+        $this->configuration->shouldReceive('setResultCacheImpl')->once();
 
         $cache = m::mock(Cache::class);
         $this->configuration->shouldReceive('getMetadataCacheImpl')

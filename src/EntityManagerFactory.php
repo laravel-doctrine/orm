@@ -58,6 +58,14 @@ class EntityManagerFactory
     private $resolver;
 
     /**
+     * @var array
+     */
+    private $defaultCache = [
+        'type'      => 'array',
+        'namespace' => null
+    ];
+
+    /**
      * @param Container              $container
      * @param Setup                  $setup
      * @param MetaDataManager        $meta
@@ -93,8 +101,7 @@ class EntityManagerFactory
     {
         $configuration = $this->setup->createConfiguration(
             array_get($settings, 'dev', false),
-            array_get($settings, 'proxies.path'),
-            $this->cache->driver()
+            array_get($settings, 'proxies.path')
         );
 
         $this->setMetadataDriver($settings, $configuration);
@@ -318,11 +325,29 @@ class EntityManagerFactory
      */
     protected function setCacheSettings(Configuration $configuration)
     {
-        if ($namespace = $this->config->get('doctrine.cache.namespace', null)) {
-            $this->cache->driver()->setNamespace($namespace);
-        }
+        $configuration->setQueryCacheImpl($this->applyNamedCacheConfiguration('query'));
+        $configuration->setResultCacheImpl($this->applyNamedCacheConfiguration('result'));
+        $configuration->setMetadataCacheImpl($this->applyNamedCacheConfiguration('metadata'));
 
         $this->setSecondLevelCaching($configuration);
+    }
+
+    /**
+     * @param  string $cacheName
+     * @return mixed
+     */
+    private function applyNamedCacheConfiguration($cacheName)
+    {
+        $defaultDriver    = $this->config->get('doctrine.cache.default', $this->defaultCache['type']);
+        $defaultNamespace = $this->config->get('doctrine.cache.namespace', $this->defaultCache['namespace']);
+
+        $driver = $this->config->get('doctrine.cache.' . $cacheName . '.driver', $defaultDriver);
+
+        if ($namespace = $this->config->get('doctrine.cache.' . $cacheName . '.namespace', $defaultNamespace)) {
+            $this->cache->driver($driver)->setNamespace($namespace);
+        }
+
+        return $this->cache->driver($driver);
     }
 
     /**
