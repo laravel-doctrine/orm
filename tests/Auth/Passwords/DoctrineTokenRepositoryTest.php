@@ -165,19 +165,19 @@ class DoctrineTokenRepositoryTest extends PHPUnit_Framework_TestCase
 
         $this->builder->shouldReceive('where')
                       ->once()
-                      ->with('token = :token')
+                      ->with('email = :email')
                       ->andReturnSelf();
 
         $this->builder->shouldReceive('setParameter')
                       ->once()
-                      ->with('token', 'token')
+                      ->with('email', 'user@mockery.mock')
                       ->andReturnSelf();
 
         $this->builder->shouldReceive('execute')
                       ->once()
                       ->andReturn(true);
 
-        $this->repository->delete('token');
+        $this->repository->delete(new UserMock);
     }
 
     public function test_can_delete_expired()
