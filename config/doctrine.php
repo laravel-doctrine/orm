@@ -156,18 +156,18 @@ return [
     */
     'cache' => [
         'second_level'     => false,
-        'default'          => 'array',
+        'default'          => env('DOCTRINE_CACHE', 'array'),
         'namespace'        => null,
         'metadata'         => [
-            'driver'       => env('DOCTRINE_METADATA_CACHE', 'array'),
+            'driver'       => env('DOCTRINE_METADATA_CACHE', env('DOCTRINE_CACHE', 'array')),
             'namespace'    => null,
         ],
         'query'            => [
-            'driver'       => env('DOCTRINE_QUERY_CACHE', 'array'),
+            'driver'       => env('DOCTRINE_QUERY_CACHE', env('DOCTRINE_CACHE', 'array')),
             'namespace'    => null,
         ],
         'result'           => [
-            'driver'       => env('DOCTRINE_RESULT_CACHE', 'array'),
+            'driver'       => env('DOCTRINE_RESULT_CACHE', env('DOCTRINE_CACHE', 'array')),
             'namespace'    => null,
         ],
     ],

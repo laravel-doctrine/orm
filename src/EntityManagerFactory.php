@@ -2,6 +2,7 @@
 
 namespace LaravelDoctrine\ORM;
 
+use Doctrine\Common\Cache\Cache;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -56,14 +57,6 @@ class EntityManagerFactory
      * @var EntityListenerResolver
      */
     private $resolver;
-
-    /**
-     * @var array
-     */
-    private $defaultCache = [
-        'type'      => 'array',
-        'namespace' => null
-    ];
 
     /**
      * @param Container              $container
@@ -334,20 +327,22 @@ class EntityManagerFactory
 
     /**
      * @param  string $cacheName
-     * @return mixed
+     * @return Cache
      */
     private function applyNamedCacheConfiguration($cacheName)
     {
-        $defaultDriver    = $this->config->get('doctrine.cache.default', $this->defaultCache['type']);
-        $defaultNamespace = $this->config->get('doctrine.cache.namespace', $this->defaultCache['namespace']);
+        $defaultDriver    = $this->config->get('doctrine.cache.default', 'array');
+        $defaultNamespace = $this->config->get('doctrine.cache.namespace');
 
         $driver = $this->config->get('doctrine.cache.' . $cacheName . '.driver', $defaultDriver);
 
+        $cache = $this->cache->driver($driver);
+
         if ($namespace = $this->config->get('doctrine.cache.' . $cacheName . '.namespace', $defaultNamespace)) {
-            $this->cache->driver($driver)->setNamespace($namespace);
+            $cache->setNamespace($namespace);
         }
 
-        return $this->cache->driver($driver);
+        return $cache;
     }
 
     /**
