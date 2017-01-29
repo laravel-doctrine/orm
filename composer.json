@@ -23,6 +23,7 @@
     "illuminate/container": "5.2.*|5.3.*",
     "illuminate/contracts": "5.2.*|5.3.*",
     "illuminate/pagination": "5.2.*|5.3.*",
+    "illuminate/routing": "5.2.*|5.3.*",
     "illuminate/support": "5.2.*|5.3.*",
     "illuminate/validation": "5.2.*|5.3.*",
     "illuminate/view": "5.2.*|5.3.*",
