@@ -143,16 +143,12 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
     /**
      * Delete a token record by token.
      *
-     * @param  string $token
+     * @param  CanResetPassword $user
      * @return void
      */
-    public function delete($token)
+    public function delete(CanResetPassword $user)
     {
-        $this->getTable()
-             ->delete($this->table)
-             ->where('token = :token')
-             ->setParameter('token', $token)
-             ->execute();
+        $this->deleteExisting($user);
     }
 
     /**
