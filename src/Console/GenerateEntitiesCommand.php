@@ -17,13 +17,13 @@ class GenerateEntitiesCommand extends Command
     {dest-path? : Path you want entities to be generated in }
     {--filter=* : A string pattern used to match entities that should be processed.}
     {--em= : Generate getter and setter for a specific entity manager. },
-    {--generate-annotations= : Flag to define if generator should generate annotation metadata on entities.}
-    {--generate-methods= : Flag to define if generator should generate stub methods on entities.}
-    {--regenerate-entities= : Flag to define if generator should regenerate entity if it exists.}
-    {--update-entities= : Flag to define if generator should only update entity if it exists.}
+    {--generate-annotations : Flag to define if generator should generate annotation metadata on entities.}
+    {--generate-methods : Flag to define if generator should generate stub methods on entities.}
+    {--regenerate-entities : Flag to define if generator should regenerate entity if it exists.}
+    {--update-entities : Flag to define if generator should only update entity if it exists.}
     {--extend= : Defines a base class to be extended by generated entity classes.}
-    {--num-spaces= : Defines the number of indentation spaces.}
-    {--no-backup= : Flag to define if generator should avoid backuping existing entity file if it exists}';
+    {--num-spaces=4 : Defines the number of indentation spaces.}
+    {--no-backup : Flag to define if generator should avoid backuping existing entity file if it exists}';
 
     /**
      * The console command description.
@@ -73,9 +73,9 @@ class GenerateEntitiesCommand extends Command
                 $entityGenerator = new EntityGenerator();
 
                 $entityGenerator->setGenerateAnnotations($this->option('generate-annotations'));
-                $entityGenerator->setGenerateStubMethods($this->option('generate-methods') === null ? true : $this->option('generate-methods'));
+                $entityGenerator->setGenerateStubMethods($this->option('generate-methods'));
                 $entityGenerator->setRegenerateEntityIfExists($this->option('regenerate-entities'));
-                $entityGenerator->setUpdateEntityIfExists($this->option('update-entities') === null ? true : $this->option('update-entities'));
+                $entityGenerator->setUpdateEntityIfExists($this->option('update-entities'));
                 $entityGenerator->setNumSpaces($this->option('num-spaces'));
                 $entityGenerator->setBackupExisting(!$this->option('no-backup'));
 
