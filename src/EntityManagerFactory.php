@@ -2,6 +2,7 @@
 
 namespace LaravelDoctrine\ORM;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
@@ -92,9 +93,12 @@ class EntityManagerFactory
      */
     public function create(array $settings = [])
     {
+        $defaultDriver = $this->config->get('doctrine.cache.default', 'array');
+
         $configuration = $this->setup->createConfiguration(
             array_get($settings, 'dev', false),
-            array_get($settings, 'proxies.path')
+            array_get($settings, 'proxies.path'),
+            $this->cache->driver($defaultDriver)
         );
 
         $this->setMetadataDriver($settings, $configuration);
