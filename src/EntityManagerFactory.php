@@ -2,7 +2,6 @@
 
 namespace LaravelDoctrine\ORM;
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
@@ -15,6 +14,7 @@ use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
+use LaravelDoctrine\ORM\Configuration\Connections\MasterSlaveConnection;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaData;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
@@ -109,6 +109,10 @@ class EntityManagerFactory
             $driver['driver'],
             $driver
         );
+
+        if ($this->isMasterSlaveConfigured($driver) && $this->hasValidMasterSlaveConfig($driver)) {
+            $connection = (new MasterSlaveConnection($this->config, $connection))->resolve($driver);
+        }
 
         $this->setNamingStrategy($settings, $configuration);
         $this->setCustomFunctions($configuration);
@@ -440,5 +444,46 @@ class EntityManagerFactory
             // Throw DBALException if Doctrine Type is not found.
             $manager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($dbType, $doctrineType);
         }
+    }
+
+
+    /**
+     * Check if master slave connection was being configured.
+     *
+     * @param array $driverConfig
+     *
+     * @return bool
+     */
+    private function isMasterSlaveConfigured(array $driverConfig)
+    {
+        // Setting read is mandatory for master/slave configuration. Setting write is optional.
+        // But if write was set and read wasn't, it means configuration is incorrect and we must inform the user.
+        return isset($driverConfig['read']) || isset($driverConfig['write']);
+    }
+
+    /**
+     * Check if slave configuration is valid.
+     *
+     * @param array $driverConfig
+     *
+     * @return bool
+     */
+    private function hasValidMasterSlaveConfig(array $driverConfig)
+    {
+        if (!isset($driverConfig['read'])) {
+            throw new \InvalidArgumentException("Parameter 'read' must be set for read/write config.");
+        }
+
+        $slaves = $driverConfig['read'];
+
+        if (!is_array($slaves) || in_array(false, array_map('is_array', $slaves))) {
+            throw new \InvalidArgumentException("Parameter 'read' must be an array containing multiple arrays.");
+        }
+
+        if (($key = array_search(0, array_map('count', $slaves))) && $key !== false) {
+            throw new \InvalidArgumentException("Parameter 'read' config no. {$key} is empty.");
+        }
+
+        return true;
     }
 }
