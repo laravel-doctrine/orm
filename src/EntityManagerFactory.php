@@ -110,7 +110,8 @@ class EntityManagerFactory
             $driver
         );
 
-        if ($this->isMasterSlaveConfigured($driver) && $this->hasValidMasterSlaveConfig($driver)) {
+        if ($this->isMasterSlaveConfigured($driver)) {
+            $this->hasValidMasterSlaveConfig($driver);
             $connection = (new MasterSlaveConnection($this->config, $connection))->resolve($driver);
         }
 
@@ -464,8 +465,6 @@ class EntityManagerFactory
      * Check if slave configuration is valid.
      *
      * @param array $driverConfig
-     *
-     * @return bool
      */
     private function hasValidMasterSlaveConfig(array $driverConfig)
     {
@@ -482,7 +481,5 @@ class EntityManagerFactory
         if (($key = array_search(0, array_map('count', $slaves))) !== false) {
             throw new \InvalidArgumentException("Parameter 'read' config no. {$key} is empty.");
         }
-
-        return true;
     }
 }

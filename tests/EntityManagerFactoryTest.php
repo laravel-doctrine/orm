@@ -22,7 +22,6 @@ use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\EntityManagerFactory;
 use LaravelDoctrine\ORM\Loggers\Logger;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver as LaravelDoctrineEntityListenerResolver;
-
 use Mockery as m;
 use Mockery\Mock;
 
@@ -711,38 +710,11 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $out = [];
 
-        $dummyInputConfig = [
-            'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'port'      => '3306',
-            'database'  => 'test',
-            'username'  => 'homestead',
-            'password'  => 'secret',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-            'strict'    => false,
-            'engine'    => null,
-            'write'     => [
-                'port' => 3307,
-            ],
-            'read' => [
-                [
-                    'port'     => 3308,
-                    'database' => 'test2',
-                ],
-                [
-                    'host' => 'localhost2',
-                    'port' => 3309
-                ],
-            ],
-        ];
-
         // Case #0. Simple valid configuration, everything should go well.
-        $out[] = [$dummyInputConfig];
+        $out[] = [$this->getDummyBaseInputConfig()];
 
         //Case #1. No read DBs set.
-        $inputConfig = $dummyInputConfig;
+        $inputConfig = $this->getDummyBaseInputConfig();
         unset($inputConfig['read']);
 
         $out[] = [
@@ -752,7 +724,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         ];
 
         //Case #2. 'read' isn't an array
-        $inputConfig         = $dummyInputConfig;
+        $inputConfig         = $this->getDummyBaseInputConfig();
         $inputConfig['read'] = 'test';
 
         $out[] = [
@@ -762,7 +734,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         ];
 
         //Case #3. 'read' has non array entries.
-        $inputConfig           = $dummyInputConfig;
+        $inputConfig           = $this->getDummyBaseInputConfig();
         $inputConfig['read'][] = 'test';
 
         $out[] = [
@@ -771,14 +743,24 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
             "Parameter 'read' must be an array containing multiple arrays."
         ];
 
-        //Case #4. 'read' has empty entries
-        $inputConfig           = $dummyInputConfig;
+        //Case #4. 'read' has empty entries.
+        $inputConfig           = $this->getDummyBaseInputConfig();
         $inputConfig['read'][] = [];
 
         $out[] = [
             $inputConfig,
             \InvalidArgumentException::class,
             "Parameter 'read' config no. 2 is empty."
+        ];
+
+        //Case #5. 'read' has empty first entry. (reported by maxbrokman.)
+        $inputConfig            = $this->getDummyBaseInputConfig();
+        $inputConfig['read'][0] = [];
+
+        $out[] = [
+            $inputConfig,
+            \InvalidArgumentException::class,
+            "Parameter 'read' config no. 0 is empty."
         ];
 
         return $out;
@@ -845,6 +827,41 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         m::close();
+    }
+
+    /**
+     * Returns dummy base config for testing.
+     *
+     * @return array
+     */
+    private function getDummyBaseInputConfig()
+    {
+        return [
+            'driver'    => 'mysql',
+            'host'      => 'localhost',
+            'port'      => '3306',
+            'database'  => 'test',
+            'username'  => 'homestead',
+            'password'  => 'secret',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+            'engine'    => null,
+            'write'     => [
+                'port' => 3307,
+            ],
+            'read' => [
+                [
+                    'port'     => 3308,
+                    'database' => 'test2',
+                ],
+                [
+                    'host' => 'localhost2',
+                    'port' => 3309
+                ],
+            ],
+        ];
     }
 }
 
