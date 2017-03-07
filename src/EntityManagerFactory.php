@@ -479,7 +479,7 @@ class EntityManagerFactory
             throw new \InvalidArgumentException("Parameter 'read' must be an array containing multiple arrays.");
         }
 
-        if (($key = array_search(0, array_map('count', $slaves))) && $key !== false) {
+        if (($key = array_search(0, array_map('count', $slaves))) !== false) {
             throw new \InvalidArgumentException("Parameter 'read' config no. {$key} is empty.");
         }
 
