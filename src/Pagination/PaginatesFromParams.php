@@ -7,16 +7,16 @@ use Doctrine\ORM\Query;
 trait PaginatesFromParams
 {
     /**
-     * @param int    $perPage
-     * @param string $pageName
+     * @param int $perPage
+     * @param int $page
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function paginateAll($perPage = 15, $pageName = 'page')
+    public function paginateAll($perPage = 15, $page = 1)
     {
         $query = $this->createQueryBuilder('o')->getQuery();
 
-        return $this->paginate($query, $perPage, $pageName);
+        return $this->paginate($query, $perPage, $page);
     }
 
     /**
