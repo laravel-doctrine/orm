@@ -57,9 +57,9 @@ class IlluminateCacheAdapter extends CacheProvider
         // Laravel cache system accept expire times in minutes
         // while Doctrine accept it in seconds, so we need to convert $lifeTime from seconds to minutes
         // before passing it to Laravel cache repository
-        $lifeTime_minutes = $lifeTime / 60;
+        $lifeTimeMinutes = $lifeTime / 60;
 
-        return $this->cache->put($id, $data, $lifeTime_minutes);
+        return $this->cache->put($id, $data, $lifeTimeMinutes);
     }
 
     /**
