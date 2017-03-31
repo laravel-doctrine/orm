@@ -100,10 +100,10 @@ class IlluminateCacheAdapterTest extends PHPUnit_Framework_TestCase
     {
         $this->repository->shouldReceive('get')
                          ->with('DoctrineNamespaceCacheKey[]')
-                         ->once()->andReturn('cacheKey');
+                         ->once()->andReturn(1);
 
         $this->repository->shouldReceive('forever')
-                         ->with("DoctrineNamespaceCacheKey[]", 1)
+                         ->with("DoctrineNamespaceCacheKey[]", 2)
                          ->once()->andReturn(true);
 
         $this->assertTrue($this->cache->deleteAll());
