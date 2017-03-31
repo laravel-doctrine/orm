@@ -18,13 +18,26 @@ class SimpleHydrator
         $instance   = $reflection->newInstanceWithoutConstructor();
 
         foreach ($attributes as $field => $value) {
-            if ($reflection->hasProperty($field)) {
-                $property = $reflection->getProperty($field);
-                $property->setAccessible(true);
-                $property->setValue($instance, $value);
-            }
+            static::hydrateReflection($reflection, $instance, $field, $value);
         }
 
         return $instance;
+    }
+
+    /**
+     * @param ReflectionClass $reflection
+     * @param object          $instance
+     * @param string          $field
+     * @param mixed           $value
+     */
+    private static function hydrateReflection(ReflectionClass $reflection, $instance, $field, $value)
+    {
+        if ($reflection->hasProperty($field)) {
+            $property = $reflection->getProperty($field);
+            $property->setAccessible(true);
+            $property->setValue($instance, $value);
+        } else if ($parent = $reflection->getParentClass()) {
+            self::hydrateReflection($parent, $instance, $field, $value);
+        }
     }
 }
