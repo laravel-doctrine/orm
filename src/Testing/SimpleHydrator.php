@@ -36,7 +36,7 @@ class SimpleHydrator
             $property = $reflection->getProperty($field);
             $property->setAccessible(true);
             $property->setValue($instance, $value);
-        } else if ($parent = $reflection->getParentClass()) {
+        } elseif ($parent = $reflection->getParentClass()) {
             self::hydrateReflection($parent, $instance, $field, $value);
         }
     }
