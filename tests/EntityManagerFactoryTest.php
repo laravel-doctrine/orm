@@ -529,8 +529,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     protected function mockCache()
     {
         $this->cache = m::mock(CacheManager::class);
+
         $this->cache->shouldReceive('driver')
-                    ->times(count($this->caches))
+                    ->times(count($this->caches) + 1) // one for each cache driver + one default
                     ->andReturn(new ArrayCache());
     }
 
