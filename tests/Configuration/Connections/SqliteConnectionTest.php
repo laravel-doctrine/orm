@@ -27,11 +27,11 @@ class SqliteConnectionTest extends PHPUnit_Framework_TestCase
     public function test_can_resolve()
     {
         $resolved = $this->connection->resolve([
-            'driver'   => 'pdo_sqlite',
-            'database' => 'path',
-            'username' => 'username',
-            'password' => 'password',
-            'prefix'   => 'prefix',
+            'driver'              => 'pdo_sqlite',
+            'database'            => 'path',
+            'username'            => 'username',
+            'password'            => 'password',
+            'prefix'              => 'prefix',
             'defaultTableOptions' => [],
         ]);
 

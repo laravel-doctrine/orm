@@ -12,15 +12,15 @@ class PgsqlConnection extends Connection
     public function resolve(array $settings = [])
     {
         return [
-            'driver'   => 'pdo_pgsql',
-            'host'     => array_get($settings, 'host'),
-            'dbname'   => array_get($settings, 'database'),
-            'user'     => array_get($settings, 'username'),
-            'password' => array_get($settings, 'password'),
-            'charset'  => array_get($settings, 'charset'),
-            'port'     => array_get($settings, 'port'),
-            'sslmode'  => array_get($settings, 'sslmode'),
-            'prefix'   => array_get($settings, 'prefix'),
+            'driver'              => 'pdo_pgsql',
+            'host'                => array_get($settings, 'host'),
+            'dbname'              => array_get($settings, 'database'),
+            'user'                => array_get($settings, 'username'),
+            'password'            => array_get($settings, 'password'),
+            'charset'             => array_get($settings, 'charset'),
+            'port'                => array_get($settings, 'port'),
+            'sslmode'             => array_get($settings, 'sslmode'),
+            'prefix'              => array_get($settings, 'prefix'),
             'defaultTableOptions' => array_get($settings, 'defaultTableOptions', []),
         ];
     }
