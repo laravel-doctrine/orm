@@ -20,6 +20,7 @@ class SqlsrvConnection extends Connection
             'port'     => array_get($settings, 'port'),
             'prefix'   => array_get($settings, 'prefix'),
             'charset'  => array_get($settings, 'charset'),
+            'defaultTableOptions' => array_get($settings, 'defaultTableOptions', []),
         ];
     }
 }

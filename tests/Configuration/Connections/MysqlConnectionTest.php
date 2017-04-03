@@ -35,7 +35,8 @@ class MysqlConnectionTest extends PHPUnit_Framework_TestCase
             'charset'     => 'charset',
             'port'        => 'port',
             'unix_socket' => 'unix_socket',
-            'prefix'      => 'prefix'
+            'prefix'      => 'prefix',
+            'defaultTableOptions' => [],
         ]);
 
         $this->assertEquals('pdo_mysql', $resolved['driver']);
@@ -47,6 +48,7 @@ class MysqlConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('port', $resolved['port']);
         $this->assertEquals('unix_socket', $resolved['unix_socket']);
         $this->assertEquals('prefix', $resolved['prefix']);
+        $this->assertCount(0, $resolved['defaultTableOptions']);
     }
 
     protected function tearDown()

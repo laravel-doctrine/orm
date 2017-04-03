@@ -19,7 +19,8 @@ class SqliteConnection extends Connection
             'password' => array_get($settings, 'password'),
             'prefix'   => array_get($settings, 'prefix'),
             'memory'   => $this->isMemory($settings),
-            'path'     => array_get($settings, 'database')
+            'path'     => array_get($settings, 'database'),
+            'defaultTableOptions' => array_get($settings, 'defaultTableOptions', []),
         ];
     }
 
