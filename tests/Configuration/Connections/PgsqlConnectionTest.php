@@ -27,15 +27,15 @@ class PgsqlConnectionTest extends PHPUnit_Framework_TestCase
     public function test_can_resolve()
     {
         $resolved = $this->connection->resolve([
-            'driver' => 'pdo_pgsql',
-            'host' => 'host',
-            'database' => 'database',
-            'username' => 'username',
-            'password' => 'password',
-            'charset' => 'charset',
-            'port' => 'port',
-            'prefix' => 'prefix',
-            'sslmode' => 'sslmode',
+            'driver'              => 'pdo_pgsql',
+            'host'                => 'host',
+            'database'            => 'database',
+            'username'            => 'username',
+            'password'            => 'password',
+            'charset'             => 'charset',
+            'port'                => 'port',
+            'prefix'              => 'prefix',
+            'sslmode'             => 'sslmode',
             'defaultTableOptions' => 'defaultTableOptions',
         ]);
 

@@ -27,11 +27,11 @@ class SqliteConnectionTest extends PHPUnit_Framework_TestCase
     public function test_can_resolve()
     {
         $resolved = $this->connection->resolve([
-            'driver' => 'pdo_sqlite',
-            'database' => 'path',
-            'username' => 'username',
-            'password' => 'password',
-            'prefix' => 'prefix',
+            'driver'              => 'pdo_sqlite',
+            'database'            => 'path',
+            'username'            => 'username',
+            'password'            => 'password',
+            'prefix'              => 'prefix',
             'defaultTableOptions' => 'defaultTableOptions',
         ]);
 
@@ -47,11 +47,11 @@ class SqliteConnectionTest extends PHPUnit_Framework_TestCase
     public function test_can_resolve_with_in_memory_database()
     {
         $resolved = $this->connection->resolve([
-            'driver' => 'pdo_sqlite',
+            'driver'   => 'pdo_sqlite',
             'database' => ':memory',
             'username' => 'username',
             'password' => 'password',
-            'prefix' => 'prefix',
+            'prefix'   => 'prefix',
         ]);
 
         $this->assertEquals('pdo_sqlite', $resolved['driver']);
