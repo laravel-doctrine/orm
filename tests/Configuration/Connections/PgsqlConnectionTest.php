@@ -36,7 +36,7 @@ class PgsqlConnectionTest extends PHPUnit_Framework_TestCase
             'port'                => 'port',
             'prefix'              => 'prefix',
             'sslmode'             => 'sslmode',
-            'defaultTableOptions' => 'defaultTableOptions',
+            'defaultTableOptions' => [],
         ]);
 
         $this->assertEquals('pdo_pgsql', $resolved['driver']);
@@ -48,7 +48,7 @@ class PgsqlConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('port', $resolved['port']);
         $this->assertEquals('sslmode', $resolved['sslmode']);
         $this->assertEquals('prefix', $resolved['prefix']);
-        $this->assertEquals('defaultTableOptions', $resolved['defaultTableOptions']);
+        $this->assertCount(0, $resolved['defaultTableOptions']);
     }
 
     protected function tearDown()

@@ -21,7 +21,7 @@ class PgsqlConnection extends Connection
             'port'                => array_get($settings, 'port'),
             'sslmode'             => array_get($settings, 'sslmode'),
             'prefix'              => array_get($settings, 'prefix'),
-            'defaultTableOptions' => array_get($settings, 'defaultTableOptions'),
+            'defaultTableOptions' => array_get($settings, 'defaultTableOptions', []),
         ];
     }
 }

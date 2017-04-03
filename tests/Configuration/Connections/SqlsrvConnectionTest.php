@@ -35,7 +35,7 @@ class SqlsrvConnectionTest extends PHPUnit_Framework_TestCase
             'port'                => 'port',
             'prefix'              => 'prefix',
             'charset'             => 'charset',
-            'defaultTableOptions' => 'defaultTableOptions',
+            'defaultTableOptions' => [],
         ]);
 
         $this->assertEquals('pdo_sqlsrv', $resolved['driver']);
@@ -46,7 +46,7 @@ class SqlsrvConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('port', $resolved['port']);
         $this->assertEquals('prefix', $resolved['prefix']);
         $this->assertEquals('charset', $resolved['charset']);
-        $this->assertEquals('defaultTableOptions', $resolved['defaultTableOptions']);
+        $this->assertCount(0, $resolved['defaultTableOptions']);
     }
 
     protected function tearDown()

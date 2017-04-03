@@ -20,7 +20,7 @@ class SqliteConnection extends Connection
             'prefix'              => array_get($settings, 'prefix'),
             'memory'              => $this->isMemory($settings),
             'path'                => array_get($settings, 'database'),
-            'defaultTableOptions' => array_get($settings, 'defaultTableOptions'),
+            'defaultTableOptions' => array_get($settings, 'defaultTableOptions', []),
         ];
     }
 

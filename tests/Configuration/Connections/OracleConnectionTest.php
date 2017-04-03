@@ -35,7 +35,7 @@ class OracleConnectionTest extends PHPUnit_Framework_TestCase
             'charset'             => 'charset',
             'port'                => 'port',
             'prefix'              => 'prefix',
-            'defaultTableOptions' => 'defaultTableOptions',
+            'defaultTableOptions' => [],
         ]);
 
         $this->assertEquals('oci8', $resolved['driver']);
@@ -46,7 +46,7 @@ class OracleConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('charset', $resolved['charset']);
         $this->assertEquals('port', $resolved['port']);
         $this->assertEquals('prefix', $resolved['prefix']);
-        $this->assertEquals('defaultTableOptions', $resolved['defaultTableOptions']);
+        $this->assertCount(0, $resolved['defaultTableOptions']);
     }
 
     protected function tearDown()

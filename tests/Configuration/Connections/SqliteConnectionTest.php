@@ -32,7 +32,7 @@ class SqliteConnectionTest extends PHPUnit_Framework_TestCase
             'username'            => 'username',
             'password'            => 'password',
             'prefix'              => 'prefix',
-            'defaultTableOptions' => 'defaultTableOptions',
+            'defaultTableOptions' => [],
         ]);
 
         $this->assertEquals('pdo_sqlite', $resolved['driver']);
@@ -41,7 +41,7 @@ class SqliteConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('prefix', $resolved['prefix']);
         $this->assertFalse($resolved['memory']);
         $this->assertEquals('path', $resolved['path']);
-        $this->assertEquals('defaultTableOptions', $resolved['defaultTableOptions']);
+        $this->assertCount(0, $resolved['defaultTableOptions']);
     }
 
     public function test_can_resolve_with_in_memory_database()

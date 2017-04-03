@@ -20,7 +20,7 @@ class OracleConnection extends Connection
             'charset'             => array_get($settings, 'charset'),
             'port'                => array_get($settings, 'port'),
             'prefix'              => array_get($settings, 'prefix'),
-            'defaultTableOptions' => array_get($settings, 'defaultTableOptions'),
+            'defaultTableOptions' => array_get($settings, 'defaultTableOptions', []),
         ];
     }
 }
