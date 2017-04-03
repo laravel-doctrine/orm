@@ -27,14 +27,15 @@ class OracleConnectionTest extends PHPUnit_Framework_TestCase
     public function test_can_resolve()
     {
         $resolved = $this->connection->resolve([
-            'driver'      => 'oci8',
-            'host'        => 'host',
-            'database'    => 'database',
-            'username'    => 'username',
-            'password'    => 'password',
-            'charset'     => 'charset',
-            'port'        => 'port',
-            'prefix'      => 'prefix'
+            'driver' => 'oci8',
+            'host' => 'host',
+            'database' => 'database',
+            'username' => 'username',
+            'password' => 'password',
+            'charset' => 'charset',
+            'port' => 'port',
+            'prefix' => 'prefix',
+            'defaultTableOptions' => 'defaultTableOptions',
         ]);
 
         $this->assertEquals('oci8', $resolved['driver']);
@@ -45,6 +46,7 @@ class OracleConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('charset', $resolved['charset']);
         $this->assertEquals('port', $resolved['port']);
         $this->assertEquals('prefix', $resolved['prefix']);
+        $this->assertEquals('defaultTableOptions', $resolved['defaultTableOptions']);
     }
 
     protected function tearDown()

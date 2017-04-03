@@ -14,12 +14,13 @@ class SqliteConnection extends Connection
     public function resolve(array $settings = [])
     {
         return [
-            'driver'   => 'pdo_sqlite',
-            'user'     => array_get($settings, 'username'),
+            'driver' => 'pdo_sqlite',
+            'user' => array_get($settings, 'username'),
             'password' => array_get($settings, 'password'),
-            'prefix'   => array_get($settings, 'prefix'),
-            'memory'   => $this->isMemory($settings),
-            'path'     => array_get($settings, 'database')
+            'prefix' => array_get($settings, 'prefix'),
+            'memory' => $this->isMemory($settings),
+            'path' => array_get($settings, 'database'),
+            'defaultTableOptions' => array_get($settings, 'defaultTableOptions'),
         ];
     }
 
