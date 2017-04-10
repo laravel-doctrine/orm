@@ -147,6 +147,23 @@ class FactoryBuilder
             return $definition;
         }
 
-        return SimpleHydrator::hydrate($this->class, array_merge($definition, $attributes));
+        return SimpleHydrator::hydrate(
+            $this->class,
+            $this->callClosureAttributes(array_merge($definition, $attributes))
+        );
+    }
+
+    /**
+     * @param array $attributes
+     *
+     * @return array
+     */
+    protected function callClosureAttributes(array $attributes)
+    {
+        return array_map(function ($attribute) use ($attributes) {
+            return $attribute instanceof \Closure ?
+                $attribute($attributes) :
+                $attribute;
+        }, $attributes);
     }
 }
