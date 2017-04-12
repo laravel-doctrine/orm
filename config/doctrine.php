@@ -218,7 +218,8 @@ return [
      */
     'factories' => [
         'folders' => [
-            'Modules/User/Database/Factory'
+            // 'Modules/User/Database/Factory',
+            // 'Modules/Features/Database/Factory'
         ]
     ]
 ];
