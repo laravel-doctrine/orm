@@ -32,6 +32,7 @@ return [
                 base_path('app')
             ],
             'repository'    => Doctrine\ORM\EntityRepository::class,
+            'entity_manager'=> Doctrine\ORM\EntityManager::class,
             'proxies'       => [
                 'namespace'     => false,
                 'path'          => storage_path('proxies'),

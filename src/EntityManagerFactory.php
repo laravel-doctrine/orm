@@ -124,7 +124,7 @@ class EntityManagerFactory
 
         $configuration->setEntityListenerResolver($this->resolver);
 
-        $manager = EntityManager::create(
+        $manager = array_get($settings, 'entity_manager', EntityManager::class)::create(
             $connection,
             $configuration
         );
