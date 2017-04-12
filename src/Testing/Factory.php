@@ -43,9 +43,9 @@ class Factory implements ArrayAccess
     /**
      * Create a new factory container.
      *
-     * @param \Faker\Generator $faker
-     * @param ManagerRegistry  $registry
-     * @param array|string|null      $pathToFactories
+     * @param \Faker\Generator  $faker
+     * @param ManagerRegistry   $registry
+     * @param array|string|null $pathToFactories
      *
      * @return static
      */
