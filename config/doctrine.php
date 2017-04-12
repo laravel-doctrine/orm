@@ -204,5 +204,21 @@ return [
      */
     'notifications'              => [
         'channel' => 'database'
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Doctrine Entity Factories
+     |--------------------------------------------------------------------------
+     |
+     |  You can add custom folders with your factories, for instance, if you have
+     |  modular system and each module contains its own factories.
+     |  If no folders are specify, the default one will be used ('database/factories' in project root)
+     |
+     */
+    'factories' => [
+        'folders' => [
+            'Modules/User/Database/Factory'
+        ]
     ]
 ];

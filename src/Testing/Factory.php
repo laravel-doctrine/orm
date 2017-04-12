@@ -45,7 +45,7 @@ class Factory implements ArrayAccess
      *
      * @param \Faker\Generator $faker
      * @param ManagerRegistry  $registry
-     * @param string|null      $pathToFactories
+     * @param array|string|null      $pathToFactories
      *
      * @return static
      */
@@ -55,9 +55,11 @@ class Factory implements ArrayAccess
 
         $factory = new static($faker, $registry);
 
-        if (is_dir($pathToFactories)) {
-            foreach (Finder::create()->files()->in($pathToFactories) as $file) {
-                require $file->getRealPath();
+        foreach ((array)$pathToFactories as $factoryDir) {
+            if (is_dir($factoryDir)) {
+                foreach (Finder::create()->files()->in($factoryDir) as $file) {
+                    require $file->getRealPath();
+                }
             }
         }
 
