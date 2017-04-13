@@ -218,8 +218,8 @@ return [
      */
     'factories' => [
         'folders' => [
-            // 'Modules/User/Database/Factory',
-            // 'Modules/Features/Database/Factory'
+            database_path('factories'),
+            // base_path('Modules/User/Database/Factory'),
         ]
     ]
 ];
