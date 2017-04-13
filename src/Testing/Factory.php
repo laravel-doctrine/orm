@@ -55,7 +55,7 @@ class Factory implements ArrayAccess
 
         $factory = new static($faker, $registry);
 
-        foreach ( (array)$pathToFactories as $factoryDir) {
+        foreach ((array) $pathToFactories as $factoryDir) {
             if (is_dir($factoryDir)) {
                 foreach (Finder::create()->files()->in($factoryDir) as $file) {
                     require $file->getRealPath();
