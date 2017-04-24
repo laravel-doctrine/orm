@@ -2,7 +2,9 @@
 
 namespace LaravelDoctrine\ORM\Testing;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Faker\Generator as Faker;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
@@ -147,9 +149,23 @@ class FactoryBuilder
             return $definition;
         }
 
+        /** @var ClassMetadata $metadata */
+        $metadata = $this->registry
+            ->getManagerForClass($this->class)
+            ->getClassMetadata($this->class);
+
+        $toManyRelations = (new Collection($metadata->getAssociationMappings()))
+            ->keys()
+            ->filter(function ($association) use ($metadata) {
+                return $metadata->isCollectionValuedAssociation($association);
+            })
+            ->mapWithKeys(function ($association) {
+                return [$association => new ArrayCollection];
+            });
+
         return SimpleHydrator::hydrate(
             $this->class,
-            $this->callClosureAttributes(array_merge($definition, $attributes))
+            $this->callClosureAttributes(array_merge($definition, $toManyRelations->all(), $attributes))
         );
     }
 
