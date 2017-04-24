@@ -85,11 +85,11 @@ class DoctrineServiceProvider extends ServiceProvider
 
     protected function ensureValidatorIsUsable()
     {
-        if(!$this->isLumen()) {
+        if (!$this->isLumen()) {
             return;
         }
 
-        if($this->shouldRegisterDoctrinePresenceValidator()) {
+        if ($this->shouldRegisterDoctrinePresenceValidator()) {
             // due to weirdness the default presence verifier overrides one set by a service provider
             // so remove them so we can re add our implementation later
             unset($this->app->availableBindings['validator']);
