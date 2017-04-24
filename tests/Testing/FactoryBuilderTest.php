@@ -44,15 +44,15 @@ namespace {
 
         protected function setUp()
         {
-            $this->aRegistry = \Mockery::mock(ManagerRegistry::class);
-            $this->aClass = EntityStub::class;
-            $this->aName = 'default';
-            $this->faker = \Mockery::mock(Faker\Generator::class);
+            $this->aRegistry   = \Mockery::mock(ManagerRegistry::class);
+            $this->aClass      = EntityStub::class;
+            $this->aName       = 'default';
+            $this->faker       = \Mockery::mock(Faker\Generator::class);
             $this->definitions = [
                 EntityStub::class => [
                     $this->aName => function () {
                         return [
-                            'id' => random_int(1, 9),
+                            'id'   => random_int(1, 9),
                             'name' => 'A Name',
                         ];
                     }
@@ -72,7 +72,6 @@ namespace {
 
             $this->entityManager->shouldReceive('persist');
             $this->entityManager->shouldReceive('flush');
-
         }
 
         protected function getFactoryBuilder(array $definitions = []): FactoryBuilder
@@ -89,7 +88,7 @@ namespace {
         protected function getEntityManager()
         {
             $conn = [
-                'driver' => 'pdo_sqlite',
+                'driver'   => 'pdo_sqlite',
                 'database' => ':memory:',
             ];
 
@@ -119,6 +118,23 @@ namespace {
 
             $this->assertInstanceOf(ArrayCollection::class, $instance->others);
         }
+
+        public function test_it_shouldnt_override_predefined_relations()
+        {
+            $instance = $this->getFactoryBuilder([
+                EntityStub::class => [
+                    'default' => function () {
+                        return [
+                            'id'     => 1,
+                            'name'   => 'a name',
+                            'others' => ['Foo'],
+                        ];
+                    }
+                ]
+            ])->make();
+
+            $this->assertEquals(['Foo'], $instance->others);
+        }
     }
 
     /**
@@ -147,5 +163,7 @@ namespace {
     }
 }
 namespace Faker {
-    interface Generator {}
+    interface Generator
+    {
+    }
 }

@@ -165,7 +165,7 @@ class FactoryBuilder
 
         return SimpleHydrator::hydrate(
             $this->class,
-            $this->callClosureAttributes(array_merge($definition, $toManyRelations->all(), $attributes))
+            $this->callClosureAttributes(array_merge($toManyRelations->all(), $definition, $attributes))
         );
     }
 
