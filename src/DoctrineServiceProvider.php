@@ -54,6 +54,8 @@ class DoctrineServiceProvider extends ServiceProvider
                 $this->getConfigPath() => config_path('doctrine.php'),
             ], 'config');
         }
+
+        $this->ensureValidatorIsUsable();
     }
 
     /**
@@ -78,6 +80,26 @@ class DoctrineServiceProvider extends ServiceProvider
 
         if ($this->shouldRegisterDoctrinePresenceValidator()) {
             $this->registerPresenceVerifierProvider();
+        }
+    }
+
+    protected function ensureValidatorIsUsable()
+    {
+        if(!$this->isLumen()) {
+            return;
+        }
+
+        if($this->shouldRegisterDoctrinePresenceValidator()) {
+            // due to weirdness the default presence verifier overrides one set by a service provider
+            // so remove them so we can re add our implementation later
+            unset($this->app->availableBindings['validator']);
+            unset($this->app->availableBindings['Illuminate\Contracts\Validation\Factory']);
+        } else {
+            // resolve the db,
+            // this makes `isset($this->app['db']) == true`
+            // which is required to set the presence verifier
+            // in the default ValidationServiceProvider implementation
+            $this->app['db'];
         }
     }
 
@@ -202,7 +224,11 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerPresenceVerifierProvider()
     {
-        $this->app->register(PresenceVerifierProvider::class);
+        $this->app->singleton('validator', function () {
+            $this->app->register(PresenceVerifierProvider::class);
+
+            return $this->app->make('validator');
+        });
     }
 
     /**
