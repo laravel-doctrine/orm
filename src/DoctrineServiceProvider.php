@@ -224,11 +224,15 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerPresenceVerifierProvider()
     {
-        $this->app->singleton('validator', function () {
-            $this->app->register(PresenceVerifierProvider::class);
+        if ($this->isLumen()) {
+            $this->app->singleton('validator', function () {
+                $this->app->register(PresenceVerifierProvider::class);
 
-            return $this->app->make('validator');
-        });
+                return $this->app->make('validator');
+            });
+        } else {
+            $this->app->register(PresenceVerifierProvider::class);
+        }
     }
 
     /**
