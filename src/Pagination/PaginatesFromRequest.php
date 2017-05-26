@@ -16,7 +16,7 @@ trait PaginatesFromRequest
     {
         $query = $this->createQueryBuilder('o')->getQuery();
 
-        return $this->paginate($query, $perPage, $pageName);
+        return $this->paginate($query, $perPage, $pageName, false);
     }
 
     /**
