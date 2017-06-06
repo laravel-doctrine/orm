@@ -32,7 +32,11 @@ class SimpleHydrator
      */
     private static function hydrateReflection(ReflectionClass $reflection, $instance, $field, $value)
     {
-        if ($reflection->hasProperty($field)) {
+        if ($reflection->hasMethod('set'.$field)) {
+            $method = $reflection->getMethod('set'.$field);
+            $method->setAccessible(true);
+            $method->invoke($instance, $value);
+        } else if ($reflection->hasProperty($field)) {
             $property = $reflection->getProperty($field);
             $property->setAccessible(true);
             $property->setValue($instance, $value);
