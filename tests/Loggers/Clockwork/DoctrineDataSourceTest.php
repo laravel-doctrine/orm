@@ -23,7 +23,7 @@ class DoctrineDataSourceTest extends PHPUnit_Framework_TestCase
             [
                 'sql'         => 'SELECT * FROM table WHERE condition = ?',
                 'params'      => ['value'],
-                'executionMS' => 1
+                'executionMS' => 0.001
             ]
         ];
 
