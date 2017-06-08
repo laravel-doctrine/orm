@@ -60,7 +60,7 @@ class DoctrineDataSource extends DataSource
         foreach ($this->logger->queries as $query) {
             $queries[] = [
                 'query'      => $this->formatter->format($query['sql'], $query['params']),
-                'duration'   => $query['executionMS'],
+                'duration'   => $query['executionMS'] * 1000,
                 'connection' => $this->connection
             ];
         }
