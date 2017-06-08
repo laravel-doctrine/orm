@@ -313,7 +313,7 @@ class DoctrineServiceProvider extends ServiceProvider
             return EntityFactory::construct(
                 $app->make(FakerGenerator::class),
                 $app->make('registry'),
-                database_path('factories')
+                $app->make('config')->get('doctrine.factories.folders', null)
             );
         });
     }
