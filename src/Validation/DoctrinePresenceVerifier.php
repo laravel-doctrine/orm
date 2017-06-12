@@ -89,7 +89,10 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
      */
     protected function select($collection)
     {
-        $em      = $this->getEntityManager($collection);
+        $em = $this->getEntityManager($collection);
+        if(is_null($em)) {
+            throw new \InvalidArgumentException($collection . ' is not a valid Doctrine entity type');
+        }
         $builder = $em->createQueryBuilder();
 
         $builder->select('count(e)')->from($collection, 'e');
