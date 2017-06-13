@@ -93,7 +93,7 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
         if ($em === null) {
             throw new \InvalidArgumentException("[$collection] is not a valid Doctrine type.");
         }
-        
+
         $builder = $em->createQueryBuilder();
 
         $builder->select('count(e)')->from($collection, 'e');
