@@ -123,6 +123,17 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    public function test_counting_invalid_entity_throws_exception()
+    {
+        $this->registry->shouldReceive('getManagerForClass')
+                       ->with(CountableEntityMock::class)
+                       ->andReturn(null);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com');
+    }
+
     protected function defaultGetCountMocks()
     {
         $this->registry->shouldReceive('getManagerForClass')
