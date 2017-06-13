@@ -5,6 +5,7 @@ namespace LaravelDoctrine\ORM\Validation;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
 use Illuminate\Validation\PresenceVerifierInterface;
+use InvalidArgumentException;
 
 class DoctrinePresenceVerifier implements PresenceVerifierInterface
 {
@@ -120,7 +121,13 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
             return $this->registry->getManager($this->connection);
         }
 
-        return $this->registry->getManagerForClass($entity);
+        $em = $this->registry->getManagerForClass($entity);
+
+        if ($em === null) {
+            throw new InvalidArgumentException(sprintf("No Entity Manager could be found for [%s].", $entity));
+        }
+
+        return $em;
     }
 
     /**
