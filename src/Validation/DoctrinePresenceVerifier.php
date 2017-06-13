@@ -90,8 +90,7 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
      */
     protected function select($collection)
     {
-        $em = $this->getEntityManager($collection);
-
+        $em      = $this->getEntityManager($collection);
         $builder = $em->createQueryBuilder();
 
         $builder->select('count(e)')->from($collection, 'e');
