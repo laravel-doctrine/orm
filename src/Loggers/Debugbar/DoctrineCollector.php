@@ -16,18 +16,17 @@ class DoctrineCollector extends DebugbarDoctrineCollector
     /**
      * @var string
      */
-    protected $name;
+    protected $widgetName;
 
 
     /**
-     * DoctrineCollector constructor.
      * @param DebugStack|EntityManager $debugStackOrEntityManager
-     * @param string                   $name
+     * @param string                   $widgetName
      */
-    public function __construct($debugStackOrEntityManager, $name = 'queries')
+    public function __construct($debugStackOrEntityManager, $widgetName = 'queries')
     {
         parent::__construct($debugStackOrEntityManager);
-        $this->name = $name;
+        $this->widgetName = $widgetName;
     }
 
     /**
@@ -44,13 +43,13 @@ class DoctrineCollector extends DebugbarDoctrineCollector
     public function getWidgets()
     {
         return [
-            $this->name => [
+            $this->widgetName => [
                 "icon"    => "arrow-right",
                 "widget"  => "PhpDebugBar.Widgets.SQLQueriesWidget",
                 "map"     => "doctrine",
                 "default" => "[]"
             ],
-            sprintf('%s:badge', $this->name) => [
+            sprintf('%s:badge', $this->widgetName) => [
                 "map"     => "doctrine.nb_statements",
                 "default" => 0
             ]

@@ -143,7 +143,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'logger'                     => env('DOCTRINE_LOGGER', false),
-    'debugbar_widget_key'        => env('DOCTRINE_DEBUGBAR_KEY', 'queries'),
+    'debugbar_widget_name'       => 'queries',
 
     /*
     |--------------------------------------------------------------------------
