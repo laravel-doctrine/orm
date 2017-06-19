@@ -43,7 +43,7 @@ class LaravelDebugbarLogger implements Logger
             $debugStack = new DebugStack;
 
             $this->debugbar->addCollector(
-                new DoctrineCollector($debugStack, $this->config->get('doctrine.debugbar_widget_key', 'queries'))
+                new DoctrineCollector($debugStack, $this->config->get('doctrine.debugbar_widget_name', 'queries'))
             );
         }
 
