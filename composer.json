@@ -58,5 +58,17 @@
     "laravel-doctrine/extensions": "to add Behavioral and Query/Type Extensions for Laravel Doctrine (~1.0)",
     "laravel-doctrine/migrations": "to add support for migrations in Laravel Doctrine (~1.0)",
     "yajra/laravel-oci8": "Support for Laravel native queue and session database drivers in Oracle (~2.0)."
-  }
+  },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaravelDoctrine\\ORM\\DoctrineServiceProvider"
+            ],
+            "aliases": {
+                "Registry": "LaravelDoctrine\\ORM\\Facades\\Registry",
+                "Doctrine": "LaravelDoctrine\\ORM\\Facades\\Doctrine",
+                "EntityManager": "LaravelDoctrine\\ORM\\Facades\\EntityManager"
+            }
+        }
+    }
 }
