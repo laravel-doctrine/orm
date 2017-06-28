@@ -44,15 +44,13 @@ class ExtensionManager
             foreach ($this->extensions as $extension) {
                 $extension = $this->container->make($extension);
 
-                if ($this->notBootedYet($connection, $extension)) {
-                    $this->bootExtension(
-                        $connection,
-                        $extension,
-                        $em,
-                        $em->getEventManager(),
-                        $em->getConfiguration()
-                    );
-                }
+                $this->bootExtension(
+                    $connection,
+                    $extension,
+                    $em,
+                    $em->getEventManager(),
+                    $em->getConfiguration()
+                );
             }
         }
     }
