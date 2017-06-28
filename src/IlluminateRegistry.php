@@ -280,6 +280,8 @@ final class IlluminateRegistry implements ManagerRegistry
 
         unset($this->managersMap[$name]);
         unset($this->connectionsMap[$name]);
+
+        return $this->getManager($name);
     }
 
     /**
