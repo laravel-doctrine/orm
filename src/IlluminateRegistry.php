@@ -205,9 +205,13 @@ final class IlluminateRegistry implements ManagerRegistry
             return $this->managersMap[$name];
         }
 
-        return $this->managersMap[$name] = $this->getService(
+        $this->managersMap[$name] = $this->getService(
             $this->getManagerBindingName($this->managers[$name])
         );
+
+        $this->container->make(\LaravelDoctrine\ORM\Extensions\ExtensionManager::class)->boot($this);
+
+        return $this->managersMap[$name];
     }
 
     /**
@@ -280,6 +284,8 @@ final class IlluminateRegistry implements ManagerRegistry
 
         unset($this->managersMap[$name]);
         unset($this->connectionsMap[$name]);
+
+        return $this->getManager($name);
     }
 
     /**

@@ -5,6 +5,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\EntityManagerFactory;
+use LaravelDoctrine\ORM\Extensions\ExtensionManager;
 use LaravelDoctrine\ORM\IlluminateRegistry;
 use Mockery as m;
 use Mockery\Mock;
@@ -26,10 +27,16 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
      */
     protected $registry;
 
+    /**
+     * @var ExtensionManager
+     */
+    protected $extensionManager;
+
     protected function setUp()
     {
-        $this->container = m::mock(Container::class);
-        $this->factory   = m::mock(EntityManagerFactory::class);
+        $this->container        = m::mock(Container::class);
+        $this->factory          = m::mock(EntityManagerFactory::class);
+        $this->extensionManager = m::mock(ExtensionManager::class);
 
         $this->registry = new IlluminateRegistry(
             $this->container,
@@ -180,6 +187,10 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->container->shouldReceive('singleton')->times(2);
         $this->registry->addManager('default');
 
+        $this->extensionManager->shouldReceive('boot');
+        $this->container->shouldReceive('make')
+            ->with(ExtensionManager::class)
+            ->andReturn($this->extensionManager);
         $this->container->shouldReceive('make')
                         ->with('doctrine.managers.default')
                         ->andReturn('manager');
@@ -193,6 +204,10 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->container->shouldReceive('singleton')->times(2);
         $this->registry->addManager('custom');
 
+        $this->extensionManager->shouldReceive('boot');
+        $this->container->shouldReceive('make')
+            ->with(ExtensionManager::class)
+            ->andReturn($this->extensionManager);
         $this->container->shouldReceive('make')
                         ->with('doctrine.managers.custom')
                         ->andReturn('connection');
@@ -215,6 +230,10 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->container->shouldReceive('singleton')->times(2);
         $this->registry->addManager('default');
 
+        $this->extensionManager->shouldReceive('boot');
+        $this->container->shouldReceive('make')
+            ->with(ExtensionManager::class)
+            ->andReturn($this->extensionManager);
         $this->container->shouldReceive('make')
                         ->once()// container@make will only be called once
                         ->with('doctrine.managers.default')
@@ -253,6 +272,10 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
     {
         $this->container->shouldReceive('singleton')->times(4);
 
+        $this->extensionManager->shouldReceive('boot');
+        $this->container->shouldReceive('make')
+            ->with(ExtensionManager::class)
+            ->andReturn($this->extensionManager);
         $this->container->shouldReceive('make')
                         ->with('doctrine.managers.default')
                         ->andReturn('manager1');
@@ -277,8 +300,18 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->registry->addManager('default');
 
         $this->container->shouldReceive('forgetInstance', 'doctrine.managers.default');
+        $this->extensionManager->shouldReceive('boot');
+        $this->container->shouldReceive('make')
+            ->with(ExtensionManager::class)
+            ->andReturn($this->extensionManager);
+        $this->container->shouldReceive('make')
+            ->with('doctrine.managers.default')
+            ->andReturn(m::mock(\Doctrine\Common\Persistence\ObjectManager::class));
 
-        $this->registry->resetManager();
+        $manager = $this->registry->resetManager();
+
+        $this->assertInstanceOf(\Doctrine\Common\Persistence\ObjectManager::class, $manager);
+        $this->assertSame($manager, $this->registry->getManager());
     }
 
     public function test_can_reset_custom_manager()
@@ -287,8 +320,18 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->registry->addManager('custom');
 
         $this->container->shouldReceive('forgetInstance', 'doctrine.managers.custom');
+        $this->extensionManager->shouldReceive('boot');
+        $this->container->shouldReceive('make')
+            ->with(ExtensionManager::class)
+            ->andReturn($this->extensionManager);
+        $this->container->shouldReceive('make')
+            ->with('doctrine.managers.custom')
+            ->andReturn(m::mock(\Doctrine\Common\Persistence\ObjectManager::class));
 
-        $this->registry->resetManager('custom');
+        $manager = $this->registry->resetManager('custom');
+
+        $this->assertInstanceOf(\Doctrine\Common\Persistence\ObjectManager::class, $manager);
+        $this->assertSame($manager, $this->registry->getManager('custom'));
     }
 
     public function test_cannot_reset_non_existing_managers()
@@ -319,6 +362,10 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $em            = m::mock(EntityManagerInterface::class);
         $configuration = m::mock(Configuration::class);
 
+        $this->extensionManager->shouldReceive('boot');
+        $this->container->shouldReceive('make')
+            ->with(ExtensionManager::class)
+            ->andReturn($this->extensionManager);
         $this->container->shouldReceive('make')
                         ->with('doctrine.managers.default')
                         ->andReturn($em);
@@ -337,6 +384,10 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->container->shouldReceive('singleton');
         $this->registry->addManager('default');
 
+        $this->extensionManager->shouldReceive('boot');
+        $this->container->shouldReceive('make')
+            ->with(ExtensionManager::class)
+            ->andReturn($this->extensionManager);
         $this->container->shouldReceive('make')
             ->with('doctrine.managers.default')
             ->andReturn(new stdClass(), new stdClass());
