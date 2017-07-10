@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Validation;
 
-use Illuminate\Validation\Factory;
+use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Validation\ValidationServiceProvider;
 
 class PresenceVerifierProvider extends ValidationServiceProvider
@@ -22,7 +22,7 @@ class PresenceVerifierProvider extends ValidationServiceProvider
     protected function registerValidationFactory()
     {
         $this->app->singleton('validator', function ($app) {
-            $validator = new Factory($app['translator'], $app);
+            $validator = $app->make(Factory::class);
 
             // The validation presence verifier is responsible for determining the existence of
             // values in a given data collection which is typically a relational database or
