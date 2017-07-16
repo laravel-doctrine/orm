@@ -328,7 +328,7 @@ class EntityManagerFactory
      */
     protected function setCustomHydrationModes(Configuration $configuration)
     {
-        $hydratorConfig = $this->config->get('doctrine.custom_hydration_modes');
+        $hydratorConfig = $this->config->get('doctrine.custom_hydration_modes', []);
         foreach ($hydratorConfig as $hydrationModeName => $customHydratorClass) {
             $configuration->addCustomHydrationMode($hydrationModeName, $customHydratorClass);
         }
