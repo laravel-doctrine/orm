@@ -132,6 +132,14 @@ return [
     'custom_string_functions'    => [],
     /*
     |--------------------------------------------------------------------------
+    | Register custom hydrators
+    |--------------------------------------------------------------------------
+    */
+    'custom_hydration_modes'     => [
+        // e.g. 'hydrationModeName' => MyHydrator::class,
+    ],
+    /*
+    |--------------------------------------------------------------------------
     | Enable query logging with laravel file logging,
     | debugbar, clockwork or an own implementation.
     | Setting it to false, will disable logging

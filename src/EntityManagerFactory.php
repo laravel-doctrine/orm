@@ -117,6 +117,7 @@ class EntityManagerFactory
 
         $this->setNamingStrategy($settings, $configuration);
         $this->setCustomFunctions($configuration);
+        $this->setCustomHydrationModes($configuration);
         $this->setCacheSettings($configuration);
         $this->configureProxies($settings, $configuration);
         $this->setCustomMappingDriverChain($settings, $configuration);
@@ -320,6 +321,17 @@ class EntityManagerFactory
         $configuration->setCustomDatetimeFunctions($this->config->get('doctrine.custom_datetime_functions'));
         $configuration->setCustomNumericFunctions($this->config->get('doctrine.custom_numeric_functions'));
         $configuration->setCustomStringFunctions($this->config->get('doctrine.custom_string_functions'));
+    }
+
+    /**
+     * @param Configuration $configuration
+     */
+    protected function setCustomHydrationModes(Configuration $configuration)
+    {
+        $hydratorConfig = $this->config->get('doctrine.custom_hydration_modes', []);
+        foreach ($hydratorConfig as $hydrationModeName => $customHydratorClass) {
+            $configuration->addCustomHydrationMode($hydrationModeName, $customHydratorClass);
+        }
     }
 
     /**

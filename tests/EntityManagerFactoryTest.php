@@ -532,6 +532,12 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                      ->andReturn(['string']);
 
         $strictCallCountChecking ? $expectation->once() : $expectation->never();
+
+        $expectation = $this->config->shouldReceive('get')
+                     ->with('doctrine.custom_hydration_modes', [])
+                     ->andReturn([]);
+
+        $strictCallCountChecking ? $expectation->once() : $expectation->never();
     }
 
     protected function mockCache()
