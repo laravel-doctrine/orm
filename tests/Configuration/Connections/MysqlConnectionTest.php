@@ -37,7 +37,7 @@ class MysqlConnectionTest extends PHPUnit_Framework_TestCase
             'unix_socket'         => 'unix_socket',
             'prefix'              => 'prefix',
             'defaultTableOptions' => [],
-            'driverOptions'       => []
+            'driverOptions'       => [],
         ]);
 
         $this->assertEquals('pdo_mysql', $resolved['driver']);
