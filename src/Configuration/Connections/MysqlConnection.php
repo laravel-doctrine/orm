@@ -22,6 +22,7 @@ class MysqlConnection extends Connection
             'unix_socket'           => array_get($settings, 'unix_socket'),
             'prefix'                => array_get($settings, 'prefix'),
             'defaultTableOptions'   => array_get($settings, 'defaultTableOptions', []),
+            'driverOptions'         => array_get($settings, 'driverOptions'),
         ];
     }
 }
