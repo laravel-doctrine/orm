@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class LaravelNamingStrategy implements NamingStrategy
 {
     /**
-     * @type Str
+     * @var Str
      */
     protected $str;
 
