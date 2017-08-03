@@ -15,6 +15,8 @@ class OracleConnection extends Connection
             'driver'                => 'oci8',
             'host'                  => array_get($settings, 'host'),
             'dbname'                => array_get($settings, 'database'),
+            'servicename'           => array_get($settings, 'service_name'),
+            'service'               => array_get($settings, 'service'),
             'user'                  => array_get($settings, 'username'),
             'password'              => array_get($settings, 'password'),
             'charset'               => array_get($settings, 'charset'),
