@@ -255,12 +255,12 @@ class Factory implements ArrayAccess
     /**
      * Define a state with a given set of attributes.
      *
-     * @param  string   $class
-     * @param  string   $state
-     * @param  callable $attributes
+     * @param  string         $class
+     * @param  string         $state
+     * @param  callable|array $attributes
      * @return $this
      */
-    public function state($class, $state, callable $attributes)
+    public function state($class, $state, $attributes)
     {
         $this->states[$class][$state] = $attributes;
 
