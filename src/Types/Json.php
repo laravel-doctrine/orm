@@ -36,7 +36,11 @@ class Json extends JsonArrayType
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return $value === null ? null : parent::convertToPHPValue($value, $platform);
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return parent::convertToPHPValue($value, $platform);
     }
 
     /**
