@@ -29,6 +29,13 @@ class Factory implements ArrayAccess
     protected $definitions = [];
 
     /**
+     * The registered model states.
+     *
+     * @var array[]
+     */
+    protected $states;
+
+    /**
      * Create a new factory instance.
      *
      * @param \Faker\Generator $faker
@@ -186,7 +193,14 @@ class Factory implements ArrayAccess
      */
     public function of($class, $name = 'default')
     {
-        return new FactoryBuilder($this->registry, $class, $name, $this->definitions, $this->faker);
+        return FactoryBuilder::construct(
+            $this->registry,
+            $class,
+            $name,
+            $this->definitions,
+            $this->faker,
+            $this->getStateFor($class)
+        );
     }
 
     /**
@@ -239,12 +253,26 @@ class Factory implements ArrayAccess
     }
 
     /**
-     * Temporary fix to prevent Fatal on Laravel 5.3.17
+     * Define a state with a given set of attributes.
      *
+     * @param  string   $class
+     * @param  string   $state
+     * @param  callable $attributes
      * @return $this
      */
-    public function state()
+    public function state($class, $state, callable $attributes)
     {
+        $this->states[$class][$state] = $attributes;
+
         return $this;
+    }
+
+    /**
+     * @param  string $class
+     * @return array
+     */
+    protected function getStateFor($class)
+    {
+        return isset($this->states[$class]) ? $this->states[$class] : [];
     }
 }
