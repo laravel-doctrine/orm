@@ -6,6 +6,7 @@ use Barryvdh\Debugbar\LaravelDebugbar;
 use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
+use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Loggers\Debugbar\DoctrineCollector;
 
 class LaravelDebugbarLogger implements Logger
@@ -16,11 +17,18 @@ class LaravelDebugbarLogger implements Logger
     protected $debugbar;
 
     /**
-     * @param LaravelDebugbar $debugbar
+     * @var Repository
      */
-    public function __construct(LaravelDebugbar $debugbar)
+    protected $config;
+
+    /**
+     * @param LaravelDebugbar $debugbar
+     * @param Repository      $config
+     */
+    public function __construct(LaravelDebugbar $debugbar, Repository $config)
     {
         $this->debugbar = $debugbar;
+        $this->config   = $config;
     }
 
     /**
@@ -35,7 +43,7 @@ class LaravelDebugbarLogger implements Logger
             $debugStack = new DebugStack;
 
             $this->debugbar->addCollector(
-                new DoctrineCollector($debugStack)
+                new DoctrineCollector($debugStack, $this->config->get('doctrine.debugbar_widget_name', 'queries'))
             );
         }
 
