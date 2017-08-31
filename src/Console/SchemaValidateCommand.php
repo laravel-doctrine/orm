@@ -27,7 +27,7 @@ class SchemaValidateCommand extends Command
      *
      * @param ManagerRegistry $registry
      */
-    public function fire(ManagerRegistry $registry)
+    public function handle(ManagerRegistry $registry)
     {
         $names = $this->option('em') ? [$this->option('em')] : $registry->getManagerNames();
         $exit  = 0;

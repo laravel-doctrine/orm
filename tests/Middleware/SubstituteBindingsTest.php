@@ -93,7 +93,7 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
         $router->get('foo/{entity}', [
             'middleware' => SubstituteBindings::class,
             'uses'       => function (BindableEntity $entity = null) {
-                return $entity->getName();
+                return $entity;
             },
         ]);
 

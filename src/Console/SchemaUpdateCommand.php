@@ -28,7 +28,7 @@ class SchemaUpdateCommand extends Command
      *
      * @param ManagerRegistry $registry
      */
-    public function fire(ManagerRegistry $registry)
+    public function handle(ManagerRegistry $registry)
     {
         if (!$this->option('sql') && (!$this->laravel->environment('local') && !$this->option('force'))) {
             $this->error('ATTENTION: This operation should not be executed in a production environment.');

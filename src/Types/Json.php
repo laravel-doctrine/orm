@@ -31,15 +31,6 @@ class Json extends JsonArrayType
     }
 
     /**
-     * When database value is null, we return null instead of empty array like our parent does.
-     * {@inheritdoc}
-     */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
-    {
-        return $value === null ? null : parent::convertToPHPValue($value, $platform);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getName()

@@ -35,7 +35,7 @@ class MappingImportCommand extends Command
      * @throws \Doctrine\ORM\Tools\Export\ExportException
      * @return int
      */
-    public function fire(ManagerRegistry $registry)
+    public function handle(ManagerRegistry $registry)
     {
         $emName = $this->option('em');
         $em     = $registry->getManager($emName);

@@ -28,7 +28,7 @@ class InfoCommand extends Command
      *
      * @throws Exception
      */
-    public function fire(ManagerRegistry $registry)
+    public function handle(ManagerRegistry $registry)
     {
         $names = $this->option('em') ? [$this->option('em')] : $registry->getManagerNames();
         $exit  = 0;

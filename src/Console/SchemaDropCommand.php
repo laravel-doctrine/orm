@@ -28,7 +28,7 @@ class SchemaDropCommand extends Command
      *
      * @param ManagerRegistry $registry
      */
-    public function fire(ManagerRegistry $registry)
+    public function handle(ManagerRegistry $registry)
     {
         $this->error('ATTENTION: This operation should not be executed in a production environment.');
 

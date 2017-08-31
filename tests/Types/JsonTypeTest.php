@@ -33,9 +33,9 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
         $this->assertNull($this->type->convertToPHPValue(null, $this->platform));
     }
 
-    public function test_it_returns_empty_array_when_database_value_is_empty()
+    public function test_it_returns_null_when_database_value_is_empty()
     {
-        $this->assertEquals([], $this->type->convertToPHPValue('', $this->platform));
+        $this->assertNull($this->type->convertToPHPValue('', $this->platform));
     }
 
     public function test_it_returns_array_when_database_value_is_json()
