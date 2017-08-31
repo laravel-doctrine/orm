@@ -28,10 +28,10 @@ class IlluminateCacheAdapterTest extends PHPUnit_Framework_TestCase
     {
         $this->repository->shouldReceive('get')
                          ->with('DoctrineNamespaceCacheKey[]')
-                         ->once()->andReturn('cacheKey');
+                         ->once()->andReturn(1);
 
         $this->repository->shouldReceive('get')
-                         ->with('[1][cacheKey]')
+                         ->with('[1][1]')
                          ->once()->andReturn('fetched');
 
         $this->assertEquals('fetched', $this->cache->fetch(1));
@@ -41,14 +41,14 @@ class IlluminateCacheAdapterTest extends PHPUnit_Framework_TestCase
     {
         $this->repository->shouldReceive('get')
                          ->with('DoctrineNamespaceCacheKey[]')
-                         ->once()->andReturn('cacheKey');
+                         ->once()->andReturn(1);
 
         $this->repository->shouldReceive('get')
-                         ->with('[1][cacheKey]')
+                         ->with('[1][1]')
                          ->once()->andReturn('fetched1');
 
         $this->repository->shouldReceive('get')
-                         ->with('[2][cacheKey]')
+                         ->with('[2][1]')
                          ->once()->andReturn('fetched2');
 
         $result = $this->cache->fetchMultiple([1, 2]);
@@ -61,10 +61,10 @@ class IlluminateCacheAdapterTest extends PHPUnit_Framework_TestCase
     {
         $this->repository->shouldReceive('get')
                          ->with('DoctrineNamespaceCacheKey[]')
-                         ->once()->andReturn('cacheKey');
+                         ->once()->andReturn(1);
 
         $this->repository->shouldReceive('has')
-                         ->with('[1][cacheKey]')
+                         ->with('[1][1]')
                          ->once()->andReturn(true);
 
         $this->assertTrue($this->cache->contains(1));
@@ -74,10 +74,10 @@ class IlluminateCacheAdapterTest extends PHPUnit_Framework_TestCase
     {
         $this->repository->shouldReceive('get')
                          ->with('DoctrineNamespaceCacheKey[]')
-                         ->once()->andReturn('cacheKey');
+                         ->once()->andReturn(1);
 
         $this->repository->shouldReceive('put')
-                         ->with('[1][cacheKey]', 'data', 1)
+                         ->with('[1][1]', 'data', 1)
                          ->once()->andReturn(true);
 
         $this->assertTrue($this->cache->save(1, 'data', 60));
@@ -87,10 +87,10 @@ class IlluminateCacheAdapterTest extends PHPUnit_Framework_TestCase
     {
         $this->repository->shouldReceive('get')
                          ->with('DoctrineNamespaceCacheKey[]')
-                         ->once()->andReturn('cacheKey');
+                         ->once()->andReturn(1);
 
         $this->repository->shouldReceive('forget')
-                         ->with('[1][cacheKey]')
+                         ->with('[1][1]')
                          ->once()->andReturn(true);
 
         $this->assertTrue($this->cache->delete(1));
@@ -103,7 +103,7 @@ class IlluminateCacheAdapterTest extends PHPUnit_Framework_TestCase
                          ->once()->andReturn(1);
 
         $this->repository->shouldReceive('forever')
-                         ->with("DoctrineNamespaceCacheKey[]", 2)
+                         ->with('DoctrineNamespaceCacheKey[]', 2)
                          ->once()->andReturn(true);
 
         $this->assertTrue($this->cache->deleteAll());
@@ -124,10 +124,10 @@ class IlluminateCacheAdapterTest extends PHPUnit_Framework_TestCase
 
         $this->repository->shouldReceive('get')
                          ->with('DoctrineNamespaceCacheKey[namespace]')
-                         ->once()->andReturn('cacheKey');
+                         ->once()->andReturn(1);
 
         $this->repository->shouldReceive('get')
-                         ->with('namespace[1][cacheKey]')
+                         ->with('namespace[1][1]')
                          ->once()->andReturn('fetched');
 
         $this->assertEquals('fetched', $this->cache->fetch(1));
