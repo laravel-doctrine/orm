@@ -58,17 +58,7 @@ Require this package
 composer require "laravel-doctrine/orm:1.4.*"
 ```
 
-After adding the package, add the ServiceProvider to the providers array in `config/app.php`
-
-```php
-LaravelDoctrine\ORM\DoctrineServiceProvider::class,
-```
-
-Optionally you can register the EntityManager facade:
-
-```php
-'EntityManager' => LaravelDoctrine\ORM\Facades\EntityManager::class
-```
+Because of the auto package discovery feature Laravel 5.5 has, the ServiceProvider and Facades are automatically registered.
 
 To publish the config use:
 
