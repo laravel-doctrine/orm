@@ -5,7 +5,6 @@ namespace LaravelDoctrine\ORM\Notifications;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
  * @ORM\MappedSuperclass
  */
 class Notification
