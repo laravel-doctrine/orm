@@ -1,64 +1,64 @@
 {
-  "name": "laravel-doctrine/orm",
-  "description": "A Doctrine ORM bridge for Laravel 5",
-  "license": "MIT",
-  "keywords": [
-    "doctrine",
-    "laravel",
-    "orm",
-    "data mapper",
-    "database"
-  ],
-  "authors": [
-    {
-      "name": "Patrick Brouwers",
-      "email": "patrick@maatwebsite.nl"
-    }
-  ],
-  "require": {
-    "php": ">=5.6.4",
-    "doctrine/orm": "2.5.*",
-    "illuminate/auth": "5.4.*|5.5.*",
-    "illuminate/console": "5.4.*|5.5.*",
-    "illuminate/container": "5.4.*|5.5.*",
-    "illuminate/contracts": "5.4.*|5.5.*",
-    "illuminate/pagination": "5.4.*|5.5.*",
-    "illuminate/routing": "5.4.*|5.5.*",
-    "illuminate/support": "5.4.*|5.5.*",
-    "illuminate/validation": "5.4.*|5.5.*",
-    "illuminate/view": "5.4.*|5.5.*",
-    "symfony/serializer": "^2.7|^3.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "~5.0",
-    "mockery/mockery": "1.0.0-alpha1",
-    "barryvdh/laravel-debugbar": "~2.0",
-    "itsgoingd/clockwork": "~1.9",
-    "illuminate/log": "5.4.*|5.5.*",
-    "illuminate/notifications": "5.4.*|5.5.*",
-    "illuminate/queue": "5.4.*|5.5.*"
-  },
-  "autoload": {
-    "psr-4": {
-      "LaravelDoctrine\\ORM\\": "src/"
+    "name": "laravel-doctrine/orm",
+    "description": "A Doctrine ORM bridge for Laravel 5",
+    "license": "MIT",
+    "keywords": [
+        "doctrine",
+        "laravel",
+        "orm",
+        "data mapper",
+        "database"
+    ],
+    "authors": [
+        {
+            "name": "Patrick Brouwers",
+            "email": "patrick@maatwebsite.nl"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.4",
+        "doctrine/orm": "2.5.*",
+        "illuminate/auth": "5.4.*",
+        "illuminate/console": "5.4.*",
+        "illuminate/container": "5.4.*",
+        "illuminate/contracts": "5.4.*",
+        "illuminate/pagination": "5.4.*",
+        "illuminate/routing": "5.4.*",
+        "illuminate/support": "5.4.*",
+        "illuminate/validation": "5.4.*",
+        "illuminate/view": "5.4.*",
+        "symfony/serializer": "^2.7|^3.0"
     },
-    "files": [
-      "src/helpers.php"
-    ]
-  },
-  "autoload-dev": {
-    "classmap": [
-      "tests"
-    ]
-  },
-  "suggest": {
-    "laravel-doctrine/fluent": "Fluent mapping driver (alternative to xml, yaml, ... (~1.1).",
-    "fzaninotto/faker": "Required to use the entity factory builder (~1.4).",
-    "laravel-doctrine/acl": "to integrate Doctrine roles & permissions with Laravel's Authorization system (~1.0)",
-    "laravel-doctrine/extensions": "to add Behavioral and Query/Type Extensions for Laravel Doctrine (~1.0)",
-    "laravel-doctrine/migrations": "to add support for migrations in Laravel Doctrine (~1.0)",
-    "yajra/laravel-oci8": "Support for Laravel native queue and session database drivers in Oracle (~2.0)."
-  },
+    "require-dev": {
+        "phpunit/phpunit": "~5.0",
+        "mockery/mockery": "1.0.0-alpha1",
+        "barryvdh/laravel-debugbar": "~2.0",
+        "itsgoingd/clockwork": "~1.9",
+        "illuminate/log": "5.4.*",
+        "illuminate/notifications": "5.4.*",
+        "illuminate/queue": "5.4.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "LaravelDoctrine\\ORM\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests"
+        ]
+    },
+    "suggest": {
+        "laravel-doctrine/fluent": "Fluent mapping driver (alternative to xml, yaml, ... (~1.1).",
+        "fzaninotto/faker": "Required to use the entity factory builder (~1.4).",
+        "laravel-doctrine/acl": "to integrate Doctrine roles & permissions with Laravel's Authorization system (~1.0)",
+        "laravel-doctrine/extensions": "to add Behavioral and Query/Type Extensions for Laravel Doctrine (~1.0)",
+        "laravel-doctrine/migrations": "to add support for migrations in Laravel Doctrine (~1.0)",
+        "yajra/laravel-oci8": "Support for Laravel native queue and session database drivers in Oracle (~2.0)."
+    },
     "extra": {
         "laravel": {
             "providers": [
