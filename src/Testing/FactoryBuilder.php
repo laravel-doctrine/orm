@@ -52,6 +52,20 @@ class FactoryBuilder
     protected $registry;
 
     /**
+     * The model states.
+     *
+     * @var array
+     */
+    protected $states = [];
+
+    /**
+     * The states to apply.
+     *
+     * @var array
+     */
+    protected $activeStates = [];
+
+    /**
      * Create an new builder instance.
      *
      * @param ManagerRegistry  $registry
@@ -67,6 +81,24 @@ class FactoryBuilder
         $this->faker       = $faker;
         $this->registry    = $registry;
         $this->definitions = $definitions;
+    }
+
+    /**
+     * @param ManagerRegistry $registry
+     * @param string          $class
+     * @param string          $name
+     * @param array           $definitions
+     * @param Faker           $faker
+     * @param array           $states
+     *
+     * @return FactoryBuilder
+     */
+    public static function construct(ManagerRegistry $registry, $class, $name, array $definitions, Faker $faker, array $states)
+    {
+        $instance         = new static($registry, $class, $name, $definitions, $faker);
+        $instance->states = $states;
+
+        return $instance;
     }
 
     /**
@@ -144,6 +176,7 @@ class FactoryBuilder
         }
 
         $definition = call_user_func($this->definitions[$this->class][$this->name], $this->faker, $attributes);
+        $definition = $this->applyStates($definition, $attributes);
 
         if ($definition instanceof $this->class) {
             return $definition;
@@ -181,5 +214,62 @@ class FactoryBuilder
                 $attribute($attributes) :
                 $attribute;
         }, $attributes);
+    }
+
+    /**
+     * Set the states to be applied to the model.
+     *
+     * @param  array|mixed $states
+     * @return $this
+     */
+    public function states($states)
+    {
+        $this->activeStates = is_array($states) ? $states : func_get_args();
+
+        return $this;
+    }
+
+    /**
+     * Apply the active states to the model definition array.
+     *
+     * @param  array $definition
+     * @param  array $attributes
+     * @return array
+     */
+    protected function applyStates(array $definition, array $attributes = [])
+    {
+        foreach ($this->activeStates as $state) {
+            if (! isset($this->states[$state])) {
+                throw new InvalidArgumentException("Unable to locate [{$state}] state for [{$this->class}].");
+            }
+
+            $definition = array_merge(
+                $definition,
+                $this->stateAttributes($state, $attributes)
+            );
+        }
+
+        return $definition;
+    }
+
+    /**
+     * Get the state attributes.
+     *
+     * @param  string $state
+     * @param  array  $attributes
+     * @return array
+     */
+    protected function stateAttributes($state, array $attributes)
+    {
+        $stateAttributes = $this->states[$state];
+
+        if (! is_callable($stateAttributes)) {
+            return $stateAttributes;
+        }
+
+        return call_user_func(
+            $stateAttributes,
+            $this->faker, $attributes
+        );
     }
 }
