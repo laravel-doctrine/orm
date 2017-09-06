@@ -176,11 +176,12 @@ class FactoryBuilder
         }
 
         $definition = call_user_func($this->definitions[$this->class][$this->name], $this->faker, $attributes);
-        $definition = $this->applyStates($definition, $attributes);
 
         if ($definition instanceof $this->class) {
             return $definition;
         }
+
+        $definition = $this->applyStates($definition, $attributes);
 
         /** @var ClassMetadata $metadata */
         $metadata = $this->registry
