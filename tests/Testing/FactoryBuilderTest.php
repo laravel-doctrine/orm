@@ -111,6 +111,7 @@ class FactoryBuilderTest extends MockeryTestCase
                     $obj = new EntityStub();
                     $obj->id = random_int(1, 9);
                     $obj->name = 'A Name';
+
                     return $obj;
                 }
             ]
