@@ -36,6 +36,7 @@ class OracleConnectionTest extends PHPUnit_Framework_TestCase
             'port'                => 'port',
             'prefix'              => 'prefix',
             'defaultTableOptions' => [],
+            'persistent'          => 'persistent',
         ]);
 
         $this->assertEquals('oci8', $resolved['driver']);
@@ -47,6 +48,7 @@ class OracleConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('port', $resolved['port']);
         $this->assertEquals('prefix', $resolved['prefix']);
         $this->assertCount(0, $resolved['defaultTableOptions']);
+        $this->assertEquals('persistent', $resolved['persistent']);
     }
 
     protected function tearDown()
