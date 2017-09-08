@@ -23,6 +23,7 @@ class OracleConnection extends Connection
             'port'                  => array_get($settings, 'port'),
             'prefix'                => array_get($settings, 'prefix'),
             'defaultTableOptions'   => array_get($settings, 'defaultTableOptions', []),
+            'persistent'            => array_get($settings, 'persistent'),
         ];
     }
 }
