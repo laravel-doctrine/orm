@@ -127,14 +127,6 @@ class FactoryBuilder
         $results = $this->make($attributes);
         $manager = $this->registry->getManagerForClass($this->class);
 
-        if ($this->amount === 1) {
-            $manager->persist($results);
-        } else {
-            foreach ($results as $result) {
-                $manager->persist($result);
-            }
-        }
-
         $manager->flush();
 
         return $results;
@@ -177,8 +169,11 @@ class FactoryBuilder
 
         $definition = call_user_func($this->definitions[$this->class][$this->name], $this->faker, $attributes);
         $definition = $this->applyStates($definition, $attributes);
+        $manager    = $this->registry->getManagerForClass($this->class);
 
         if ($definition instanceof $this->class) {
+            $manager->persist($definition);
+
             return $definition;
         }
 
@@ -196,10 +191,14 @@ class FactoryBuilder
                 return [$association => new ArrayCollection];
             });
 
-        return SimpleHydrator::hydrate(
+        $instance = SimpleHydrator::hydrate(
             $this->class,
             $this->callClosureAttributes(array_merge($toManyRelations->all(), $definition, $attributes))
         );
+
+        $manager->persist($instance);
+
+        return $instance;
     }
 
     /**
@@ -239,7 +238,7 @@ class FactoryBuilder
     protected function applyStates(array $definition, array $attributes = [])
     {
         foreach ($this->activeStates as $state) {
-            if (! isset($this->states[$state])) {
+            if (!isset($this->states[$state])) {
                 throw new InvalidArgumentException("Unable to locate [{$state}] state for [{$this->class}].");
             }
 
@@ -263,7 +262,7 @@ class FactoryBuilder
     {
         $stateAttributes = $this->states[$state];
 
-        if (! is_callable($stateAttributes)) {
+        if (!is_callable($stateAttributes)) {
             return $stateAttributes;
         }
 
