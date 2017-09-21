@@ -101,6 +101,9 @@ class FactoryBuilderTest extends MockeryTestCase
         $instance = $this->getFactoryBuilder()->make();
 
         $this->assertInstanceOf(EntityStub::class, $instance);
+
+        $this->entityManager->shouldHaveReceived('persist')->with($instance)->once();
+        $this->entityManager->shouldNotHaveReceived('flush');
     }
 
     public function test_it_creates_instances_of_the_class()
