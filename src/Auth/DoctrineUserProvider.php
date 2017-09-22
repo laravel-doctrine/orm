@@ -143,4 +143,3 @@ class DoctrineUserProvider implements UserProvider
         return $this->entity;
     }
 }
-
