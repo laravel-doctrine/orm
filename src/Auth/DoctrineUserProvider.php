@@ -133,4 +133,14 @@ class DoctrineUserProvider implements UserProvider
 
         return $refEntity->newInstanceWithoutConstructor();
     }
+
+    /**
+     * Returns entity namespace.
+     * @return string
+     */
+    public function getModel()
+    {
+    	return $this->entity;
+    }
 }
+
