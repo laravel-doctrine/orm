@@ -140,7 +140,7 @@ class DoctrineUserProvider implements UserProvider
      */
     public function getModel()
     {
-    	return $this->entity;
+        return $this->entity;
     }
 }
 
