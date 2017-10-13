@@ -210,9 +210,26 @@ class FactoryBuilder
     protected function callClosureAttributes(array $attributes)
     {
         return array_map(function ($attribute) use ($attributes) {
-            return $attribute instanceof \Closure ?
-                $attribute($attributes) :
-                $attribute;
+            if ($attribute instanceof \Closure) {
+                $entity = $attribute($attributes);
+                if (is_object($entity)) {
+                    $this->registry
+                        ->getManagerForClass(get_class($entity))
+                        ->persist($entity);
+                } elseif (is_array($entity)) {
+                    foreach ($entity as $e) {
+                        if (is_object($e)) {
+                            $this->registry
+                                ->getManagerForClass(get_class($e))
+                                ->persist($e);
+                        }
+                    }
+                }
+
+                return $entity;
+            }
+
+            return $attribute;
         }, $attributes);
     }
 
