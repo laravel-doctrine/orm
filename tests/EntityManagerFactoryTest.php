@@ -4,6 +4,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\DBAL\Connections\MasterSlaveConnection as MasterSlaveDoctrineWrapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Cache\CacheFactory;
 use Doctrine\ORM\Cache\RegionsConfiguration;
@@ -22,6 +23,7 @@ use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\EntityManagerFactory;
 use LaravelDoctrine\ORM\Loggers\Logger;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver as LaravelDoctrineEntityListenerResolver;
+
 use Mockery as m;
 use Mockery\Mock;
 
@@ -484,8 +486,11 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
     /**
      * MOCKS
+     *
+     * @param array $driverConfig
+     * @param bool  $strictCallCountChecking
      */
-    protected function mockConfig()
+    protected function mockConfig($driverConfig = ['driver' => 'mysql'], $strictCallCountChecking = true)
     {
         $this->config = m::mock(Repository::class);
 
@@ -495,10 +500,11 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                      ->andReturn('array');
 
         foreach ($this->caches as $cache) {
-            $this->config->shouldReceive('get')
+            $expectation = $this->config->shouldReceive('get')
                          ->with('doctrine.cache.' . $cache . '.driver', 'array')
-                         ->atLeast()->once()
                          ->andReturn('array');
+
+            $strictCallCountChecking ? $expectation->once() : $expectation->never();
         }
 
         $this->config->shouldReceive('has')
@@ -509,21 +515,26 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->config->shouldReceive('get')
                      ->with('database.connections.mysql')
                      ->once()
-                     ->andReturn([
-                         'driver' => 'mysql'
-                     ]);
+                     ->andReturn($driverConfig);
 
-        $this->config->shouldReceive('get')
+        $expectation = $this->config->shouldReceive('get')
                      ->with('doctrine.custom_datetime_functions')
-                     ->once()->andReturn(['datetime']);
+                     ->andReturn(['datetime']);
 
-        $this->config->shouldReceive('get')
+        $strictCallCountChecking ? $expectation->once() : $expectation->never();
+
+
+        $expectation = $this->config->shouldReceive('get')
                      ->with('doctrine.custom_numeric_functions')
-                     ->once()->andReturn(['numeric']);
+                     ->andReturn(['numeric']);
 
-        $this->config->shouldReceive('get')
+        $strictCallCountChecking ? $expectation->once() : $expectation->never();
+
+        $expectation = $this->config->shouldReceive('get')
                      ->with('doctrine.custom_string_functions')
-                     ->once()->andReturn(['string']);
+                     ->andReturn(['string']);
+
+        $strictCallCountChecking ? $expectation->once() : $expectation->never();
     }
 
     protected function mockCache()
@@ -692,7 +703,147 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->configuration->shouldReceive('setNamingStrategy')->once()->with($strategy);
     }
 
-    protected function tearDown()
+    /**
+     * Data provider for testMasterSlaveConnection.
+     *
+     * @return array
+     */
+    public function getTestMasterSlaveConnectionData()
+    {
+        $out = [];
+
+        $dummyInputConfig = [
+            'driver' => 'mysql',
+            'host' => 'localhost',
+            'port' => '3306',
+            'database' => 'test',
+            'username' => 'homestead',
+            'password' => 'secret',
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+            'write' => [
+                'port' => 3307,
+            ],
+            'read' => [
+                [
+                    'port' => 3308,
+                    'database' => 'test2',
+                ],
+                [
+                    'host' => 'localhost2',
+                    'port' => 3309
+                ],
+            ],
+        ];
+
+        // Case #0. Simple valid configuration, everything should go well.
+        $out[] = [$dummyInputConfig];
+
+        //Case #1. No read DBs set.
+        $inputConfig = $dummyInputConfig;
+        unset($inputConfig['read']);
+
+        $out[] = [
+            $inputConfig,
+            \InvalidArgumentException::class,
+            "Parameter 'read' must be set for read/write config."
+        ];
+
+        //Case #2. 'read' isn't an array
+        $inputConfig = $dummyInputConfig;
+        $inputConfig['read'] = 'test';
+
+        $out[] = [
+            $inputConfig,
+            \InvalidArgumentException::class,
+            "Parameter 'read' must be an array containing multiple arrays."
+        ];
+
+        //Case #3. 'read' has non array entries.
+        $inputConfig = $dummyInputConfig;
+        $inputConfig['read'][] = 'test';
+
+        $out[] = [
+            $inputConfig,
+            \InvalidArgumentException::class,
+            "Parameter 'read' must be an array containing multiple arrays."
+        ];
+
+        //Case #4. 'read' has empty entries
+        $inputConfig = $dummyInputConfig;
+        $inputConfig['read'][] = [];
+
+        $out[] = [
+            $inputConfig,
+            \InvalidArgumentException::class,
+            "Parameter 'read' config no. 2 is empty."
+        ];
+
+        return $out;
+    }
+
+    /**
+     * Check if config is handled correctly.
+     *
+     * @param array $inputConfig
+     * @param string $expectedException
+     * @param string $msg
+     *
+     * @dataProvider getTestMasterSlaveConnectionData
+     */
+    public function testMasterSlaveConnection(
+        array $inputConfig,
+        $expectedException = '',
+        $msg = ''
+    ) {
+        m::resetContainer();
+
+        $this->mockApp();
+        $this->mockResolver();
+        $this->mockConfig($inputConfig, empty($expectedException));
+
+        $this->cache = m::mock(CacheManager::class);
+        $this->cache->shouldReceive('driver')
+            ->times(empty($expectedException) ? 4 : 1)
+            ->andReturn(new ArrayCache());
+
+        $this->setup = m::mock(Setup::class);
+        $this->setup->shouldReceive('createConfiguration')->once()->andReturn($this->configuration);
+
+        $this->connection = m::mock(ConnectionManager::class);
+        $this->connection->shouldReceive('driver')
+            ->once()
+            ->with('mysql', $inputConfig)
+            ->andReturn(['driver' => 'pdo_mysql']);
+
+        $factory = new EntityManagerFactory(
+            $this->container,
+            $this->setup,
+            $this->meta,
+            $this->connection,
+            $this->cache,
+            $this->config,
+            $this->listenerResolver
+        );
+
+        if (!empty($expectedException)) {
+            $this->setExpectedException($expectedException, $msg);
+        } else {
+            $this->disableDebugbar();
+            $this->disableCustomCacheNamespace();
+            $this->disableSecondLevelCaching();
+            $this->disableCustomFunctions();
+            $this->enableLaravelNamingStrategy();
+        }
+
+        $this->settings['connection'] = 'mysql';
+        $factory->create($this->settings);
+    }
+
+protected function tearDown()
     {
         m::close();
     }
