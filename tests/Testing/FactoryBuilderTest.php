@@ -155,7 +155,6 @@ class FactoryBuilderTest extends MockeryTestCase
 
         $this->assertSame($madeInstance, $instance->others[0]);
 
-
         $this->entityManager->shouldHaveReceived('persist')->with($madeInstance)->once();
     }
 
