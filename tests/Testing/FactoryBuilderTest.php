@@ -145,7 +145,7 @@ class FactoryBuilderTest extends MockeryTestCase
                     return [
                         'id'     => 1,
                         'name'   => 'a name',
-                        'others' => function() use ($madeInstance) {
+                        'others' => function () use ($madeInstance) {
                             return [$madeInstance];
                         },
                     ];
