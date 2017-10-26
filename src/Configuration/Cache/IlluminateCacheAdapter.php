@@ -51,7 +51,9 @@ class IlluminateCacheAdapter extends CacheProvider
     protected function doSave($id, $data, $lifeTime = false)
     {
         if (!$lifeTime) {
-            return $this->cache->forever($id, $data);
+            $this->cache->forever($id, $data);
+
+            return true;
         }
 
         // Laravel cache system accept expire times in minutes
@@ -59,7 +61,9 @@ class IlluminateCacheAdapter extends CacheProvider
         // before passing it to Laravel cache repository
         $lifeTimeMinutes = $lifeTime / 60;
 
-        return $this->cache->put($id, $data, $lifeTimeMinutes);
+        $this->cache->put($id, $data, $lifeTimeMinutes);
+
+        return true;
     }
 
     /**
