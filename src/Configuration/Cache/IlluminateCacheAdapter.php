@@ -59,7 +59,9 @@ class IlluminateCacheAdapter extends CacheProvider
         // before passing it to Laravel cache repository
         $lifeTimeMinutes = $lifeTime / 60;
 
-        return $this->cache->put($id, $data, $lifeTimeMinutes);
+        $this->cache->put($id, $data, $lifeTimeMinutes);
+
+        return true;
     }
 
     /**
