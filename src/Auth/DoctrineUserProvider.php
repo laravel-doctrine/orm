@@ -4,10 +4,9 @@ namespace LaravelDoctrine\ORM\Auth;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Illuminate\Contracts\Auth\Authenticatable as IlluminateAuthenticatable;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher;
-use LaravelDoctrine\ORM\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use ReflectionClass;
 
 class DoctrineUserProvider implements UserProvider
@@ -44,7 +43,7 @@ class DoctrineUserProvider implements UserProvider
      *
      * @param mixed $identifier
      *
-     * @return IlluminateAuthenticatable|null
+     * @return Authenticatable|null
      */
     public function retrieveById($identifier)
     {
@@ -57,7 +56,7 @@ class DoctrineUserProvider implements UserProvider
      * @param mixed  $identifier
      * @param string $token
      *
-     * @return IlluminateAuthenticatable|null
+     * @return Authenticatable|null
      */
     public function retrieveByToken($identifier, $token)
     {
@@ -70,12 +69,12 @@ class DoctrineUserProvider implements UserProvider
     /**
      * Update the "remember me" token for the given user in storage.
      *
-     * @param IlluminateAuthenticatable $user
+     * @param Authenticatable $user
      * @param string                    $token
      *
      * @return void
      */
-    public function updateRememberToken(IlluminateAuthenticatable $user, $token)
+    public function updateRememberToken(Authenticatable $user, $token)
     {
         $user->setRememberToken($token);
         $this->em->persist($user);
@@ -87,7 +86,7 @@ class DoctrineUserProvider implements UserProvider
      *
      * @param array $credentials
      *
-     * @return IlluminateAuthenticatable|null
+     * @return Authenticatable|null
      */
     public function retrieveByCredentials(array $credentials)
     {
@@ -104,12 +103,12 @@ class DoctrineUserProvider implements UserProvider
     /**
      * Validate a user against the given credentials.
      *
-     * @param IlluminateAuthenticatable $user
+     * @param Authenticatable $user
      * @param array                     $credentials
      *
      * @return bool
      */
-    public function validateCredentials(IlluminateAuthenticatable $user, array $credentials)
+    public function validateCredentials(Authenticatable $user, array $credentials)
     {
         return $this->hasher->check($credentials['password'], $user->getAuthPassword());
     }
@@ -125,7 +124,7 @@ class DoctrineUserProvider implements UserProvider
 
     /**
      * Returns instantiated entity.
-     * @return AuthenticatableContract
+     * @return Authenticatable
      */
     protected function getEntity()
     {
