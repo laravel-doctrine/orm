@@ -103,6 +103,23 @@ class FactoryBuilderTest extends MockeryTestCase
         $this->assertInstanceOf(EntityStub::class, $instance);
     }
 
+    public function test_it_makes_instances_of_the_class_for_object_definition()
+    {
+        $this->definitions = [
+            EntityStub::class => [
+                $this->aName => function () {
+                    $obj = new EntityStub();
+                    $obj->id = random_int(1, 9);
+                    $obj->name = 'A Name';
+
+                    return $obj;
+                }
+            ]
+        ];
+
+        $this->test_it_makes_instances_of_the_class();
+    }
+
     public function test_it_creates_instances_of_the_class()
     {
         $instance = $this->getFactoryBuilder()->create();
