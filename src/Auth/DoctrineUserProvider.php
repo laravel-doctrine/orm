@@ -70,7 +70,7 @@ class DoctrineUserProvider implements UserProvider
      * Update the "remember me" token for the given user in storage.
      *
      * @param Authenticatable $user
-     * @param string                    $token
+     * @param string          $token
      *
      * @return void
      */
@@ -104,7 +104,7 @@ class DoctrineUserProvider implements UserProvider
      * Validate a user against the given credentials.
      *
      * @param Authenticatable $user
-     * @param array                     $credentials
+     * @param array           $credentials
      *
      * @return bool
      */
