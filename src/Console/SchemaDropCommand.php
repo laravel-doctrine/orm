@@ -60,6 +60,8 @@ class SchemaDropCommand extends Command
                     }
 
                     $this->info('Database schema dropped successfully!');
+                    
+                    return 0;
                 }
 
                 if ($this->option('full')) {
