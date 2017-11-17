@@ -46,7 +46,14 @@ class IlluminateCacheAdapter extends CacheProvider
     }
 
     /**
-     * {@inheritdoc}
+     * Puts data into the cache.
+     *
+     * @param string $id       The cache id.
+     * @param string $data     The cache entry/data.
+     * @param int    $lifeTime The lifetime. If != 0, sets a specific lifetime for this
+     *                           cache entry (0 => infinite lifeTime).
+     *
+     * @return bool TRUE always, because the cache repository have void return
      */
     protected function doSave($id, $data, $lifeTime = false)
     {
