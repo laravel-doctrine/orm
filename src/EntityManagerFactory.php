@@ -16,6 +16,7 @@ use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\Connections\MasterSlaveConnection;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
+use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaData;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
@@ -93,15 +94,16 @@ class EntityManagerFactory
      */
     public function create(array $settings = [])
     {
-        $defaultDriver = $this->config->get('doctrine.cache.default', 'array');
+        $defaultCache = $this->config->get('doctrine.cache.default', 'array');
+        $cache        = $this->cache->driver($defaultCache);
 
         $configuration = $this->setup->createConfiguration(
             array_get($settings, 'dev', false),
             array_get($settings, 'proxies.path'),
-            $this->cache->driver($defaultDriver)
+            $cache
         );
 
-        $this->setMetadataDriver($settings, $configuration);
+        $this->setMetadataDriver($settings, $configuration, $cache);
 
         $driver = $this->getConnectionDriver($settings);
 
@@ -147,16 +149,21 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array $settings
-     * @param       $configuration
+     * @param array         $settings
+     * @param Configuration $configuration
+     * @param Cache         $cache
      */
-    private function setMetadataDriver(array $settings, Configuration $configuration)
+    private function setMetadataDriver(array $settings, Configuration $configuration, Cache $cache)
     {
         $metadata = $this->meta->driver(
             array_get($settings, 'meta'),
             $settings,
             false
         );
+
+        if ($metadata instanceof Annotations) {
+            $metadata->setCache($cache);
+        }
 
         if ($metadata instanceof MetaData) {
             $configuration->setMetadataDriverImpl($metadata->resolve($settings));
