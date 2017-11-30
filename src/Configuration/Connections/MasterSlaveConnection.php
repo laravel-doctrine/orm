@@ -41,7 +41,7 @@ class MasterSlaveConnection extends Connection
         $driver = $this->resolvedBaseSettings['driver'];
 
         return [
-            'wrapperClass' => MasterSlaveDoctrineWrapper::class,
+            'wrapperClass' => $settings['wrapperClass'] ?? MasterSlaveDoctrineWrapper::class,
             'driver'       => $driver,
             'master'       => $this->getConnectionData(isset($settings['write']) ? $settings['write'] : [], $driver),
             'slaves'       => $this->getSlavesConfig($settings['read'], $driver),
