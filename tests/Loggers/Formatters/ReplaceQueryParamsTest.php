@@ -95,6 +95,23 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function test_can_replace_nested_array_param2()
+    {
+        $sql    = 'INSERT INTO foo (column1) VALUES (?)';
+        $params = [
+            1 => [
+                'id'     => 20,
+                'foo'    => 'bar',
+                'nested' => []
+            ]
+        ];
+
+        $this->assertEquals(
+            'INSERT INTO foo (column1) VALUES ("{"id":20,"foo":"bar","nested":[]}")',
+            $this->formatter->format($sql, $params)
+        );
+    }
+
     protected function tearDown()
     {
         m::close();
