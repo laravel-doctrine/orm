@@ -156,7 +156,7 @@ class FactoryBuilderTest extends MockeryTestCase
     {
         $states = [
             'withState' => function () {
-                return ['name' => 'stateful'];
+                return ['id' => 2, 'name' => 'stateful'];
             },
             'other' => function () {
                 return ['id' => 3];
@@ -166,7 +166,7 @@ class FactoryBuilderTest extends MockeryTestCase
         $instance = $this->getFactoryBuilder([], $states)->states('withState')->make();
 
         $this->assertEquals('stateful', $instance->name);
-        $this->assertNotEquals(3, $instance->id);
+        $this->assertEquals(2, $instance->id);
     }
 }
 
