@@ -88,6 +88,7 @@ class PaginatorAdapterTest extends PHPUnit_Framework_TestCase
 
         $connection->shouldReceive('getDatabasePlatform')->andReturn($platform);
         $connection->shouldReceive('executeQuery')->andReturn([]);
+        $connection->shouldReceive('getParams')->andReturn([]);
 
         $platform->shouldReceive('appendLockHint')->andReturnUsing(function ($a) {
             return $a;
