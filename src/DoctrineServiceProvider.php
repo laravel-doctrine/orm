@@ -49,11 +49,9 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->extendAuthManager();
         $this->extendNotificationChannel();
 
-        if (!$this->isLumen()) {
-            $this->publishes([
-                $this->getConfigPath() => config_path('doctrine.php'),
-            ], 'config');
-        }
+        $this->publishes([
+            $this->getConfigPath() => config_path('doctrine.php'),
+        ], 'config');
 
         $this->ensureValidatorIsUsable();
     }
