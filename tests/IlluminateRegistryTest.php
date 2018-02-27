@@ -277,8 +277,14 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->registry->addManager('default');
 
         $this->container->shouldReceive('forgetInstance', 'doctrine.managers.default');
+        $this->container->shouldReceive('make')
+            ->with('doctrine.managers.default')
+            ->andReturn(m::mock(\Doctrine\Common\Persistence\ObjectManager::class));
 
-        $this->registry->resetManager();
+        $manager = $this->registry->resetManager();
+
+        $this->assertInstanceOf(\Doctrine\Common\Persistence\ObjectManager::class, $manager);
+        $this->assertSame($manager, $this->registry->getManager());
     }
 
     public function test_can_reset_custom_manager()
@@ -287,8 +293,14 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->registry->addManager('custom');
 
         $this->container->shouldReceive('forgetInstance', 'doctrine.managers.custom');
+        $this->container->shouldReceive('make')
+            ->with('doctrine.managers.custom')
+            ->andReturn(m::mock(\Doctrine\Common\Persistence\ObjectManager::class));
 
-        $this->registry->resetManager('custom');
+        $manager = $this->registry->resetManager('custom');
+
+        $this->assertInstanceOf(\Doctrine\Common\Persistence\ObjectManager::class, $manager);
+        $this->assertSame($manager, $this->registry->getManager('custom'));
     }
 
     public function test_cannot_reset_non_existing_managers()
