@@ -248,21 +248,23 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function extendAuthManager()
     {
-        $this->app->make('auth')->provider('doctrine', function ($app, $config) {
-            $entity = $config['model'];
+        if ($this->app->bound('auth')) {
+            $this->app->make('auth')->provider('doctrine', function ($app, $config) {
+                $entity = $config['model'];
 
-            $em = $app['registry']->getManagerForClass($entity);
+                $em = $app['registry']->getManagerForClass($entity);
 
-            if (!$em) {
-                throw new InvalidArgumentException("No EntityManager is set-up for {$entity}");
-            }
+                if (!$em) {
+                    throw new InvalidArgumentException("No EntityManager is set-up for {$entity}");
+                }
 
-            return new DoctrineUserProvider(
-                $app['hash'],
-                $em,
-                $entity
-            );
-        });
+                return new DoctrineUserProvider(
+                    $app['hash'],
+                    $em,
+                    $entity
+                );
+            });
+        }
     }
 
     /**
