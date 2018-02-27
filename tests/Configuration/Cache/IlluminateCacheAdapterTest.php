@@ -78,7 +78,7 @@ class IlluminateCacheAdapterTest extends PHPUnit_Framework_TestCase
 
         $this->repository->shouldReceive('put')
                          ->with('[1][1]', 'data', 1)
-                         ->once()->andReturn(true);
+                         ->once()->andReturn(null);
 
         $this->assertTrue($this->cache->save(1, 'data', 60));
     }
