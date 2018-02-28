@@ -213,18 +213,18 @@ class FactoryBuilder
         return array_map(function ($attribute) use ($attributes) {
             if ($attribute instanceof \Closure) {
                 $entity = $attribute($attributes);
-                if (is_object($entity)) {
+	            if (is_iterable($entity)) {
+		            foreach ($entity as $e) {
+			            if (is_object($e)) {
+				            $this->registry
+					            ->getManagerForClass(get_class($e))
+					            ->persist($e);
+			            }
+		            }
+	            }elseif (is_object($entity)) {
                     $this->registry
                         ->getManagerForClass(get_class($entity))
                         ->persist($entity);
-                } elseif (is_array($entity)) {
-                    foreach ($entity as $e) {
-                        if (is_object($e)) {
-                            $this->registry
-                                ->getManagerForClass(get_class($e))
-                                ->persist($e);
-                        }
-                    }
                 }
 
                 return $entity;
