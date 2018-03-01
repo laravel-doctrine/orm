@@ -213,7 +213,7 @@ class FactoryBuilder
         return array_map(function ($attribute) use ($attributes) {
             if ($attribute instanceof \Closure) {
                 $entity = $attribute($attributes);
-	            if (is_iterable($entity)) {
+	            if (is_array($entity) || $entity instanceof \Traversable) {
 		            foreach ($entity as $e) {
 			            if (is_object($e)) {
 				            $this->registry
