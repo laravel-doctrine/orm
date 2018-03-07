@@ -22,7 +22,7 @@ return [
     */
     'managers'                   => [
         'default' => [
-            'dev'           => env('APP_DEBUG'),
+            'dev'           => env('APP_DEBUG', false),
             'meta'          => env('DOCTRINE_METADATA', 'annotations'),
             'connection'    => env('DB_CONNECTION', 'mysql'),
             'namespaces'    => [],
