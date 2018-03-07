@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Pagination;
 
-use Doctrine\ORM\Query;
+use Doctrine\ORM\AbstractQuery;
 
 trait PaginatesFromRequest
 {
@@ -20,14 +20,14 @@ trait PaginatesFromRequest
     }
 
     /**
-     * @param Query  $query
-     * @param int    $perPage
-     * @param bool   $fetchJoinCollection
-     * @param string $pageName
+     * @param AbstractQuery $query
+     * @param int           $perPage
+     * @param bool          $fetchJoinCollection
+     * @param string        $pageName
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function paginate(Query $query, $perPage, $pageName = 'page', $fetchJoinCollection = true)
+    public function paginate(AbstractQuery $query, $perPage, $pageName = 'page', $fetchJoinCollection = true)
     {
         return PaginatorAdapter::fromRequest(
             $query,
