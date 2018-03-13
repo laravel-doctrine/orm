@@ -28,7 +28,7 @@ abstract class IlluminateCacheProvider implements Driver
     /**
      * @param array $settings
      *
-     * @return MemcachedCache
+     * @return IlluminateCacheAdapter
      */
     public function resolve(array $settings = [])
     {
