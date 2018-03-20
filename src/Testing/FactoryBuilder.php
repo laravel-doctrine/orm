@@ -213,11 +213,7 @@ class FactoryBuilder
         return array_map(function ($attribute) use ($attributes) {
             if ($attribute instanceof \Closure) {
                 $entity = $attribute($attributes);
-                if (is_object($entity)) {
-                    $this->registry
-                        ->getManagerForClass(get_class($entity))
-                        ->persist($entity);
-                } elseif (is_array($entity)) {
+                if (is_array($entity) || $entity instanceof \Traversable) {
                     foreach ($entity as $e) {
                         if (is_object($e)) {
                             $this->registry
@@ -225,6 +221,10 @@ class FactoryBuilder
                                 ->persist($e);
                         }
                     }
+                } elseif (is_object($entity)) {
+                    $this->registry
+                        ->getManagerForClass(get_class($entity))
+                        ->persist($entity);
                 }
 
                 return $entity;
