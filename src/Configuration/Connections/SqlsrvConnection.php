@@ -21,6 +21,7 @@ class SqlsrvConnection extends Connection
             'prefix'              => array_get($settings, 'prefix'),
             'charset'             => array_get($settings, 'charset'),
             'defaultTableOptions' => array_get($settings, 'defaultTableOptions', []),
+            'serverVersion'       => array_get($settings, 'serverVersion'),
         ];
     }
 }
