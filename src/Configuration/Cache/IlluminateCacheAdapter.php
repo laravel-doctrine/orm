@@ -46,12 +46,21 @@ class IlluminateCacheAdapter extends CacheProvider
     }
 
     /**
-     * {@inheritdoc}
+     * Puts data into the cache.
+     *
+     * @param string $id       The cache id.
+     * @param string $data     The cache entry/data.
+     * @param int    $lifeTime The lifetime. If != 0, sets a specific lifetime for this
+     *                         cache entry (0 => infinite lifeTime).
+     *
+     * @return bool TRUE always, because the cache repository have void return
      */
     protected function doSave($id, $data, $lifeTime = false)
     {
         if (!$lifeTime) {
-            return $this->cache->forever($id, $data);
+            $this->cache->forever($id, $data);
+
+            return true;
         }
 
         // Laravel cache system accept expire times in minutes
@@ -59,7 +68,9 @@ class IlluminateCacheAdapter extends CacheProvider
         // before passing it to Laravel cache repository
         $lifeTimeMinutes = $lifeTime / 60;
 
-        return $this->cache->put($id, $data, $lifeTimeMinutes);
+        $this->cache->put($id, $data, $lifeTimeMinutes);
+
+        return true;
     }
 
     /**

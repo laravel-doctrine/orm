@@ -121,6 +121,10 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
             return $this->registry->getManager($this->connection);
         }
 
+        if (substr($entity, 0, 1) === '\\') {
+            $entity = substr($entity, 1);
+        }
+
         $em = $this->registry->getManagerForClass($entity);
 
         if ($em === null) {

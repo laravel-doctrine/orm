@@ -152,11 +152,34 @@ class FactoryBuilderTest extends MockeryTestCase
         $this->assertEquals(['Foo'], $instance->others);
     }
 
+    public function test_it_should_persist_entities_returned_by_a_closure()
+    {
+        $madeInstance = new EntityStub();
+
+        $instance = $this->getFactoryBuilder([
+            EntityStub::class => [
+                'default' => function () use ($madeInstance) {
+                    return [
+                        'id'     => 1,
+                        'name'   => 'a name',
+                        'others' => function () use ($madeInstance) {
+                            return [$madeInstance];
+                        },
+                    ];
+                }
+            ]
+        ])->create();
+
+        $this->assertSame($madeInstance, $instance->others[0]);
+
+        $this->entityManager->shouldHaveReceived('persist')->with($madeInstance)->once();
+    }
+
     public function test_it_handles_states()
     {
         $states = [
             'withState' => function () {
-                return ['name' => 'stateful'];
+                return ['id' => 2, 'name' => 'stateful'];
             },
             'other' => function () {
                 return ['id' => 3];
@@ -166,7 +189,7 @@ class FactoryBuilderTest extends MockeryTestCase
         $instance = $this->getFactoryBuilder([], $states)->states('withState')->make();
 
         $this->assertEquals('stateful', $instance->name);
-        $this->assertNotEquals(3, $instance->id);
+        $this->assertEquals(2, $instance->id);
     }
 }
 

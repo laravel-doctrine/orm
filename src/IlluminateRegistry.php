@@ -280,6 +280,8 @@ final class IlluminateRegistry implements ManagerRegistry
 
         unset($this->managersMap[$name]);
         unset($this->connectionsMap[$name]);
+
+        return $this->getManager($name);
     }
 
     /**
@@ -336,7 +338,13 @@ final class IlluminateRegistry implements ManagerRegistry
             $class = $proxyClass->getParentClass()->getName();
         }
 
-        foreach ($this->getManagerNames() as $name) {
+        $managerNames = $this->getManagerNames();
+
+        if (count($managerNames) === 1) {
+            return $this->getManager(reset($managerNames));
+        }
+
+        foreach ($managerNames as $name) {
             $manager = $this->getManager($name);
 
             if (!$manager->getMetadataFactory()->isTransient($class)) {
