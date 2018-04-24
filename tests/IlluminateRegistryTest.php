@@ -271,6 +271,20 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->assertContains('manager2', $managers);
     }
 
+    public function test_can_purge_default_manager()
+    {
+        $this->container->shouldReceive('singleton');
+        $this->registry->addManager('default');
+
+        $this->container->shouldReceive('forgetInstance', 'doctrine.managers.default');
+        $this->container->shouldReceive('make')
+            ->with('doctrine.managers.default')
+            ->andReturn(m::mock(\Doctrine\Common\Persistence\ObjectManager::class));
+
+        $this->registry->purgeManager();
+        $this->assertFalse($this->registry->managerExists('default'));
+    }
+
     public function test_can_reset_default_manager()
     {
         $this->container->shouldReceive('singleton');
@@ -287,6 +301,20 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->assertSame($manager, $this->registry->getManager());
     }
 
+    public function test_can_purge_custom_manager()
+    {
+        $this->container->shouldReceive('singleton');
+        $this->registry->addManager('custom');
+
+        $this->container->shouldReceive('forgetInstance', 'doctrine.managers.custom');
+        $this->container->shouldReceive('make')
+            ->with('doctrine.managers.custom')
+            ->andReturn(m::mock(\Doctrine\Common\Persistence\ObjectManager::class));
+
+        $this->registry->purgeManager();
+        $this->assertFalse($this->registry->managerExists('custom'));
+    }
+
     public function test_can_reset_custom_manager()
     {
         $this->container->shouldReceive('singleton');
@@ -301,6 +329,16 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(\Doctrine\Common\Persistence\ObjectManager::class, $manager);
         $this->assertSame($manager, $this->registry->getManager('custom'));
+    }
+
+    public function test_cannot_purge_non_existing_managers()
+    {
+        $this->setExpectedException(
+            InvalidArgumentException::class,
+            'Doctrine Manager named "non-existing" does not exist.'
+        );
+
+        $this->registry->purgeManager('non-existing');
     }
 
     public function test_cannot_reset_non_existing_managers()
