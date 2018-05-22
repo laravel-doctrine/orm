@@ -73,6 +73,18 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function test_can_replace_datetime_immutable_objects()
+    {
+        $date   = new DateTimeImmutable('now');
+        $sql    = 'SELECT * FROM table WHERE column = ?';
+        $params = [$date];
+
+        $this->assertEquals(
+            'SELECT * FROM table WHERE column = "' . $date->format('Y-m-d H:i:s') . '"',
+            $this->formatter->format($sql, $params)
+        );
+    }
+
     public function test_can_replace_array_param()
     {
         $sql    = 'SELECT * FROM table WHERE column IN ?';
