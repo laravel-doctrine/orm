@@ -65,7 +65,7 @@ class DoctrineManager
 
     /**
      * @param string|null     $connection
-     * @param string|callback $callback
+     * @param string|callable $callback
      * @param ManagerRegistry $registry
      */
     private function callExtendOn($connection = null, $callback, ManagerRegistry $registry)

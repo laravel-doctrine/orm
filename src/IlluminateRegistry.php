@@ -273,7 +273,7 @@ final class IlluminateRegistry implements ManagerRegistry
 
     /**
      * Purge a named object manager.
-     * 
+     *
      * This method can be used if you wish to close an object manager manually, without opening a new one.
      * This can be useful if you wish to open a new manager later (but maybe with different settings).
      *
@@ -306,6 +306,7 @@ final class IlluminateRegistry implements ManagerRegistry
     public function resetManager($name = null)
     {
         $this->closeManager($name);
+
         return $this->getManager($name);
     }
 
