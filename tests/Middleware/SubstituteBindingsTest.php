@@ -23,16 +23,23 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
      */
     private $em;
 
+    /**
+     * @var Mock
+     */
+    private $repository;
+
     public function setUp()
     {
-        $this->registry = m::mock(ManagerRegistry::class);
-        $this->em       = m::mock(EntityManager::class);
+        $this->registry     = m::mock(ManagerRegistry::class);
+        $this->em           = m::mock(EntityManager::class);
+        $this->repository   = m::mock(\Doctrine\Common\Persistence\ObjectRepository::class);
     }
 
     protected function getRouter()
     {
         $container = new Container;
         $router    = new Router(new Dispatcher, $container);
+
         $container->singleton(Registrar::class, function () use ($router) {
             return $router;
         });
@@ -46,7 +53,7 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
 
     protected function mockRegistry()
     {
-        $this->registry->shouldReceive('getManagerForClass')->once()->with('BindableEntity')->andReturn($this->em);
+        $this->registry->shouldReceive('getRepository')->once()->with('BindableEntity')->andReturn($this->repository);
     }
 
     public function test_entity_binding()
@@ -63,7 +70,7 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
         $entity       = new BindableEntity();
         $entity->id   = 1;
         $entity->name = 'NAMEVALUE';
-        $this->em->shouldReceive('find')->once()->with('BindableEntity', 1)->andReturn($entity);
+        $this->repository->shouldReceive('find')->once()->with(1)->andReturn($entity);
 
         $this->assertEquals('namevalue', $router->dispatch(Request::create('foo/1', 'GET'))->getContent());
     }
@@ -82,7 +89,7 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
         ]);
 
         $this->mockRegistry();
-        $this->em->shouldReceive('find')->once()->with('BindableEntity', 1)->andReturn(null);
+        $this->repository->shouldReceive('find')->once()->with(1)->andReturn(null);
 
         $router->dispatch(Request::create('foo/1', 'GET'))->getContent();
     }
@@ -98,7 +105,7 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
         ]);
 
         $this->mockRegistry();
-        $this->em->shouldReceive('find')->once()->with('BindableEntity', 1)->andReturn(null);
+        $this->repository->shouldReceive('find')->once()->with(1)->andReturn(null);
 
         $this->assertEquals('', $router->dispatch(Request::create('foo/1', 'GET'))->getContent());
     }
@@ -137,9 +144,26 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
         $entity       = new BindableEntity();
         $entity->id   = 1;
         $entity->name = 'NAMEVALUE';
-        $this->em->shouldReceive('find')->once()->with('BindableEntity', 1)->andReturn($entity);
+        $this->repository->shouldReceive('find')->once()->with(1)->andReturn($entity);
 
         $this->assertEquals('namevalue', $router->dispatch(Request::create('foo/1', 'GET'))->getContent());
+    }
+
+    public function test_not_id_binding()
+    {
+        $router = $this->getRouter();
+        $router->get('foo/{entity}', [
+            'uses'       => 'EntityController@interfacer',
+            'middleware' => SubstituteBindings::class,
+        ]);
+
+        $this->registry->shouldReceive('getRepository')->once()->with('BindableEntityWithInterface')->andReturn($this->repository);
+        $entity       = new BindableEntityWithInterface();
+        $entity->id   = 1;
+        $entity->name = 'NAMEVALUE';
+        $this->repository->shouldReceive('findBy')->once()->with(['name' => 'NAMEVALUE'])->andReturn($entity);
+
+        $this->assertEquals(1, $router->dispatch(Request::create('foo/NAMEVALUE', 'GET'))->getContent());
     }
 
     protected function tearDown()
@@ -165,10 +189,38 @@ class BindableEntity
     }
 }
 
+class BindableEntityWithInterface implements \LaravelDoctrine\ORM\Contracts\UrlRoutable
+{
+    public $id;
+
+    public $name;
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getName()
+    {
+        return strtolower($this->name);
+    }
+
+    public static function getRouteKeyName(): string
+    {
+        return 'name';
+    }
+}
+
 class EntityController
 {
     public function index(BindableEntity $entity)
     {
         return $entity->getName();
     }
+
+    public function interfacer(BindableEntityWithInterface $entity)
+    {
+        return $entity->getId();
+    }
 }
+
