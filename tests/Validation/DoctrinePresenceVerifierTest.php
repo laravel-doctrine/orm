@@ -88,12 +88,63 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
         $this->builder->shouldReceive('andWhere')
                       ->once()->with('e.condition2 = :condition2');
 
+        $this->builder->shouldReceive('andWhere')
+                      ->once()->with('e.condition3 != :condition3');
+
+        $this->builder->shouldReceive('setParameter')->once()->with('condition1', 'value1');
+        $this->builder->shouldReceive('setParameter')->once()->with('condition2', 'value2');
+        $this->builder->shouldReceive('setParameter')->once()->with('condition3', 'value3');
+
+        $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com', null, null, [
+            'condition1' => 'value1',
+            'condition2' => 'value2',
+            'condition3' => '!value3'
+        ]);
+    }
+
+    public function test_can_get_count_with_extra_conditions_with_null()
+    {
+        $this->defaultGetCountMocks();
+
+        $this->builder->shouldReceive('andWhere')
+                      ->once()->with('e.condition1 = :condition1');
+
+        $this->builder->shouldReceive('andWhere')
+                      ->once()->with('e.condition2 = :condition2');
+
+        $this->builder->shouldReceive('andWhere')
+                      ->once()->with('e.condition3 IS NULL');
+
         $this->builder->shouldReceive('setParameter')->once()->with('condition1', 'value1');
         $this->builder->shouldReceive('setParameter')->once()->with('condition2', 'value2');
 
         $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com', null, null, [
             'condition1' => 'value1',
-            'condition2' => 'value2'
+            'condition2' => 'value2',
+            'condition3' => 'NULL'
+        ]);
+    }
+
+    public function test_can_get_count_with_extra_conditions_with_not_null()
+    {
+        $this->defaultGetCountMocks();
+
+        $this->builder->shouldReceive('andWhere')
+                      ->once()->with('e.condition1 = :condition1');
+
+        $this->builder->shouldReceive('andWhere')
+                      ->once()->with('e.condition2 = :condition2');
+
+        $this->builder->shouldReceive('andWhere')
+                      ->once()->with('e.condition3 IS NOT NULL');
+
+        $this->builder->shouldReceive('setParameter')->once()->with('condition1', 'value1');
+        $this->builder->shouldReceive('setParameter')->once()->with('condition2', 'value2');
+
+        $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com', null, null, [
+            'condition1' => 'value1',
+            'condition2' => 'value2',
+            'condition3' => 'NOT_NULL'
         ]);
     }
 

@@ -105,8 +105,17 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
     protected function queryExtraConditions(array $extra, QueryBuilder $builder)
     {
         foreach ($extra as $key => $extraValue) {
-            $builder->andWhere("e.{$key} = :" . $this->prepareParam($key));
-            $builder->setParameter($this->prepareParam($key), $extraValue);
+            if ($extraValue === 'NULL') {
+                $builder->andWhere("e.{$key} IS NULL");
+            } elseif ($extraValue === 'NOT_NULL') {
+                $builder->andWhere("e.{$key} IS NOT NULL");
+            } elseif (\Illuminate\Support\Str::startsWith($extraValue, '!')) {
+                $builder->andWhere("e.{$key} != :" . $this->prepareParam($key));
+                $builder->setParameter($this->prepareParam($key), mb_substr($extraValue, 1));
+            } else {
+                $builder->andWhere("e.{$key} = :" . $this->prepareParam($key));
+                $builder->setParameter($this->prepareParam($key), $extraValue);
+            }
         }
     }
 
