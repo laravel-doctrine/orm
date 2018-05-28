@@ -5,6 +5,8 @@ namespace LaravelDoctrine\ORM\Loggers\Formatters;
 use DateTime;
 use DateTimeInterface;
 use Exception;
+use function is_array;
+use function json_decode;
 
 class ReplaceQueryParams implements QueryFormatter
 {
@@ -43,7 +45,7 @@ class ReplaceQueryParams implements QueryFormatter
                 }
             }
         } elseif (is_array($param)) {
-            if (count($param) !== count($param, COUNT_RECURSIVE)) {
+            if ($this->isNestedArray($param)) {
                 $param = json_encode($param, JSON_UNESCAPED_UNICODE);
             } else {
                 $param = implode(
@@ -63,5 +65,19 @@ class ReplaceQueryParams implements QueryFormatter
         }
 
         return '"' . (string) $param . '"';
+    }
+
+    /**
+     * @param array $array
+     * @return bool
+     */
+    private function isNestedArray(array $array) {
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
