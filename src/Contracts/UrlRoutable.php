@@ -6,4 +6,3 @@ interface UrlRoutable
 {
     public static function getRouteKeyName(): string;
 }
-

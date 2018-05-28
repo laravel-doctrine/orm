@@ -223,4 +223,3 @@ class EntityController
         return $entity->getId();
     }
 }
-

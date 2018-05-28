@@ -2,11 +2,9 @@
 
 namespace LaravelDoctrine\ORM\Loggers\Formatters;
 
-use DateTime;
 use DateTimeInterface;
 use Exception;
 use function is_array;
-use function json_decode;
 
 class ReplaceQueryParams implements QueryFormatter
 {
@@ -68,10 +66,11 @@ class ReplaceQueryParams implements QueryFormatter
     }
 
     /**
-     * @param array $array
+     * @param  array $array
      * @return bool
      */
-    private function isNestedArray(array $array) {
+    private function isNestedArray(array $array)
+    {
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 return true;
