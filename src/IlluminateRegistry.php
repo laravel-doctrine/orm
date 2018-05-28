@@ -246,21 +246,10 @@ final class IlluminateRegistry implements ManagerRegistry
     }
 
     /**
-     * Resets a named object manager.
-     * This method is useful when an object manager has been closed
-     * because of a rollbacked transaction AND when you think that
-     * it makes sense to get a new one to replace the closed one.
-     * Be warned that you will get a brand new object manager as
-     * the existing one is not useable anymore. This means that any
-     * other object with a dependency on this object manager will
-     * hold an obsolete reference. You can inject the registry instead
-     * to avoid this problem.
-     *
+     * Close an existing object manager.
      * @param string|null $name The object manager name (null for the default one).
-     *
-     * @return \Doctrine\Common\Persistence\ObjectManager
      */
-    public function resetManager($name = null)
+    public function closeManager($name = null)
     {
         $name = $name ?: $this->getDefaultManagerName();
 
@@ -280,7 +269,43 @@ final class IlluminateRegistry implements ManagerRegistry
 
         unset($this->managersMap[$name]);
         unset($this->connectionsMap[$name]);
+    }
 
+    /**
+     * Purge a named object manager.
+     * 
+     * This method can be used if you wish to close an object manager manually, without opening a new one.
+     * This can be useful if you wish to open a new manager later (but maybe with different settings).
+     *
+     * @param string|null $name The object manager name (null for the default one).
+     */
+    public function purgeManager($name = null)
+    {
+        $name = $name ?: $this->getDefaultManagerName();
+        $this->closeManager($name);
+
+        unset($this->managers[$name]);
+        unset($this->connections[$name]);
+    }
+
+    /**
+     * Resets a named object manager.
+     * This method is useful when an object manager has been closed
+     * because of a rollbacked transaction AND when you think that
+     * it makes sense to get a new one to replace the closed one.
+     * Be warned that you will get a brand new object manager as
+     * the existing one is not useable anymore. This means that any
+     * other object with a dependency on this object manager will
+     * hold an obsolete reference. You can inject the registry instead
+     * to avoid this problem.
+     *
+     * @param string|null $name The object manager name (null for the default one).
+     *
+     * @return \Doctrine\Common\Persistence\ObjectManager
+     */
+    public function resetManager($name = null)
+    {
+        $this->closeManager($name);
         return $this->getManager($name);
     }
 
