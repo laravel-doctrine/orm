@@ -22,6 +22,7 @@ class PgsqlConnection extends Connection
             'sslmode'             => array_get($settings, 'sslmode'),
             'prefix'              => array_get($settings, 'prefix'),
             'defaultTableOptions' => array_get($settings, 'defaultTableOptions', []),
+            'serverVersion'       => array_get($settings, 'serverVersion'),
         ];
     }
 }
