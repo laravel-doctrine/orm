@@ -34,7 +34,7 @@ class ClockworkLogger implements Logger
         $this->clockwork->addDataSource(
             new DoctrineDataSource(
                 $debugStack,
-                $em->getConnection()->getDriver()->getName()
+                $em->getConnection()
             )
         );
     }

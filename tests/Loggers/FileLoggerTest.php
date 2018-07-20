@@ -1,5 +1,6 @@
 <?php
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use LaravelDoctrine\ORM\Loggers\FileLogger;
@@ -17,8 +18,16 @@ class FileLoggerTest extends PHPUnit_Framework_TestCase
         $configuration->shouldReceive('setSQLLogger')
                       ->once();
 
+        $em->shouldReceive('getConnection')
+            ->once()->andReturn(m::mock(Connection::class));
+
         $logger = new FileLogger($writer);
 
         $logger->register($em, $configuration);
+    }
+
+    protected function tearDown()
+    {
+        m::close();
     }
 }
