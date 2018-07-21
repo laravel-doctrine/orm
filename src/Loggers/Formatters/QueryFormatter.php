@@ -8,9 +8,9 @@ interface QueryFormatter
 {
     /**
      * @param AbstractPlatform $platform
-     * @param string     $sql
-     * @param array|null $params
-     * @param array|null $types
+     * @param string           $sql
+     * @param array|null       $params
+     * @param array|null       $types
      *
      * @return string
      */

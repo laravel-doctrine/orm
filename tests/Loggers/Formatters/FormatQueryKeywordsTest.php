@@ -33,7 +33,7 @@ class FormatQueryKeywordsTest extends PHPUnit_Framework_TestCase
     {
         $sql    = "select * from table where condition is not null having count(id) > 10 limit 10 offset 10 group by parent order by position desc";
         $params = [];
-        $types = [];
+        $types  = [];
 
         $this->decorate($this->platform, $sql, $params, $types);
 
@@ -44,7 +44,7 @@ class FormatQueryKeywordsTest extends PHPUnit_Framework_TestCase
     {
         $sql    = "insert into table (column1, column2, column3) values (value1, value2, value3)";
         $params = [];
-        $types = [];
+        $types  = [];
 
         $this->decorate($this->platform, $sql, $params, $types);
 
@@ -55,7 +55,7 @@ class FormatQueryKeywordsTest extends PHPUnit_Framework_TestCase
     {
         $sql    = "update table set column1=value, column2=value2 where some_column=some_value";
         $params = [];
-        $types = [];
+        $types  = [];
 
         $this->decorate($this->platform, $sql, $params, $types);
 
@@ -66,7 +66,7 @@ class FormatQueryKeywordsTest extends PHPUnit_Framework_TestCase
     {
         $sql    = "update table set column1=value, column2=value2 where some_column=some_value";
         $params = [];
-        $types = [];
+        $types  = [];
 
         $this->decorate($this->platform, $sql, $params, $types);
 

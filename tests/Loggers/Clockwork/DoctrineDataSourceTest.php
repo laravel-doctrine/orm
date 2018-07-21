@@ -40,7 +40,7 @@ class DoctrineDataSourceTest extends PHPUnit_Framework_TestCase
         ];
 
         $this->connection = m::mock(\Doctrine\DBAL\Connection::class);
-        $this->driver = m::mock(\Doctrine\DBAL\Driver::class);
+        $this->driver     = m::mock(\Doctrine\DBAL\Driver::class);
 
         $this->driver->shouldReceive('getName')->once()->andReturn('mysql');
 

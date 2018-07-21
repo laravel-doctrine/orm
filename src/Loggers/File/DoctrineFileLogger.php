@@ -36,13 +36,13 @@ class DoctrineFileLogger implements SQLLogger
     protected $connection;
 
     /**
-     * @param Log $logger
+     * @param Log        $logger
      * @param Connection $connection
      */
     public function __construct(Log $logger, Connection $connection)
     {
-        $this->logger    = $logger;
-        $this->formatter = new FormatQueryKeywords(new ReplaceQueryParams);
+        $this->logger     = $logger;
+        $this->formatter  = new FormatQueryKeywords(new ReplaceQueryParams);
         $this->connection = $connection;
     }
 

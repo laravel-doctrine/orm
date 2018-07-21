@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\JsonArrayType;
 use Doctrine\DBAL\Types\Type;
 use LaravelDoctrine\ORM\Loggers\Formatters\ReplaceQueryParams;
 use Mockery as m;
@@ -20,7 +21,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->platform = m::mock(AbstractPlatform::class);
+        $this->platform  = m::mock(AbstractPlatform::class);
         $this->formatter = new ReplaceQueryParams;
     }
 
@@ -137,9 +138,9 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
     {
         $sql    = 'UPDATE table foo SET column = ?';
         $params = [new ObjectClass()];
-        $types = ['object_type'];
+        $types  = ['object_type'];
 
-        if(!Type::hasType('object_type')){
+        if (!Type::hasType('object_type')) {
             Type::addType('object_type', ObjectType::class);
         }
 
@@ -168,9 +169,8 @@ class StringClass
     }
 }
 
-class ObjectType extends Doctrine\DBAL\Types\JsonType
+class ObjectType extends JsonArrayType
 {
-
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         return json_encode(get_object_vars($value));

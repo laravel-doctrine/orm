@@ -12,10 +12,10 @@ class ReplaceQueryParams implements QueryFormatter
 {
     /**
      * @param AbstractPlatform $platform
-     * @param string     $sql
-     * @param array|null $params
-     * @param array|null $types
-     * 
+     * @param string           $sql
+     * @param array|null       $params
+     * @param array|null       $types
+     *
      *
      * @return string
      */
@@ -23,7 +23,7 @@ class ReplaceQueryParams implements QueryFormatter
     {
         if (is_array($params)) {
             foreach ($params as $key => $param) {
-                $type = $types[$key] ?? null;
+                $type  = $types[$key] ?? null;
                 $param = $this->convertParam($platform, $param, $type);
                 $sql   = preg_replace('/\?/', "$param", $sql, 1);
             }
@@ -44,8 +44,8 @@ class ReplaceQueryParams implements QueryFormatter
             if (!method_exists($param, '__toString')) {
                 if ($param instanceof DateTimeInterface) {
                     $param = $param->format('Y-m-d H:i:s');
-                } elseif(Type::hasType($type)){
-                    $type = Type::getType($type);
+                } elseif (Type::hasType($type)) {
+                    $type  = Type::getType($type);
                     $param = $type->convertToDatabaseValue($param, $platform);
                 } else {
                     throw new Exception('Given query param is an instance of ' . get_class($param) . ' and could not be converted to a string');

@@ -25,9 +25,9 @@ class DoctrineFileLoggerTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->writer = m::mock(Log::class);
+        $this->writer     = m::mock(Log::class);
         $this->connection = m::mock(Connection::class);
-        $this->logger = new DoctrineFileLogger(
+        $this->logger     = new DoctrineFileLogger(
             $this->writer,
             $this->connection
         );
