@@ -27,6 +27,7 @@ use LaravelDoctrine\ORM\Console\DumpDatabaseCommand;
 use LaravelDoctrine\ORM\Console\EnsureProductionSettingsCommand;
 use LaravelDoctrine\ORM\Console\GenerateEntitiesCommand;
 use LaravelDoctrine\ORM\Console\GenerateProxiesCommand;
+use LaravelDoctrine\ORM\Console\GenerateRepositoriesCommand;
 use LaravelDoctrine\ORM\Console\InfoCommand;
 use LaravelDoctrine\ORM\Console\MappingImportCommand;
 use LaravelDoctrine\ORM\Console\SchemaCreateCommand;
@@ -365,6 +366,7 @@ class DoctrineServiceProvider extends ServiceProvider
             ConvertConfigCommand::class,
             MappingImportCommand::class,
             GenerateEntitiesCommand::class,
+            GenerateRepositoriesCommand::class,
             ConvertMappingCommand::class,
             DumpDatabaseCommand::class
         ]);
