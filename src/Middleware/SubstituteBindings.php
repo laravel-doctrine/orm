@@ -71,7 +71,7 @@ class SubstituteBindings
                 if ($parameter->getClass()->implementsInterface(UrlRoutable::class)) {
                     $name = call_user_func([$class, 'getRouteKeyName']);
 
-                    $entity = $repository->findBy([
+                    $entity = $repository->findOneBy([
                         $name => $id
                     ]);
                 } else {
