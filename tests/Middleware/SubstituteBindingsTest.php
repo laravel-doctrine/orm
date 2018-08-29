@@ -161,7 +161,7 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
         $entity       = new BindableEntityWithInterface();
         $entity->id   = 1;
         $entity->name = 'NAMEVALUE';
-        $this->repository->shouldReceive('findBy')->once()->with(['name' => 'NAMEVALUE'])->andReturn($entity);
+        $this->repository->shouldReceive('findOneBy')->with(['name' => 'NAMEVALUE'])->andReturn($entity);
 
         $this->assertEquals(1, $router->dispatch(Request::create('foo/NAMEVALUE', 'GET'))->getContent());
     }
