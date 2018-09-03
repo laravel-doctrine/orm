@@ -2,6 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Loggers\Formatters;
 
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+
 class FormatQueryKeywords implements QueryFormatter
 {
     /**
@@ -44,14 +46,16 @@ class FormatQueryKeywords implements QueryFormatter
     }
 
     /**
+     * @param AbstractPlatform
      * @param string     $sql
      * @param array|null $params
+     * @param array|null $types
      *
      * @return string
      */
-    public function format($sql, array $params = null)
+    public function format($platform, $sql, array $params = null, array $types = null)
     {
-        $sql = $this->formatter->format($sql, $params);
+        $sql = $this->formatter->format($platform, $sql, $params, $types);
 
         return preg_replace_callback('/\b' . implode('\b|\b', $this->keywords) . '\b/i', function ($match) {
             return strtoupper($match[0]);

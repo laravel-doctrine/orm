@@ -31,4 +31,9 @@ class ClockworkLoggerTest extends PHPUnit_Framework_TestCase
 
         $logger->register($em, $configuration);
     }
+
+    protected function tearDown()
+    {
+        m::close();
+    }
 }

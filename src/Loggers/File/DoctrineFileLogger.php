@@ -2,6 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Loggers\File;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\SQLLogger;
 use LaravelDoctrine\ORM\Loggers\Formatters\FormatQueryKeywords;
 use LaravelDoctrine\ORM\Loggers\Formatters\ReplaceQueryParams;
@@ -30,12 +31,19 @@ class DoctrineFileLogger implements SQLLogger
     protected $query;
 
     /**
-     * @param Log $logger
+     * @var Connection
      */
-    public function __construct(Log $logger)
+    protected $connection;
+
+    /**
+     * @param Log        $logger
+     * @param Connection $connection
+     */
+    public function __construct(Log $logger, Connection $connection)
     {
-        $this->logger    = $logger;
-        $this->formatter = new FormatQueryKeywords(new ReplaceQueryParams);
+        $this->logger     = $logger;
+        $this->formatter  = new FormatQueryKeywords(new ReplaceQueryParams);
+        $this->connection = $connection;
     }
 
     /**
@@ -50,7 +58,7 @@ class DoctrineFileLogger implements SQLLogger
     public function startQuery($sql, array $params = null, array $types = null)
     {
         $this->start = microtime(true);
-        $this->query = $this->formatter->format($sql, $params);
+        $this->query = $this->formatter->format($this->connection->getDatabasePlatform(), $sql, $params, $types);
     }
 
     /**

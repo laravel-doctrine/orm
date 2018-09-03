@@ -1,7 +1,11 @@
 <?php
 
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\JsonArrayType;
+use Doctrine\DBAL\Types\Type;
 use LaravelDoctrine\ORM\Loggers\Formatters\ReplaceQueryParams;
 use Mockery as m;
+use Mockery\Mock;
 
 class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 {
@@ -10,8 +14,14 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
      */
     protected $formatter;
 
+    /**
+     * @var Mock
+     */
+    private $platform;
+
     protected function setUp()
     {
+        $this->platform  = m::mock(AbstractPlatform::class);
         $this->formatter = new ReplaceQueryParams;
     }
 
@@ -22,7 +32,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'SELECT * FROM table WHERE column = "value"',
-            $this->formatter->format($sql, $params)
+            $this->formatter->format($this->platform, $sql, $params)
         );
     }
 
@@ -33,7 +43,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'SELECT * FROM table WHERE column = "value" AND column2 = "value2"',
-            $this->formatter->format($sql, $params)
+            $this->formatter->format($this->platform, $sql, $params)
         );
     }
 
@@ -47,7 +57,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
         $sql    = 'SELECT * FROM table WHERE column = ?';
         $params = [new ObjectClass];
 
-        $this->formatter->format($sql, $params);
+        $this->formatter->format($this->platform, $sql, $params);
     }
 
     public function test_can_replace_object_params_with__toString()
@@ -57,7 +67,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'SELECT * FROM table WHERE column = "string"',
-            $this->formatter->format($sql, $params)
+            $this->formatter->format($this->platform, $sql, $params)
         );
     }
 
@@ -69,7 +79,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'SELECT * FROM table WHERE column = "' . $date->format('Y-m-d H:i:s') . '"',
-            $this->formatter->format($sql, $params)
+            $this->formatter->format($this->platform, $sql, $params)
         );
     }
 
@@ -81,7 +91,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'SELECT * FROM table WHERE column = "' . $date->format('Y-m-d H:i:s') . '"',
-            $this->formatter->format($sql, $params)
+            $this->formatter->format($this->platform, $sql, $params)
         );
     }
 
@@ -92,7 +102,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'SELECT * FROM table WHERE column IN ("value1", "value2")',
-            $this->formatter->format($sql, $params)
+            $this->formatter->format($this->platform, $sql, $params)
         );
     }
 
@@ -103,7 +113,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'SELECT * FROM table WHERE column = "' . json_encode(reset($params), JSON_UNESCAPED_UNICODE) . '"',
-            $this->formatter->format($sql, $params)
+            $this->formatter->format($this->platform, $sql, $params)
         );
     }
 
@@ -120,7 +130,23 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'INSERT INTO foo (column1) VALUES ("{"id":20,"foo":"bar","nested":[]}")',
-            $this->formatter->format($sql, $params)
+            $this->formatter->format($this->platform, $sql, $params)
+        );
+    }
+
+    public function test_replace_object_params_without__toString_but_type()
+    {
+        $sql    = 'UPDATE table foo SET column = ?';
+        $params = [new ObjectClass()];
+        $types  = ['object_type'];
+
+        if (!Type::hasType('object_type')) {
+            Type::addType('object_type', ObjectType::class);
+        }
+
+        $this->assertEquals(
+            'UPDATE table foo SET column = "{"status":false}"',
+            $this->formatter->format($this->platform, $sql, $params, $types)
         );
     }
 
@@ -132,6 +158,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
 class ObjectClass
 {
+    public $status = false;
 }
 
 class StringClass
@@ -139,5 +166,18 @@ class StringClass
     public function __toString()
     {
         return 'string';
+    }
+}
+
+class ObjectType extends JsonArrayType
+{
+    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    {
+        return json_encode(get_object_vars($value));
+    }
+
+    public function getName()
+    {
+        return 'object_type';
     }
 }

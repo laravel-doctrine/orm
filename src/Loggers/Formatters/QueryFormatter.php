@@ -2,13 +2,17 @@
 
 namespace LaravelDoctrine\ORM\Loggers\Formatters;
 
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+
 interface QueryFormatter
 {
     /**
-     * @param string     $sql
-     * @param array|null $params
+     * @param AbstractPlatform $platform
+     * @param string           $sql
+     * @param array|null       $params
+     * @param array|null       $types
      *
      * @return string
      */
-    public function format($sql, array $params = null);
+    public function format($platform, $sql, array $params = null, array $types = null);
 }

@@ -3,6 +3,8 @@
 use Clockwork\Request\Request;
 use Doctrine\DBAL\Logging\DebugStack;
 use LaravelDoctrine\ORM\Loggers\Clockwork\DoctrineDataSource;
+use Mockery as m;
+use Mockery\Mock;
 
 class DoctrineDataSourceTest extends PHPUnit_Framework_TestCase
 {
@@ -16,6 +18,16 @@ class DoctrineDataSourceTest extends PHPUnit_Framework_TestCase
      */
     protected $source;
 
+    /**
+     * @var Doctrine\DBAL\Connection
+     */
+    protected $connection;
+
+    /**
+     * @var Mock
+     */
+    protected $driver;
+
     protected function setUp()
     {
         $this->logger          = new DebugStack;
@@ -27,7 +39,15 @@ class DoctrineDataSourceTest extends PHPUnit_Framework_TestCase
             ]
         ];
 
-        $this->source = new DoctrineDataSource($this->logger, 'mysql');
+        $this->connection = m::mock(\Doctrine\DBAL\Connection::class);
+        $this->driver     = m::mock(\Doctrine\DBAL\Driver::class);
+
+        $this->driver->shouldReceive('getName')->once()->andReturn('mysql');
+
+        $this->connection->shouldReceive('getDriver')->once()->andReturn($this->driver);
+        $this->connection->shouldReceive('getDatabasePlatform')->once()->andReturn('mysql');
+
+        $this->source = new DoctrineDataSource($this->logger, $this->connection);
     }
 
     public function test_transforms_debugstack_query_log_to_clockwork_compatible_array()

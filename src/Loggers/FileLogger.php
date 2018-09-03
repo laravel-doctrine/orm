@@ -28,7 +28,7 @@ class FileLogger implements Logger
      */
     public function register(EntityManagerInterface $em, Configuration $configuration)
     {
-        $logger = new DoctrineFileLogger($this->logger);
+        $logger = new DoctrineFileLogger($this->logger, $em->getConnection());
         $configuration->setSQLLogger($logger);
     }
 }

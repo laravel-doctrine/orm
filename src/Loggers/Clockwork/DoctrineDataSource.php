@@ -4,6 +4,7 @@ namespace LaravelDoctrine\ORM\Loggers\Clockwork;
 
 use Clockwork\DataSource\DataSource;
 use Clockwork\Request\Request;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\SQLLogger;
 use LaravelDoctrine\ORM\Loggers\Formatters\FormatQueryKeywords;
 use LaravelDoctrine\ORM\Loggers\Formatters\QueryFormatter;
@@ -17,7 +18,7 @@ class DoctrineDataSource extends DataSource
     protected $logger;
 
     /**
-     * @var
+     * @var Connection
      */
     protected $connection;
 
@@ -30,7 +31,7 @@ class DoctrineDataSource extends DataSource
      * @param SQLLogger $logger
      * @param           $connection
      */
-    public function __construct(SQLLogger $logger, $connection)
+    public function __construct(SQLLogger $logger, Connection $connection)
     {
         $this->logger     = $logger;
         $this->connection = $connection;
@@ -59,9 +60,9 @@ class DoctrineDataSource extends DataSource
         $queries = [];
         foreach ($this->logger->queries as $query) {
             $queries[] = [
-                'query'      => $this->formatter->format($query['sql'], $query['params']),
+                'query'      => $this->formatter->format($this->connection->getDatabasePlatform(), $query['sql'], $query['params']),
                 'duration'   => $query['executionMS'] * 1000,
-                'connection' => $this->connection
+                'connection' => $this->connection->getDriver()->getName()
             ];
         }
 
