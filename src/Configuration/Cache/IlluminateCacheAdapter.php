@@ -30,7 +30,7 @@ class IlluminateCacheAdapter extends CacheProvider
      */
     protected function doFetch($id)
     {
-        return $this->cache->get($id) ?: false;
+        return $this->cache->get($id) ?? false;
     }
 
     /**
