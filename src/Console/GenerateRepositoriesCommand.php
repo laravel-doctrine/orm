@@ -32,6 +32,9 @@ class GenerateRepositoriesCommand extends Command
      */
     public function handle(ManagerRegistry $registry)
     {
+        $this->error('The doctrine:generate:repositories command has been deprecated and will be removed in Doctrine ORM 3');
+
+
         $names = $this->option('em') ? [$this->option('em')] : $registry->getManagerNames();
 
         foreach ($names as $name) {
