@@ -1,5 +1,7 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\Connections;
+
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
@@ -8,7 +10,7 @@ use LaravelDoctrine\ORM\Configuration\Connections\SqliteConnection;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 use Mockery as m;
 
-class ConnectionManagerTest extends PHPUnit_Framework_TestCase
+class ConnectionManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ConnectionManager
@@ -60,7 +62,7 @@ class ConnectionManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_cant_resolve_unsupported_drivers()
     {
-        $this->setExpectedException(DriverNotFound::class);
+        $this->expectException(DriverNotFound::class);
         $this->manager->driver('non-existing');
     }
 

@@ -1,11 +1,13 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\Connections;
+
 use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Connections\OracleConnection;
 use Mockery as m;
 use Mockery\Mock;
 
-class OracleConnectionTest extends PHPUnit_Framework_TestCase
+class OracleConnectionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Mock

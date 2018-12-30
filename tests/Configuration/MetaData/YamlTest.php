@@ -1,11 +1,13 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\MetaData;
+
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\Yaml;
 use Mockery as m;
 
-class YamlTest extends PHPUnit_Framework_TestCase
+class YamlTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Yaml

@@ -1,5 +1,7 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Extensions;
+
 use Doctrine\Common\Persistence\Mapping\Driver\DefaultFileLocator;
 use Doctrine\Common\Persistence\Mapping\Driver\SymfonyFileLocator;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
@@ -9,7 +11,7 @@ use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use Mockery as m;
 use Mockery\Mock;
 
-class MappingDriverChainTest extends PHPUnit_Framework_TestCase
+class MappingDriverChainTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Mock

@@ -5,9 +5,9 @@ namespace LaravelDoctrine\ORM\Testing;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Faker\Generator as Faker;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use LaravelDoctrine\Tests\Stubs\Faker\Generator;
 
 class FactoryBuilder
 {
@@ -72,9 +72,9 @@ class FactoryBuilder
      * @param string           $class
      * @param string           $name
      * @param array            $definitions
-     * @param \Faker\Generator $faker
+     * @param Generator $faker
      */
-    public function __construct(ManagerRegistry $registry, $class, $name, array $definitions, Faker $faker)
+    public function __construct(ManagerRegistry $registry, $class, $name, array $definitions, Generator $faker)
     {
         $this->name        = $name;
         $this->class       = $class;
@@ -88,12 +88,12 @@ class FactoryBuilder
      * @param string          $class
      * @param string          $name
      * @param array           $definitions
-     * @param Faker           $faker
+     * @param Generator       $faker
      * @param array           $states
      *
      * @return FactoryBuilder
      */
-    public static function construct(ManagerRegistry $registry, $class, $name, array $definitions, Faker $faker, array $states)
+    public static function construct(ManagerRegistry $registry, $class, $name, array $definitions, Generator $faker, array $states)
     {
         $instance         = new static($registry, $class, $name, $definitions, $faker);
         $instance->states = $states;

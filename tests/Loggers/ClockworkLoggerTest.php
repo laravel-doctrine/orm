@@ -1,5 +1,7 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Loggers;
+
 use Clockwork\Clockwork;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
@@ -8,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use LaravelDoctrine\ORM\Loggers\ClockworkLogger;
 use Mockery as m;
 
-class ClockworkLoggerTest extends PHPUnit_Framework_TestCase
+class ClockworkLoggerTest extends \PHPUnit\Framework\TestCase
 {
     public function test_can_register()
     {

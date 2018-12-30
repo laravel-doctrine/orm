@@ -1,5 +1,7 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\Cache;
+
 use Mockery as m;
 
 abstract class AbstractCacheTest
@@ -86,7 +88,7 @@ abstract class AbstractCacheTest
                     ->once()->andReturn('cacheKey');
 
         $this->getStore()->shouldReceive('put')
-                    ->with("DoctrineNamespaceCacheKey[]", 1, false)
+                    ->with('DoctrineNamespaceCacheKey[]', 1, false)
                     ->once()->andReturn(true);
 
         $this->assertTrue($this->getCache()->deleteAll());

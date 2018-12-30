@@ -1,11 +1,14 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Testing;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
 use LaravelDoctrine\ORM\Testing\FactoryBuilder;
+use LaravelDoctrine\Tests\Stubs\Faker\Generator;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class FactoryBuilderTest extends MockeryTestCase
@@ -31,7 +34,7 @@ class FactoryBuilderTest extends MockeryTestCase
     private $definitions;
 
     /**
-     * @var \Faker\Generator|\Mockery\Mock
+     * @var Generator|\Mockery\Mock
      */
     private $faker;
 
@@ -43,11 +46,11 @@ class FactoryBuilderTest extends MockeryTestCase
     protected function setUp()
     {
         $this->aRegistry   = \Mockery::mock(ManagerRegistry::class);
-        $this->aClass      = EntityStub::class;
+        $this->aClass      = \LaravelDoctrine\Tests\Mocks\EntityStub::class;
         $this->aName       = 'default';
-        $this->faker       = \Mockery::mock(Faker\Generator::class);
+        $this->faker       = \Mockery::mock(Generator::class);
         $this->definitions = [
-            EntityStub::class => [
+            \LaravelDoctrine\Tests\Mocks\EntityStub::class => [
                 $this->aName => function () {
                     return [
                         'id'   => random_int(1, 9),
@@ -59,13 +62,13 @@ class FactoryBuilderTest extends MockeryTestCase
 
         $this->aRegistry
             ->shouldReceive('getManagerForClass')
-            ->with(EntityStub::class)
+            ->with(\LaravelDoctrine\Tests\Mocks\EntityStub::class)
             ->andReturn($this->entityManager = \Mockery::mock(EntityManagerInterface::class));
 
-        $classMetadata = $this->getEntityManager()->getClassMetadata(EntityStub::class);
+        $classMetadata = $this->getEntityManager()->getClassMetadata(\LaravelDoctrine\Tests\Mocks\EntityStub::class);
 
         $this->entityManager->shouldReceive('getClassMetadata')
-                            ->with(EntityStub::class)
+                            ->with(\LaravelDoctrine\Tests\Mocks\EntityStub::class)
                             ->andReturn($classMetadata);
 
         $this->entityManager->shouldReceive('persist');
@@ -100,15 +103,15 @@ class FactoryBuilderTest extends MockeryTestCase
     {
         $instance = $this->getFactoryBuilder()->make();
 
-        $this->assertInstanceOf(EntityStub::class, $instance);
+        $this->assertInstanceOf(\LaravelDoctrine\Tests\Mocks\EntityStub::class, $instance);
     }
 
     public function test_it_makes_instances_of_the_class_for_object_definition()
     {
         $this->definitions = [
-            EntityStub::class => [
+            \LaravelDoctrine\Tests\Mocks\EntityStub::class => [
                 $this->aName => function () {
-                    $obj = new EntityStub();
+                    $obj = new \LaravelDoctrine\Tests\Mocks\EntityStub();
                     $obj->id = random_int(1, 9);
                     $obj->name = 'A Name';
 
@@ -138,7 +141,7 @@ class FactoryBuilderTest extends MockeryTestCase
     public function test_it_shouldnt_override_predefined_relations()
     {
         $instance = $this->getFactoryBuilder([
-            EntityStub::class => [
+            \LaravelDoctrine\Tests\Mocks\EntityStub::class => [
                 'default' => function () {
                     return [
                         'id'     => 1,
@@ -154,10 +157,10 @@ class FactoryBuilderTest extends MockeryTestCase
 
     public function test_it_should_persist_entities_returned_by_a_closure()
     {
-        $madeInstance = new EntityStub();
+        $madeInstance = new \LaravelDoctrine\Tests\Mocks\EntityStub();
 
         $instance = $this->getFactoryBuilder([
-            EntityStub::class => [
+            \LaravelDoctrine\Tests\Mocks\EntityStub::class => [
                 'default' => function () use ($madeInstance) {
                     return [
                         'id'     => 1,
@@ -191,29 +194,4 @@ class FactoryBuilderTest extends MockeryTestCase
         $this->assertEquals('stateful', $instance->name);
         $this->assertEquals(2, $instance->id);
     }
-}
-
-/**
- * @Entity
- */
-class EntityStub
-{
-    /**
-     * @Id @GeneratedValue @Column(type="integer")
-     */
-    public $id;
-
-    /**
-     * @Column(type="string")
-     */
-    public $name;
-
-    /**
-     * @ManyToMany(targetEntity="EntityStub")
-     * @JoinTable(name="stub_stubs",
-     *      joinColumns={@JoinColumn(name="owner_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="owned_id", referencedColumnName="id")}
-     * )
-     */
-    public $others;
 }

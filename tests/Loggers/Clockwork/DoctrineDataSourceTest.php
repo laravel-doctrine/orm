@@ -1,12 +1,14 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Loggers\Clockwork;
+
 use Clockwork\Request\Request;
 use Doctrine\DBAL\Logging\DebugStack;
 use LaravelDoctrine\ORM\Loggers\Clockwork\DoctrineDataSource;
 use Mockery as m;
 use Mockery\Mock;
 
-class DoctrineDataSourceTest extends PHPUnit_Framework_TestCase
+class DoctrineDataSourceTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DebugStack
@@ -19,7 +21,7 @@ class DoctrineDataSourceTest extends PHPUnit_Framework_TestCase
     protected $source;
 
     /**
-     * @var Doctrine\DBAL\Connection
+     * @var \Doctrine\DBAL\Connection
      */
     protected $connection;
 

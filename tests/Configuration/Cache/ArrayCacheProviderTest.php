@@ -1,5 +1,7 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\Cache;
+
 use Doctrine\Common\Cache\ArrayCache;
 use LaravelDoctrine\ORM\Configuration\Cache\ArrayCacheProvider;
 

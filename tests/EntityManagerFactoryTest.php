@@ -1,8 +1,9 @@
 <?php
 
+namespace LaravelDoctrine\Tests;
+
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Cache\CacheFactory;
@@ -15,6 +16,7 @@ use Doctrine\ORM\Repository\RepositoryFactory;
 use Doctrine\ORM\Tools\Setup;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
+use InvalidArgumentException;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
@@ -24,8 +26,11 @@ use LaravelDoctrine\ORM\Loggers\Logger;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver as LaravelDoctrineEntityListenerResolver;
 use Mockery as m;
 use Mockery\Mock;
+use ReflectionException;
+use Doctrine\ORM\Mapping\DefaultNamingStrategy;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
 
-class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
+class EntityManagerFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var CacheManager|Mock
@@ -77,7 +82,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     /**
      * @var array
      */
-    protected $caches = [ 'query', 'result', 'metadata' ];
+    protected static $caches = [ 'query', 'result', 'metadata' ];
 
     /**
      * @var array
@@ -233,7 +238,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                      ->with('doctrine.cache.namespace')
                      ->andReturn('namespace');
 
-        foreach ($this->caches as $cache) {
+        foreach (self::$caches as $cache) {
             $this->config->shouldReceive('get')
                          ->with('doctrine.cache.' . $cache . '.namespace', 'namespace')
                          ->once()
@@ -273,15 +278,15 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->enableLaravelNamingStrategy();
 
         $this->settings['filters'] = [
-            'name' => FilterStub::class
+            'name' => Mocks\FilterStub::class
         ];
 
         $this->configuration->shouldReceive('addFilter')
-                            ->with('name', FilterStub::class)
+                            ->with('name', Mocks\FilterStub::class)
                             ->once();
 
         $this->configuration->shouldReceive('getFilterClassName')
-                            ->atLeast()->once()->andReturn(FilterStub::class);
+                            ->atLeast()->once()->andReturn(Mocks\FilterStub::class);
 
         $manager = $this->factory->create($this->settings);
 
@@ -293,9 +298,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     public function test_can_set_listeners()
     {
         $this->container->shouldReceive('make')
-                ->with(ListenerStub::class)
+                ->with(Mocks\ListenerStub::class)
                 ->once()
-                ->andReturn(new ListenerStub());
+                ->andReturn(new Mocks\ListenerStub());
 
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
@@ -304,7 +309,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->enableLaravelNamingStrategy();
 
         $this->settings['events']['listeners'] = [
-            'name' => ListenerStub::class
+            'name' => Mocks\ListenerStub::class
         ];
 
         $manager = $this->factory->create($this->settings);
@@ -317,13 +322,13 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     public function test_can_set_multiple_listeners()
     {
         $this->container->shouldReceive('make')
-                        ->with(ListenerStub::class)
+                        ->with(Mocks\ListenerStub::class)
                         ->once()
-                        ->andReturn(new ListenerStub())
+                        ->andReturn(new Mocks\ListenerStub())
                         ->shouldReceive('make')
-                        ->with(AnotherListenerStub::class)
+                        ->with(Mocks\AnotherListenerStub::class)
                         ->once()
-                        ->andReturn(new AnotherListenerStub());
+                        ->andReturn(new Mocks\AnotherListenerStub());
 
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
@@ -333,8 +338,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->settings['events']['listeners'] = [
             'name' => [
-                ListenerStub::class,
-                AnotherListenerStub::class
+                Mocks\ListenerStub::class,
+                Mocks\AnotherListenerStub::class
             ]
         ];
 
@@ -355,7 +360,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                 ->once()
                 ->andThrow($reflectionException);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
@@ -373,9 +378,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
     public function test_can_set_subscribers()
     {
         $this->container->shouldReceive('make')
-                ->with(SubscriberStub::class)
+                ->with(Mocks\SubscriberStub::class)
                 ->once()
-                ->andReturn(new SubscriberStub);
+                ->andReturn(new Mocks\SubscriberStub);
 
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
@@ -384,7 +389,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->enableLaravelNamingStrategy();
 
         $this->settings['events']['subscribers'] = [
-            'name' => SubscriberStub::class
+            'name' => Mocks\SubscriberStub::class
         ];
 
         $manager = $this->factory->create($this->settings);
@@ -403,7 +408,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                         ->once()
                         ->andThrow($reflectionException);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
@@ -425,12 +430,12 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
 
-        $this->settings['naming_strategy'] = 'Doctrine\ORM\Mapping\DefaultNamingStrategy';
+        $this->settings['naming_strategy'] = DefaultNamingStrategy::class;
 
-        $strategy = m::mock('Doctrine\ORM\Mapping\DefaultNamingStrategy');
+        $strategy = m::mock(DefaultNamingStrategy::class);
 
         $this->container->shouldReceive('make')
-                        ->with('Doctrine\ORM\Mapping\DefaultNamingStrategy')
+                        ->with(DefaultNamingStrategy::class)
                         ->once()->andReturn($strategy);
 
         $this->configuration->shouldReceive('setNamingStrategy')->once()->with($strategy);
@@ -448,12 +453,12 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
 
-        $this->settings['decorator'] = Decorator::class;
+        $this->settings['decorator'] = Mocks\Decorator::class;
 
         $manager = $this->factory->create($this->settings);
 
         $this->assertEntityManager($manager);
-        $this->assertInstanceOf(Decorator::class, $manager);
+        $this->assertInstanceOf(Mocks\Decorator::class, $manager);
         $this->assertInstanceOf(EntityManagerDecorator::class, $manager);
     }
 
@@ -497,7 +502,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                      ->atLeast()->once()
                      ->andReturn('array');
 
-        foreach ($this->caches as $cache) {
+        foreach (self::$caches as $cache) {
             $expectation = $this->config->shouldReceive('get')
                          ->with('doctrine.cache.' . $cache . '.driver', 'array')
                          ->andReturn('array');
@@ -545,7 +550,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $this->cache = m::mock(CacheManager::class);
 
         $this->cache->shouldReceive('driver')
-                    ->times(count($this->caches) + 1) // one for each cache driver + one default
+                    ->times(count(self::$caches) + 1) // one for each cache driver + one default
                     ->andReturn(new ArrayCache());
     }
 
@@ -610,7 +615,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                      ->atLeast()->once()
                      ->andReturn(null);
 
-        foreach ($this->caches as $cache) {
+        foreach (self::$caches as $cache) {
             $this->config->shouldReceive('get')
                          ->with('doctrine.cache.' . $cache . '.namespace', null)
                          ->atLeast()->once()
@@ -642,7 +647,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->configuration->shouldReceive('getClassMetadataFactoryName')
                             ->atLeast()->once()
-                            ->andReturn('Doctrine\ORM\Mapping\ClassMetadataFactory');
+                            ->andReturn(ClassMetadataFactory::class);
 
         $this->configuration->shouldReceive('setMetadataCacheImpl')->once();
         $this->configuration->shouldReceive('setQueryCacheImpl')->once();
@@ -817,7 +822,9 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         );
 
         if (!empty($expectedException)) {
-            $this->setExpectedException($expectedException, $msg);
+            $this->expectException($expectedException);
+            $this->expectExceptionMessage($msg);
+
         } else {
             $this->disableDebugbar();
             $this->disableCustomCacheNamespace();
@@ -869,34 +876,4 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
             ],
         ];
     }
-}
-
-class FilterStub
-{
-}
-
-class ListenerStub
-{
-}
-
-class AnotherListenerStub
-{
-}
-
-class SubscriberStub implements EventSubscriber
-{
-    /**
-     * Returns an array of events this subscriber wants to listen to.
-     * @return array
-     */
-    public function getSubscribedEvents()
-    {
-        return [
-            'onFlush'
-        ];
-    }
-}
-
-class Decorator extends EntityManagerDecorator
-{
 }

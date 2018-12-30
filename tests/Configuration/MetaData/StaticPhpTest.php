@@ -1,11 +1,13 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\MetaData;
+
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\StaticPhp;
 use Mockery as m;
 
-class StaticPhpTest extends PHPUnit_Framework_TestCase
+class StaticPhpTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var StaticPhp

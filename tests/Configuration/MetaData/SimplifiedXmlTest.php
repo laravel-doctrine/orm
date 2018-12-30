@@ -1,11 +1,13 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\MetaData;
+
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\SimplifiedXml;
 use Mockery as m;
 
-class SimplifiedXmlTest extends PHPUnit_Framework_TestCase
+class SimplifiedXmlTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SimplifiedXml

@@ -1,8 +1,10 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Utilities;
+
 use LaravelDoctrine\ORM\Utilities\ArrayUtil;
 
-class ArrayUtilTest extends PHPUnit_Framework_TestCase
+class ArrayUtilTest extends \PHPUnit\Framework\TestCase
 {
     public function test_returns_value_when_exists()
     {

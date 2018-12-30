@@ -1,5 +1,7 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Pagination;
+
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
@@ -13,12 +15,12 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\AbstractPaginator;
 use LaravelDoctrine\ORM\Pagination\PaginatorAdapter;
 
-class PaginatorAdapterTest extends PHPUnit_Framework_TestCase
+class PaginatorAdapterTest extends \PHPUnit\Framework\TestCase
 {
     public function testMakesLaravelsPaginatorFromParams()
     {
         $em      = $this->mockEntityManager();
-        $query   = (new Query($em))->setDQL('SELECT f FROM Foo f');
+        $query   = (new Query($em))->setDQL('SELECT f FROM LaravelDoctrine\Tests\Mocks\Foo f');
         $adapter = PaginatorAdapter::fromParams($query, 15, 2);
 
         $paginator = $adapter->make();
@@ -34,7 +36,7 @@ class PaginatorAdapterTest extends PHPUnit_Framework_TestCase
         });
 
         $em      = $this->mockEntityManager();
-        $query   = (new Query($em))->setDQL('SELECT f FROM Foo f');
+        $query   = (new Query($em))->setDQL('SELECT f FROM LaravelDoctrine\Tests\Mocks\Foo f');
         $adapter = PaginatorAdapter::fromRequest($query);
 
         $paginator = $adapter->make();
@@ -77,7 +79,7 @@ class PaginatorAdapterTest extends PHPUnit_Framework_TestCase
         ];
 
         $metadata->subClasses                = [];
-        $metadata->name                      = 'Foo';
+        $metadata->name                      = \LaravelDoctrine\Tests\Mocks\Foo::class;
         $metadata->containsForeignIdentifier = false;
         $metadata->identifier                = ['id'];
 
@@ -106,18 +108,11 @@ class PaginatorAdapterTest extends PHPUnit_Framework_TestCase
         $hydrator->shouldReceive('hydrateAll')->andReturn([]);
 
         $em->shouldReceive('getConfiguration')->andReturn($config);
-        $em->shouldReceive('getClassMetadata')->with('Foo')->andReturn($metadata);
+        $em->shouldReceive('getClassMetadata')->with(\LaravelDoctrine\Tests\Mocks\Foo::class)->andReturn($metadata);
         $em->shouldReceive('getConnection')->andReturn($connection);
         $em->shouldReceive('hasFilters')->andReturn(false);
         $em->shouldReceive('newHydrator')->andReturn($hydrator);
 
         return $em;
     }
-}
-
-class Foo
-{
-    private $id;
-
-    private $name;
 }

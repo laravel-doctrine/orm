@@ -1,12 +1,14 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Types;
+
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use LaravelDoctrine\ORM\Types\Json;
 use Mockery as m;
 use Mockery\Mock;
 
-class JsonTypeTest extends PHPUnit_Framework_TestCase
+class JsonTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Json

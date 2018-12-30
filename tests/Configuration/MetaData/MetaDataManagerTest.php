@@ -1,5 +1,7 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\MetaData;
+
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
@@ -7,7 +9,7 @@ use LaravelDoctrine\ORM\Configuration\MetaData\Yaml;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 use Mockery as m;
 
-class MetaDataManagerTest extends PHPUnit_Framework_TestCase
+class MetaDataManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var MetaDataManager
@@ -45,7 +47,7 @@ class MetaDataManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_cant_resolve_unsupported_drivers()
     {
-        $this->setExpectedException(DriverNotFound::class);
+        $this->expectException(DriverNotFound::class);
         $this->manager->driver('non-existing');
     }
 

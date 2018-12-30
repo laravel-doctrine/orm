@@ -1,5 +1,7 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\Cache;
+
 use Doctrine\Common\Cache\VoidCache;
 use LaravelDoctrine\ORM\Configuration\Cache\VoidCacheProvider;
 

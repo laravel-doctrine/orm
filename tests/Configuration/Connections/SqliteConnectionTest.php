@@ -1,11 +1,13 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\Connections;
+
 use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Connections\SqliteConnection;
 use Mockery as m;
 use Mockery\Mock;
 
-class SqliteConnectionTest extends PHPUnit_Framework_TestCase
+class SqliteConnectionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Mock

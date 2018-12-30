@@ -1,9 +1,11 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration;
+
 use Illuminate\Support\Str;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 
-class LaravelNamingStrategyTest extends PHPUnit_Framework_TestCase
+class LaravelNamingStrategyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @type LaravelNamingStrategy

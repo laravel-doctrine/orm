@@ -1,8 +1,12 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\Cache;
 
-abstract class AbstractCacheProviderTest extends PHPUnit_Framework_TestCase
+abstract class AbstractCacheProviderTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @return \LaravelDoctrine\ORM\Configuration\Driver
+     */
     abstract public function getProvider();
 
     abstract public function getExpectedInstance();
@@ -14,6 +18,6 @@ abstract class AbstractCacheProviderTest extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        Mockery::close();
+        \Mockery::close();
     }
 }

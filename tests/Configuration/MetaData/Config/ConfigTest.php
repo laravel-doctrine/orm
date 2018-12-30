@@ -1,5 +1,7 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\MetaData\Config;
+
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
@@ -7,7 +9,7 @@ use LaravelDoctrine\ORM\Configuration\MetaData\Config;
 use Mockery as m;
 use Mockery\Mock;
 
-class ConfigTest extends PHPUnit_Framework_TestCase
+class ConfigTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Mock

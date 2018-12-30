@@ -1,11 +1,13 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\MetaData;
+
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use Mockery as m;
 
-class AnnotationsTest extends PHPUnit_Framework_TestCase
+class AnnotationsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Annotations

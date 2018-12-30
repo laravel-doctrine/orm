@@ -1,8 +1,10 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\MetaData;
+
 use LaravelDoctrine\ORM\Configuration\MetaData\Config\ConfigDriver;
 
-class ConfigDriverTest extends PHPUnit_Framework_TestCase
+class ConfigDriverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ConfigDriver

@@ -1,5 +1,7 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Loggers;
+
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
@@ -7,7 +9,7 @@ use LaravelDoctrine\ORM\Loggers\FileLogger;
 use Mockery as m;
 use Psr\Log\LoggerInterface as Log;
 
-class FileLoggerTest extends PHPUnit_Framework_TestCase
+class FileLoggerTest extends \PHPUnit\Framework\TestCase
 {
     public function test_can_register()
     {

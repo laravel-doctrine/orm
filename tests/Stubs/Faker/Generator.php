@@ -1,6 +1,6 @@
 <?php
 
-namespace Faker;
+namespace LaravelDoctrine\Tests\Stubs\Faker;
 
 interface Generator
 {

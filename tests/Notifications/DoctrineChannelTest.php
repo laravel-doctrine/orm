@@ -1,13 +1,17 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Notifications;
+
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use LaravelDoctrine\ORM\Exceptions\NoEntityManagerFound;
 use LaravelDoctrine\ORM\Notifications\DoctrineChannel;
-use LaravelDoctrine\ORM\Notifications\Notifiable;
+use LaravelDoctrine\Tests\Mocks\NotificationStub;
+use Mockery;
 use Mockery\Mock;
+use LaravelDoctrine\ORM\Notifications\Notification;
 
-class DoctrineChannelTest extends PHPUnit_Framework_TestCase
+class DoctrineChannelTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DoctrineChannel
@@ -36,10 +40,10 @@ class DoctrineChannelTest extends PHPUnit_Framework_TestCase
     public function test_can_send_notification_on_default_em()
     {
         $this->registry->shouldReceive('getManagerForClass')
-                       ->with('LaravelDoctrine\ORM\Notifications\Notification')
+                       ->with(Notification::class)
                        ->andReturn($this->em);
 
-        $this->channel->send(new NotifiableStub, new NotificationStub);
+        $this->channel->send(new \LaravelDoctrine\Tests\Mocks\NotifiableStub, new NotificationStub);
 
         $this->em->shouldHaveReceived('persist')->once();
         $this->em->shouldHaveReceived('flush')->once();
@@ -51,7 +55,7 @@ class DoctrineChannelTest extends PHPUnit_Framework_TestCase
                        ->with('custom')
                        ->andReturn($this->em);
 
-        $this->channel->send(new CustomNotifiableStub, new NotificationStub);
+        $this->channel->send(new \LaravelDoctrine\Tests\Mocks\CustomNotifiableStub, new NotificationStub);
 
         $this->em->shouldHaveReceived('persist')->once();
         $this->em->shouldHaveReceived('flush')->once();
@@ -59,35 +63,12 @@ class DoctrineChannelTest extends PHPUnit_Framework_TestCase
 
     public function test_it_should_throw_exception_when_it_does_not_find_an_em()
     {
-        $this->setExpectedException(NoEntityManagerFound::class);
+        $this->expectException(NoEntityManagerFound::class);
 
         $this->registry->shouldReceive('getManager')
                        ->with('custom')
                        ->andReturnNull();
 
-        $this->channel->send(new CustomNotifiableStub, new NotificationStub);
-    }
-}
-
-class NotificationStub extends \Illuminate\Notifications\Notification
-{
-    public function toEntity()
-    {
-        return (new \LaravelDoctrine\ORM\Notifications\Notification);
-    }
-}
-
-class NotifiableStub
-{
-    use Notifiable;
-}
-
-class CustomNotifiableStub
-{
-    use Notifiable;
-
-    public function routeNotificationForDoctrine()
-    {
-        return 'custom';
+        $this->channel->send(new \LaravelDoctrine\Tests\Mocks\CustomNotifiableStub, new NotificationStub);
     }
 }

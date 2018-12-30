@@ -1,15 +1,17 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Auth;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Hashing\Hasher;
-use LaravelDoctrine\ORM\Auth\Authenticatable;
 use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
+use LaravelDoctrine\Tests\Mocks\AuthenticatableMock;
+use LaravelDoctrine\Tests\Mocks\AuthenticatableWithNonEmptyConstructorMock;
 use Mockery as m;
 use Mockery\Mock;
 
-class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
+class DoctrineUserProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Mock
@@ -45,12 +47,12 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
         $this->provider = new DoctrineUserProvider(
             $this->hasher,
             $this->em,
-            AuthenticableMock::class
+            AuthenticatableMock::class
         );
         $this->providerNonEmpty = new DoctrineUserProvider(
             $this->hasher,
             $this->em,
-            AuthenticableWithNonEmptyConstructorMock::class
+            AuthenticatableWithNonEmptyConstructorMock::class
         );
     }
 
@@ -58,7 +60,7 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
     {
         $this->mockGetRepository();
 
-        $user = new AuthenticableMock;
+        $user = new AuthenticatableMock;
         $this->repo->shouldReceive('find')
                    ->once()->with(1)
                    ->andReturn($user);
@@ -70,7 +72,7 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
     {
         $this->mockGetRepository();
 
-        $user = new AuthenticableMock;
+        $user = new AuthenticatableMock;
         $this->repo->shouldReceive('findOneBy')
                    ->with([
                        'id'            => 1,
@@ -83,9 +85,9 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
 
     public function test_can_retrieve_by_token_with_non_empty_constructor()
     {
-        $this->mockGetRepository(AuthenticableWithNonEmptyConstructorMock::class);
+        $this->mockGetRepository(AuthenticatableWithNonEmptyConstructorMock::class);
 
-        $user = new AuthenticableWithNonEmptyConstructorMock(['myPassword']);
+        $user = new AuthenticatableWithNonEmptyConstructorMock(['myPassword']);
         $this->repo->shouldReceive('findOneBy')
                    ->with([
                        'id'            => 1,
@@ -98,7 +100,7 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
 
     public function test_can_update_remember_token()
     {
-        $user = new AuthenticableMock;
+        $user = new AuthenticatableMock;
 
         $this->em->shouldReceive('persist')->once()->with($user);
         $this->em->shouldReceive('flush')->once()->with($user);
@@ -112,7 +114,7 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
     {
         $this->mockGetRepository();
 
-        $user = new AuthenticableMock;
+        $user = new AuthenticatableMock;
         $this->repo->shouldReceive('findOneBy')
                    ->with([
                        'email' => 'email',
@@ -127,7 +129,7 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
 
     public function test_can_validate_credentials()
     {
-        $user = new AuthenticableMock;
+        $user = new AuthenticatableMock;
 
         $this->hasher->shouldReceive('check')->once()
                      ->with('myPassword', 'myPassword')
@@ -139,7 +141,7 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
         ));
     }
 
-    protected function mockGetRepository($class = AuthenticableMock::class)
+    protected function mockGetRepository($class = AuthenticatableMock::class)
     {
         $this->em->shouldReceive('getRepository')
                  ->with($class)
@@ -149,25 +151,5 @@ class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         m::close();
-    }
-}
-
-class AuthenticableMock implements AuthenticatableContract
-{
-    use Authenticatable;
-
-    public function __construct()
-    {
-        $this->password = 'myPassword';
-    }
-}
-
-class AuthenticableWithNonEmptyConstructorMock implements AuthenticatableContract
-{
-    use Authenticatable;
-
-    public function __construct(array $passwords)
-    {
-        $this->password = $passwords[0];
     }
 }

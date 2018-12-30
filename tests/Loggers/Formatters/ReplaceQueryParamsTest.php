@@ -1,13 +1,17 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Loggers\Formatters;
+
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\JsonArrayType;
 use Doctrine\DBAL\Types\Type;
+use Exception;
 use LaravelDoctrine\ORM\Loggers\Formatters\ReplaceQueryParams;
 use Mockery as m;
 use Mockery\Mock;
 
-class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
+class ReplaceQueryParamsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ReplaceQueryParams
@@ -49,13 +53,11 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
     public function test_cannot_replace_object_params_without__toString()
     {
-        $this->setExpectedException(
-            Exception::class,
-            'Given query param is an instance of ObjectClass and could not be converted to a string'
-        );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Given query param is an instance of ' . \LaravelDoctrine\Tests\Mocks\ObjectClass::class . ' and could not be converted to a string');
 
         $sql    = 'SELECT * FROM table WHERE column = ?';
-        $params = [new ObjectClass];
+        $params = [new \LaravelDoctrine\Tests\Mocks\ObjectClass];
 
         $this->formatter->format($this->platform, $sql, $params);
     }
@@ -63,7 +65,7 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
     public function test_can_replace_object_params_with__toString()
     {
         $sql    = 'SELECT * FROM table WHERE column = ?';
-        $params = [new StringClass];
+        $params = [new \LaravelDoctrine\Tests\Mocks\StringClass];
 
         $this->assertEquals(
             'SELECT * FROM table WHERE column = "string"',
@@ -137,11 +139,11 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
     public function test_replace_object_params_without__toString_but_type()
     {
         $sql    = 'UPDATE table foo SET column = ?';
-        $params = [new ObjectClass()];
+        $params = [new \LaravelDoctrine\Tests\Mocks\ObjectClass()];
         $types  = ['object_type'];
 
         if (!Type::hasType('object_type')) {
-            Type::addType('object_type', ObjectType::class);
+            Type::addType('object_type', \LaravelDoctrine\Tests\Mocks\ObjectType::class);
         }
 
         $this->assertEquals(
@@ -153,31 +155,5 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         m::close();
-    }
-}
-
-class ObjectClass
-{
-    public $status = false;
-}
-
-class StringClass
-{
-    public function __toString()
-    {
-        return 'string';
-    }
-}
-
-class ObjectType extends JsonArrayType
-{
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
-    {
-        return json_encode(get_object_vars($value));
-    }
-
-    public function getName()
-    {
-        return 'object_type';
     }
 }

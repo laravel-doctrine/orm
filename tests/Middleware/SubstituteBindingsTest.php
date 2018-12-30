@@ -1,6 +1,9 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Middleware;
+
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\Registrar;
@@ -10,8 +13,9 @@ use Illuminate\Routing\Router;
 use LaravelDoctrine\ORM\Middleware\SubstituteBindings;
 use Mockery as m;
 use Mockery\Mock;
+use Doctrine\ORM\EntityNotFoundException;
 
-class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
+class SubstituteBindingsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Mock
@@ -32,7 +36,7 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
     {
         $this->registry     = m::mock(ManagerRegistry::class);
         $this->em           = m::mock(EntityManager::class);
-        $this->repository   = m::mock(\Doctrine\Common\Persistence\ObjectRepository::class);
+        $this->repository   = m::mock(ObjectRepository::class);
     }
 
     protected function getRouter()
@@ -53,7 +57,7 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
 
     protected function mockRegistry()
     {
-        $this->registry->shouldReceive('getRepository')->once()->with('BindableEntity')->andReturn($this->repository);
+        $this->registry->shouldReceive('getRepository')->once()->with(\LaravelDoctrine\Tests\Mocks\BindableEntity::class)->andReturn($this->repository);
     }
 
     public function test_entity_binding()
@@ -61,13 +65,13 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
         $router = $this->getRouter();
         $router->get('foo/{entity}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => function (BindableEntity $entity) {
+            'uses'       => function (\LaravelDoctrine\Tests\Mocks\BindableEntity $entity) {
                 return $entity->getName();
             },
         ]);
 
         $this->mockRegistry();
-        $entity       = new BindableEntity();
+        $entity       = new \LaravelDoctrine\Tests\Mocks\BindableEntity();
         $entity->id   = 1;
         $entity->name = 'NAMEVALUE';
         $this->repository->shouldReceive('find')->once()->with(1)->andReturn($entity);
@@ -77,13 +81,13 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
 
     public function test_entity_binding_expect_entity_not_found_exception()
     {
-        $this->setExpectedException('Doctrine\ORM\EntityNotFoundException');
+        $this->expectException(EntityNotFoundException::class);
 
         $router = $this->getRouter();
 
         $router->get('foo/{entity}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => function (BindableEntity $entity) {
+            'uses'       => function (\LaravelDoctrine\Tests\Mocks\BindableEntity $entity) {
                 return $entity->getName();
             },
         ]);
@@ -99,7 +103,7 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
         $router = $this->getRouter();
         $router->get('foo/{entity}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => function (BindableEntity $entity = null) {
+            'uses'       => function (\LaravelDoctrine\Tests\Mocks\BindableEntity $entity = null) {
                 return $entity;
             },
         ]);
@@ -136,12 +140,12 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
     {
         $router = $this->getRouter();
         $router->get('foo/{entity}', [
-            'uses'       => 'EntityController@index',
+            'uses'       => 'LaravelDoctrine\Tests\Mocks\EntityController@index',
             'middleware' => SubstituteBindings::class,
         ]);
 
         $this->mockRegistry();
-        $entity       = new BindableEntity();
+        $entity       = new \LaravelDoctrine\Tests\Mocks\BindableEntity();
         $entity->id   = 1;
         $entity->name = 'NAMEVALUE';
         $this->repository->shouldReceive('find')->once()->with(1)->andReturn($entity);
@@ -153,12 +157,12 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
     {
         $router = $this->getRouter();
         $router->get('foo/{entity}', [
-            'uses'       => 'EntityController@interfacer',
+            'uses'       => 'LaravelDoctrine\Tests\Mocks\EntityController@interfacer',
             'middleware' => SubstituteBindings::class,
         ]);
 
-        $this->registry->shouldReceive('getRepository')->once()->with('BindableEntityWithInterface')->andReturn($this->repository);
-        $entity       = new BindableEntityWithInterface();
+        $this->registry->shouldReceive('getRepository')->once()->with(\LaravelDoctrine\Tests\Mocks\BindableEntityWithInterface::class)->andReturn($this->repository);
+        $entity       = new \LaravelDoctrine\Tests\Mocks\BindableEntityWithInterface();
         $entity->id   = 1;
         $entity->name = 'NAMEVALUE';
         $this->repository->shouldReceive('findOneBy')->with(['name' => 'NAMEVALUE'])->andReturn($entity);
@@ -169,57 +173,5 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         m::close();
-    }
-}
-
-class BindableEntity
-{
-    public $id;
-
-    public $name;
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getName()
-    {
-        return strtolower($this->name);
-    }
-}
-
-class BindableEntityWithInterface implements \LaravelDoctrine\ORM\Contracts\UrlRoutable
-{
-    public $id;
-
-    public $name;
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getName()
-    {
-        return strtolower($this->name);
-    }
-
-    public static function getRouteKeyName(): string
-    {
-        return 'name';
-    }
-}
-
-class EntityController
-{
-    public function index(BindableEntity $entity)
-    {
-        return $entity->getName();
-    }
-
-    public function interfacer(BindableEntityWithInterface $entity)
-    {
-        return $entity->getId();
     }
 }

@@ -1,11 +1,13 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\MetaData;
+
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\PHPDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\Php;
 use Mockery as m;
 
-class PhpTest extends PHPUnit_Framework_TestCase
+class PhpTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Php

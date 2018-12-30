@@ -1,8 +1,10 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Console\Exporters;
+
 use LaravelDoctrine\ORM\Console\Exporters\FluentExporter;
 
-class FluentExporterTest extends PHPUnit_Framework_TestCase
+class FluentExporterTest extends \PHPUnit\Framework\TestCase
 {
     public function test_it_exports_a_simple_class_metadata()
     {

@@ -4,7 +4,7 @@ namespace LaravelDoctrine\ORM\Testing;
 
 use ArrayAccess;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Faker\Generator as Faker;
+use LaravelDoctrine\Tests\Stubs\Faker\Generator;
 use Symfony\Component\Finder\Finder;
 
 class Factory implements ArrayAccess
@@ -12,7 +12,7 @@ class Factory implements ArrayAccess
     /**
      * The Faker instance for the builder.
      *
-     * @var \Faker\Generator
+     * @var Generator
      */
     protected $faker;
 
@@ -38,10 +38,10 @@ class Factory implements ArrayAccess
     /**
      * Create a new factory instance.
      *
-     * @param \Faker\Generator $faker
+     * @param Generator $faker
      * @param ManagerRegistry  $registry
      */
-    public function __construct(Faker $faker, ManagerRegistry $registry)
+    public function __construct(Generator $faker, ManagerRegistry $registry)
     {
         $this->faker    = $faker;
         $this->registry = $registry;
@@ -50,13 +50,13 @@ class Factory implements ArrayAccess
     /**
      * Create a new factory container.
      *
-     * @param \Faker\Generator $faker
+     * @param Generator $faker
      * @param ManagerRegistry  $registry
      * @param string|null      $pathToFactories
      *
      * @return static
      */
-    public static function construct(Faker $faker, ManagerRegistry $registry, $pathToFactories = null)
+    public static function construct(Generator $faker, ManagerRegistry $registry, $pathToFactories = null)
     {
         $pathToFactories = $pathToFactories ?: database_path('factories');
 

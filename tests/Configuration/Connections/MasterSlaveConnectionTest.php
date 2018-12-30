@@ -1,5 +1,7 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\Connections;
+
 use Doctrine\DBAL\Connections\MasterSlaveConnection as MasterSlaveDoctrineWrapper;
 use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Connections\MasterSlaveConnection;
@@ -8,7 +10,7 @@ use Mockery as m;
 /**
  * Basic unit tests for master slave connection.
  */
-class MasterSlaveConnectionTest extends PHPUnit_Framework_TestCase
+class MasterSlaveConnectionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Data provider for testMasterSlaveConnection.
@@ -28,8 +30,8 @@ class MasterSlaveConnectionTest extends PHPUnit_Framework_TestCase
         // Case #2. Simple valid configuration with oracle base settings.
         $out[] = [$this->getResolvedOracleConfig(), $this->getInputConfig(), $this->getOracleExpectedConfig()];
 
-        // Case #3. Simple valid configuration with pgqsql base settings.
-        $out[] = [$this->getResolvedPgqsqlConfig(), $this->getInputConfig(), $this->getPgsqlExpectedConfig()];
+        // Case #3. Simple valid configuration with pgsql base settings.
+        $out[] = [$this->getResolvedPgsqlConfig(), $this->getInputConfig(), $this->getPgsqlExpectedConfig()];
 
         // Case #4. Simple valid configuration with sqlite base settings.
         $out[] = [$this->getResolvedSqliteConfig(), $this->getSqliteInputConfig(), $this->getSqliteExpectedConfig()];
@@ -282,9 +284,11 @@ class MasterSlaveConnectionTest extends PHPUnit_Framework_TestCase
     private function getSqliteInputConfig()
     {
         $inputConfigSqlite = $this->getInputConfig();
-        unset($inputConfigSqlite['read'][0]['database']);
-        unset($inputConfigSqlite['read'][1]['database']);
-        unset($inputConfigSqlite['write']['database']);
+        unset(
+            $inputConfigSqlite['read'][0]['database'],
+            $inputConfigSqlite['read'][1]['database'],
+            $inputConfigSqlite['write']['database']
+        );
 
         return $inputConfigSqlite;
     }
@@ -347,7 +351,7 @@ class MasterSlaveConnectionTest extends PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    private function getResolvedPgqsqlConfig()
+    private function getResolvedPgsqlConfig()
     {
         return [
             'driver'      => 'pgsql',

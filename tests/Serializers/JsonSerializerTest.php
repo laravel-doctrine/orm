@@ -1,9 +1,10 @@
 <?php
 
-use LaravelDoctrine\ORM\Serializers\Jsonable;
+namespace LaravelDoctrine\Tests\Serializers;
+
 use LaravelDoctrine\ORM\Serializers\JsonSerializer;
 
-class JsonSerializerTest extends PHPUnit_Framework_TestCase
+class JsonSerializerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var JsonSerializer
@@ -17,7 +18,7 @@ class JsonSerializerTest extends PHPUnit_Framework_TestCase
 
     public function test_can_serialize_to_json()
     {
-        $json = $this->serializer->serialize(new JsonableEntity);
+        $json = $this->serializer->serialize(new \LaravelDoctrine\Tests\Mocks\JsonableEntity);
 
         $this->assertJson($json);
         $this->assertEquals('{"id":"IDVALUE","name":"NAMEVALUE","numeric":"1"}', $json);
@@ -25,35 +26,9 @@ class JsonSerializerTest extends PHPUnit_Framework_TestCase
 
     public function test_can_serialize_to_json_with_numeric_check()
     {
-        $json = $this->serializer->serialize(new JsonableEntity(), JSON_NUMERIC_CHECK);
+        $json = $this->serializer->serialize(new \LaravelDoctrine\Tests\Mocks\JsonableEntity(), JSON_NUMERIC_CHECK);
 
         $this->assertJson($json);
         $this->assertEquals('{"id":"IDVALUE","name":"NAMEVALUE","numeric":1}', $json);
-    }
-}
-
-class JsonableEntity
-{
-    use Jsonable;
-
-    protected $id = 'IDVALUE';
-
-    protected $name = 'NAMEVALUE';
-
-    protected $numeric = "1";
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getNumeric()
-    {
-        return $this->numeric;
     }
 }

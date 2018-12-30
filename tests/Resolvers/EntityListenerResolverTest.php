@@ -1,11 +1,16 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Resolvers;
+
+
 use Doctrine\ORM\Mapping\EntityListenerResolver as ResolverContract;
 use Illuminate\Contracts\Container\Container;
+use InvalidArgumentException;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
 use Mockery as m;
+use stdClass;
 
-class EntityListenerResolverTest extends PHPUnit_Framework_TestCase
+class EntityListenerResolverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var m\MockInterface|Container
@@ -99,12 +104,12 @@ class EntityListenerResolverTest extends PHPUnit_Framework_TestCase
 
         $resolvedObject = $this->resolver->resolve(get_class($object));
 
-        $this->assertSame($object, $resolvedObject, "Resolver should not use container when directly registering");
+        $this->assertSame($object, $resolvedObject, 'Resolver should not use container when directly registering');
     }
 
     public function testDoesNotAllowRegisteringNonObjects()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->resolver->register('foo');
     }
 }

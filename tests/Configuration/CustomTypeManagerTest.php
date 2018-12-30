@@ -1,9 +1,13 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration;
+
 use Doctrine\DBAL\DBALException;
 use LaravelDoctrine\ORM\Configuration\CustomTypeManager;
+use LaravelDoctrine\Tests\Mocks\TypeMock;
+use LaravelDoctrine\Tests\Mocks\TypeMock2;
 
-class CustomTypeManagerTest extends PHPUnit_Framework_TestCase
+class CustomTypeManagerTest extends \PHPUnit\Framework\TestCase
 {
     public function test_can_add_type()
     {
@@ -40,16 +44,9 @@ class CustomTypeManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_cannot_get_non_existing_type()
     {
-        $this->setExpectedException(DBALException::class);
+        $this->expectException(DBALException::class);
 
         $manager = new CustomTypeManager;
         $manager->getType('non_existing');
     }
-}
-
-class TypeMock
-{
-}
-class TypeMock2
-{
 }

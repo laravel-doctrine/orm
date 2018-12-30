@@ -1,11 +1,13 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Loggers;
+
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use LaravelDoctrine\ORM\Loggers\EchoLogger;
 use Mockery as m;
 
-class EchoLoggerTest extends PHPUnit_Framework_TestCase
+class EchoLoggerTest extends \PHPUnit\Framework\TestCase
 {
     public function test_can_register()
     {

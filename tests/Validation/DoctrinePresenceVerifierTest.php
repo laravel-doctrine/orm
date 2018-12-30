@@ -1,14 +1,17 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Validation;
+
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use InvalidArgumentException;
 use LaravelDoctrine\ORM\Validation\DoctrinePresenceVerifier;
 use Mockery as m;
 use Mockery\Mock;
 
-class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
+class DoctrinePresenceVerifierTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Mock
@@ -51,7 +54,7 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
     {
         $this->defaultGetCountMocks();
 
-        $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com');
+        $this->verifier->getCount(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class, 'email', 'test@email.com');
     }
 
     public function test_can_get_count_with_excluded_ids()
@@ -63,7 +66,7 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
 
         $this->query->shouldReceive('setParameter')->once()->with('id', 1);
 
-        $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com', 1);
+        $this->verifier->getCount(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class, 'email', 'test@email.com', 1);
     }
 
     public function test_can_get_count_with_excluded_ids_with_custom_id_column()
@@ -75,7 +78,7 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
 
         $this->query->shouldReceive('setParameter')->once()->with('new_id', 1);
 
-        $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com', 1, 'new_id');
+        $this->verifier->getCount(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class, 'email', 'test@email.com', 1, 'new_id');
     }
 
     public function test_can_get_count_with_extra_conditions()
@@ -95,7 +98,7 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
         $this->builder->shouldReceive('setParameter')->once()->with('condition2', 'value2');
         $this->builder->shouldReceive('setParameter')->once()->with('condition3', 'value3');
 
-        $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com', null, null, [
+        $this->verifier->getCount(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class, 'email', 'test@email.com', null, null, [
             'condition1' => 'value1',
             'condition2' => 'value2',
             'condition3' => '!value3'
@@ -118,7 +121,7 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
         $this->builder->shouldReceive('setParameter')->once()->with('condition1', 'value1');
         $this->builder->shouldReceive('setParameter')->once()->with('condition2', 'value2');
 
-        $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com', null, null, [
+        $this->verifier->getCount(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class, 'email', 'test@email.com', null, null, [
             'condition1' => 'value1',
             'condition2' => 'value2',
             'condition3' => 'NULL'
@@ -141,7 +144,7 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
         $this->builder->shouldReceive('setParameter')->once()->with('condition1', 'value1');
         $this->builder->shouldReceive('setParameter')->once()->with('condition2', 'value2');
 
-        $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com', null, null, [
+        $this->verifier->getCount(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class, 'email', 'test@email.com', null, null, [
             'condition1' => 'value1',
             'condition2' => 'value2',
             'condition3' => 'NOT_NULL'
@@ -152,7 +155,7 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
     {
         $this->defaultGetMultiCountMocks();
 
-        $this->verifier->getMultiCount(CountableEntityMock::class, 'email', ['test@email.com']);
+        $this->verifier->getMultiCount(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class, 'email', ['test@email.com']);
     }
 
     public function test_can_get_multi_count_with_extra_conditions()
@@ -168,7 +171,7 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
         $this->builder->shouldReceive('setParameter')->once()->with('condition1', 'value1');
         $this->builder->shouldReceive('setParameter')->once()->with('condition2', 'value2');
 
-        $this->verifier->getMultiCount(CountableEntityMock::class, 'email', ['test@email.com'], [
+        $this->verifier->getMultiCount(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class, 'email', ['test@email.com'], [
             'condition1' => 'value1',
             'condition2' => 'value2'
         ]);
@@ -177,19 +180,19 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
     public function test_counting_invalid_entity_throws_exception()
     {
         $this->registry->shouldReceive('getManagerForClass')
-            ->with(CountableEntityMock::class)
+            ->with(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class)
             ->andReturn(null);
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('No Entity Manager could be found for [CountableEntityMock].');
+        $this->expectExceptionMessage('No Entity Manager could be found for [' . \LaravelDoctrine\Tests\Mocks\CountableEntityMock::class .'].');
 
-        $this->verifier->getCount(CountableEntityMock::class, 'email', 'test@email.com');
+        $this->verifier->getCount(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class, 'email', 'test@email.com');
     }
 
     protected function defaultGetCountMocks()
     {
         $this->registry->shouldReceive('getManagerForClass')
-                       ->with(CountableEntityMock::class)
+                       ->with(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class)
                        ->andReturn($this->em);
 
         $this->em->shouldReceive('createQueryBuilder')
@@ -200,7 +203,7 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
                       ->andReturn($this->builder);
 
         $this->builder->shouldReceive('from')
-                      ->with(CountableEntityMock::class, 'e')
+                      ->with(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class, 'e')
                       ->once();
 
         $this->builder->shouldReceive('where')
@@ -218,7 +221,7 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
     protected function defaultGetMultiCountMocks()
     {
         $this->registry->shouldReceive('getManagerForClass')
-                       ->with(CountableEntityMock::class)
+                       ->with(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class)
                        ->andReturn($this->em);
 
         $this->em->shouldReceive('createQueryBuilder')
@@ -229,14 +232,14 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
                       ->andReturn($this->builder);
 
         $this->builder->shouldReceive('from')
-                      ->with(CountableEntityMock::class, 'e')
+                      ->with(\LaravelDoctrine\Tests\Mocks\CountableEntityMock::class, 'e')
                       ->once();
 
         $this->builder->shouldReceive('where')
                       ->once();
 
         $this->builder->shouldReceive('expr')->andReturn($this->builder);
-        $this->builder->shouldReceive('in')->with("e.email", ['test@email.com']);
+        $this->builder->shouldReceive('in')->with('e.email', ['test@email.com']);
 
         $this->builder->shouldReceive('getQuery')
                       ->once()->andReturn($this->query);
@@ -248,8 +251,4 @@ class DoctrinePresenceVerifierTest extends PHPUnit_Framework_TestCase
     {
         m::close();
     }
-}
-
-class CountableEntityMock
-{
 }

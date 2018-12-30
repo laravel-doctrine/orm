@@ -1,12 +1,14 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Loggers;
+
 use Barryvdh\Debugbar\LaravelDebugbar;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use LaravelDoctrine\ORM\Loggers\LaravelDebugbarLogger;
 use Mockery as m;
 
-class LaravelDebugbarLoggerTest extends PHPUnit_Framework_TestCase
+class LaravelDebugbarLoggerTest extends \PHPUnit\Framework\TestCase
 {
     public function test_can_register()
     {

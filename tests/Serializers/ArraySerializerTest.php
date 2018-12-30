@@ -1,9 +1,10 @@
 <?php
 
-use LaravelDoctrine\ORM\Serializers\Arrayable;
+namespace LaravelDoctrine\Tests\Serializers;
+
 use LaravelDoctrine\ORM\Serializers\ArraySerializer;
 
-class ArraySerializerTest extends PHPUnit_Framework_TestCase
+class ArraySerializerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ArraySerializer
@@ -17,30 +18,11 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
 
     public function test_can_serialize_to_array()
     {
-        $array = $this->serializer->serialize(new ArrayableEntity);
+        $array = $this->serializer->serialize(new \LaravelDoctrine\Tests\Mocks\ArrayableEntity);
 
         $this->assertEquals([
             'id'   => 'IDVALUE',
             'name' => 'NAMEVALUE'
         ], $array);
-    }
-}
-
-class ArrayableEntity
-{
-    use Arrayable;
-
-    protected $id = 'IDVALUE';
-
-    protected $name = 'NAMEVALUE';
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getName()
-    {
-        return $this->name;
     }
 }

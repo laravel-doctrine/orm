@@ -1,11 +1,14 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Extensions\TablePrefix;
+
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixListener;
 use Mockery as m;
+use Doctrine\Common\Persistence\ObjectManager;
 
-class TablePrefixListenerTest extends PHPUnit_Framework_TestCase
+class TablePrefixListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ClassMetadataInfo
@@ -25,9 +28,9 @@ class TablePrefixListenerTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->metadata = new ClassMetadataInfo('\Foo');
-        $this->metadata->setTableName('foo');
+        $this->metadata->setPrimaryTable(['name' => 'foo']);
 
-        $this->objectManager = m::mock('Doctrine\Common\Persistence\ObjectManager');
+        $this->objectManager = m::mock(ObjectManager::class);
         $this->args          = new LoadClassMetadataEventArgs($this->metadata, $this->objectManager);
     }
 

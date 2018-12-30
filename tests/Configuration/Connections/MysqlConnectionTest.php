@@ -1,11 +1,13 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Configuration\Connections;
+
 use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Connections\MysqlConnection;
 use Mockery as m;
 use Mockery\Mock;
 
-class MysqlConnectionTest extends PHPUnit_Framework_TestCase
+class MysqlConnectionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Mock

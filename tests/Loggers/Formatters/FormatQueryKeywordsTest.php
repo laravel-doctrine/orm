@@ -1,12 +1,14 @@
 <?php
 
+namespace LaravelDoctrine\Tests\Loggers\Formatters;
+
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use LaravelDoctrine\ORM\Loggers\Formatters\FormatQueryKeywords;
 use LaravelDoctrine\ORM\Loggers\Formatters\QueryFormatter;
 use Mockery as m;
 use Mockery\Mock;
 
-class FormatQueryKeywordsTest extends PHPUnit_Framework_TestCase
+class FormatQueryKeywordsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Mock
@@ -31,7 +33,7 @@ class FormatQueryKeywordsTest extends PHPUnit_Framework_TestCase
 
     public function test_formats_select_queries()
     {
-        $sql    = "select * from table where condition is not null having count(id) > 10 limit 10 offset 10 group by parent order by position desc";
+        $sql    = 'select * from table where condition is not null having count(id) > 10 limit 10 offset 10 group by parent order by position desc';
         $params = [];
         $types  = [];
 
@@ -42,7 +44,7 @@ class FormatQueryKeywordsTest extends PHPUnit_Framework_TestCase
 
     public function test_formats_insert_queries()
     {
-        $sql    = "insert into table (column1, column2, column3) values (value1, value2, value3)";
+        $sql    = 'insert into table (column1, column2, column3) values (value1, value2, value3)';
         $params = [];
         $types  = [];
 
@@ -53,7 +55,7 @@ class FormatQueryKeywordsTest extends PHPUnit_Framework_TestCase
 
     public function test_formats_update_queries()
     {
-        $sql    = "update table set column1=value, column2=value2 where some_column=some_value";
+        $sql    = 'update table set column1=value, column2=value2 where some_column=some_value';
         $params = [];
         $types  = [];
 
@@ -64,7 +66,7 @@ class FormatQueryKeywordsTest extends PHPUnit_Framework_TestCase
 
     public function test_formats_delete_queries()
     {
-        $sql    = "update table set column1=value, column2=value2 where some_column=some_value";
+        $sql    = 'update table set column1=value, column2=value2 where some_column=some_value';
         $params = [];
         $types  = [];
 

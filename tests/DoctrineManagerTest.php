@@ -1,19 +1,21 @@
 <?php
 
+namespace LaravelDoctrine\Tests;
+
 use Doctrine\Common\EventManager;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;
+use InvalidArgumentException;
 use LaravelDoctrine\ORM\BootChain;
-use LaravelDoctrine\ORM\DoctrineExtender;
 use LaravelDoctrine\ORM\DoctrineManager;
 use LaravelDoctrine\ORM\EntityManagerFactory;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use Mockery as m;
 
-class DoctrineManagerTest extends PHPUnit_Framework_TestCase
+class DoctrineManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Container
@@ -77,12 +79,12 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
         $this->container->shouldReceive('make')
                         ->once()
-                        ->with(MyDoctrineExtender::class)
-                        ->andReturn(new MyDoctrineExtender);
+                        ->with(Mocks\MyDoctrineExtender::class)
+                        ->andReturn(new Mocks\MyDoctrineExtender);
 
         $this->mockEmCalls();
 
-        $this->manager->extend('default', MyDoctrineExtender::class);
+        $this->manager->extend('default', Mocks\MyDoctrineExtender::class);
 
         BootChain::boot($this->registry);
     }
@@ -94,7 +96,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
                        ->with('default')
                        ->andReturn($this->em);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->manager->extend('default', 'no_class');
 
@@ -110,12 +112,12 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
 
         $this->container->shouldReceive('make')
                         ->once()
-                        ->with(InvalidDoctrineExtender::class)
-                        ->andReturn(new InvalidDoctrineExtender);
+                        ->with(Mocks\InvalidDoctrineExtender::class)
+                        ->andReturn(new Mocks\InvalidDoctrineExtender);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
-        $this->manager->extend('default', InvalidDoctrineExtender::class);
+        $this->manager->extend('default', Mocks\InvalidDoctrineExtender::class);
 
         BootChain::boot($this->registry);
     }
@@ -221,21 +223,4 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
         $this->em->shouldReceive('getEventManager')
                  ->once()->andReturn(m::mock(EventManager::class));
     }
-}
-
-class MyDoctrineExtender implements DoctrineExtender
-{
-    /**
-     * @param Configuration $configuration
-     * @param Connection    $connection
-     * @param EventManager  $eventManager
-     */
-    public function extend(Configuration $configuration, Connection $connection, EventManager $eventManager)
-    {
-        (new DoctrineManagerTest)->assertExtendedCorrectly($configuration, $connection, $eventManager);
-    }
-}
-
-class InvalidDoctrineExtender
-{
 }
