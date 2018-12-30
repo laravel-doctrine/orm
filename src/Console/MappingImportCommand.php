@@ -54,6 +54,9 @@ class MappingImportCommand extends Command
                 $type       = 'yaml';
             }
         }
+        if ($type === 'yaml') {
+            $this->error('The yaml mapping type in doctrine:mapping:import command has been deprecated and will be removed in Doctrine ORM 3');
+        }
 
         $cme      = new ClassMetadataExporter();
         $exporter = $cme->getExporter($type);
