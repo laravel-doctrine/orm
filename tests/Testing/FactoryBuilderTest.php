@@ -72,7 +72,7 @@ class FactoryBuilderTest extends MockeryTestCase
         $this->entityManager->shouldReceive('flush');
     }
 
-    protected function getFactoryBuilder(array $definitions = [], array $states = []): FactoryBuilder
+    protected function getFactoryBuilder(array $definitions = [], array $states = [], array $afterMaking = [], array $afterCreating = []): FactoryBuilder
     {
         return FactoryBuilder::construct(
             $this->aRegistry,
@@ -80,7 +80,9 @@ class FactoryBuilderTest extends MockeryTestCase
             $this->aName,
             array_merge($this->definitions, $definitions),
             $this->faker,
-            $states
+            $states,
+            $afterMaking,
+            $afterCreating
         );
     }
 
@@ -178,18 +180,86 @@ class FactoryBuilderTest extends MockeryTestCase
     public function test_it_handles_states()
     {
         $states = [
-            'withState' => function () {
-                return ['id' => 2, 'name' => 'stateful'];
-            },
-            'other' => function () {
-                return ['id' => 3];
-            },
+            $this->aClass => [
+                'withState' => function () {
+                    return ['id' => 2, 'name' => 'stateful'];
+                },
+                'other' => function () {
+                    return ['id' => 3];
+                },
+            ]
         ];
 
         $instance = $this->getFactoryBuilder([], $states)->states('withState')->make();
 
         $this->assertEquals('stateful', $instance->name);
         $this->assertEquals(2, $instance->id);
+    }
+
+    public function test_it_handles_after_making_callback()
+    {
+        $afterMakingRan = false;
+
+        $this->getFactoryBuilder([], [], [$this->aClass => ['default' => [function () use (&$afterMakingRan) {
+            $afterMakingRan = true;
+        }]]])->make();
+
+        $this->assertTrue($afterMakingRan);
+    }
+
+    public function test_it_handles_after_making_callback_with_multiple_models()
+    {
+        $afterMakingRan = 0;
+
+        $this->getFactoryBuilder([], [], [$this->aClass => ['default' => [function () use (&$afterMakingRan) {
+            $afterMakingRan++;
+        }]]], [])->times(2)->make();
+
+        $this->assertEquals(2, $afterMakingRan);
+    }
+
+    public function test_it_handles_after_creating_callback()
+    {
+        $afterCreatingRan = false;
+
+        $this->getFactoryBuilder([], [], [], [$this->aClass => ['default' => [function () use (&$afterCreatingRan) {
+            $afterCreatingRan = true;
+        }]]])->create();
+
+        $this->assertTrue($afterCreatingRan);
+    }
+
+    public function test_it_handles_after_creating_callback_with_multiple_models()
+    {
+        $afterCreatingRan = 0;
+
+        $this->getFactoryBuilder([], [], [], [$this->aClass => ['default' => [function () use (&$afterCreatingRan) {
+            $afterCreatingRan++;
+        }]]])->times(2)->create();
+
+        $this->assertEquals(2, $afterCreatingRan);
+    }
+
+    public function test_it_handles_after_creating_with_state_callback()
+    {
+        $afterCreatingRan = false;
+
+        $this->getFactoryBuilder([], ['withState'], [], [$this->aClass => ['withState' => [function () use (&$afterCreatingRan) {
+            $afterCreatingRan = true;
+        }]]])->states('withState')->create();
+
+        $this->assertTrue($afterCreatingRan);
+    }
+
+    public function test_it_handles_after_making_with_state_callback()
+    {
+        $afterMakingRan = false;
+
+        $this->getFactoryBuilder([], ['withState'], [$this->aClass => ['withState' => [function () use (&$afterMakingRan) {
+            $afterMakingRan = true;
+        }]]])->states('withState')->make();
+
+        $this->assertTrue($afterMakingRan);
     }
 }
 

@@ -73,32 +73,18 @@ class FactoryBuilder
      * @param string           $name
      * @param array            $definitions
      * @param \Faker\Generator $faker
+     * @param array            $afterMaking
+     * @param array            $afterCreating
      */
-    public function __construct(ManagerRegistry $registry, $class, $name, array $definitions, Faker $faker)
+    public function __construct(ManagerRegistry $registry, $class, $name, array $definitions, Faker $faker, array $afterMaking, array $afterCreating)
     {
-        $this->name        = $name;
-        $this->class       = $class;
-        $this->faker       = $faker;
-        $this->registry    = $registry;
-        $this->definitions = $definitions;
-    }
-
-    /**
-     * @param ManagerRegistry $registry
-     * @param string          $class
-     * @param string          $name
-     * @param array           $definitions
-     * @param Faker           $faker
-     * @param array           $states
-     *
-     * @return FactoryBuilder
-     */
-    public static function construct(ManagerRegistry $registry, $class, $name, array $definitions, Faker $faker, array $states)
-    {
-        $instance         = new static($registry, $class, $name, $definitions, $faker);
-        $instance->states = $states;
-
-        return $instance;
+        $this->name          = $name;
+        $this->class         = $class;
+        $this->faker         = $faker;
+        $this->registry      = $registry;
+        $this->definitions   = $definitions;
+        $this->afterMaking   = $afterMaking;
+        $this->afterCreating = $afterCreating;
     }
 
     /**
@@ -129,15 +115,38 @@ class FactoryBuilder
 
         if ($this->amount === 1) {
             $manager->persist($results);
+            $this->callAfterCreating(collect($results));
         } else {
             foreach ($results as $result) {
                 $manager->persist($result);
             }
+            $this->callAfterCreating($results);
         }
 
         $manager->flush();
 
         return $results;
+    }
+
+    /**
+     * @param ManagerRegistry $registry
+     * @param string          $class
+     * @param string          $name
+     * @param array           $definitions
+     * @param Faker           $faker
+     * @param array           $states
+     * @param array           $afterMaking
+     * @param array           $afterCreating
+     *
+     * @return FactoryBuilder
+     */
+    public static function construct(ManagerRegistry $registry, $class, $name, array $definitions,
+                                     Faker $faker, array $states, array $afterMaking = [], array $afterCreating = [])
+    {
+        $instance         = new static($registry, $class, $name, $definitions, $faker, $afterMaking, $afterCreating);
+        $instance->states = $states;
+
+        return $instance;
     }
 
     /**
@@ -150,7 +159,9 @@ class FactoryBuilder
     public function make(array $attributes = [])
     {
         if ($this->amount === 1) {
-            return $this->makeInstance($attributes);
+            return tap($this->makeInstance($attributes), function ($instance) {
+                $this->callAfterMaking(collect([$instance]));
+            });
         } else {
             $results = [];
 
@@ -158,7 +169,11 @@ class FactoryBuilder
                 $results[] = $this->makeInstance($attributes);
             }
 
-            return new Collection($results);
+            $resultsCollection = new Collection($results);
+
+            $this->callAfterMaking($resultsCollection);
+
+            return $resultsCollection;
         }
     }
 
@@ -257,7 +272,11 @@ class FactoryBuilder
     protected function applyStates(array $definition, array $attributes = [])
     {
         foreach ($this->activeStates as $state) {
-            if (! isset($this->states[$state])) {
+            if (! isset($this->states[$this->class][$state])) {
+                if ($this->stateHasAfterCallback($state)) {
+                    continue;
+                }
+
                 throw new InvalidArgumentException("Unable to locate [{$state}] state for [{$this->class}].");
             }
 
@@ -279,7 +298,7 @@ class FactoryBuilder
      */
     protected function stateAttributes($state, array $attributes)
     {
-        $stateAttributes = $this->states[$state];
+        $stateAttributes = $this->states[$this->class][$state];
 
         if (! is_callable($stateAttributes)) {
             return $stateAttributes;
@@ -289,5 +308,76 @@ class FactoryBuilder
             $stateAttributes,
             $this->faker, $attributes
         );
+    }
+
+    /**
+     * Run after making callbacks on a collection of models.
+     *
+     * @param  \Illuminate\Support\Collection $models
+     * @return void
+     */
+    public function callAfterMaking($models)
+    {
+        $this->callAfter($this->afterMaking, $models);
+    }
+
+    /**
+     * Run after creating callbacks on a collection of models.
+     *
+     * @param  \Illuminate\Support\Collection $models
+     * @return void
+     */
+    public function callAfterCreating($models)
+    {
+        $this->callAfter($this->afterCreating, $models);
+    }
+
+    /**
+     * Call after callbacks for each model and state.
+     *
+     * @param  array                          $afterCallbacks
+     * @param  \Illuminate\Support\Collection $models
+     * @return void
+     */
+    protected function callAfter(array $afterCallbacks, $models)
+    {
+        $states = array_merge([$this->name], $this->activeStates);
+
+        $models->each(function ($model) use ($states, $afterCallbacks) {
+            foreach ($states as $state) {
+                $this->callAfterCallbacks($afterCallbacks, $model, $state);
+            }
+        });
+    }
+
+    /**
+     * Call after callbacks for each model and state.
+     *
+     * @param  array                               $afterCallbacks
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string                              $state
+     * @return void
+     */
+    protected function callAfterCallbacks(array $afterCallbacks, $model, $state)
+    {
+        if (! isset($afterCallbacks[$this->class][$state])) {
+            return;
+        }
+
+        foreach ($afterCallbacks[$this->class][$state] as $callback) {
+            $callback($model, $this->faker);
+        }
+    }
+
+    /**
+     * Determine if the given state has an "after" callback.
+     *
+     * @param  string $state
+     * @return bool
+     */
+    protected function stateHasAfterCallback($state)
+    {
+        return isset($this->afterMaking[$this->class][$state]) ||
+            isset($this->afterCreating[$this->class][$state]);
     }
 }

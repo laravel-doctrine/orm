@@ -21,4 +21,68 @@ class FactoryTest extends MockeryTestCase
         $this->assertAttributeEquals(['withState' => function () {
         }], 'states', $builder);
     }
+
+    public function test_it_passes_along_after_creating_callback()
+    {
+        /** @var Faker\Generator $faker */
+        $faker = Mockery::mock(Faker\Generator::class);
+        /** @var ManagerRegistry $registry */
+        $registry = Mockery::mock(ManagerRegistry::class);
+
+        $factory = new Factory($faker, $registry);
+        $factory->afterCreating('SomeClass', function () {
+        });
+
+        $builder = $factory->of('SomeClass');
+        $this->assertAttributeEquals(['SomeClass' => ['default' => [function () {
+        }]]], 'afterCreating', $builder);
+    }
+
+    public function test_it_passes_along_after_making_callback()
+    {
+        /** @var Faker\Generator $faker */
+        $faker = Mockery::mock(Faker\Generator::class);
+        /** @var ManagerRegistry $registry */
+        $registry = Mockery::mock(ManagerRegistry::class);
+
+        $factory = new Factory($faker, $registry);
+        $factory->afterMaking('SomeClass', function () {
+        });
+
+        $builder = $factory->of('SomeClass');
+        $this->assertAttributeEquals(['SomeClass' => ['default' => [function () {
+        }]]], 'afterMaking', $builder);
+    }
+
+    public function test_it_passes_along_after_creating_state_callback()
+    {
+        /** @var Faker\Generator $faker */
+        $faker = Mockery::mock(Faker\Generator::class);
+        /** @var ManagerRegistry $registry */
+        $registry = Mockery::mock(ManagerRegistry::class);
+
+        $factory = new Factory($faker, $registry);
+        $factory->afterCreatingState('SomeClass', 'withState', function () {
+        });
+
+        $builder = $factory->of('SomeClass');
+        $this->assertAttributeEquals(['SomeClass' => ['withState' => [function () {
+        }]]], 'afterCreating', $builder);
+    }
+
+    public function test_it_passes_along_after_making_state_callback()
+    {
+        /** @var Faker\Generator $faker */
+        $faker = Mockery::mock(Faker\Generator::class);
+        /** @var ManagerRegistry $registry */
+        $registry = Mockery::mock(ManagerRegistry::class);
+
+        $factory = new Factory($faker, $registry);
+        $factory->afterMakingState('SomeClass', 'withState', function () {
+        });
+
+        $builder = $factory->of('SomeClass');
+        $this->assertAttributeEquals(['SomeClass' => ['withState' => [function () {
+        }]]], 'afterMaking', $builder);
+    }
 }
