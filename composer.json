@@ -18,15 +18,15 @@
     "require": {
         "php": ">=7.0",
         "doctrine/orm": "2.5.*|2.6.*",
-        "illuminate/auth": "5.5.*|5.6.*|5.7.*",
-        "illuminate/console": "5.5.*|5.6.*|5.7.*",
-        "illuminate/container": "5.5.*|5.6.*|5.7.*",
-        "illuminate/contracts": "5.5.*|5.6.*|5.7.*",
-        "illuminate/pagination": "5.5.*|5.6.*|5.7.*",
-        "illuminate/routing": "5.5.*|5.6.*|5.7.*",
-        "illuminate/support": "5.5.*|5.6.*|5.7.*",
-        "illuminate/validation": "5.5.*|5.6.*|5.7.*",
-        "illuminate/view": "5.5.*|5.6.*|5.7.*",
+        "illuminate/auth": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/console": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/container": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/contracts": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/pagination": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/routing": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/support": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/validation": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/view": "5.5.*|5.6.*|5.7.*|5.8.*",
         "symfony/serializer": "^2.7|~3.0|~4.0"
     },
     "require-dev": {
@@ -34,9 +34,9 @@
         "mockery/mockery": "^1.0",
         "barryvdh/laravel-debugbar": "~2.0",
         "itsgoingd/clockwork": "~1.9",
-        "illuminate/log": "5.5.*|5.6.*|5.7.*",
-        "illuminate/notifications": "5.5.*|5.6.*|5.7.*",
-        "illuminate/queue": "5.5.*|5.6.*|5.7.*"
+        "illuminate/log": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/notifications": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/queue": "5.5.*|5.6.*|5.7.*|5.8.*"
     },
     "autoload": {
         "psr-4": {
