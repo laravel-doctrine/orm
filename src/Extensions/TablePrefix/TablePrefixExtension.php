@@ -6,8 +6,8 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
-use LaravelDoctrine\ORM\Extensions\Extension;
 use Illuminate\Support\Arr;
+use LaravelDoctrine\ORM\Extensions\Extension;
 
 class TablePrefixExtension implements Extension
 {
