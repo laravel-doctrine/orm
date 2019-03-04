@@ -2,6 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
+use Illuminate\Support\Arr;
+
 class SqlsrvConnection extends Connection
 {
     /**
@@ -13,15 +15,15 @@ class SqlsrvConnection extends Connection
     {
         return [
             'driver'              => 'pdo_sqlsrv',
-            'host'                => array_get($settings, 'host'),
-            'dbname'              => array_get($settings, 'database'),
-            'user'                => array_get($settings, 'username'),
-            'password'            => array_get($settings, 'password'),
-            'port'                => array_get($settings, 'port'),
-            'prefix'              => array_get($settings, 'prefix'),
-            'charset'             => array_get($settings, 'charset'),
-            'defaultTableOptions' => array_get($settings, 'defaultTableOptions', []),
-            'serverVersion'       => array_get($settings, 'serverVersion'),
+            'host'                => Arr::get($settings, 'host'),
+            'dbname'              => Arr::get($settings, 'database'),
+            'user'                => Arr::get($settings, 'username'),
+            'password'            => Arr::get($settings, 'password'),
+            'port'                => Arr::get($settings, 'port'),
+            'prefix'              => Arr::get($settings, 'prefix'),
+            'charset'             => Arr::get($settings, 'charset'),
+            'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
+            'serverVersion'       => Arr::get($settings, 'serverVersion'),
         ];
     }
 }

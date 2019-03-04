@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Configuration;
+use Illuminate\Support\Arr;
 
 class Annotations extends MetaData
 {
@@ -14,8 +15,8 @@ class Annotations extends MetaData
     public function resolve(array $settings = [])
     {
         return (new Configuration())->newDefaultAnnotationDriver(
-            array_get($settings, 'paths', []),
-            array_get($settings, 'simple', false)
+            Arr::get($settings, 'paths', []),
+            Arr::get($settings, 'simple', false)
         );
     }
 }

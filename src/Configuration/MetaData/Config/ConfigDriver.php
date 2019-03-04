@@ -4,6 +4,7 @@ namespace LaravelDoctrine\ORM\Configuration\MetaData\Config;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
+use Illuminate\Support\Arr;
 
 class ConfigDriver extends YamlDriver implements MappingDriver
 {
@@ -53,6 +54,6 @@ class ConfigDriver extends YamlDriver implements MappingDriver
      */
     public function getElement($className)
     {
-        return array_get($this->mappings, $className);
+        return Arr::get($this->mappings, $className);
     }
 }

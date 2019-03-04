@@ -2,6 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
+use Illuminate\Support\Arr;
+
 class OracleConnection extends Connection
 {
     /**
@@ -13,17 +15,17 @@ class OracleConnection extends Connection
     {
         return [
             'driver'                => 'oci8',
-            'host'                  => array_get($settings, 'host'),
-            'dbname'                => array_get($settings, 'database'),
-            'servicename'           => array_get($settings, 'service_name'),
-            'service'               => array_get($settings, 'service'),
-            'user'                  => array_get($settings, 'username'),
-            'password'              => array_get($settings, 'password'),
-            'charset'               => array_get($settings, 'charset'),
-            'port'                  => array_get($settings, 'port'),
-            'prefix'                => array_get($settings, 'prefix'),
-            'defaultTableOptions'   => array_get($settings, 'defaultTableOptions', []),
-            'persistent'            => array_get($settings, 'persistent'),
+            'host'                  => Arr::get($settings, 'host'),
+            'dbname'                => Arr::get($settings, 'database'),
+            'servicename'           => Arr::get($settings, 'service_name'),
+            'service'               => Arr::get($settings, 'service'),
+            'user'                  => Arr::get($settings, 'username'),
+            'password'              => Arr::get($settings, 'password'),
+            'charset'               => Arr::get($settings, 'charset'),
+            'port'                  => Arr::get($settings, 'port'),
+            'prefix'                => Arr::get($settings, 'prefix'),
+            'defaultTableOptions'   => Arr::get($settings, 'defaultTableOptions', []),
+            'persistent'            => Arr::get($settings, 'persistent'),
         ];
     }
 }

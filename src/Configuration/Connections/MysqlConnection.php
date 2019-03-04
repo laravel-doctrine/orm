@@ -2,6 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
+use Illuminate\Support\Arr;
+
 class MysqlConnection extends Connection
 {
     /**
@@ -13,17 +15,17 @@ class MysqlConnection extends Connection
     {
         return [
             'driver'                => 'pdo_mysql',
-            'host'                  => array_get($settings, 'host'),
-            'dbname'                => array_get($settings, 'database'),
-            'user'                  => array_get($settings, 'username'),
-            'password'              => array_get($settings, 'password'),
-            'charset'               => array_get($settings, 'charset'),
-            'port'                  => array_get($settings, 'port'),
-            'unix_socket'           => array_get($settings, 'unix_socket'),
-            'prefix'                => array_get($settings, 'prefix'),
-            'defaultTableOptions'   => array_get($settings, 'defaultTableOptions', []),
-            'driverOptions'         => array_get($settings, 'driverOptions', []),
-            'serverVersion'         => array_get($settings, 'serverVersion'),
+            'host'                  => Arr::get($settings, 'host'),
+            'dbname'                => Arr::get($settings, 'database'),
+            'user'                  => Arr::get($settings, 'username'),
+            'password'              => Arr::get($settings, 'password'),
+            'charset'               => Arr::get($settings, 'charset'),
+            'port'                  => Arr::get($settings, 'port'),
+            'unix_socket'           => Arr::get($settings, 'unix_socket'),
+            'prefix'                => Arr::get($settings, 'prefix'),
+            'defaultTableOptions'   => Arr::get($settings, 'defaultTableOptions', []),
+            'driverOptions'         => Arr::get($settings, 'driverOptions', []),
+            'serverVersion'         => Arr::get($settings, 'serverVersion'),
         ];
     }
 }

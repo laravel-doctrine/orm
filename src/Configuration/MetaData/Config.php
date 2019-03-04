@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Arr;
 use LaravelDoctrine\ORM\Configuration\MetaData\Config\ConfigDriver;
 
 class Config extends MetaData
@@ -28,7 +29,7 @@ class Config extends MetaData
     public function resolve(array $settings = [])
     {
         return new ConfigDriver(
-            $this->config->get(array_get($settings, 'mapping_file'), [])
+            $this->config->get(Arr::get($settings, 'mapping_file'), [])
         );
     }
 }

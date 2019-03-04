@@ -8,6 +8,7 @@ use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\Fluent\Builders\Builder;
 use LaravelDoctrine\Fluent\Extensions\ExtensibleClassMetadataFactory;
 use LaravelDoctrine\Fluent\FluentDriver;
+use Illuminate\Support\Arr;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 
 class Fluent extends MetaData
@@ -32,7 +33,7 @@ class Fluent extends MetaData
      */
     public function resolve(array $settings = [])
     {
-        $driver         = new FluentDriver(array_get($settings, 'mappings', []));
+        $driver         = new FluentDriver(Arr::get($settings, 'mappings', []));
 
         $namingStrategy = $this->getNamingStrategy($settings);
 
@@ -49,7 +50,7 @@ class Fluent extends MetaData
      */
     protected function getNamingStrategy(array $settings = [])
     {
-        return $this->container->make(array_get($settings, 'naming_strategy', LaravelNamingStrategy::class));
+        return $this->container->make(Arr::get($settings, 'naming_strategy', LaravelNamingStrategy::class));
     }
 
     /**

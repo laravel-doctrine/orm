@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver;
+use Illuminate\Support\Arr;
 
 class StaticPhp extends MetaData
 {
@@ -14,7 +15,7 @@ class StaticPhp extends MetaData
     public function resolve(array $settings = [])
     {
         return new StaticPHPDriver(
-            array_get($settings, 'paths')
+            Arr::get($settings, 'paths')
         );
     }
 }

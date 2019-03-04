@@ -2,6 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
+use Illuminate\Support\Arr;
+
 class PgsqlConnection extends Connection
 {
     /**
@@ -13,16 +15,16 @@ class PgsqlConnection extends Connection
     {
         return [
             'driver'              => 'pdo_pgsql',
-            'host'                => array_get($settings, 'host'),
-            'dbname'              => array_get($settings, 'database'),
-            'user'                => array_get($settings, 'username'),
-            'password'            => array_get($settings, 'password'),
-            'charset'             => array_get($settings, 'charset'),
-            'port'                => array_get($settings, 'port'),
-            'sslmode'             => array_get($settings, 'sslmode'),
-            'prefix'              => array_get($settings, 'prefix'),
-            'defaultTableOptions' => array_get($settings, 'defaultTableOptions', []),
-            'serverVersion'       => array_get($settings, 'serverVersion'),
+            'host'                => Arr::get($settings, 'host'),
+            'dbname'              => Arr::get($settings, 'database'),
+            'user'                => Arr::get($settings, 'username'),
+            'password'            => Arr::get($settings, 'password'),
+            'charset'             => Arr::get($settings, 'charset'),
+            'port'                => Arr::get($settings, 'port'),
+            'sslmode'             => Arr::get($settings, 'sslmode'),
+            'prefix'              => Arr::get($settings, 'prefix'),
+            'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
+            'serverVersion'       => Arr::get($settings, 'serverVersion'),
         ];
     }
 }
