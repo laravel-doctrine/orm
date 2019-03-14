@@ -53,24 +53,15 @@ class IlluminateCacheAdapter extends CacheProvider
      * @param int    $lifeTime The lifetime. If != 0, sets a specific lifetime for this
      *                         cache entry (0 => infinite lifeTime).
      *
-     * @return bool TRUE always, because the cache repository have void return
+     * @return bool
      */
     protected function doSave($id, $data, $lifeTime = false)
     {
         if (!$lifeTime) {
-            $this->cache->forever($id, $data);
-
-            return true;
+            reutrn $this->cache->forever($id, $data);
         }
 
-        // Laravel cache system accept expire times in minutes
-        // while Doctrine accept it in seconds, so we need to convert $lifeTime from seconds to minutes
-        // before passing it to Laravel cache repository
-        $lifeTimeMinutes = $lifeTime / 60;
-
-        $this->cache->put($id, $data, $lifeTimeMinutes);
-
-        return true;
+        return $this->cache->put($id, $data, $lifeTime);
     }
 
     /**
