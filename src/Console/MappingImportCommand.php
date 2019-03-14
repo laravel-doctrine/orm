@@ -8,6 +8,7 @@ use Doctrine\ORM\Tools\Console\MetadataFilter;
 use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
+use Illuminate\Support\Str;
 
 class MappingImportCommand extends Command
 {
@@ -45,12 +46,12 @@ class MappingImportCommand extends Command
         $simplified = false;
         $type       = $this->argument('mapping-type');
 
-        if (starts_with($type, 'simplified')) {
+        if (Str::startsWith($type, 'simplified')) {
             $simplified = true;
 
-            if (str_contains($type, 'xml')) {
+            if (Str::contains($type, 'xml')) {
                 $type       = 'xml';
-            } elseif (str_contains($type, 'yaml')) {
+            } elseif (Str::contains($type, 'yaml')) {
                 $type       = 'yaml';
             }
         }

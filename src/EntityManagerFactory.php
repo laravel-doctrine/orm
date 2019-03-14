@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Setup;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
@@ -96,8 +97,8 @@ class EntityManagerFactory
         $defaultDriver = $this->config->get('doctrine.cache.default', 'array');
 
         $configuration = $this->setup->createConfiguration(
-            array_get($settings, 'dev', false),
-            array_get($settings, 'proxies.path'),
+            Arr::get($settings, 'dev', false),
+            Arr::get($settings, 'proxies.path'),
             $this->cache->driver($defaultDriver)
         );
 
@@ -125,7 +126,7 @@ class EntityManagerFactory
         $this->setRepositoryFactory($settings, $configuration);
 
         $configuration->setDefaultRepositoryClassName(
-            array_get($settings, 'repository', EntityRepository::class)
+            Arr::get($settings, 'repository', EntityRepository::class)
         );
 
         $configuration->setEntityListenerResolver($this->resolver);
@@ -153,7 +154,7 @@ class EntityManagerFactory
     private function setMetadataDriver(array $settings, Configuration $configuration)
     {
         $metadata = $this->meta->driver(
-            array_get($settings, 'meta'),
+            Arr::get($settings, 'meta'),
             $settings,
             false
         );
@@ -251,7 +252,7 @@ class EntityManagerFactory
     protected function registerPaths(array $settings = [], Configuration $configuration)
     {
         $configuration->getMetadataDriverImpl()->addPaths(
-            array_get($settings, 'paths', [])
+            Arr::get($settings, 'paths', [])
         );
     }
 
@@ -261,9 +262,9 @@ class EntityManagerFactory
      */
     protected function setRepositoryFactory($settings, Configuration $configuration)
     {
-        if (array_get($settings, 'repository_factory', false)) {
+        if (Arr::get($settings, 'repository_factory', false)) {
             $configuration->setRepositoryFactory(
-                $this->container->make(array_get($settings, 'repository_factory', false))
+                $this->container->make(Arr::get($settings, 'repository_factory', false))
             );
         }
     }
@@ -275,14 +276,14 @@ class EntityManagerFactory
     protected function configureProxies(array $settings = [], Configuration $configuration)
     {
         $configuration->setProxyDir(
-            array_get($settings, 'proxies.path')
+            Arr::get($settings, 'proxies.path')
         );
 
         $configuration->setAutoGenerateProxyClasses(
-            array_get($settings, 'proxies.auto_generate', false)
+            Arr::get($settings, 'proxies.auto_generate', false)
         );
 
-        if ($namespace = array_get($settings, 'proxies.namespace', false)) {
+        if ($namespace = Arr::get($settings, 'proxies.namespace', false)) {
             $configuration->setProxyNamespace($namespace);
         }
     }
@@ -306,7 +307,7 @@ class EntityManagerFactory
      */
     protected function setNamingStrategy(array $settings = [], Configuration $configuration)
     {
-        $strategy = array_get($settings, 'naming_strategy', LaravelNamingStrategy::class);
+        $strategy = Arr::get($settings, 'naming_strategy', LaravelNamingStrategy::class);
 
         $configuration->setNamingStrategy(
             $this->container->make($strategy)
@@ -395,7 +396,7 @@ class EntityManagerFactory
             'LaravelDoctrine'
         );
 
-        foreach (array_get($settings, 'namespaces', []) as $alias => $namespace) {
+        foreach (Arr::get($settings, 'namespaces', []) as $alias => $namespace) {
             // Add an alias for the namespace using the key
             if (is_string($alias)) {
                 $configuration->addEntityNamespace($alias, $namespace);
@@ -417,7 +418,7 @@ class EntityManagerFactory
      */
     protected function decorateManager(array $settings = [], EntityManagerInterface $manager)
     {
-        if ($decorator = array_get($settings, 'decorator', false)) {
+        if ($decorator = Arr::get($settings, 'decorator', false)) {
             if (!class_exists($decorator)) {
                 throw new InvalidArgumentException("EntityManagerDecorator {$decorator} does not exist");
             }
@@ -435,7 +436,7 @@ class EntityManagerFactory
      */
     protected function getConnectionDriver(array $settings = [])
     {
-        $connection = array_get($settings, 'connection');
+        $connection = Arr::get($settings, 'connection');
         $key        = 'database.connections.' . $connection;
 
         if (!$this->config->has($key)) {
@@ -453,7 +454,7 @@ class EntityManagerFactory
      */
     protected function registerMappingTypes(array $settings = [], EntityManagerInterface $manager)
     {
-        foreach (array_get($settings, 'mapping_types', []) as $dbType => $doctrineType) {
+        foreach (Arr::get($settings, 'mapping_types', []) as $dbType => $doctrineType) {
             // Throw DBALException if Doctrine Type is not found.
             $manager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($dbType, $doctrineType);
         }

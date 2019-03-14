@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use Illuminate\Support\Arr;
 use LaravelDoctrine\ORM\Extensions\Extension;
 
 class TablePrefixExtension implements Extension
@@ -41,6 +42,6 @@ class TablePrefixExtension implements Extension
     {
         $params = $connection->getParams();
 
-        return array_get($params, 'prefix');
+        return Arr::get($params, 'prefix');
     }
 }

@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\Common\Persistence\Mapping\Driver\PHPDriver;
+use Illuminate\Support\Arr;
 
 class Php extends MetaData
 {
@@ -14,7 +15,7 @@ class Php extends MetaData
     public function resolve(array $settings = [])
     {
         return new PHPDriver(
-            array_get($settings, 'paths')
+            Arr::get($settings, 'paths')
         );
     }
 }

@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Support\Str;
 use ReflectionClass;
 
 class DoctrineUserProvider implements UserProvider
@@ -92,7 +93,7 @@ class DoctrineUserProvider implements UserProvider
     {
         $criteria = [];
         foreach ($credentials as $key => $value) {
-            if (!str_contains($key, 'password')) {
+            if (!Str::contains($key, 'password')) {
                 $criteria[$key] = $value;
             }
         }

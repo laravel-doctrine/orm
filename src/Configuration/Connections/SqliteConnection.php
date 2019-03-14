@@ -2,6 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class SqliteConnection extends Connection
@@ -15,12 +16,12 @@ class SqliteConnection extends Connection
     {
         return [
             'driver'              => 'pdo_sqlite',
-            'user'                => array_get($settings, 'username'),
-            'password'            => array_get($settings, 'password'),
-            'prefix'              => array_get($settings, 'prefix'),
+            'user'                => Arr::get($settings, 'username'),
+            'password'            => Arr::get($settings, 'password'),
+            'prefix'              => Arr::get($settings, 'prefix'),
             'memory'              => $this->isMemory($settings),
-            'path'                => array_get($settings, 'database'),
-            'defaultTableOptions' => array_get($settings, 'defaultTableOptions', []),
+            'path'                => Arr::get($settings, 'database'),
+            'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
         ];
     }
 
@@ -31,6 +32,6 @@ class SqliteConnection extends Connection
      */
     protected function isMemory(array $settings = [])
     {
-        return Str::startsWith(array_get($settings, 'database'), ':memory');
+        return Str::startsWith(Arr::get($settings, 'database'), ':memory');
     }
 }

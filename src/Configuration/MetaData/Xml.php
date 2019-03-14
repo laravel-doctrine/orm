@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Illuminate\Support\Arr;
 
 class Xml extends MetaData
 {
@@ -14,8 +15,8 @@ class Xml extends MetaData
     public function resolve(array $settings = [])
     {
         return new XmlDriver(
-            array_get($settings, 'paths'),
-            array_get($settings, 'extension', XmlDriver::DEFAULT_FILE_EXTENSION)
+            Arr::get($settings, 'paths'),
+            Arr::get($settings, 'extension', XmlDriver::DEFAULT_FILE_EXTENSION)
         );
     }
 }

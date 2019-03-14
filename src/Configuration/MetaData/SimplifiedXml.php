@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
+use Illuminate\Support\Arr;
 
 class SimplifiedXml extends MetaData
 {
@@ -14,8 +15,8 @@ class SimplifiedXml extends MetaData
     public function resolve(array $settings = [])
     {
         return new SimplifiedXmlDriver(
-            array_get($settings, 'paths'),
-            array_get($settings, 'extension', SimplifiedXmlDriver::DEFAULT_FILE_EXTENSION)
+            Arr::get($settings, 'paths'),
+            Arr::get($settings, 'extension', SimplifiedXmlDriver::DEFAULT_FILE_EXTENSION)
         );
     }
 }
