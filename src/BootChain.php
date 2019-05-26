@@ -12,11 +12,24 @@ class BootChain
     protected static $resolveCallbacks = [];
 
     /**
+     * @var ManagerRegistry[]
+     */
+    protected static $registries = [];
+
+    /**
      * @param callable $callback
      */
     public static function add(callable  $callback)
     {
-        static::$resolveCallbacks[] = $callback;
+        if (empty(static::$registries)) {
+            static::$resolveCallbacks[] = $callback;
+        } else {
+            foreach (static::$registries as $registry) {
+                if (is_callable($callback)) {
+                    call_user_func($callback, $registry);
+                }
+            }
+        }
     }
 
     /**
@@ -24,6 +37,7 @@ class BootChain
      */
     public static function boot(ManagerRegistry $registry)
     {
+        static::$registries[] = $registry;
         foreach (static::$resolveCallbacks as $callback) {
             if (is_callable($callback)) {
                 call_user_func($callback, $registry);
