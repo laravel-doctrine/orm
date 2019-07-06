@@ -25,7 +25,7 @@ class TablePrefixListenerTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->metadata = new ClassMetadataInfo('\Foo');
-        $this->metadata->setTableName('foo');
+        $this->metadata->setPrimaryTable(['name' => 'foo']);
 
         $this->objectManager = m::mock('Doctrine\Common\Persistence\ObjectManager');
         $this->args          = new LoadClassMetadataEventArgs($this->metadata, $this->objectManager);

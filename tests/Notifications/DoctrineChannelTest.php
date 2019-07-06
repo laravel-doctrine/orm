@@ -59,7 +59,7 @@ class DoctrineChannelTest extends PHPUnit_Framework_TestCase
 
     public function test_it_should_throw_exception_when_it_does_not_find_an_em()
     {
-        $this->setExpectedException(NoEntityManagerFound::class);
+        $this->expectException(NoEntityManagerFound::class);
 
         $this->registry->shouldReceive('getManager')
                        ->with('custom')

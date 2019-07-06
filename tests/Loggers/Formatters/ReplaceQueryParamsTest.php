@@ -49,8 +49,8 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
     public function test_cannot_replace_object_params_without__toString()
     {
-        $this->setExpectedException(
-            Exception::class,
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
             'Given query param is an instance of ObjectClass and could not be converted to a string'
         );
 

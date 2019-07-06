@@ -45,7 +45,7 @@ class MetaDataManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_cant_resolve_unsupported_drivers()
     {
-        $this->setExpectedException(DriverNotFound::class);
+        $this->expectException(DriverNotFound::class);
         $this->manager->driver('non-existing');
     }
 

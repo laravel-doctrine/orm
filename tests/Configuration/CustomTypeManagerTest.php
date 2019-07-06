@@ -40,7 +40,7 @@ class CustomTypeManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_cannot_get_non_existing_type()
     {
-        $this->setExpectedException(DBALException::class);
+        $this->expectException(DBALException::class);
 
         $manager = new CustomTypeManager;
         $manager->getType('non_existing');

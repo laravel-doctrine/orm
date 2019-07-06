@@ -94,7 +94,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
                        ->with('default')
                        ->andReturn($this->em);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->manager->extend('default', 'no_class');
 
@@ -113,7 +113,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
                         ->with(InvalidDoctrineExtender::class)
                         ->andReturn(new InvalidDoctrineExtender);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->manager->extend('default', InvalidDoctrineExtender::class);
 

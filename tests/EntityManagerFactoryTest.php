@@ -355,7 +355,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                 ->once()
                 ->andThrow($reflectionException);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
@@ -403,7 +403,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                         ->once()
                         ->andThrow($reflectionException);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
@@ -817,7 +817,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         );
 
         if (!empty($expectedException)) {
-            $this->setExpectedException($expectedException, $msg);
+            $this->expectException($expectedException);
+            $this->expectExceptionMessage($msg);
         } else {
             $this->disableDebugbar();
             $this->disableCustomCacheNamespace();

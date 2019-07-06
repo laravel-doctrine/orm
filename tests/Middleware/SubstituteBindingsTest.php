@@ -77,7 +77,7 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
 
     public function test_entity_binding_expect_entity_not_found_exception()
     {
-        $this->setExpectedException('Doctrine\ORM\EntityNotFoundException');
+        $this->expectException(\Doctrine\ORM\EntityNotFoundException::class);
 
         $router = $this->getRouter();
 

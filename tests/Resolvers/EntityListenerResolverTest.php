@@ -104,7 +104,7 @@ class EntityListenerResolverTest extends PHPUnit_Framework_TestCase
 
     public function testDoesNotAllowRegisteringNonObjects()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->resolver->register('foo');
     }
 }
