@@ -2,52 +2,17 @@
 
 namespace LaravelDoctrine\ORM\Types;
 
-use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\JsonArrayType;
+use Doctrine\DBAL\Types\JsonType;
 
 /**
- * Custom Doctrine data type for JSON.
- * Doctrine has a json_array type but, as its name suggests, it was designed with
- * only arrays in mind. This extending type fixes a bug with the json_array type
- * wherein a null value in database gets converted to an empty array.
- * IMPORTANT NOTE: you must register custom types with Doctrine:
- *      \Doctrine\DBAL\Types\Type::addType('json', '\Path\To\Custom\Type\Json');
- * @link http://www.doctrine-project.org/jira/browse/DBAL-446
- * @link https://github.com/doctrine/dbal/pull/655
+ * @deprecated Extend JsonType directly
+ *
+ * This type was added when Doctrine only had `JsonArrayType`.
+ * `JsonArrayType` had a flaw with empty/null values.
+ * Doctrine later added a new type called `JsonType` without these
+ * flaws, with the same logic as we had here. So this type is
+ * now deprecated in favor of the official type.
  */
-class Json extends JsonArrayType
+class Json extends JsonType
 {
-    /**
-     * Made to be compatible with Doctrine 2.4 and 2.5; 2.5 added getJsonTypeDeclarationSQL().
-     * {@inheritdoc}
-     */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
-    {
-        if (method_exists($platform, 'getJsonTypeDeclarationSQL')) {
-            return $platform->getJsonTypeDeclarationSQL($fieldDeclaration);
-        }
-
-        return $platform->getClobTypeDeclarationSQL($fieldDeclaration);
-    }
-
-    /**
-     * When database value is null, we return null instead of empty array like our parent does.
-     * {@inheritdoc}
-     */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
-    {
-        if ($value === null || $value === '') {
-            return null;
-        }
-
-        return parent::convertToPHPValue($value, $platform);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'json';
-    }
 }
