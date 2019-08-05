@@ -203,7 +203,9 @@ class FactoryBuilder
             ->getManagerForClass($this->class)
             ->getClassMetadata($this->class);
 
-        $toManyRelations = (new Collection($metadata->getAssociationMappings()))
+        $associationMappings = $metadata->getAssociationMappings();
+
+        $toManyRelations = (new Collection($associationMappings))
             ->keys()
             ->filter(function ($association) use ($metadata) {
                 return $metadata->isCollectionValuedAssociation($association);
@@ -214,7 +216,7 @@ class FactoryBuilder
 
         return SimpleHydrator::hydrate(
             $this->class,
-            $this->callClosureAttributes(array_merge($toManyRelations->all(), $definition, $attributes))
+            $this->callClosureAttributes(array_merge($toManyRelations->all(), $definition, $attributes), $associationMappings)
         );
     }
 
@@ -223,30 +225,35 @@ class FactoryBuilder
      *
      * @return array
      */
-    protected function callClosureAttributes(array $attributes)
+    protected function callClosureAttributes(array $attributes, array $associations)
     {
-        return array_map(function ($attribute) use ($attributes) {
+        \array_walk($attributes, function (&$attribute, $key) use ($attributes, $associations) {
+
             if ($attribute instanceof \Closure) {
                 $entity = $attribute($attributes);
-                if (is_array($entity) || $entity instanceof \Traversable) {
-                    foreach ($entity as $e) {
-                        if (is_object($e)) {
-                            $this->registry
-                                ->getManagerForClass(get_class($e))
-                                ->persist($e);
+
+                if(isset($associations[$key])) {
+                    if (is_array($entity) || $entity instanceof \Traversable) {
+                        foreach ($entity as $e) {
+                            if (is_object($e)) {
+                                $this->registry
+                                    ->getManagerForClass(get_class($e))
+                                    ->persist($e);
+                            }
                         }
+                    } elseif (is_object($entity)) {
+                        $this->registry
+                            ->getManagerForClass(get_class($entity))
+                            ->persist($entity);
                     }
-                } elseif (is_object($entity)) {
-                    $this->registry
-                        ->getManagerForClass(get_class($entity))
-                        ->persist($entity);
                 }
 
-                return $entity;
+                $attribute = $entity;
             }
 
-            return $attribute;
-        }, $attributes);
+        });
+
+        return $attributes;
     }
 
     /**

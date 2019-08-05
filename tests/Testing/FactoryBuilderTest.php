@@ -177,6 +177,59 @@ class FactoryBuilderTest extends MockeryTestCase
         $this->entityManager->shouldHaveReceived('persist')->with($madeInstance)->once();
     }
 
+    public function test_it_should_not_persist_embeddables_returned_by_a_closure()
+    {
+        $embeddedInstance = new EmbeddableStub();
+
+        $instance = $this->getFactoryBuilder([
+            EntityStub::class => [
+                'default' => function () use ($embeddedInstance) {
+                    return [
+                        'id'     => 1,
+                        'name'   => 'a name',
+                        'others' => [new EntityStub()],
+                        'embeddableStub' => function() use ($embeddedInstance) {
+                            return $embeddedInstance;
+                        },
+                    ];
+                }
+            ]
+        ])->create();
+
+        $this->assertSame($embeddedInstance, $instance->embeddableStub);
+
+        $this->entityManager->shouldNotHaveReceived('persist', [$embeddedInstance]);
+    }
+
+    public function test_it_should_only_persist_associations_returned_by_a_closure()
+    {
+        $madeInstance = new EntityStub();
+        $embeddedInstance = new EmbeddableStub();
+
+        $instance = $this->getFactoryBuilder([
+            EntityStub::class => [
+                'default' => function () use ($madeInstance, $embeddedInstance) {
+                    return [
+                        'id'     => 1,
+                        'name'   => 'a name',
+                        'others' => function () use ($madeInstance) {
+                            return [$madeInstance];
+                        },
+                        'embeddableStub' => function() use ($embeddedInstance) {
+                            return $embeddedInstance;
+                        }
+                    ];
+                }
+            ]
+        ])->create();
+
+        $this->assertSame($madeInstance, $instance->others[0]);
+        $this->assertSame($embeddedInstance, $instance->embeddableStub);
+
+        $this->entityManager->shouldHaveReceived('persist')->with($madeInstance)->once();
+        $this->entityManager->shouldNotHaveReceived('persist', [$embeddedInstance]);
+    }
+
     public function test_it_handles_states()
     {
         $states = [
@@ -286,4 +339,20 @@ class EntityStub
      * )
      */
     public $others;
+
+    /**
+     * @Embedded(class="EmbeddableStub")
+     */
+    public $embeddableStub;
+}
+
+/**
+ * @Embeddable
+ */
+class EmbeddableStub
+{
+    /**
+     * @Column(type="string")
+     */
+    public $embedded;
 }
