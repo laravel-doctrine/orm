@@ -180,14 +180,12 @@ class FactoryBuilderTest extends MockeryTestCase
     public function test_it_handles_states()
     {
         $states = [
-            $this->aClass => [
-                'withState' => function () {
-                    return ['id' => 2, 'name' => 'stateful'];
-                },
-                'other' => function () {
-                    return ['id' => 3];
-                },
-            ]
+            'withState' => function () {
+                return ['id' => 2, 'name' => 'stateful'];
+            },
+            'other' => function () {
+                return ['id' => 3];
+            },
         ];
 
         $instance = $this->getFactoryBuilder([], $states)->states('withState')->make();
