@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Entity Mangers
+    | Entity Managers
     |--------------------------------------------------------------------------
     |
     | Configure your Entity Managers here. You can set a different connection
