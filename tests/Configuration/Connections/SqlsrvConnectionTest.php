@@ -4,8 +4,9 @@ use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Connections\SqlsrvConnection;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class SqlsrvConnectionTest extends PHPUnit_Framework_TestCase
+class SqlsrvConnectionTest extends TestCase
 {
     /**
      * @var Mock

@@ -2,8 +2,9 @@
 
 use LaravelDoctrine\ORM\Serializers\Arrayable;
 use LaravelDoctrine\ORM\Serializers\ArraySerializer;
+use PHPUnit\Framework\TestCase;
 
-class ArraySerializerTest extends PHPUnit_Framework_TestCase
+class ArraySerializerTest extends TestCase
 {
     /**
      * @var ArraySerializer

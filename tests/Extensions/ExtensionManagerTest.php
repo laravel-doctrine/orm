@@ -12,8 +12,9 @@ use LaravelDoctrine\ORM\Extensions\Extension;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class ExtensionManagerTest extends PHPUnit_Framework_TestCase
+class ExtensionManagerTest extends TestCase
 {
     /**
      * @var Mock

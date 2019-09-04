@@ -8,8 +8,9 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 use LaravelDoctrine\ORM\Auth\Passwords\DoctrineTokenRepository;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class DoctrineTokenRepositoryTest extends PHPUnit_Framework_TestCase
+class DoctrineTokenRepositoryTest extends TestCase
 {
     /**
      * @var Mock
@@ -178,6 +179,8 @@ class DoctrineTokenRepositoryTest extends PHPUnit_Framework_TestCase
                       ->andReturn(true);
 
         $this->repository->delete(new UserMock);
+
+        $this->assertTrue(true);
     }
 
     public function test_can_delete_expired()
@@ -204,6 +207,8 @@ class DoctrineTokenRepositoryTest extends PHPUnit_Framework_TestCase
                       ->once();
 
         $this->repository->deleteExpired();
+
+        $this->assertTrue(true);
     }
 
     protected function tearDown()

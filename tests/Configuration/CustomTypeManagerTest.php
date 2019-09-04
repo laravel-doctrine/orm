@@ -2,8 +2,9 @@
 
 use Doctrine\DBAL\DBALException;
 use LaravelDoctrine\ORM\Configuration\CustomTypeManager;
+use PHPUnit\Framework\TestCase;
 
-class CustomTypeManagerTest extends PHPUnit_Framework_TestCase
+class CustomTypeManagerTest extends TestCase
 {
     public function test_can_add_type()
     {
@@ -40,7 +41,7 @@ class CustomTypeManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_cannot_get_non_existing_type()
     {
-        $this->setExpectedException(DBALException::class);
+        $this->expectException(DBALException::class);
 
         $manager = new CustomTypeManager;
         $manager->getType('non_existing');

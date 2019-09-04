@@ -4,8 +4,9 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use LaravelDoctrine\ORM\Loggers\EchoLogger;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class EchoLoggerTest extends PHPUnit_Framework_TestCase
+class EchoLoggerTest extends TestCase
 {
     public function test_can_register()
     {
@@ -18,6 +19,8 @@ class EchoLoggerTest extends PHPUnit_Framework_TestCase
         $logger = new EchoLogger();
 
         $logger->register($em, $configuration);
+
+        $this->assertTrue(true);
     }
 
     protected function tearDown()

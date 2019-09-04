@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Str;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
+use PHPUnit\Framework\TestCase;
 
-class LaravelNamingStrategyTest extends PHPUnit_Framework_TestCase
+class LaravelNamingStrategyTest extends TestCase
 {
     /**
      * @type LaravelNamingStrategy

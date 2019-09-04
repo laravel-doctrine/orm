@@ -6,8 +6,9 @@ use Doctrine\DBAL\Types\Type;
 use LaravelDoctrine\ORM\Loggers\Formatters\ReplaceQueryParams;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
+class ReplaceQueryParamsTest extends TestCase
 {
     /**
      * @var ReplaceQueryParams
@@ -49,10 +50,8 @@ class ReplaceQueryParamsTest extends PHPUnit_Framework_TestCase
 
     public function test_cannot_replace_object_params_without__toString()
     {
-        $this->setExpectedException(
-            Exception::class,
-            'Given query param is an instance of ObjectClass and could not be converted to a string'
-        );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Given query param is an instance of ObjectClass and could not be converted to a string');
 
         $sql    = 'SELECT * FROM table WHERE column = ?';
         $params = [new ObjectClass];

@@ -5,8 +5,9 @@ use Doctrine\DBAL\Logging\DebugStack;
 use LaravelDoctrine\ORM\Loggers\Clockwork\DoctrineDataSource;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class DoctrineDataSourceTest extends PHPUnit_Framework_TestCase
+class DoctrineDataSourceTest extends TestCase
 {
     /**
      * @var DebugStack

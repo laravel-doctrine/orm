@@ -4,8 +4,9 @@ use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Connections\PgsqlConnection;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class PgsqlConnectionTest extends PHPUnit_Framework_TestCase
+class PgsqlConnectionTest extends TestCase
 {
     /**
      * @var Mock

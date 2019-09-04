@@ -6,8 +6,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class TablePrefixExtensionTest extends PHPUnit_Framework_TestCase
+class TablePrefixExtensionTest extends TestCase
 {
     /**
      * @var \Mockery\MockInterface

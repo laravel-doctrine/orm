@@ -1,8 +1,9 @@
 <?php
 
 use LaravelDoctrine\ORM\Console\Exporters\FluentExporter;
+use PHPUnit\Framework\TestCase;
 
-class FluentExporterTest extends PHPUnit_Framework_TestCase
+class FluentExporterTest extends TestCase
 {
     public function test_it_exports_a_simple_class_metadata()
     {

@@ -10,8 +10,9 @@ use Illuminate\Routing\Router;
 use LaravelDoctrine\ORM\Middleware\SubstituteBindings;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
+class SubstituteBindingsTest extends TestCase
 {
     /**
      * @var Mock
@@ -77,7 +78,7 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
 
     public function test_entity_binding_expect_entity_not_found_exception()
     {
-        $this->setExpectedException('Doctrine\ORM\EntityNotFoundException');
+        $this->expectException('Doctrine\ORM\EntityNotFoundException');
 
         $router = $this->getRouter();
 

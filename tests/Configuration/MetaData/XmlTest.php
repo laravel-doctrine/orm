@@ -4,8 +4,9 @@ use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\Xml;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class XmlTest extends PHPUnit_Framework_TestCase
+class XmlTest extends TestCase
 {
     /**
      * @var Xml

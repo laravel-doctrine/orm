@@ -6,8 +6,9 @@ use LaravelDoctrine\ORM\Exceptions\NoEntityManagerFound;
 use LaravelDoctrine\ORM\Notifications\DoctrineChannel;
 use LaravelDoctrine\ORM\Notifications\Notifiable;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class DoctrineChannelTest extends PHPUnit_Framework_TestCase
+class DoctrineChannelTest extends TestCase
 {
     /**
      * @var DoctrineChannel
@@ -43,6 +44,8 @@ class DoctrineChannelTest extends PHPUnit_Framework_TestCase
 
         $this->em->shouldHaveReceived('persist')->once();
         $this->em->shouldHaveReceived('flush')->once();
+
+        $this->assertTrue(true);
     }
 
     public function test_can_send_notification_on_custom_em()
@@ -55,11 +58,13 @@ class DoctrineChannelTest extends PHPUnit_Framework_TestCase
 
         $this->em->shouldHaveReceived('persist')->once();
         $this->em->shouldHaveReceived('flush')->once();
+
+        $this->assertTrue(true);
     }
 
     public function test_it_should_throw_exception_when_it_does_not_find_an_em()
     {
-        $this->setExpectedException(NoEntityManagerFound::class);
+        $this->expectException(NoEntityManagerFound::class);
 
         $this->registry->shouldReceive('getManager')
                        ->with('custom')

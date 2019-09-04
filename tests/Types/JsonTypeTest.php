@@ -5,8 +5,9 @@ use Doctrine\DBAL\Types\Type;
 use LaravelDoctrine\ORM\Types\Json;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class JsonTypeTest extends PHPUnit_Framework_TestCase
+class JsonTypeTest extends TestCase
 {
     /**
      * @var Json

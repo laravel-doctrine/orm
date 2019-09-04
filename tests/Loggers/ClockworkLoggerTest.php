@@ -7,8 +7,9 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use LaravelDoctrine\ORM\Loggers\ClockworkLogger;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class ClockworkLoggerTest extends PHPUnit_Framework_TestCase
+class ClockworkLoggerTest extends TestCase
 {
     public function test_can_register()
     {
@@ -30,6 +31,8 @@ class ClockworkLoggerTest extends PHPUnit_Framework_TestCase
         $logger = new ClockworkLogger($clockwork);
 
         $logger->register($em, $configuration);
+
+        $this->assertTrue(true);
     }
 
     protected function tearDown()

@@ -4,8 +4,9 @@ use Doctrine\ORM\Mapping\EntityListenerResolver as ResolverContract;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class EntityListenerResolverTest extends PHPUnit_Framework_TestCase
+class EntityListenerResolverTest extends TestCase
 {
     /**
      * @var m\MockInterface|Container
@@ -104,7 +105,7 @@ class EntityListenerResolverTest extends PHPUnit_Framework_TestCase
 
     public function testDoesNotAllowRegisteringNonObjects()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->resolver->register('foo');
     }
 }

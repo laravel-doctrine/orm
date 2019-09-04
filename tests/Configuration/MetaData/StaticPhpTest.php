@@ -4,8 +4,9 @@ use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\StaticPhp;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class StaticPhpTest extends PHPUnit_Framework_TestCase
+class StaticPhpTest extends TestCase
 {
     /**
      * @var StaticPhp
