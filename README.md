@@ -51,7 +51,7 @@ Version | Supported Laravel Versions | Support
 1.2.x | 5.2.x, 5.3.x | Security releases
 1.3.x | 5.4.x | Bugfix and security releases
 1.4.x | 5.5.x | New features
-1.5.x | 5.5.x, 6.0.x | Laravel 6
+1.5.x | 6.x | Laravel 6
 
 Require this package  
 
