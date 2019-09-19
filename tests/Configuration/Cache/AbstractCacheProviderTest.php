@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class AbstractCacheProviderTest extends PHPUnit_Framework_TestCase
 {
     abstract public function getProvider();
