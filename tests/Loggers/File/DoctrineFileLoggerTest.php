@@ -4,9 +4,10 @@ use Doctrine\DBAL\Connection;
 use LaravelDoctrine\ORM\Loggers\File\DoctrineFileLogger;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface as Log;
 
-class DoctrineFileLoggerTest extends PHPUnit_Framework_TestCase
+class DoctrineFileLoggerTest extends TestCase
 {
     /**
      * @var DoctrineFileLogger

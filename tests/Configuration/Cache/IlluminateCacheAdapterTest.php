@@ -3,8 +3,9 @@
 use Illuminate\Contracts\Cache\Repository;
 use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheAdapter;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class IlluminateCacheAdapterTest extends PHPUnit_Framework_TestCase
+class IlluminateCacheAdapterTest extends TestCase
 {
     /**
      * @var IlluminateCacheAdapter

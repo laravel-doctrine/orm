@@ -4,8 +4,9 @@ use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\Yaml;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class YamlTest extends PHPUnit_Framework_TestCase
+class YamlTest extends TestCase
 {
     /**
      * @var Yaml

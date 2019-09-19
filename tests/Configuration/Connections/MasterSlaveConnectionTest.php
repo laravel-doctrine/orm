@@ -4,11 +4,12 @@ use Doctrine\DBAL\Connections\MasterSlaveConnection as MasterSlaveDoctrineWrappe
 use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Connections\MasterSlaveConnection;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Basic unit tests for master slave connection.
  */
-class MasterSlaveConnectionTest extends PHPUnit_Framework_TestCase
+class MasterSlaveConnectionTest extends TestCase
 {
     /**
      * Data provider for testMasterSlaveConnection.

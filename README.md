@@ -51,11 +51,12 @@ Version | Supported Laravel Versions | Support
 1.2.x | 5.2.x, 5.3.x | Security releases
 1.3.x | 5.4.x | Bugfix and security releases
 1.4.x | 5.5.x | New features
+1.5.x | 6.x | Laravel 6
 
 Require this package  
 
 ```bash
-composer require "laravel-doctrine/orm:1.4.*"
+composer require "laravel-doctrine/orm:1.5.*"
 ```
 
 Because of the auto package discovery feature Laravel 5.5 has, the ServiceProvider and Facades are automatically registered.

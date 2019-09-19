@@ -8,8 +8,9 @@ use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Cache\FileCacheProvider;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class CacheManagerTest extends PHPUnit_Framework_TestCase
+class CacheManagerTest extends TestCase
 {
     /**
      * @var CacheManager
@@ -58,7 +59,7 @@ class CacheManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_cant_resolve_unsupported_drivers()
     {
-        $this->setExpectedException(DriverNotFound::class);
+        $this->expectException(DriverNotFound::class);
         $this->manager->driver('non-existing');
     }
 
@@ -76,6 +77,8 @@ class CacheManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->extend('new', function ($app) {
             $this->assertInstanceOf(Container::class, $app);
         });
+
+        $this->assertTrue(true);
     }
 
     public function test_can_replace_an_existing_driver()

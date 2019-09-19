@@ -5,8 +5,9 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use LaravelDoctrine\ORM\Loggers\LaravelDebugbarLogger;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class LaravelDebugbarLoggerTest extends PHPUnit_Framework_TestCase
+class LaravelDebugbarLoggerTest extends TestCase
 {
     public function test_can_register()
     {
@@ -23,6 +24,8 @@ class LaravelDebugbarLoggerTest extends PHPUnit_Framework_TestCase
         $logger = new LaravelDebugbarLogger($debugbar);
 
         $logger->register($em, $configuration);
+
+        $this->assertTrue(true);
     }
 
     protected function tearDown()

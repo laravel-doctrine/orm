@@ -24,8 +24,9 @@ use LaravelDoctrine\ORM\Loggers\Logger;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver as LaravelDoctrineEntityListenerResolver;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
+class EntityManagerFactoryTest extends TestCase
 {
     /**
      * @var CacheManager|Mock
@@ -355,7 +356,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                 ->once()
                 ->andThrow($reflectionException);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
@@ -403,7 +404,7 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
                         ->once()
                         ->andThrow($reflectionException);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
@@ -817,7 +818,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         );
 
         if (!empty($expectedException)) {
-            $this->setExpectedException($expectedException, $msg);
+            $this->expectException($expectedException);
+            $this->expectExceptionMessage($msg);
         } else {
             $this->disableDebugbar();
             $this->disableCustomCacheNamespace();
@@ -828,6 +830,8 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->settings['connection'] = 'mysql';
         $factory->create($this->settings);
+
+        $this->assertTrue(true);
     }
 
     protected function tearDown()

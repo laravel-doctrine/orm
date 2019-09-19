@@ -8,8 +8,9 @@ use LaravelDoctrine\ORM\EntityManagerFactory;
 use LaravelDoctrine\ORM\IlluminateRegistry;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
+class IlluminateRegistryTest extends TestCase
 {
     /**
      * @var Mock
@@ -106,10 +107,8 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
 
     public function test_cannot_non_existing_connection()
     {
-        $this->setExpectedException(
-            InvalidArgumentException::class,
-            'Doctrine Connection named "non-existing" does not exist.'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Doctrine Connection named "non-existing" does not exist.');
 
         $this->registry->getConnection('non-existing');
     }
@@ -202,10 +201,8 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
 
     public function test_cannot_non_existing_manager()
     {
-        $this->setExpectedException(
-            InvalidArgumentException::class,
-            'Doctrine Manager named "non-existing" does not exist.'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Doctrine Manager named "non-existing" does not exist.');
 
         $this->registry->getManager('non-existing');
     }
@@ -333,30 +330,24 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
 
     public function test_cannot_purge_non_existing_managers()
     {
-        $this->setExpectedException(
-            InvalidArgumentException::class,
-            'Doctrine Manager named "non-existing" does not exist.'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Doctrine Manager named "non-existing" does not exist.');
 
         $this->registry->purgeManager('non-existing');
     }
 
     public function test_cannot_reset_non_existing_managers()
     {
-        $this->setExpectedException(
-            InvalidArgumentException::class,
-            'Doctrine Manager named "non-existing" does not exist.'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Doctrine Manager named "non-existing" does not exist.');
 
         $this->registry->resetManager('non-existing');
     }
 
     public function test_get_alias_namespace_from_unknown_namespace()
     {
-        $this->setExpectedException(
-            ORMException::class,
-            'Unknown Entity namespace alias \'Alias\''
-        );
+        $this->expectException(ORMException::class);
+        $this->expectExceptionMessage('Unknown Entity namespace alias \'Alias\'');
 
         $this->registry->getAliasNamespace('Alias');
     }

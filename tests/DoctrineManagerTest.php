@@ -12,8 +12,9 @@ use LaravelDoctrine\ORM\DoctrineManager;
 use LaravelDoctrine\ORM\EntityManagerFactory;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class DoctrineManagerTest extends PHPUnit_Framework_TestCase
+class DoctrineManagerTest extends TestCase
 {
     /**
      * @var Container
@@ -94,7 +95,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
                        ->with('default')
                        ->andReturn($this->em);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->manager->extend('default', 'no_class');
 
@@ -113,7 +114,7 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
                         ->with(InvalidDoctrineExtender::class)
                         ->andReturn(new InvalidDoctrineExtender);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->manager->extend('default', InvalidDoctrineExtender::class);
 
@@ -173,6 +174,8 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->addNamespace('NewNamespace', 'default');
 
         BootChain::boot($this->registry);
+
+        $this->assertTrue(true);
     }
 
     public function test_can_add_paths_to_default_connection()
@@ -197,6 +200,8 @@ class DoctrineManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->addPaths(['paths'], 'default');
 
         BootChain::boot($this->registry);
+
+        $this->assertTrue(true);
     }
 
     protected function tearDown()

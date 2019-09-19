@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM\Configuration;
 
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Str;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 
 abstract class Manager
@@ -78,7 +79,7 @@ abstract class Manager
      */
     protected function createDriver($driver, array $settings = [], $resolve = true)
     {
-        $class = $this->getNamespace() . '\\' . studly_case($driver) . $this->getClassSuffix();
+        $class = $this->getNamespace() . '\\' . Str::studly($driver) . $this->getClassSuffix();
 
         // We'll check to see if a creator method exists for the given driver. If not we
         // will check for a custom driver creator, which allows developers to create

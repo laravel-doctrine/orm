@@ -4,8 +4,9 @@ use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Connections\SqliteConnection;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class SqliteConnectionTest extends PHPUnit_Framework_TestCase
+class SqliteConnectionTest extends TestCase
 {
     /**
      * @var Mock

@@ -8,8 +8,9 @@ use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class MappingDriverChainTest extends PHPUnit_Framework_TestCase
+class MappingDriverChainTest extends TestCase
 {
     /**
      * @var Mock
@@ -52,6 +53,8 @@ class MappingDriverChainTest extends PHPUnit_Framework_TestCase
 
         $this->chain->addPaths(['paths']);
         $this->chain->addPaths(['paths2']);
+
+        $this->assertTrue(true);
     }
 
     public function test_can_add_paths_to_filedriver()
@@ -66,6 +69,8 @@ class MappingDriverChainTest extends PHPUnit_Framework_TestCase
 
         $chain->addPaths(['paths']);
         $chain->addPaths(['paths2']);
+
+        $this->assertTrue(true);
     }
 
     public function test_can_add_paths_to_simplified_filedriver()
@@ -80,6 +85,8 @@ class MappingDriverChainTest extends PHPUnit_Framework_TestCase
 
         $chain->addPaths(['paths']);
         $chain->addPaths(['paths2']);
+
+        $this->assertTrue(true);
     }
 
     public function test_can_get_annotation_reader()

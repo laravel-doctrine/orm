@@ -7,8 +7,9 @@ use LaravelDoctrine\ORM\Configuration\Connections\MysqlConnection;
 use LaravelDoctrine\ORM\Configuration\Connections\SqliteConnection;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class ConnectionManagerTest extends PHPUnit_Framework_TestCase
+class ConnectionManagerTest extends TestCase
 {
     /**
      * @var ConnectionManager
@@ -60,7 +61,7 @@ class ConnectionManagerTest extends PHPUnit_Framework_TestCase
 
     public function test_cant_resolve_unsupported_drivers()
     {
-        $this->setExpectedException(DriverNotFound::class);
+        $this->expectException(DriverNotFound::class);
         $this->manager->driver('non-existing');
     }
 
@@ -78,6 +79,8 @@ class ConnectionManagerTest extends PHPUnit_Framework_TestCase
         $this->manager->extend('new', function ($app) {
             $this->assertInstanceOf(Container::class, $app);
         });
+
+        $this->assertTrue(true);
     }
 
     public function test_can_replace_an_existing_driver()

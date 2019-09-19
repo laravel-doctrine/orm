@@ -8,8 +8,9 @@ use LaravelDoctrine\ORM\Auth\Authenticatable;
 use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class DoctrineUserProviderTest extends PHPUnit_Framework_TestCase
+class DoctrineUserProviderTest extends TestCase
 {
     /**
      * @var Mock

@@ -2,8 +2,9 @@
 
 use LaravelDoctrine\ORM\Serializers\Jsonable;
 use LaravelDoctrine\ORM\Serializers\JsonSerializer;
+use PHPUnit\Framework\TestCase;
 
-class JsonSerializerTest extends PHPUnit_Framework_TestCase
+class JsonSerializerTest extends TestCase
 {
     /**
      * @var JsonSerializer

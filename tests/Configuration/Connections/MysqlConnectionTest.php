@@ -4,8 +4,9 @@ use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Connections\MysqlConnection;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class MysqlConnectionTest extends PHPUnit_Framework_TestCase
+class MysqlConnectionTest extends TestCase
 {
     /**
      * @var Mock

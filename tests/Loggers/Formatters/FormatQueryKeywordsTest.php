@@ -5,8 +5,9 @@ use LaravelDoctrine\ORM\Loggers\Formatters\FormatQueryKeywords;
 use LaravelDoctrine\ORM\Loggers\Formatters\QueryFormatter;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-class FormatQueryKeywordsTest extends PHPUnit_Framework_TestCase
+class FormatQueryKeywordsTest extends TestCase
 {
     /**
      * @var Mock

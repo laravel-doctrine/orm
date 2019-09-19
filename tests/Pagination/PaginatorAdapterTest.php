@@ -12,8 +12,9 @@ use Doctrine\ORM\Query;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\AbstractPaginator;
 use LaravelDoctrine\ORM\Pagination\PaginatorAdapter;
+use PHPUnit\Framework\TestCase;
 
-class PaginatorAdapterTest extends PHPUnit_Framework_TestCase
+class PaginatorAdapterTest extends TestCase
 {
     public function testMakesLaravelsPaginatorFromParams()
     {
