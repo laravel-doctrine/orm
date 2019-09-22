@@ -29,7 +29,7 @@ EntityManager::flush();
 * Pagination
 * Pre-configured metadata, connections and caching
 * Extendable: extend or add your own drivers for metadata, connections or cache
-* Annotations, yaml, xml, config and static php metadata mappings
+* Fluent, Annotations, YAML, SimplifiedYAML, XML, SimplifiedXML, Config and Static PHP metadata mappings
 * Multiple entity managers and connections
 * Laravel naming strategy
 * Simple authentication implementation
