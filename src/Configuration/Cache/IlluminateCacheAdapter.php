@@ -58,12 +58,10 @@ class IlluminateCacheAdapter extends CacheProvider
     protected function doSave($id, $data, $lifeTime = false)
     {
         if (!$lifeTime) {
-            $this->cache->forever($id, $data);
-        } else {
-            $this->cache->put($id, $data, $lifeTime);
+            return $this->cache->forever($id, $data);
         }
 
-        return true;
+        return $this->cache->put($id, $data, $lifeTime);
     }
 
     /**
