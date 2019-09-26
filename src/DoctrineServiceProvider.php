@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -95,7 +96,7 @@ class DoctrineServiceProvider extends ServiceProvider
             // due to weirdness the default presence verifier overrides one set by a service provider
             // so remove them so we can re add our implementation later
             unset($this->app->availableBindings['validator']);
-            unset($this->app->availableBindings['Illuminate\Contracts\Validation\Factory']);
+            unset($this->app->availableBindings[ValidationFactory::class]);
         } else {
             // resolve the db,
             // this makes `isset($this->app['db']) == true`
