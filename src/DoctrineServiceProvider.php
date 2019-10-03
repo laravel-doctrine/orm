@@ -309,8 +309,8 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     protected function registerEntityFactory()
     {
-        $this->app->singleton(FakerGenerator::class, function () {
-            return FakerFactory::create();
+        $this->app->singleton(FakerGenerator::class, function ($app) {
+            return FakerFactory::create($app['config']->get('app.faker_locale', 'en_US'));
         });
 
         $this->app->singleton(EntityFactory::class, function ($app) {
