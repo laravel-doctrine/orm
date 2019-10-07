@@ -14,6 +14,9 @@ use Doctrine\DBAL\Types\JsonArrayType;
  *      \Doctrine\DBAL\Types\Type::addType('json', '\Path\To\Custom\Type\Json');
  * @link http://www.doctrine-project.org/jira/browse/DBAL-446
  * @link https://github.com/doctrine/dbal/pull/655
+ *
+ * @deprecated Replaced by JsonType in Doctrine.
+ * You can safely remove usage of this type in your 'custom_type' configuration.
  */
 class Json extends JsonArrayType
 {
