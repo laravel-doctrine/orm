@@ -50,7 +50,7 @@ Version | Supported Laravel Versions | Support
 1.1.x | 5.2.x |  EOL
 1.2.x | 5.2.x, 5.3.x | Security releases
 1.3.x | 5.4.x | Bugfix and security releases
-~1.4 | 5.5.x | New features
+~1.4.0 | 5.5.x | New features
 \>=1.4.3 | 5.6.x | New features
 \>=1.4.8 | 5.7.x | New features
 \>=1.4.10 | 5.8.x | New features
