@@ -26,6 +26,7 @@ class MysqlConnection extends Connection
             'defaultTableOptions'   => Arr::get($settings, 'defaultTableOptions', []),
             'driverOptions'         => Arr::get($settings, 'driverOptions', []),
             'serverVersion'         => Arr::get($settings, 'serverVersion'),
+            'wrapperClass'          => Arr::get($settings, 'wrapperClass')
         ];
     }
 }

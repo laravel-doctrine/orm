@@ -22,6 +22,7 @@ class SqliteConnection extends Connection
             'memory'              => $this->isMemory($settings),
             'path'                => Arr::get($settings, 'database'),
             'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
+            'wrapperClass'        => Arr::get($settings, 'wrapperClass')
         ];
     }
 
