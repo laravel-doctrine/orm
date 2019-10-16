@@ -26,6 +26,7 @@ class OracleConnection extends Connection
             'prefix'                => Arr::get($settings, 'prefix'),
             'defaultTableOptions'   => Arr::get($settings, 'defaultTableOptions', []),
             'persistent'            => Arr::get($settings, 'persistent'),
+            'wrapperClass'          => Arr::get($settings, 'wrapperClass')
         ];
     }
 }
