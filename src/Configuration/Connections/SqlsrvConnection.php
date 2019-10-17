@@ -24,6 +24,7 @@ class SqlsrvConnection extends Connection
             'charset'             => Arr::get($settings, 'charset'),
             'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
             'serverVersion'       => Arr::get($settings, 'serverVersion'),
+            'wrapperClass'        => Arr::get($settings, 'wrapperClass')
         ];
     }
 }
