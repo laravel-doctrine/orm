@@ -3,6 +3,9 @@ language: php
 php:
   - 7.0
   - 7.1
+  - 7.2
+  - 7.3
+  - 7.4snapshot
 
 before_script:
   - travis_retry composer self-update
