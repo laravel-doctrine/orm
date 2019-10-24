@@ -81,6 +81,13 @@ class PaginatorAdapterTest extends PHPUnit_Framework_TestCase
         $metadata->containsForeignIdentifier = false;
         $metadata->identifier                = ['id'];
 
+        $metadata->table = [
+            'name'              => 'foos',
+            'schema'            => '',
+            'indexes'           => [],
+            'uniqueConstraints' => []
+        ];
+
         $metadata->shouldReceive('isInheritanceTypeSingleTable')->andReturn(false);
         $metadata->shouldReceive('isInheritanceTypeJoined')->andReturn(false);
         $metadata->shouldReceive('getTableName')->andReturn('fooes');
