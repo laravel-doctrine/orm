@@ -14,7 +14,7 @@ class ArraySerializer
     public function serialize($entity)
     {
         $format = 'array';
-        $data = $this->getNormalizer()->normalize($entity, $format);
+        $data   = $this->getNormalizer()->normalize($entity, $format);
 
         return $this->getEncoder()->encode($data, $format);
     }
