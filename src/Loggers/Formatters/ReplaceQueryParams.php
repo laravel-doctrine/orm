@@ -43,7 +43,7 @@ class ReplaceQueryParams implements QueryFormatter
         if ($type === null) {
             $type = '';
         }
-        
+
         if (is_object($param)) {
             if (!method_exists($param, '__toString')) {
                 if ($param instanceof DateTimeInterface) {

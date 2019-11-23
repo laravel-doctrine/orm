@@ -3,7 +3,6 @@
 namespace LaravelDoctrine\ORM\Serializers;
 
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class ArraySerializer
 {
