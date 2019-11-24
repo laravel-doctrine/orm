@@ -3,33 +3,20 @@
 namespace LaravelDoctrine\ORM\Serializers;
 
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class ArraySerializer
 {
     /**
-     * @var Serializer
-     */
-    protected $serializer;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->serializer = new Serializer([$this->getNormalizer()], [
-            'array' => $this->getEncoder(),
-        ]);
-    }
-
-    /**
      * @param $entity
      *
-     * @return string
+     * @return array
      */
     public function serialize($entity)
     {
-        return $this->serializer->serialize($entity, 'array');
+        $format = 'array';
+        $data   = $this->getNormalizer()->normalize($entity, $format);
+
+        return $this->getEncoder()->encode($data, $format);
     }
 
     /**

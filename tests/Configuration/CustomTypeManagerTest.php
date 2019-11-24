@@ -1,6 +1,8 @@
 <?php
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Type;
 use LaravelDoctrine\ORM\Configuration\CustomTypeManager;
 
 class CustomTypeManagerTest extends PHPUnit_Framework_TestCase
@@ -47,9 +49,23 @@ class CustomTypeManagerTest extends PHPUnit_Framework_TestCase
     }
 }
 
-class TypeMock
+class TypeMock extends Type
 {
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    {
+    }
+
+    public function getName()
+    {
+    }
 }
-class TypeMock2
+class TypeMock2 extends Type
 {
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    {
+    }
+
+    public function getName()
+    {
+    }
 }
