@@ -44,19 +44,22 @@ EntityManager::flush();
 
 ## Versions
 
-Version | Supported Laravel Versions | Support
-:---------|:----------|:----------
-1.0.x |  5.1.x | EOL
-1.1.x | 5.2.x |  EOL
-1.2.x | 5.2.x, 5.3.x | Security releases
-1.3.x | 5.4.x | Bugfix and security releases
-1.4.x | 5.5.x | New features
-1.5.x | 6.x | Laravel 6
+Version | Supported Laravel Versions
+:---------|:----------
+1.0.x |  5.1.x
+1.1.x | 5.2.x
+1.2.x | 5.2.x, 5.3.x
+1.3.x | 5.4.x
+~1.4.0 | 5.5.x
+~1.4.3 | 5.6.x 
+~1.4.8 | 5.7.x
+~1.4.10 | 5.8.x
+~1.5 | 6.x
 
 Require this package  
 
 ```bash
-composer require "laravel-doctrine/orm:1.5.*"
+composer require "laravel-doctrine/orm:~1.5.*"
 ```
 
 Because of the auto package discovery feature Laravel 5.5 has, the ServiceProvider and Facades are automatically registered.
