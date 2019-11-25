@@ -278,7 +278,7 @@ class Factory implements ArrayAccess
             $name,
             $this->definitions,
             $this->faker,
-            $this->getStateFor($class),
+            $this->states ?? [],
             $this->afterMaking,
             $this->afterCreating
         );
@@ -351,14 +351,5 @@ class Factory implements ArrayAccess
     public function offsetUnset($offset)
     {
         unset($this->definitions[$offset]);
-    }
-
-    /**
-     * @param  string $class
-     * @return array
-     */
-    protected function getStateFor($class)
-    {
-        return isset($this->states[$class]) ? $this->states[$class] : [];
     }
 }
