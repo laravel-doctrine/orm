@@ -467,9 +467,8 @@ class EntityManagerFactory
     /**
      * @param array $settings
      *
-     * @return null|EventManager
-     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @return null|EventManager
      */
     private function createEventManager(array $settings = [])
     {
