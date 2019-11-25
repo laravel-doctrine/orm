@@ -529,6 +529,52 @@ class EntityManagerFactoryTest extends TestCase
         $this->assertInstanceOf(FakeConnection::class, $manager->getConnection());
     }
 
+    public function test_custom_event_manager()
+    {
+        m::resetContainer();
+
+        $config = new ConfigRepository([
+            'database.connections.mysql' => [
+                'driver'       => 'mysql'
+            ],
+            'doctrine' => [
+                'meta'       => 'annotations',
+                'connection' => 'mysql',
+                'paths'      => ['Entities'],
+                'proxies'    => [
+                    'path'          => 'dir',
+                    'auto_generate' => false,
+                    'namespace'     => 'namespace'
+                ],
+                'event_manager' => 'my_event_manager'
+            ],
+            'doctrine.custom_datetime_functions' => [],
+            'doctrine.custom_numeric_functions'  => [],
+            'doctrine.custom_string_functions'   => []
+        ]);
+
+        $container = new \Illuminate\Container\Container();
+        $container->singleton(Repository::class, function () use ($config) {
+            return $config;
+        });
+
+        $container->alias(FakeEventManager::class, 'my_event_manager');
+
+        $factory = new EntityManagerFactory(
+            $container,
+            new Setup(),
+            new MetaDataManager($container),
+            new ConnectionManager($container),
+            new CacheManager($container),
+            $config,
+            new EntityListenerResolver($container)
+        );
+
+        $manager = $factory->create($config->get('doctrine'));
+
+        $this->assertInstanceOf(FakeEventManager::class, $manager->getEventManager());
+    }
+
     /**
      * MOCKS
      *
@@ -919,6 +965,10 @@ class EntityManagerFactoryTest extends TestCase
             ],
         ];
     }
+}
+
+class FakeEventManager extends \Doctrine\Common\EventManager
+{
 }
 
 class FakeConnection extends Connection

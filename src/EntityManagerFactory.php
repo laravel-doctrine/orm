@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\EventManager;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -104,6 +105,8 @@ class EntityManagerFactory
 
         $this->setMetadataDriver($settings, $configuration);
 
+        $eventManager = $this->createEventManager($settings);
+
         $driver = $this->getConnectionDriver($settings);
 
         $connection = $this->connection->driver(
@@ -133,7 +136,8 @@ class EntityManagerFactory
 
         $manager = EntityManager::create(
             $connection,
-            $configuration
+            $configuration,
+            $eventManager
         );
 
         $manager = $this->decorateManager($settings, $manager);
@@ -458,6 +462,23 @@ class EntityManagerFactory
             // Throw DBALException if Doctrine Type is not found.
             $manager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($dbType, $doctrineType);
         }
+    }
+
+    /**
+     * @param array $settings
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @return null|EventManager
+     */
+    private function createEventManager(array $settings = [])
+    {
+        $customEventManager = Arr::get($settings, 'event_manager');
+
+        if (!$customEventManager) {
+            return null;
+        }
+
+        return $this->container->make($customEventManager);
     }
 
     /**
