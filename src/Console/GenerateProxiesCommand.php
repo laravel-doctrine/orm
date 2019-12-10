@@ -77,7 +77,7 @@ class GenerateProxiesCommand extends Command
                 $em->getProxyFactory()->generateProxyClasses($metadatas, $destPath);
 
                 // Outputting information message
-                $this->comment(sprintf('Proxy classes generated to "<info>%s</INFO>"', $destPath));
+                $this->comment(sprintf('Proxy classes generated to "<info>%s</info>"', $destPath));
             } else {
                 $this->error('No Metadata Classes to process.');
             }
