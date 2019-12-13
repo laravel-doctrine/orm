@@ -3,7 +3,7 @@
 namespace LaravelDoctrine\ORM\Extensions;
 
 use Doctrine\Common\EventManager;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;

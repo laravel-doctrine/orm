@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Mapping\MappingException;
 use Exception;
 
