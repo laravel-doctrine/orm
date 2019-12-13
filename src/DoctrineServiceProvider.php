@@ -2,11 +2,11 @@
 
 namespace LaravelDoctrine\ORM;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Proxy\Autoloader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
+use Doctrine\Persistence\ManagerRegistry;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
 use Illuminate\Contracts\Container\Container;

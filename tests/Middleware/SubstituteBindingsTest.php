@@ -1,7 +1,7 @@
 <?php
 
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Events\Dispatcher;
