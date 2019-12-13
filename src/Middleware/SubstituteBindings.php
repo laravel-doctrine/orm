@@ -3,7 +3,7 @@
 namespace LaravelDoctrine\ORM\Middleware;
 
 use Closure;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityNotFoundException;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Routing\Route;
