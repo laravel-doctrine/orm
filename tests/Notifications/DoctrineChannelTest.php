@@ -1,6 +1,6 @@
 <?php
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use LaravelDoctrine\ORM\Exceptions\NoEntityManagerFound;
 use LaravelDoctrine\ORM\Notifications\DoctrineChannel;

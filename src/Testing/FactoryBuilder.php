@@ -3,7 +3,7 @@
 namespace LaravelDoctrine\ORM\Testing;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Faker\Generator as Faker;
 use Illuminate\Support\Collection;
