@@ -1,6 +1,6 @@
 <?php
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\SimplifiedYaml;
 use Mockery as m;

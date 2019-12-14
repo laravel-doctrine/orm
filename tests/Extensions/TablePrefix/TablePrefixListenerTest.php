@@ -13,7 +13,7 @@ class TablePrefixListenerTest extends PHPUnit_Framework_TestCase
     protected $metadata;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var \Doctrine\Persistence\ObjectManager
      */
     protected $objectManager;
 
@@ -27,7 +27,7 @@ class TablePrefixListenerTest extends PHPUnit_Framework_TestCase
         $this->metadata = new ClassMetadataInfo('\Foo');
         $this->metadata->setTableName('foo');
 
-        $this->objectManager = m::mock('Doctrine\Common\Persistence\ObjectManager');
+        $this->objectManager = m::mock('Doctrine\Persistence\ObjectManager');
         $this->args          = new LoadClassMetadataEventArgs($this->metadata, $this->objectManager);
     }
 

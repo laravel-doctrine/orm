@@ -1,6 +1,6 @@
 <?php
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use LaravelDoctrine\ORM\Configuration\MetaData\Config;

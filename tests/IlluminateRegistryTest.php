@@ -279,7 +279,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->container->shouldReceive('forgetInstance', 'doctrine.managers.default');
         $this->container->shouldReceive('make')
             ->with('doctrine.managers.default')
-            ->andReturn(m::mock(\Doctrine\Common\Persistence\ObjectManager::class));
+            ->andReturn(m::mock(\Doctrine\Persistence\ObjectManager::class));
 
         $this->registry->purgeManager();
         $this->assertFalse($this->registry->managerExists('default'));
@@ -293,11 +293,11 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->container->shouldReceive('forgetInstance', 'doctrine.managers.default');
         $this->container->shouldReceive('make')
             ->with('doctrine.managers.default')
-            ->andReturn(m::mock(\Doctrine\Common\Persistence\ObjectManager::class));
+            ->andReturn(m::mock(\Doctrine\Persistence\ObjectManager::class));
 
         $manager = $this->registry->resetManager();
 
-        $this->assertInstanceOf(\Doctrine\Common\Persistence\ObjectManager::class, $manager);
+        $this->assertInstanceOf(\Doctrine\Persistence\ObjectManager::class, $manager);
         $this->assertSame($manager, $this->registry->getManager());
     }
 
@@ -309,7 +309,7 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->container->shouldReceive('forgetInstance', 'doctrine.managers.custom');
         $this->container->shouldReceive('make')
             ->with('doctrine.managers.custom')
-            ->andReturn(m::mock(\Doctrine\Common\Persistence\ObjectManager::class));
+            ->andReturn(m::mock(\Doctrine\Persistence\ObjectManager::class));
 
         $this->registry->purgeManager();
         $this->assertFalse($this->registry->managerExists('custom'));
@@ -323,11 +323,11 @@ class IlluminateRegistryTest extends PHPUnit_Framework_TestCase
         $this->container->shouldReceive('forgetInstance', 'doctrine.managers.custom');
         $this->container->shouldReceive('make')
             ->with('doctrine.managers.custom')
-            ->andReturn(m::mock(\Doctrine\Common\Persistence\ObjectManager::class));
+            ->andReturn(m::mock(\Doctrine\Persistence\ObjectManager::class));
 
         $manager = $this->registry->resetManager('custom');
 
-        $this->assertInstanceOf(\Doctrine\Common\Persistence\ObjectManager::class, $manager);
+        $this->assertInstanceOf(\Doctrine\Persistence\ObjectManager::class, $manager);
         $this->assertSame($manager, $this->registry->getManager('custom'));
     }
 

@@ -122,7 +122,7 @@ class DoctrinePresenceVerifier implements PresenceVerifierInterface
     /**
      * @param string $entity
      *
-     * @return \Doctrine\Common\Persistence\ObjectManager|null
+     * @return \Doctrine\Persistence\ObjectManager|null
      */
     protected function getEntityManager($entity)
     {
