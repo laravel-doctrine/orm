@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Configuration\MetaData\Config;
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use Illuminate\Support\Arr;
 
