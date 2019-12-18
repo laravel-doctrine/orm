@@ -71,7 +71,7 @@ class SchemaDropCommand extends Command
                 }
 
                 if (count($sql)) {
-                    $pluralization = (1 === count($sql)) ? 'query was' : 'queries were';
+                    $pluralization = (1 === count($sql)) ? 'query' : 'queries';
                     $this->message(sprintf('The Schema-Tool would execute <info>"%s"</info> %s to update the database.',
                         count($sql), $pluralization));
                     $this->message('Please run the operation by passing one - or both - of the following options:');
