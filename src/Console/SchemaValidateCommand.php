@@ -2,8 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\SchemaValidator;
+use Doctrine\Persistence\ManagerRegistry;
 
 class SchemaValidateCommand extends Command
 {

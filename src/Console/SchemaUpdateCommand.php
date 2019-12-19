@@ -2,8 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\Persistence\ManagerRegistry;
 
 class SchemaUpdateCommand extends Command
 {
