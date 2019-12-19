@@ -2,8 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Validation;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Validation\PresenceVerifierInterface;
 use InvalidArgumentException;
 
