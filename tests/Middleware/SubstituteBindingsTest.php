@@ -1,7 +1,7 @@
 <?php
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Events\Dispatcher;
@@ -33,7 +33,7 @@ class SubstituteBindingsTest extends TestCase
     {
         $this->registry     = m::mock(ManagerRegistry::class);
         $this->em           = m::mock(EntityManager::class);
-        $this->repository   = m::mock(\Doctrine\Common\Persistence\ObjectRepository::class);
+        $this->repository   = m::mock(\Doctrine\Persistence\ObjectRepository::class);
     }
 
     protected function getRouter()

@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Facades;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Support\Facades\Facade;
 
 class Registry extends Facade

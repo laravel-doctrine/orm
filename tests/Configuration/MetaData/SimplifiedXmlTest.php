@@ -1,7 +1,7 @@
 <?php
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\SimplifiedXml;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 class BootChain
 {

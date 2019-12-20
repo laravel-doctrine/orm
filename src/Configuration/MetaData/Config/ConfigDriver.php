@@ -2,8 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Configuration\MetaData\Config;
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Illuminate\Support\Arr;
 
 class ConfigDriver extends YamlDriver implements MappingDriver

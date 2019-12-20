@@ -3,7 +3,7 @@
 namespace LaravelDoctrine\ORM\Testing;
 
 use ArrayAccess;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Faker\Generator as Faker;
 use Symfony\Component\Finder\Finder;
 

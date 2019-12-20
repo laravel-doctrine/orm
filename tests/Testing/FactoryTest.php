@@ -1,6 +1,6 @@
 <?php
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use LaravelDoctrine\ORM\Testing\Factory;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

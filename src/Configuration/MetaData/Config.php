@@ -24,7 +24,7 @@ class Config extends MetaData
     /**
      * @param array $settings
      *
-     * @return \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
+     * @return \Doctrine\Persistence\Mapping\Driver\MappingDriver
      */
     public function resolve(array $settings = [])
     {

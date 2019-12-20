@@ -1,10 +1,10 @@
 <?php
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
+use Doctrine\Persistence\ManagerRegistry;
 use LaravelDoctrine\ORM\Testing\FactoryBuilder;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

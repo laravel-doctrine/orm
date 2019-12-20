@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Notifications;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Notifications\Notification as LaravelNotification;
 use LaravelDoctrine\ORM\Exceptions\NoEntityManagerFound;
 use RuntimeException;
