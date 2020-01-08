@@ -44,6 +44,8 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
             return $router;
         });
 
+        $container->alias(ManagerRegistry::class, \Doctrine\Persistence\ManagerRegistry::class);
+
         $container->singleton(ManagerRegistry::class, function () {
             return $this->registry;
         });
