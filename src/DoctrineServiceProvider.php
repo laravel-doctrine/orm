@@ -161,9 +161,6 @@ class DoctrineServiceProvider extends ServiceProvider
 
         $this->app->alias('registry', ManagerRegistry::class);
         $this->app->alias('registry', IlluminateRegistry::class);
-
-        // This alias is required for compatibility with doctrine/persistence 1.3+
-        $this->app->alias(ManagerRegistry::class, \Doctrine\Persistence\ManagerRegistry::class);
     }
 
     /**
