@@ -1,7 +1,7 @@
 <?php
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
-use Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\Driver\StaticPHPDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\StaticPhp;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

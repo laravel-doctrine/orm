@@ -2,8 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Console\MetadataFilter;
+use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
 
 class GenerateProxiesCommand extends Command

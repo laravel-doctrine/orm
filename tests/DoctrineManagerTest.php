@@ -1,10 +1,10 @@
 <?php
 
 use Doctrine\Common\EventManager;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\BootChain;
 use LaravelDoctrine\ORM\DoctrineExtender;

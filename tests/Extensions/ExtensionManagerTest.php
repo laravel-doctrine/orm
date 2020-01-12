@@ -2,11 +2,11 @@
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventManager;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Query\FilterCollection;
+use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Extensions\Extension;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;

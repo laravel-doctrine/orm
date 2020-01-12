@@ -2,9 +2,9 @@
 
 namespace LaravelDoctrine\ORM;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Common\Persistence\Proxy;
 use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\Proxy;
 use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 use ReflectionClass;
@@ -191,7 +191,7 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @param string $name The object manager name (null for the default one).
      *
-     * @return \Doctrine\Common\Persistence\ObjectManager
+     * @return \Doctrine\Persistence\ObjectManager
      */
     public function getManager($name = null)
     {
@@ -233,7 +233,7 @@ final class IlluminateRegistry implements ManagerRegistry
     /**
      * Gets an array of all registered object managers.
      *
-     * @return \Doctrine\Common\Persistence\ObjectManager[] An array of ObjectManager instances
+     * @return \Doctrine\Persistence\ObjectManager[] An array of ObjectManager instances
      */
     public function getManagers()
     {
@@ -301,7 +301,7 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @param string|null $name The object manager name (null for the default one).
      *
-     * @return \Doctrine\Common\Persistence\ObjectManager
+     * @return \Doctrine\Persistence\ObjectManager
      */
     public function resetManager($name = null)
     {
@@ -337,7 +337,7 @@ final class IlluminateRegistry implements ManagerRegistry
      * @param string $persistentObject      The name of the persistent object.
      * @param string $persistentManagerName The object manager name (null for the default one).
      *
-     * @return \Doctrine\Common\Persistence\ObjectRepository
+     * @return \Doctrine\Persistence\ObjectRepository
      */
     public function getRepository($persistentObject, $persistentManagerName = null)
     {
@@ -349,7 +349,7 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @param string $class A persistent object class name.
      *
-     * @return \Doctrine\Common\Persistence\ObjectManager|null
+     * @return \Doctrine\Persistence\ObjectManager|null
      */
     public function getManagerForClass($class)
     {

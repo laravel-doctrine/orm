@@ -2,8 +2,8 @@
 
 namespace LaravelDoctrine\ORM;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 

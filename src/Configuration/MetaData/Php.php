@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
-use Doctrine\Common\Persistence\Mapping\Driver\PHPDriver;
+use Doctrine\Persistence\Mapping\Driver\PHPDriver;
 use Illuminate\Support\Arr;
 
 class Php extends MetaData
@@ -10,7 +10,7 @@ class Php extends MetaData
     /**
      * @param array $settings
      *
-     * @return \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
+     * @return \Doctrine\Persistence\Mapping\Driver\MappingDriver
      */
     public function resolve(array $settings = [])
     {

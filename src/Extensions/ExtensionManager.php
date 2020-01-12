@@ -3,9 +3,9 @@
 namespace LaravelDoctrine\ORM\Extensions;
 
 use Doctrine\Common\EventManager;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Contracts\Container\Container;
 
 class ExtensionManager

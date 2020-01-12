@@ -2,8 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\Persistence\ManagerRegistry;
 
 class SchemaCreateCommand extends Command
 {

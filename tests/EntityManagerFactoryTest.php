@@ -3,7 +3,6 @@
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Cache\CacheFactory;
 use Doctrine\ORM\Cache\RegionsConfiguration;
@@ -13,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\FilterCollection;
 use Doctrine\ORM\Repository\RepositoryFactory;
 use Doctrine\ORM\Tools\Setup;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;

@@ -2,12 +2,12 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Mapping\Driver\DatabaseDriver;
 use Doctrine\ORM\Tools\Console\MetadataFilter;
 use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
+use Doctrine\Persistence\ManagerRegistry;
 use LaravelDoctrine\ORM\Console\Exporters\FluentExporter;
 
 class ConvertMappingCommand extends Command

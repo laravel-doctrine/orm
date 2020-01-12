@@ -1,7 +1,7 @@
 <?php
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

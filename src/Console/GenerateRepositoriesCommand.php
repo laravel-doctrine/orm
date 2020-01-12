@@ -2,10 +2,10 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Console\MetadataFilter;
 use Doctrine\ORM\Tools\EntityRepositoryGenerator;
+use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
 
 class GenerateRepositoriesCommand extends Command
