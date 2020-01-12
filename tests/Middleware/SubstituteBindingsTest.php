@@ -45,6 +45,8 @@ class SubstituteBindingsTest extends TestCase
             return $router;
         });
 
+        $container->alias(ManagerRegistry::class, \Doctrine\Persistence\ManagerRegistry::class);
+
         $container->singleton(ManagerRegistry::class, function () {
             return $this->registry;
         });
