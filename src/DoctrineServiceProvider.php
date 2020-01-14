@@ -161,6 +161,11 @@ class DoctrineServiceProvider extends ServiceProvider
 
         $this->app->alias('registry', ManagerRegistry::class);
         $this->app->alias('registry', IlluminateRegistry::class);
+
+        // This namespace has been deprecated in doctrine/persistence and we have
+        // stopped referring to it. Alias is necessary to let other use it until
+        // its removed.
+        $this->app->alias('registry', \Doctrine\Common\Persistence\ManagerRegistry::class);
     }
 
     /**
