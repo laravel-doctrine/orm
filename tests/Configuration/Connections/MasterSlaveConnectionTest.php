@@ -89,6 +89,7 @@ class MasterSlaveConnectionTest extends TestCase
                     'port' => 3309
                 ],
             ],
+            'serverVersion' => '5.8',
         ];
     }
 
@@ -100,9 +101,10 @@ class MasterSlaveConnectionTest extends TestCase
     private function getExpectedConfig()
     {
         return [
-            'wrapperClass' => MasterSlaveDoctrineWrapper::class,
-            'driver'       => 'pdo_mysql',
-            'slaves'       => [
+            'wrapperClass'  => MasterSlaveDoctrineWrapper::class,
+            'driver'        => 'pdo_mysql',
+            'serverVersion' => '5.8',
+            'slaves'        => [
                 [
                     'host'        => 'localhost',
                     'user'        => 'homestead',
@@ -217,6 +219,7 @@ class MasterSlaveConnectionTest extends TestCase
         $expectedConfigOracle                   = $this->getNodesExpectedConfig();
         $expectedConfigOracle['driver']         = 'oci8';
         $expectedConfigOracle['master']['user'] = 'homestead1';
+        $expectedConfigOracle['serverVersion']  = '5.8';
 
         return $expectedConfigOracle;
     }
@@ -234,6 +237,7 @@ class MasterSlaveConnectionTest extends TestCase
         $expectedConfigPgsql['master']['sslmode']    = 'sslmode';
         $expectedConfigPgsql['slaves'][0]['sslmode'] = 'sslmode';
         $expectedConfigPgsql['slaves'][1]['sslmode'] = 'sslmode';
+        $expectedConfigPgsql['serverVersion']        = '5.8';
 
         return $expectedConfigPgsql;
     }
@@ -272,6 +276,7 @@ class MasterSlaveConnectionTest extends TestCase
                 'memory'   => true,
                 'path'     => ':memory',
             ],
+            'serverVersion' => '5.8',
         ];
     }
 
