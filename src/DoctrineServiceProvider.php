@@ -49,8 +49,13 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->extendAuthManager();
-        $this->extendNotificationChannel();
+        if($this->shouldExtendAuthManager()){
+            $this->extendAuthManager();   
+        }
+        
+        if($this->shouldExtendNotificationChannel()){
+            $this->extendNotificationChannel();
+        }
 
         if (!$this->isLumen()) {
             $this->publishes([
@@ -393,5 +398,21 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function shouldRegisterDoctrinePresenceValidator()
     {
         return $this->app['config']->get('doctrine.doctrine_presence_verifier', true);
+    }
+    
+    /**
+     * @return bool
+     */
+    protected function shouldExtendAuthManager()
+    {
+        return $this->app['config']->get('doctrine.enable_extending_of_auth', true);
+    }
+      
+    /**
+     * @return bool
+     */
+    protected function shouldExtendNotificationChannel()
+    {
+        return $this->app['config']->get('doctrine.enable_extending_of_notification_channel', true);
     }
 }
