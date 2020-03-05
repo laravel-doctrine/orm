@@ -152,7 +152,7 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
     /**
      * Determine if the given user recently created a password reset token.
      *
-     * @param  CanResetPassword  $user
+     * @param  CanResetPassword $user
      * @return bool
      */
     public function recentlyCreatedToken(CanResetPassword $user)
@@ -170,7 +170,7 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
     /**
      * Determine if the token was recently created.
      *
-     * @param  string  $createdAt
+     * @param  string $createdAt
      * @return bool
      */
     protected function tokenRecentlyCreated($createdAt)
@@ -183,8 +183,6 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
             $this->throttle
         )->isFuture();
     }
-
-
 
     /**
      * Delete a token record by token.
