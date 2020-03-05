@@ -148,7 +148,6 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
         return $expiresAt->isPast();
     }
 
-
     /**
      * Determine if the given user recently created a password reset token.
      *
