@@ -153,6 +153,47 @@ class DoctrineTokenRepositoryTest extends TestCase
         $this->assertTrue($this->repository->exists(new UserMock, 'token'));
     }
 
+    public function test_can_check_if_recently_created_token()
+    {
+        $this->connection->shouldReceive('createQueryBuilder')
+                         ->once()
+                         ->andReturn($this->builder);
+
+        $this->builder->shouldReceive('select')
+                      ->once()
+                      ->with('*')
+                      ->andReturnSelf();
+
+        $this->builder->shouldReceive('from')
+                      ->once()
+                      ->with('password_resets')
+                      ->andReturnSelf();
+
+        $this->builder->shouldReceive('where')
+                      ->once()
+                      ->with('email = :email')
+                      ->andReturnSelf();
+
+        $this->builder->shouldReceive('setParameter')
+                      ->once()
+                      ->with('email', 'user@mockery.mock')
+                      ->andReturnSelf();
+
+        $this->builder->shouldReceive('execute')
+                      ->once()
+                      ->andReturnSelf();
+
+        $this->builder->shouldReceive('fetch')
+                      ->once()
+                      ->andReturn([
+                          'email'      => 'user@mockery.mock',
+                          'token'      => 'token',
+                          'created_at' => Carbon::now()
+                      ]);
+
+        $this->assertTrue($this->repository->recentlyCreatedToken(new UserMock));
+    }
+
     public function test_can_delete()
     {
         $this->connection->shouldReceive('createQueryBuilder')

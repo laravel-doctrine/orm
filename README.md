@@ -13,7 +13,7 @@
 
 ```php
 $scientist = new Scientist(
-    'Albert', 
+    'Albert',
     'Einstein'
 );
 
@@ -36,7 +36,7 @@ EntityManager::flush();
 * Password reminders implementation
 * Doctrine console commands
 * DoctrineExtensions supported
-* Timestamps, Softdeletes and TablePrefix listeners 
+* Timestamps, Softdeletes and TablePrefix listeners
 
 ## Documentation
 
@@ -51,15 +51,16 @@ Version | Supported Laravel Versions
 1.2.x | 5.2.x, 5.3.x
 1.3.x | 5.4.x
 ~1.4.0 | 5.5.x
-~1.4.3 | 5.6.x 
+~1.4.3 | 5.6.x
 ~1.4.8 | 5.7.x
 ~1.4.10 | 5.8.x
 ~1.5 | 6.x
+~1.6 | 7.x
 
 Require this package  
 
 ```bash
-composer require "laravel-doctrine/orm:1.5.*"
+composer require "laravel-doctrine/orm:1.6.*"
 ```
 
 Because of the auto package discovery feature Laravel 5.5 has, the ServiceProvider and Facades are automatically registered.

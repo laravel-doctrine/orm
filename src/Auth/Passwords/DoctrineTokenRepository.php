@@ -40,6 +40,13 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
     protected $expires;
 
     /**
+     * Minimum number of seconds before re-redefining the token.
+     *
+     * @var int
+     */
+    protected $throttle;
+
+    /**
      * Create a new token repository instance.
      *
      * @param Connection $connection
@@ -47,12 +54,13 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
      * @param string     $hashKey
      * @param int        $expires
      */
-    public function __construct(Connection $connection, $table, $hashKey, $expires = 60)
+    public function __construct(Connection $connection, $table, $hashKey, $expires = 60, $throttle = 60)
     {
         $this->table      = $table;
         $this->hashKey    = $hashKey;
         $this->expires    = $expires * 60;
         $this->connection = $connection;
+        $this->throttle   = $throttle;
     }
 
     /**
@@ -138,6 +146,41 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
         $expiresAt = Carbon::parse($token['created_at'])->addSeconds($this->expires);
 
         return $expiresAt->isPast();
+    }
+
+    /**
+     * Determine if the given user recently created a password reset token.
+     *
+     * @param  CanResetPassword $user
+     * @return bool
+     */
+    public function recentlyCreatedToken(CanResetPassword $user)
+    {
+        $record = $this->getTable()
+                       ->select('*')
+                       ->from($this->table)
+                       ->where('email = :email')
+                       ->setParameter('email', $user->getEmailForPasswordReset())
+                       ->execute()->fetch();
+
+        return $record && $this->tokenRecentlyCreated($record['created_at']);
+    }
+
+    /**
+     * Determine if the token was recently created.
+     *
+     * @param  string $createdAt
+     * @return bool
+     */
+    protected function tokenRecentlyCreated($createdAt)
+    {
+        if ($this->throttle <= 0) {
+            return false;
+        }
+
+        return Carbon::parse($createdAt)->addSeconds(
+            $this->throttle
+        )->isFuture();
     }
 
     /**
