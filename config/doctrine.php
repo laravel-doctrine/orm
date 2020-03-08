@@ -156,7 +156,7 @@ return [
     | Configure meta-data, query and result caching here.
     | Optionally you can enable second level caching.
     |
-    | Available: apc|array|file|memcached|redis|void
+    | Available: apc|array|file|memcached|php_file|redis|void
     |
     */
     'cache' => [
