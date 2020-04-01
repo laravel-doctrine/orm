@@ -115,7 +115,7 @@ class FactoryBuilder
 
         if ($this->amount === 1) {
             $manager->persist($results);
-            $this->callAfterCreating(collect($results));
+            $this->callAfterCreating(collect([$results]));
         } else {
             foreach ($results as $result) {
                 $manager->persist($result);
