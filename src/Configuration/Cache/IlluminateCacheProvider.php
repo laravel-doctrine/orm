@@ -32,8 +32,10 @@ abstract class IlluminateCacheProvider implements Driver
      */
     public function resolve(array $settings = [])
     {
+        $store = $settings['store'] ?? $this->store;
+
         return new IlluminateCacheAdapter(
-            $this->cache->store($this->store)
+            $this->cache->store($store)
         );
     }
 }
