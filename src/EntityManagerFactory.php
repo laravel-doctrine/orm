@@ -361,7 +361,7 @@ class EntityManagerFactory
         $defaultNamespace = $this->config->get('doctrine.cache.namespace');
 
         $settings = $this->config->get('doctrine.cache.' . $cacheName, []);
-        $driver = $settings['driver'] ?? $defaultDriver;
+        $driver   = $settings['driver'] ?? $defaultDriver;
 
         $cache = $this->cache->driver($driver, $settings);
 
