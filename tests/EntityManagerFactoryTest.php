@@ -661,6 +661,66 @@ class EntityManagerFactoryTest extends PHPUnit_Framework_TestCase
         $factory->create($config->get('doctrine'));
     }
 
+    public function test_php_file_cache_custom_path()
+    {
+        m::resetContainer();
+
+        $config = new ConfigRepository([
+            'database.connections.mysql' => [
+                'driver' => 'mysql'
+            ],
+            'doctrine' => [
+                'meta' => 'annotations',
+                'connection' => 'mysql',
+                'paths' => ['Entities'],
+                'proxies' => [
+                    'path' => 'dir',
+                    'auto_generate' => false,
+                    'namespace' => 'namespace'
+                ],
+
+                'cache' => [
+                    'metadata' => [
+                        'driver' => 'php_file',
+                        'path' => 'myCustomPath'
+                    ]
+                ]
+            ],
+            'doctrine.custom_datetime_functions' => [],
+            'doctrine.custom_numeric_functions' => [],
+            'doctrine.custom_string_functions' => []
+        ]);
+
+        $container = new \Illuminate\Container\Container();
+        $container->singleton(Repository::class, function () use ($config) {
+            return $config;
+        });
+
+        $cache = M::mock(Illuminate\Contracts\Cache\Repository::class);
+
+        $factory = M::mock(\Illuminate\Contracts\Cache\Factory::class);
+        $factory->shouldReceive('store')->with('myStoreName')->andReturn($cache);
+
+        $container->singleton(Illuminate\Contracts\Cache\Factory::class, function() use ( $factory) {
+            return $factory;
+        });
+
+        $factory = new EntityManagerFactory(
+            $container,
+            new Setup(),
+            new MetaDataManager($container),
+            new ConnectionManager($container),
+            new CacheManager($container),
+            $config,
+            new EntityListenerResolver($container)
+        );
+
+        $manager = $factory->create($config->get('doctrine'));
+
+        $this->assertInstanceOf(\Doctrine\Common\Cache\PhpFileCache::class, $manager->getConfiguration()->getMetadataCacheImpl());
+        $this->assertStringEndsWith('myCustomPath', $manager->getConfiguration()->getMetadataCacheImpl()->getDirectory());
+    }
+
     public function test_wrapper_connection()
     {
         m::resetContainer();
