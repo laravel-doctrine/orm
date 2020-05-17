@@ -2,10 +2,10 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
+use const E_USER_DEPRECATED;
 use Illuminate\Contracts\Cache\Factory;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Configuration\Driver;
-use const E_USER_DEPRECATED;
 
 class IlluminateCacheProvider implements Driver
 {
