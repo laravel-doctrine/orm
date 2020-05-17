@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM\Testing;
 
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Arr;
 
 class ConfigRepository implements Repository
 {
@@ -23,7 +24,7 @@ class ConfigRepository implements Repository
 
     public function get($key, $default = null)
     {
-        return $this->items[$key] ?? $default;
+        return Arr::get($this->items, $key, $default);
     }
 
     public function set($key, $value = null)
