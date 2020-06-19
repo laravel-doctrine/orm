@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Doctrine\ORM\Cache|null getCache()
  * @method static \Doctrine\DBAL\Connection getConnection()
  * @method static \Doctrine\ORM\Query\Expr getExpressionBuilder()
- * @method statuc \Doctrine\ORM\Utility\IdentifierFlattener getIdentifierFlattener()
+ * @method static \Doctrine\ORM\Utility\IdentifierFlattener getIdentifierFlattener()
  * @method static void beginTransaction()
  * @method static mixed transactional(callable $func)
  * @method static void commit()
