@@ -131,7 +131,7 @@ class PaginatorAdapter
     }
 
     /**
-     * @param  array  $params
+     * @param array $params
      *
      * @return $this
      */
