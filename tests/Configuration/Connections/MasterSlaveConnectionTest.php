@@ -89,7 +89,7 @@ class MasterSlaveConnectionTest extends TestCase
                     'port' => 3309
                 ],
             ],
-            'serverVersion' => '5.8',
+            'serverVersion'       => '5.8',
             'defaultTableOptions' => [
                 'charset' => 'utf8mb4',
                 'collate' => 'utf8mb4_unicode_ci',
@@ -294,7 +294,7 @@ class MasterSlaveConnectionTest extends TestCase
                 'memory'   => true,
                 'path'     => ':memory',
             ],
-            'serverVersion' => '5.8',
+            'serverVersion'       => '5.8',
             'defaultTableOptions' => [
                 'charset' => 'utf8mb4',
                 'collate' => 'utf8mb4_unicode_ci',

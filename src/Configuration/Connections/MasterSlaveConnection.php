@@ -51,7 +51,7 @@ class MasterSlaveConnection extends Connection
             $resolvedSettings['serverVersion'] = $settings['serverVersion'];
         }
 
-        if(!empty($settings['defaultTableOptions'])) {
+        if (!empty($settings['defaultTableOptions'])) {
             $resolvedSettings['defaultTableOptions'] = $settings['defaultTableOptions'];
         }
 
