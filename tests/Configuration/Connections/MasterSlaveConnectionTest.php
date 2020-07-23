@@ -89,7 +89,11 @@ class MasterSlaveConnectionTest extends TestCase
                     'port' => 3309
                 ],
             ],
-            'serverVersion' => '5.8',
+            'serverVersion'       => '5.8',
+            'defaultTableOptions' => [
+                'charset' => 'utf8mb4',
+                'collate' => 'utf8mb4_unicode_ci',
+            ]
         ];
     }
 
@@ -135,6 +139,10 @@ class MasterSlaveConnectionTest extends TestCase
                 'charset'     => 'charset',
                 'unix_socket' => 'unix_socket',
                 'prefix'      => 'prefix'
+            ],
+            'defaultTableOptions' => [
+                'charset' => 'utf8mb4',
+                'collate' => 'utf8mb4_unicode_ci',
             ],
         ];
     }
@@ -221,6 +229,11 @@ class MasterSlaveConnectionTest extends TestCase
         $expectedConfigOracle['master']['user'] = 'homestead1';
         $expectedConfigOracle['serverVersion']  = '5.8';
 
+        $expectedConfigOracle['defaultTableOptions'] = [
+            'charset' => 'utf8mb4',
+            'collate' => 'utf8mb4_unicode_ci',
+        ];
+
         return $expectedConfigOracle;
     }
 
@@ -238,6 +251,11 @@ class MasterSlaveConnectionTest extends TestCase
         $expectedConfigPgsql['slaves'][0]['sslmode'] = 'sslmode';
         $expectedConfigPgsql['slaves'][1]['sslmode'] = 'sslmode';
         $expectedConfigPgsql['serverVersion']        = '5.8';
+
+        $expectedConfigPgsql['defaultTableOptions'] = [
+            'charset' => 'utf8mb4',
+            'collate' => 'utf8mb4_unicode_ci',
+        ];
 
         return $expectedConfigPgsql;
     }
@@ -276,7 +294,11 @@ class MasterSlaveConnectionTest extends TestCase
                 'memory'   => true,
                 'path'     => ':memory',
             ],
-            'serverVersion' => '5.8',
+            'serverVersion'       => '5.8',
+            'defaultTableOptions' => [
+                'charset' => 'utf8mb4',
+                'collate' => 'utf8mb4_unicode_ci',
+            ]
         ];
     }
 
