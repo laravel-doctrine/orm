@@ -29,8 +29,10 @@ class PhpFileCacheProvider implements Driver
      */
     public function resolve(array $settings = [])
     {
+        $path = $settings['path'] ?? $this->config->get('cache.stores.file.path', storage_path('framework/cache'));
+
         return new PhpFileCache(
-            $this->config->get('cache.stores.file.path', storage_path('framework/cache'))
+            $path
         );
     }
 }

@@ -16,6 +16,7 @@ use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
+use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheAdapter;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
@@ -485,6 +486,242 @@ class EntityManagerFactoryTest extends TestCase
         $this->assertEntityManager($manager);
     }
 
+    public function test_illuminate_cache_provider_custom_store()
+    {
+        m::resetContainer();
+
+        $config = new ConfigRepository([
+            'database.connections.mysql' => [
+                'driver' => 'mysql'
+            ],
+            'doctrine' => [
+                'meta'       => 'annotations',
+                'connection' => 'mysql',
+                'paths'      => ['Entities'],
+                'proxies'    => [
+                    'path'          => 'dir',
+                    'auto_generate' => false,
+                    'namespace'     => 'namespace'
+                ],
+
+                'cache' => [
+                    'metadata' => [
+                        'driver' => 'illuminate',
+                        'store'  => 'myStoreName'
+                    ]
+                ]
+            ],
+            'doctrine.custom_datetime_functions' => [],
+            'doctrine.custom_numeric_functions'  => [],
+            'doctrine.custom_string_functions'   => []
+        ]);
+
+        $container = new \Illuminate\Container\Container();
+        $container->singleton(Repository::class, function () use ($config) {
+            return $config;
+        });
+
+        $cache = M::mock(Illuminate\Contracts\Cache\Repository::class);
+
+        $factory = M::mock(\Illuminate\Contracts\Cache\Factory::class);
+        $factory->shouldReceive('store')->with('myStoreName')->andReturn($cache);
+
+        $container->singleton(Illuminate\Contracts\Cache\Factory::class, function () use ($factory) {
+            return $factory;
+        });
+
+        $factory = new EntityManagerFactory(
+            $container,
+            new Setup(),
+            new MetaDataManager($container),
+            new ConnectionManager($container),
+            new CacheManager($container),
+            $config,
+            new EntityListenerResolver($container)
+        );
+
+        $manager = $factory->create($config->get('doctrine'));
+
+        $this->assertInstanceOf(IlluminateCacheAdapter::class, $manager->getConfiguration()->getMetadataCacheImpl());
+    }
+
+    public function test_illuminate_cache_provider_redis()
+    {
+        m::resetContainer();
+
+        $config = new ConfigRepository([
+            'database.connections.mysql' => [
+                'driver' => 'mysql'
+            ],
+            'doctrine' => [
+                'meta'       => 'annotations',
+                'connection' => 'mysql',
+                'paths'      => ['Entities'],
+                'proxies'    => [
+                    'path'          => 'dir',
+                    'auto_generate' => false,
+                    'namespace'     => 'namespace'
+                ],
+
+                'cache' => [
+                    'metadata' => [
+                        'driver' => 'redis',
+                    ]
+                ]
+            ],
+            'doctrine.custom_datetime_functions' => [],
+            'doctrine.custom_numeric_functions'  => [],
+            'doctrine.custom_string_functions'   => []
+        ]);
+
+        $container = new \Illuminate\Container\Container();
+        $container->singleton(Repository::class, function () use ($config) {
+            return $config;
+        });
+
+        $cache = M::mock(Illuminate\Contracts\Cache\Repository::class);
+
+        $factory = M::mock(\Illuminate\Contracts\Cache\Factory::class);
+        $factory->shouldReceive('store')->with('redis')->andReturn($cache);
+
+        $container->singleton(Illuminate\Contracts\Cache\Factory::class, function () use ($factory) {
+            return $factory;
+        });
+
+        $factory = new EntityManagerFactory(
+            $container,
+            new Setup(),
+            new MetaDataManager($container),
+            new ConnectionManager($container),
+            new CacheManager($container),
+            $config,
+            new EntityListenerResolver($container)
+        );
+
+        $manager = $factory->create($config->get('doctrine'));
+
+        $this->assertInstanceOf(IlluminateCacheAdapter::class, $manager->getConfiguration()->getMetadataCacheImpl());
+    }
+
+    public function test_illuminate_cache_provider_invalid_store()
+    {
+        m::resetContainer();
+
+        $config = new ConfigRepository([
+            'database.connections.mysql' => [
+                'driver' => 'mysql'
+            ],
+            'doctrine' => [
+                'meta'       => 'annotations',
+                'connection' => 'mysql',
+                'paths'      => ['Entities'],
+                'proxies'    => [
+                    'path'          => 'dir',
+                    'auto_generate' => false,
+                    'namespace'     => 'namespace'
+                ],
+
+                'cache' => [
+                    'metadata' => [
+                        'driver' => 'illuminate',
+                    ]
+                ]
+            ],
+            'doctrine.custom_datetime_functions' => [],
+            'doctrine.custom_numeric_functions'  => [],
+            'doctrine.custom_string_functions'   => []
+        ]);
+
+        $container = new \Illuminate\Container\Container();
+        $container->singleton(Repository::class, function () use ($config) {
+            return $config;
+        });
+
+        $cache = M::mock(Illuminate\Contracts\Cache\Repository::class);
+
+        $factory = M::mock(\Illuminate\Contracts\Cache\Factory::class);
+        $factory->shouldReceive('store')->with('myStoreName')->andReturn($cache);
+
+        $container->singleton(Illuminate\Contracts\Cache\Factory::class, function () use ($factory) {
+            return $factory;
+        });
+
+        $factory = new EntityManagerFactory(
+            $container,
+            new Setup(),
+            new MetaDataManager($container),
+            new ConnectionManager($container),
+            new CacheManager($container),
+            $config,
+            new EntityListenerResolver($container)
+        );
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->expectExceptionMessage('Please specify the `store` when using the "illuminate" cache driver.');
+        $factory->create($config->get('doctrine'));
+    }
+
+    public function test_php_file_cache_custom_path()
+    {
+        m::resetContainer();
+
+        $config = new ConfigRepository([
+            'database.connections.mysql' => [
+                'driver' => 'mysql'
+            ],
+            'doctrine' => [
+                'meta'       => 'annotations',
+                'connection' => 'mysql',
+                'paths'      => ['Entities'],
+                'proxies'    => [
+                    'path'          => 'dir',
+                    'auto_generate' => false,
+                    'namespace'     => 'namespace'
+                ],
+
+                'cache' => [
+                    'metadata' => [
+                        'driver' => 'php_file',
+                        'path'   => 'myCustomPath'
+                    ]
+                ]
+            ],
+            'doctrine.custom_datetime_functions' => [],
+            'doctrine.custom_numeric_functions'  => [],
+            'doctrine.custom_string_functions'   => []
+        ]);
+
+        $container = new \Illuminate\Container\Container();
+        $container->singleton(Repository::class, function () use ($config) {
+            return $config;
+        });
+
+        $cache = M::mock(Illuminate\Contracts\Cache\Repository::class);
+
+        $factory = M::mock(\Illuminate\Contracts\Cache\Factory::class);
+        $factory->shouldReceive('store')->with('myStoreName')->andReturn($cache);
+
+        $container->singleton(Illuminate\Contracts\Cache\Factory::class, function () use ($factory) {
+            return $factory;
+        });
+
+        $factory = new EntityManagerFactory(
+            $container,
+            new Setup(),
+            new MetaDataManager($container),
+            new ConnectionManager($container),
+            new CacheManager($container),
+            $config,
+            new EntityListenerResolver($container)
+        );
+
+        $manager = $factory->create($config->get('doctrine'));
+
+        $this->assertInstanceOf(\Doctrine\Common\Cache\PhpFileCache::class, $manager->getConfiguration()->getMetadataCacheImpl());
+        $this->assertStringEndsWith('myCustomPath', $manager->getConfiguration()->getMetadataCacheImpl()->getDirectory());
+    }
+
     public function test_wrapper_connection()
     {
         m::resetContainer();
@@ -592,8 +829,8 @@ class EntityManagerFactoryTest extends TestCase
 
         foreach ($this->caches as $cache) {
             $expectation = $this->config->shouldReceive('get')
-                         ->with('doctrine.cache.' . $cache . '.driver', 'array')
-                         ->andReturn('array');
+                         ->with('doctrine.cache.' . $cache, [])
+                         ->andReturn(['driver' => 'array']);
 
             $strictCallCountChecking ? $expectation->once() : $expectation->never();
         }

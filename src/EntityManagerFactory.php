@@ -360,9 +360,10 @@ class EntityManagerFactory
         $defaultDriver    = $this->config->get('doctrine.cache.default', 'array');
         $defaultNamespace = $this->config->get('doctrine.cache.namespace');
 
-        $driver = $this->config->get('doctrine.cache.' . $cacheName . '.driver', $defaultDriver);
+        $settings = $this->config->get('doctrine.cache.' . $cacheName, []);
+        $driver   = $settings['driver'] ?? $defaultDriver;
 
-        $cache = $this->cache->driver($driver);
+        $cache = $this->cache->driver($driver, $settings);
 
         if ($namespace = $this->config->get('doctrine.cache.' . $cacheName . '.namespace', $defaultNamespace)) {
             $cache->setNamespace($namespace);
