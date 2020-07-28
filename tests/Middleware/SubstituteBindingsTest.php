@@ -168,6 +168,23 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $router->dispatch(Request::create('foo/NAMEVALUE', 'GET'))->getContent());
     }
 
+    public function test_not_id_binding_alternate()
+    {
+        $router = $this->getRouter();
+        $router->get('foo/{entity}', [
+            'uses'       => 'EntityController@interfaceralternate',
+            'middleware' => SubstituteBindings::class,
+        ]);
+
+        $this->registry->shouldReceive('getRepository')->once()->with('BindableEntityWithAlternateInterface')->andReturn($this->repository);
+        $entity       = new BindableEntityWithAlternateInterface();
+        $entity->id   = 1;
+        $entity->name = 'NAMEVALUE';
+        $this->repository->shouldReceive('findOneBy')->with(['name' => 'NAMEVALUE'])->andReturn($entity);
+
+        $this->assertEquals(1, $router->dispatch(Request::create('foo/NAMEVALUE', 'GET'))->getContent());
+    }
+
     protected function tearDown()
     {
         m::close();
@@ -213,6 +230,40 @@ class BindableEntityWithInterface implements \LaravelDoctrine\ORM\Contracts\UrlR
     }
 }
 
+class BindableEntityWithAlternateInterface implements \Illuminate\Contracts\Routing\UrlRoutable
+{
+    public $id;
+
+    public $name;
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getName()
+    {
+        return strtolower($this->name);
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'name';
+    }
+
+    public function getRouteKey()
+    {
+        // TODO: Implement getRouteKey() method.
+        throw new \RunTimeException("Not Implemented");
+    }
+
+    public function resolveRouteBinding($value)
+    {
+        // TODO: Implement resolveRouteBinding() method.
+        throw new \RunTimeException("Not Implemented");
+    }
+}
+
 class EntityController
 {
     public function index(BindableEntity $entity)
@@ -221,6 +272,11 @@ class EntityController
     }
 
     public function interfacer(BindableEntityWithInterface $entity)
+    {
+        return $entity->getId();
+    }
+
+    public function interfaceralternate(BindableEntityWithAlternateInterface $entity)
     {
         return $entity->getId();
     }

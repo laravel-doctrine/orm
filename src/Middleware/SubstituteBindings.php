@@ -7,7 +7,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityNotFoundException;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Routing\Route;
-use LaravelDoctrine\ORM\Contracts\UrlRoutable;
 use ReflectionParameter;
 
 class SubstituteBindings
@@ -68,8 +67,14 @@ class SubstituteBindings
             $class = $parameter->getClass()->getName();
 
             if ($repository = $this->registry->getRepository($class)) {
-                if ($parameter->getClass()->implementsInterface(UrlRoutable::class)) {
+                if ($parameter->getClass()->implementsInterface(\LaravelDoctrine\ORM\Contracts\UrlRoutable::class)) {
                     $name = call_user_func([$class, 'getRouteKeyName']);
+
+                    $entity = $repository->findOneBy([
+                        $name => $id
+                    ]);
+                } elseif ($parameter->getClass()->implementsInterface(\Illuminate\Contracts\Routing\UrlRoutable::class)) {
+                    $name = call_user_func([new $class, 'getRouteKeyName']);
 
                     $entity = $repository->findOneBy([
                         $name => $id
