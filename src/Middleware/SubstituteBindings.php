@@ -74,8 +74,10 @@ class SubstituteBindings
                         $name => $id
                     ]);
                 } elseif ($parameter->getClass()->implementsInterface(\Illuminate\Contracts\Routing\UrlRoutable::class)) {
-                    $name = call_user_func([new $class, 'getRouteKeyName']);
-
+                    $em = $this->registry->getManagerForClass($class);
+                    $meta = $em->getClassMetadata($class);
+                    $instance = $meta->newInstance();
+                    $name = call_user_func([$instance, 'getRouteKeyName']);
                     $entity = $repository->findOneBy([
                         $name => $id
                     ]);

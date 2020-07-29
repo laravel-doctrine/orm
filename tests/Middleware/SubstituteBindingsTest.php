@@ -177,6 +177,8 @@ class SubstituteBindingsTest extends PHPUnit_Framework_TestCase
         ]);
 
         $this->registry->shouldReceive('getRepository')->once()->with('BindableEntityWithAlternateInterface')->andReturn($this->repository);
+        $this->registry->shouldReceive('getManagerForClass')->once()->with('BindableEntityWithAlternateInterface')->andReturn($this->em);
+        $this->em->shouldReceive('getClassMetadata')->once()->with('BindableEntityWithAlternateInterface')->andReturn(new \Doctrine\ORM\Mapping\ClassMetadata(BindableEntityWithAlternateInterface::class));
         $entity       = new BindableEntityWithAlternateInterface();
         $entity->id   = 1;
         $entity->name = 'NAMEVALUE';
@@ -253,14 +255,16 @@ class BindableEntityWithAlternateInterface implements \Illuminate\Contracts\Rout
 
     public function getRouteKey()
     {
-        // TODO: Implement getRouteKey() method.
-        throw new \RunTimeException("Not Implemented");
+        $fields = EntityManager::getClassMetadata(__CLASS__)->getIdentifierFieldNames();
+        if(count($fields) == 1) {
+            return $fields[0];
+        }
+        throw new \InvalidArgumentException(sprintf("%s has %d identifier fields, 1 expected", __CLASS__, count($fields)));
     }
 
     public function resolveRouteBinding($value)
     {
-        // TODO: Implement resolveRouteBinding() method.
-        throw new \RunTimeException("Not Implemented");
+        return EntityManager::getRepository(__CLASS__)->findOneBy([$this->getRouteKeyName() => $value]);
     }
 }
 
