@@ -2,6 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Auth;
 
+use Doctrine\ORM\Mapping as ORM;
+
 trait Authenticatable
 {
     /**
