@@ -17,7 +17,7 @@ class IlluminateCacheAdapterTest extends TestCase
      */
     protected $repository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repository = m::mock(Repository::class);
         $this->cache      = new IlluminateCacheAdapter(
@@ -134,7 +134,7 @@ class IlluminateCacheAdapterTest extends TestCase
         $this->assertEquals('fetched', $this->cache->fetch(1));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

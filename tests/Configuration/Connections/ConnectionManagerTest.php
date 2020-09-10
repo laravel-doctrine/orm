@@ -26,7 +26,7 @@ class ConnectionManagerTest extends TestCase
      */
     protected $config;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->app = m::mock(Container::class);
         $this->app->shouldReceive('make')->andReturn(m::self());
@@ -92,7 +92,7 @@ class ConnectionManagerTest extends TestCase
         $this->assertEquals('connection', $this->manager->driver('oci8'));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

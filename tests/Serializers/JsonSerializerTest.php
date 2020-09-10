@@ -11,7 +11,7 @@ class JsonSerializerTest extends TestCase
      */
     protected $serializer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->serializer = new JsonSerializer;
     }

@@ -116,7 +116,7 @@ abstract class AbstractCacheTest
         $this->assertEquals('fetched', $this->getCache()->fetch(1));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

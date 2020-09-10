@@ -13,7 +13,7 @@ class AnnotationsTest extends TestCase
      */
     protected $meta;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->meta = new Annotations();
     }
@@ -31,7 +31,7 @@ class AnnotationsTest extends TestCase
         $this->assertInstanceOf(AnnotationDriver::class, $resolved);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

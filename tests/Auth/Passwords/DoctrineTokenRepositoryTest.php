@@ -37,7 +37,7 @@ class DoctrineTokenRepositoryTest extends TestCase
      */
     protected $builder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->connection = m::mock(Connection::class);
         $this->builder    = m::mock(QueryBuilder::class);
@@ -252,7 +252,7 @@ class DoctrineTokenRepositoryTest extends TestCase
         $this->assertTrue(true);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

@@ -18,7 +18,7 @@ class SqliteConnectionTest extends TestCase
      */
     protected $connection;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->config = m::mock(Repository::class);
 
@@ -73,7 +73,7 @@ class SqliteConnectionTest extends TestCase
         $this->assertEquals(':memory:', $resolved['path']);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

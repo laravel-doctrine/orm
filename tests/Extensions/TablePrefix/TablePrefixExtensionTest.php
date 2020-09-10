@@ -25,7 +25,7 @@ class TablePrefixExtensionTest extends TestCase
      */
     protected $reader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->evm = m::mock(EventManager::class);
         $this->evm->shouldReceive('addEventSubscriber')->once();
@@ -56,7 +56,7 @@ class TablePrefixExtensionTest extends TestCase
         $this->assertEmpty($extension->getFilters());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

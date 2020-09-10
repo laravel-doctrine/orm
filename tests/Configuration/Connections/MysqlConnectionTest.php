@@ -18,7 +18,7 @@ class MysqlConnectionTest extends TestCase
      */
     protected $connection;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->config = m::mock(Repository::class);
 
@@ -54,7 +54,7 @@ class MysqlConnectionTest extends TestCase
         $this->assertCount(0, $resolved['driverOptions']);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

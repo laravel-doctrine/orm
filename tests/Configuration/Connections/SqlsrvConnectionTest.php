@@ -18,7 +18,7 @@ class SqlsrvConnectionTest extends TestCase
      */
     protected $connection;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->config = m::mock(Repository::class);
 
@@ -50,7 +50,7 @@ class SqlsrvConnectionTest extends TestCase
         $this->assertCount(0, $resolved['defaultTableOptions']);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

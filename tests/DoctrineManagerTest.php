@@ -41,7 +41,7 @@ class DoctrineManagerTest extends TestCase
      */
     protected $factory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->container = m::mock(Container::class);
         $this->registry  = m::mock(ManagerRegistry::class);
@@ -204,7 +204,7 @@ class DoctrineManagerTest extends TestCase
         $this->assertTrue(true);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
         BootChain::flush();

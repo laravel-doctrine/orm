@@ -19,7 +19,7 @@ class JsonTypeTest extends TestCase
      */
     protected $platform;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platform = m::mock(AbstractPlatform::class);
 
@@ -44,7 +44,7 @@ class JsonTypeTest extends TestCase
         $this->assertEquals(['value'], $this->type->convertToPHPValue(json_encode(['value']), $this->platform));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

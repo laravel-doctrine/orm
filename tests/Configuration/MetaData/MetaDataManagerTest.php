@@ -20,7 +20,7 @@ class MetaDataManagerTest extends TestCase
      */
     protected $app;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->app = m::mock(Container::class);
         $this->app->shouldReceive('make')->andReturn(m::self());
@@ -77,7 +77,7 @@ class MetaDataManagerTest extends TestCase
         $this->assertEquals('configuration', $this->manager->driver('annotations'));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
