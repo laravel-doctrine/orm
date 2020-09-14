@@ -73,15 +73,19 @@ class ConvertMappingCommand extends Command
 
             if (!file_exists($destPath)) {
                 throw new \InvalidArgumentException(
-                    sprintf("Mapping destination directory '<info>%s</info>' does not exist.",
-                        $this->argument('dest-path'))
+                    sprintf(
+                        "Mapping destination directory '<info>%s</info>' does not exist.",
+                        $this->argument('dest-path')
+                    )
                 );
             }
 
             if (!is_writable($destPath)) {
                 throw new \InvalidArgumentException(
-                    sprintf("Mapping destination directory '<info>%s</info>' does not have write permissions.",
-                        $destPath)
+                    sprintf(
+                        "Mapping destination directory '<info>%s</info>' does not have write permissions.",
+                        $destPath
+                    )
                 );
             }
 
@@ -110,8 +114,10 @@ class ConvertMappingCommand extends Command
                 $exporter->export();
 
                 $this->info(PHP_EOL . sprintf(
-                        'Exporting "<info>%s</info>" mapping information to "<info>%s</info>"', $toType, $destPath
-                    ));
+                    'Exporting "<info>%s</info>" mapping information to "<info>%s</info>"',
+                    $toType,
+                    $destPath
+                ));
             } else {
                 $this->info('No Metadata Classes to process.');
             }

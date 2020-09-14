@@ -140,9 +140,16 @@ class FactoryBuilder
      *
      * @return FactoryBuilder
      */
-    public static function construct(ManagerRegistry $registry, $class, $name, array $definitions,
-                                     Faker $faker, array $states, array $afterMaking = [], array $afterCreating = [])
-    {
+    public static function construct(
+        ManagerRegistry $registry,
+        $class,
+        $name,
+        array $definitions,
+        Faker $faker,
+        array $states,
+        array $afterMaking = [],
+        array $afterCreating = []
+    ) {
         $instance         = new static($registry, $class, $name, $definitions, $faker, $afterMaking, $afterCreating);
         $instance->states = $states;
 
@@ -306,7 +313,8 @@ class FactoryBuilder
 
         return call_user_func(
             $stateAttributes,
-            $this->faker, $attributes
+            $this->faker,
+            $attributes
         );
     }
 

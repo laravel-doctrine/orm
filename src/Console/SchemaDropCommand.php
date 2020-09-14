@@ -72,14 +72,21 @@ class SchemaDropCommand extends Command
 
                 if (count($sql)) {
                     $pluralization = (1 === count($sql)) ? 'query' : 'queries';
-                    $this->message(sprintf('The Schema-Tool would execute <info>"%s"</info> %s to update the database.',
-                        count($sql), $pluralization));
+                    $this->message(sprintf(
+                        'The Schema-Tool would execute <info>"%s"</info> %s to update the database.',
+                        count($sql),
+                        $pluralization
+                    ));
                     $this->message('Please run the operation by passing one - or both - of the following options:');
 
-                    $this->comment(sprintf('    <info>php artisan %s --force</info> to execute the command',
-                        $this->getName()));
-                    $this->comment(sprintf('    <info>php artisan %s --sql</info> to dump the SQL statements to the screen',
-                        $this->getName()));
+                    $this->comment(sprintf(
+                        '    <info>php artisan %s --force</info> to execute the command',
+                        $this->getName()
+                    ));
+                    $this->comment(sprintf(
+                        '    <info>php artisan %s --sql</info> to dump the SQL statements to the screen',
+                        $this->getName()
+                    ));
 
                     $exit = 1;
                 } else {
