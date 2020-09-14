@@ -36,7 +36,7 @@ class DoctrinePresenceVerifierTest extends TestCase
      */
     protected $query;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->em       = m::mock(EntityManagerInterface::class);
         $this->registry = m::mock(ManagerRegistry::class);
@@ -261,7 +261,7 @@ class DoctrinePresenceVerifierTest extends TestCase
         $this->query->shouldReceive('getSingleScalarResult');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

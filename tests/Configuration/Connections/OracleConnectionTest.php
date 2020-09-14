@@ -18,7 +18,7 @@ class OracleConnectionTest extends TestCase
      */
     protected $connection;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->config = m::mock(Repository::class);
 
@@ -52,7 +52,7 @@ class OracleConnectionTest extends TestCase
         $this->assertEquals('persistent', $resolved['persistent']);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

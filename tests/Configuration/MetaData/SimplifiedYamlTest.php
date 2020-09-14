@@ -13,7 +13,7 @@ class SimplifiedYamlTest extends TestCase
      */
     protected $meta;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->meta = new SimplifiedYaml();
     }
@@ -31,7 +31,7 @@ class SimplifiedYamlTest extends TestCase
         $this->assertInstanceOf(SimplifiedYamlDriver::class, $resolved);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

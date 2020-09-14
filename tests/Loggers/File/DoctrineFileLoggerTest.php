@@ -24,7 +24,7 @@ class DoctrineFileLoggerTest extends TestCase
      */
     protected $connection;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->writer     = m::mock(Log::class);
         $this->connection = m::mock(Connection::class);
@@ -45,7 +45,7 @@ class DoctrineFileLoggerTest extends TestCase
         $this->assertEquals('SELECT * FROM table WHERE condition = "value"', $this->logger->getQuery());
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

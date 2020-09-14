@@ -98,7 +98,7 @@ class EntityManagerFactoryTest extends TestCase
         'repository' => 'Repo'
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mockApp();
         $this->mockMeta();
@@ -1163,7 +1163,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->assertTrue(true);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
