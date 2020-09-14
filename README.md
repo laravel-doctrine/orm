@@ -56,6 +56,7 @@ Version | Supported Laravel Versions
 ~1.4.10 | 5.8.x
 ~1.5 | 6.x
 ~1.6 | 7.x
+~1.7 | 8.x
 
 Require this package  
 
