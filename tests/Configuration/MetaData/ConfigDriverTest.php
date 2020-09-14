@@ -12,7 +12,8 @@ class ConfigDriverTest extends TestCase
 
     protected function setUp()
     {
-        $this->driver = new ConfigDriver([
+        $this->driver = new ConfigDriver(
+            [
                 'App\User'    => [
                     'type'   => 'entity',
                     'table'  => 'users',

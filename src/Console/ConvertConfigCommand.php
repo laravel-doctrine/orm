@@ -37,12 +37,25 @@ class ConvertConfigCommand extends SymfonyCommand
             ->setAliases(['doctrine:config:convert'])
             ->setDescription('Convert the configuration file for another laravel-doctrine implementation into a valid configuration for LaravelDoctrine\ORM')
             ->setDefinition([
-                new InputArgument('author', InputArgument::REQUIRED,
-                    'The name of the author of the repository being migrated from. Options are "atrauzzi" and "mitchellvanw"'),
-                new InputOption('dest-path', null, InputOption::VALUE_OPTIONAL,
-                    'Where the generated configuration should be placed', 'config'),
-                new InputOption('source-file', null, InputOption::VALUE_OPTIONAL,
-                    'Where the source configuration file is located.', 'config/doctrine.php')
+                new InputArgument(
+                    'author',
+                    InputArgument::REQUIRED,
+                    'The name of the author of the repository being migrated from. Options are "atrauzzi" and "mitchellvanw"'
+                ),
+                new InputOption(
+                    'dest-path',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'Where the generated configuration should be placed',
+                    'config'
+                ),
+                new InputOption(
+                    'source-file',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'Where the source configuration file is located.',
+                    'config/doctrine.php'
+                )
             ]);
     }
 
@@ -74,8 +87,10 @@ class ConvertConfigCommand extends SymfonyCommand
 
         if (!is_writable($destPath)) {
             throw new InvalidArgumentException(
-                sprintf("Configuration destination directory '<info>%s</info>' does not have write permissions.",
-                    $destPath)
+                sprintf(
+                    "Configuration destination directory '<info>%s</info>' does not have write permissions.",
+                    $destPath
+                )
             );
         }
 
@@ -86,8 +101,10 @@ class ConvertConfigCommand extends SymfonyCommand
 
         if (!file_exists($sourceFilePath)) {
             throw new InvalidArgumentException(
-                sprintf("Source file at path '<info>%s</info>' does not exist.",
-                    $originalSourceFilePath)
+                sprintf(
+                    "Source file at path '<info>%s</info>' does not exist.",
+                    $originalSourceFilePath
+                )
             );
         }
 

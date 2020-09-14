@@ -56,15 +56,19 @@ class GenerateRepositoriesCommand extends Command
 
             if (!file_exists($destPath)) {
                 throw new InvalidArgumentException(
-                    sprintf("Repositories destination directory '<info>%s</info>' does not exist.",
-                        $em->getConfiguration()->getProxyDir())
+                    sprintf(
+                        "Repositories destination directory '<info>%s</info>' does not exist.",
+                        $em->getConfiguration()->getProxyDir()
+                    )
                 );
             }
 
             if (!is_writable($destPath)) {
                 throw new InvalidArgumentException(
-                    sprintf("Repositories destination directory '<info>%s</info>' does not have write permissions.",
-                        $destPath)
+                    sprintf(
+                        "Repositories destination directory '<info>%s</info>' does not have write permissions.",
+                        $destPath
+                    )
                 );
             }
 
