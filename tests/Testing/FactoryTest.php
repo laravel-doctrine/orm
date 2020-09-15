@@ -18,10 +18,10 @@ class FactoryTest extends MockeryTestCase
         });
 
         $builder = $factory->of('SomeClass');
-        $this->assertAttributeEquals([
-            'SomeClass' => ['withState' => function () {
-            }]
-        ], 'states', $builder);
+
+        $this->assertObjectHasAttribute('states', $builder);
+        $this->assertArrayHasKey('SomeClass', $builder->getStates());
+        $this->assertArrayHasKey('withState', $builder->getStates()['SomeClass']);
     }
 
     public function test_it_passes_along_after_creating_callback()
@@ -36,8 +36,10 @@ class FactoryTest extends MockeryTestCase
         });
 
         $builder = $factory->of('SomeClass');
-        $this->assertAttributeEquals(['SomeClass' => ['default' => [function () {
-        }]]], 'afterCreating', $builder);
+
+        $this->assertObjectHasAttribute('afterCreating', $builder);
+        $this->assertArrayHasKey('SomeClass', $builder->afterCreating);
+        $this->assertArrayHasKey('default', $builder->afterCreating['SomeClass']);
     }
 
     public function test_it_passes_along_after_making_callback()
@@ -52,8 +54,9 @@ class FactoryTest extends MockeryTestCase
         });
 
         $builder = $factory->of('SomeClass');
-        $this->assertAttributeEquals(['SomeClass' => ['default' => [function () {
-        }]]], 'afterMaking', $builder);
+        $this->assertObjectHasAttribute('afterMaking', $builder);
+        $this->assertArrayHasKey('SomeClass', $builder->afterMaking);
+        $this->assertArrayHasKey('default', $builder->afterMaking['SomeClass']);
     }
 
     public function test_it_passes_along_after_creating_state_callback()
@@ -68,8 +71,9 @@ class FactoryTest extends MockeryTestCase
         });
 
         $builder = $factory->of('SomeClass');
-        $this->assertAttributeEquals(['SomeClass' => ['withState' => [function () {
-        }]]], 'afterCreating', $builder);
+        $this->assertObjectHasAttribute('afterCreating', $builder);
+        $this->assertArrayHasKey('SomeClass', $builder->afterCreating);
+        $this->assertArrayHasKey('withState', $builder->afterCreating['SomeClass']);
     }
 
     public function test_it_passes_along_after_making_state_callback()
@@ -84,7 +88,9 @@ class FactoryTest extends MockeryTestCase
         });
 
         $builder = $factory->of('SomeClass');
-        $this->assertAttributeEquals(['SomeClass' => ['withState' => [function () {
-        }]]], 'afterMaking', $builder);
+
+        $this->assertObjectHasAttribute('afterMaking', $builder);
+        $this->assertArrayHasKey('SomeClass', $builder->afterMaking);
+        $this->assertArrayHasKey('withState', $builder->afterMaking['SomeClass']);
     }
 }
