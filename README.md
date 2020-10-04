@@ -61,7 +61,7 @@ Version | Supported Laravel Versions
 Require this package  
 
 ```bash
-composer require "laravel-doctrine/orm:1.6.*"
+composer require "laravel-doctrine/orm:1.7.*"
 ```
 
 Because of the auto package discovery feature Laravel 5.5 has, the ServiceProvider and Facades are automatically registered.
