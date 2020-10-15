@@ -119,13 +119,13 @@ class EntityManagerFactory
             $connection = (new MasterSlaveConnection($this->config, $connection))->resolve($driver);
         }
 
-        $this->setNamingStrategy($settings, $configuration);
+        $this->setNamingStrategy($configuration, $settings);
         $this->setCustomFunctions($configuration);
         $this->setCustomHydrationModes($configuration);
         $this->setCacheSettings($configuration);
-        $this->configureProxies($settings, $configuration);
-        $this->setCustomMappingDriverChain($settings, $configuration);
-        $this->registerPaths($settings, $configuration);
+        $this->configureProxies($configuration, $settings);
+        $this->setCustomMappingDriverChain($configuration, $settings);
+        $this->registerPaths($configuration, $settings);
         $this->setRepositoryFactory($settings, $configuration);
 
         $configuration->setDefaultRepositoryClassName(
@@ -140,13 +140,13 @@ class EntityManagerFactory
             $eventManager
         );
 
-        $manager = $this->decorateManager($settings, $manager);
+        $manager = $this->decorateManager($manager, $settings);
 
         $this->setLogger($manager, $configuration);
-        $this->registerListeners($settings, $manager);
-        $this->registerSubscribers($settings, $manager);
-        $this->registerFilters($settings, $configuration, $manager);
-        $this->registerMappingTypes($settings, $manager);
+        $this->registerListeners($manager, $settings);
+        $this->registerSubscribers($manager, $settings);
+        $this->registerFilters($configuration, $manager, $settings);
+        $this->registerMappingTypes($manager, $settings);
 
         return $manager;
     }
@@ -172,10 +172,10 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array                  $settings
      * @param EntityManagerInterface $manager
+     * @param array                  $settings
      */
-    protected function registerListeners(array $settings = [], EntityManagerInterface $manager)
+    protected function registerListeners(EntityManagerInterface $manager, array $settings = [])
     {
         if (isset($settings['events']['listeners'])) {
             foreach ($settings['events']['listeners'] as $event => $listener) {
@@ -213,10 +213,10 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array                  $settings
      * @param EntityManagerInterface $manager
+     * @param array                  $settings
      */
-    protected function registerSubscribers(array $settings = [], EntityManagerInterface $manager)
+    protected function registerSubscribers(EntityManagerInterface $manager, array $settings = [])
     {
         if (isset($settings['events']['subscribers'])) {
             foreach ($settings['events']['subscribers'] as $subscriber) {
@@ -232,14 +232,14 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array                  $settings
      * @param Configuration          $configuration
      * @param EntityManagerInterface $manager
+     * @param array                  $settings
      */
     protected function registerFilters(
-        array $settings = [],
         Configuration $configuration,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        array $settings = []
     ) {
         if (isset($settings['filters'])) {
             foreach ($settings['filters'] as $name => $filter) {
@@ -250,10 +250,10 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array         $settings
      * @param Configuration $configuration
+     * @param array         $settings
      */
-    protected function registerPaths(array $settings = [], Configuration $configuration)
+    protected function registerPaths(Configuration $configuration, array $settings = [])
     {
         $configuration->getMetadataDriverImpl()->addPaths(
             Arr::get($settings, 'paths', [])
@@ -274,10 +274,10 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array         $settings
      * @param Configuration $configuration
+     * @param array         $settings
      */
-    protected function configureProxies(array $settings = [], Configuration $configuration)
+    protected function configureProxies(Configuration $configuration, array $settings = [])
     {
         $configuration->setProxyDir(
             Arr::get($settings, 'proxies.path')
@@ -306,10 +306,10 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array         $settings
      * @param Configuration $configuration
+     * @param array         $settings
      */
-    protected function setNamingStrategy(array $settings = [], Configuration $configuration)
+    protected function setNamingStrategy(Configuration $configuration, array $settings = [])
     {
         $strategy = Arr::get($settings, 'naming_strategy', LaravelNamingStrategy::class);
 
@@ -391,10 +391,10 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array         $settings
      * @param Configuration $configuration
+     * @param array         $settings
      */
-    protected function setCustomMappingDriverChain(array $settings = [], Configuration $configuration)
+    protected function setCustomMappingDriverChain(Configuration $configuration, array $settings = [])
     {
         $chain = new MappingDriverChain(
             $configuration->getMetadataDriverImpl(),
@@ -416,12 +416,12 @@ class EntityManagerFactory
     }
 
     /**
-     * @param                        $settings
      * @param EntityManagerInterface $manager
+     * @param                        $settings
      *
      * @return mixed
      */
-    protected function decorateManager(array $settings = [], EntityManagerInterface $manager)
+    protected function decorateManager(EntityManagerInterface $manager, array $settings = [])
     {
         if ($decorator = Arr::get($settings, 'decorator', false)) {
             if (!class_exists($decorator)) {
@@ -452,12 +452,12 @@ class EntityManagerFactory
     }
 
     /**
-     * @param                        $settings
      * @param EntityManagerInterface $manager
+     * @param                        $settings
      *
      * @throws \Doctrine\DBAL\DBALException If Database Type or Doctrine Type is not found.
      */
-    protected function registerMappingTypes(array $settings = [], EntityManagerInterface $manager)
+    protected function registerMappingTypes(EntityManagerInterface $manager, array $settings = [])
     {
         foreach (Arr::get($settings, 'mapping_types', []) as $dbType => $doctrineType) {
             // Throw DBALException if Doctrine Type is not found.
