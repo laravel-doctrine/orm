@@ -4,6 +4,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection as DoctrinePrimaryReadReplicaConnection;
 use Doctrine\ORM\Cache\CacheFactory;
 use Doctrine\ORM\Cache\RegionsConfiguration;
 use Doctrine\ORM\Configuration;
@@ -1161,6 +1162,57 @@ class EntityManagerFactoryTest extends TestCase
         $factory->create($this->settings);
 
         $this->assertTrue(true);
+    }
+
+    /**
+     * doctrine/dbal 2.11 has MasterSlaveConnection class deprecated in favour of PrimaryReadReplicaConnection
+     */
+    public function testPrimaryReadReplicaConnectionIsUsedWhenAvailable()
+    {
+        if (!class_exists(DoctrinePrimaryReadReplicaConnection::class)) {
+            $this->markTestSkipped('Skipped for doctrine/dbal < 2.11');
+        }
+
+        m::resetContainer();
+
+        $this->mockApp();
+        $this->mockResolver();
+        $this->mockConfig($this->getDummyBaseInputConfig());
+
+        $this->cache = m::mock(CacheManager::class);
+        $this->cache->shouldReceive('driver')
+            ->times(4)
+            ->andReturn(new ArrayCache());
+
+        $this->setup = m::mock(Setup::class);
+        $this->setup->shouldReceive('createConfiguration')->once()->andReturn($this->configuration);
+
+        $this->connection = m::mock(ConnectionManager::class);
+        $this->connection->shouldReceive('driver')
+            ->once()
+            ->with('mysql', $this->getDummyBaseInputConfig())
+            ->andReturn(['driver' => 'pdo_mysql']);
+
+        $factory = new EntityManagerFactory(
+            $this->container,
+            $this->setup,
+            $this->meta,
+            $this->connection,
+            $this->cache,
+            $this->config,
+            $this->listenerResolver
+        );
+
+        $this->disableDebugbar();
+        $this->disableCustomCacheNamespace();
+        $this->disableSecondLevelCaching();
+        $this->disableCustomFunctions();
+        $this->enableLaravelNamingStrategy();
+
+        $this->settings['connection'] = 'mysql';
+        $entityManager = $factory->create($this->settings);
+
+        $this->assertInstanceOf(DoctrinePrimaryReadReplicaConnection::class, $entityManager->getConnection());
     }
 
     protected function tearDown(): void
