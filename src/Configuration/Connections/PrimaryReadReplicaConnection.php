@@ -41,8 +41,8 @@ class PrimaryReadReplicaConnection extends Connection
         $driver = $this->resolvedBaseSettings['driver'];
 
         $resolvedSettings = [
-            'wrapperClass' => $settings['wrapperClass'] ?? PrimaryReadReplicaDoctrineWrapper::class,
-            'driver'       => $driver,
+            'wrapperClass'  => $settings['wrapperClass'] ?? PrimaryReadReplicaDoctrineWrapper::class,
+            'driver'        => $driver,
             'primary'       => $this->getConnectionData(isset($settings['write']) ? $settings['write'] : [], $driver),
             'replica'       => $this->getReplicasConfig($settings['read'], $driver),
         ];

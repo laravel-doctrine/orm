@@ -1210,7 +1210,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->enableLaravelNamingStrategy();
 
         $this->settings['connection'] = 'mysql';
-        $entityManager = $factory->create($this->settings);
+        $entityManager                = $factory->create($this->settings);
 
         $this->assertInstanceOf(DoctrinePrimaryReadReplicaConnection::class, $entityManager->getConnection());
     }

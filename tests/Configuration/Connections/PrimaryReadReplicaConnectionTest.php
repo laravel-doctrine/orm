@@ -112,9 +112,9 @@ class PrimaryReadReplicaConnectionTest extends TestCase
     private function getExpectedConfig()
     {
         return [
-            'wrapperClass'  => PrimaryReadReplicaDoctrineWrapper::class,
-            'driver'        => 'pdo_mysql',
-            'serverVersion' => '5.8',
+            'wrapperClass'   => PrimaryReadReplicaDoctrineWrapper::class,
+            'driver'         => 'pdo_mysql',
+            'serverVersion'  => '5.8',
             'replica'        => [
                 [
                     'host'        => 'localhost',
@@ -196,8 +196,8 @@ class PrimaryReadReplicaConnectionTest extends TestCase
     private function getNodesExpectedConfig()
     {
         return [
-            'wrapperClass' => PrimaryReadReplicaDoctrineWrapper::class,
-            'driver'       => 'pdo_mysql',
+            'wrapperClass'  => PrimaryReadReplicaDoctrineWrapper::class,
+            'driver'        => 'pdo_mysql',
             'replica'       => [
                 [
                     'host'     => 'localhost',
@@ -231,10 +231,10 @@ class PrimaryReadReplicaConnectionTest extends TestCase
      */
     private function getOracleExpectedConfig()
     {
-        $expectedConfigOracle                   = $this->getNodesExpectedConfig();
-        $expectedConfigOracle['driver']         = 'oci8';
+        $expectedConfigOracle                    = $this->getNodesExpectedConfig();
+        $expectedConfigOracle['driver']          = 'oci8';
         $expectedConfigOracle['primary']['user'] = 'homestead1';
-        $expectedConfigOracle['serverVersion']  = '5.8';
+        $expectedConfigOracle['serverVersion']   = '5.8';
 
         $expectedConfigOracle['defaultTableOptions'] = [
             'charset' => 'utf8mb4',
@@ -251,13 +251,13 @@ class PrimaryReadReplicaConnectionTest extends TestCase
      */
     private function getPgsqlExpectedConfig()
     {
-        $expectedConfigPgsql                         = $this->getNodesExpectedConfig();
-        $expectedConfigPgsql['driver']               = 'pgsql';
+        $expectedConfigPgsql                          = $this->getNodesExpectedConfig();
+        $expectedConfigPgsql['driver']                = 'pgsql';
         $expectedConfigPgsql['primary']['user']       = 'homestead1';
         $expectedConfigPgsql['primary']['sslmode']    = 'sslmode';
         $expectedConfigPgsql['replica'][0]['sslmode'] = 'sslmode';
         $expectedConfigPgsql['replica'][1]['sslmode'] = 'sslmode';
-        $expectedConfigPgsql['serverVersion']        = '5.8';
+        $expectedConfigPgsql['serverVersion']         = '5.8';
 
         $expectedConfigPgsql['defaultTableOptions'] = [
             'charset' => 'utf8mb4',
@@ -275,8 +275,8 @@ class PrimaryReadReplicaConnectionTest extends TestCase
     private function getSqliteExpectedConfig()
     {
         return [
-            'wrapperClass' => PrimaryReadReplicaDoctrineWrapper::class,
-            'driver'       => 'pdo_sqlite',
+            'wrapperClass'  => PrimaryReadReplicaDoctrineWrapper::class,
+            'driver'        => 'pdo_sqlite',
             'replica'       => [
                 [
                     'user'     => 'homestead',
