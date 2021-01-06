@@ -1,5 +1,6 @@
 {
     "name": "laravel-doctrine/orm",
+    "type": "library",
     "description": "A Doctrine ORM bridge for Laravel 5",
     "license": "MIT",
     "keywords": [
@@ -16,9 +17,9 @@
         }
     ],
     "require": {
-        "php": "^7.3",
-        "doctrine/orm": "^2.6|^2.7",
-        "doctrine/persistence": "^1.3",
+        "php": "^7.4|^8.0",
+        "doctrine/orm": "^2.7|^2.8",
+        "doctrine/persistence": "^1.3|^2.0",
         "illuminate/auth": "^8.0",
         "illuminate/console": "^8.0",
         "illuminate/container": "^8.0",
