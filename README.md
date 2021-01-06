@@ -3,7 +3,7 @@
 <img src="https://cloud.githubusercontent.com/assets/7728097/12726966/cf009822-c91a-11e5-8f19-63ce1d77e8b2.jpg"/>
 
 [![GitHub release](https://img.shields.io/github/release/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
-![Github actions](https://github.com/laravel-doctrine/orm/workflows/CI/badge.svg?branch=1.7)
+[![Github actions](https://github.com/laravel-doctrine/orm/workflows/CI/badge.svg?branch=1.7)](https://github.com/laravel-doctrine/orm/actions?query=workflow%3ACI+branch%3A1.7)
 [![StyleCI](https://styleci.io/repos/39036008/shield)](https://styleci.io/repos/39036008)
 [![Scrutinizer](https://img.shields.io/scrutinizer/g/laravel-doctrine/orm.svg?style=flat-square)](https://github.com/laravel-doctrine/orm)
 [![Packagist](https://img.shields.io/packagist/dm/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
