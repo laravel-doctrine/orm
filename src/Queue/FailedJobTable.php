@@ -15,6 +15,7 @@ class FailedJobTable extends AbstractTable
     {
         return [
             $this->column('id', 'integer', true),
+            $this->column('uuid', 'string'),
             $this->column('connection', 'string'),
             $this->column('queue', 'string'),
             $this->column('payload', 'text'),
@@ -29,7 +30,8 @@ class FailedJobTable extends AbstractTable
     protected function indices()
     {
         return [
-            $this->index('pk', ['id'], true, true)
+            $this->index('pk', ['id'], true, true),
+            $this->index('uuid_unique', ['uuid'], true)
         ];
     }
 }
