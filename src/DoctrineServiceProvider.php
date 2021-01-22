@@ -112,7 +112,8 @@ class DoctrineServiceProvider extends ServiceProvider
     protected function mergeConfig()
     {
         $this->mergeConfigFrom(
-            $this->getConfigPath(), 'doctrine'
+            $this->getConfigPath(),
+            'doctrine'
         );
 
         if ($this->isLumen()) {

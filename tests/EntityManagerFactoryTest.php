@@ -757,7 +757,7 @@ class EntityManagerFactoryTest extends TestCase
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
-           $config,
+            $config,
             new EntityListenerResolver($container)
         );
 

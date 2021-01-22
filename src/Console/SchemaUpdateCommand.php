@@ -43,8 +43,10 @@ class SchemaUpdateCommand extends Command
             $tool = new SchemaTool($em);
 
             $this->comment('');
-            $this->message('Checking if database connected to <info>' . $name . '</info> entity manager needs updating...',
-                'blue');
+            $this->message(
+                'Checking if database connected to <info>' . $name . '</info> entity manager needs updating...',
+                'blue'
+            );
 
             // Check if there are updates available
             $sql = $tool->getUpdateSchemaSql(
@@ -67,12 +69,16 @@ class SchemaUpdateCommand extends Command
                     );
 
                     $pluralization = (1 === count($sql)) ? 'query was' : 'queries were';
-                    $this->info(sprintf('Database schema updated successfully! "<info>%s</info>" %s executed',
+                    $this->info(sprintf(
+                        'Database schema updated successfully! "<info>%s</info>" %s executed',
                         count($sql),
-                        $pluralization));
+                        $pluralization
+                    ));
                 } else {
-                    $this->message(sprintf('The Schema-Tool would execute <info>"%s"</info> queries to update the database.',
-                        count($sql)));
+                    $this->message(sprintf(
+                        'The Schema-Tool would execute <info>"%s"</info> queries to update the database.',
+                        count($sql)
+                    ));
                 }
             }
         }
@@ -80,10 +86,14 @@ class SchemaUpdateCommand extends Command
         if (!$this->option('sql') && (!$this->laravel->environment('local') && !$this->option('force'))) {
             $this->info('');
             $this->message('Please run the operation by passing one - or both - of the following options:');
-            $this->comment(sprintf('    <info>php artisan %s --force</info> to execute the command',
-                $this->getName()));
-            $this->comment(sprintf('    <info>php artisan %s --sql</info> to dump the SQL statements to the screen',
-                $this->getName()));
+            $this->comment(sprintf(
+                '    <info>php artisan %s --force</info> to execute the command',
+                $this->getName()
+            ));
+            $this->comment(sprintf(
+                '    <info>php artisan %s --sql</info> to dump the SQL statements to the screen',
+                $this->getName()
+            ));
 
             return 1;
         }
