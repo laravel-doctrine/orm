@@ -149,8 +149,7 @@ class FactoryBuilder
         array $states,
         array $afterMaking = [],
         array $afterCreating = []
-    )
-    {
+    ) {
         $instance         = new static($registry, $class, $name, $definitions, $faker, $afterMaking, $afterCreating);
         $instance->states = $states;
 
