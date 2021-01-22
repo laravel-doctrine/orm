@@ -37,7 +37,7 @@ class DoctrineUserProviderTest extends TestCase
      */
     protected $repo;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->hasher = m::mock(Hasher::class);
         $this->em     = m::mock(EntityManagerInterface::class);
@@ -147,7 +147,7 @@ class DoctrineUserProviderTest extends TestCase
                  ->once()->andReturn($this->repo);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

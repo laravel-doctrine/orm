@@ -23,7 +23,7 @@ class TablePrefixListenerTest extends TestCase
      */
     protected $args;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->metadata = new ClassMetadataInfo('\Foo');
         $this->metadata->setPrimaryTable(['name' => 'foo']);

@@ -56,7 +56,7 @@ class ExtensionManagerTest extends TestCase
      */
     protected $container;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry      = m::mock(ManagerRegistry::class);
         $this->container     = m::mock(Container::class);
@@ -211,7 +211,7 @@ class ExtensionManagerTest extends TestCase
         $this->assertTrue($booted['default']['ExtensionWithFiltersMock']);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
 

@@ -20,7 +20,7 @@ class ConfigTest extends TestCase
      */
     protected $meta;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->config = m::mock(Repository::class);
         $this->config->shouldReceive('get')->with('mappings', [])->once()->andReturn([

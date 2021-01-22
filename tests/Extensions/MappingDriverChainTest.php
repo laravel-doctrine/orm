@@ -22,7 +22,7 @@ class MappingDriverChainTest extends TestCase
      */
     protected $chain;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->driver = m::mock(AnnotationDriver::class);
         $this->chain  = new MappingDriverChain($this->driver, 'Namespace');
@@ -98,7 +98,7 @@ class MappingDriverChainTest extends TestCase
         $this->assertEquals('reader', $this->chain->getReader());
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
