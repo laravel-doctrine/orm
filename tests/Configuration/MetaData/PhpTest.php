@@ -13,7 +13,7 @@ class PhpTest extends TestCase
      */
     protected $meta;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->meta = new Php();
     }
@@ -30,7 +30,7 @@ class PhpTest extends TestCase
         $this->assertInstanceOf(PHPDriver::class, $resolved);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

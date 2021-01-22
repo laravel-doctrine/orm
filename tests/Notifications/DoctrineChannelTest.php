@@ -25,7 +25,7 @@ class DoctrineChannelTest extends TestCase
      */
     private $em;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = Mockery::spy(EntityManagerInterface::class);
 
