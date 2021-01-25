@@ -13,7 +13,7 @@ class YamlTest extends TestCase
      */
     protected $meta;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->meta = new Yaml();
     }
@@ -49,7 +49,7 @@ class YamlTest extends TestCase
         $this->assertInstanceOf(YamlDriver::class, $resolved);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

@@ -29,7 +29,7 @@ class DoctrineDataSourceTest extends TestCase
      */
     protected $driver;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->logger          = new DebugStack;
         $this->logger->queries = [

@@ -23,7 +23,7 @@ class EchoLoggerTest extends TestCase
         $this->assertTrue(true);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

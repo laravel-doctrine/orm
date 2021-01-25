@@ -27,7 +27,7 @@ class IlluminateRegistryTest extends TestCase
      */
     protected $registry;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->container = m::mock(Container::class);
         $this->factory   = m::mock(EntityManagerFactory::class);
@@ -391,7 +391,7 @@ class IlluminateRegistryTest extends TestCase
         $this->assertNotSame($first, $second);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

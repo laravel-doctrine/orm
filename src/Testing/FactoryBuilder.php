@@ -257,6 +257,14 @@ class FactoryBuilder
     }
 
     /**
+     * @return array
+     */
+    public function getStates(): array
+    {
+        return $this->states;
+    }
+
+    /**
      * Set the states to be applied to the model.
      *
      * @param  array|mixed $states

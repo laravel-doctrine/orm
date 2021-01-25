@@ -40,7 +40,7 @@ class FactoryBuilderTest extends MockeryTestCase
      */
     private $entityManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->aRegistry   = \Mockery::mock(ManagerRegistry::class);
         $this->aClass      = EntityStub::class;

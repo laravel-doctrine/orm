@@ -10,7 +10,7 @@ class ConfigDriverTest extends TestCase
      */
     protected $driver;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->driver = new ConfigDriver(
             [

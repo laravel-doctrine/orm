@@ -29,7 +29,7 @@ class SubstituteBindingsTest extends TestCase
      */
     private $repository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->registry     = m::mock(ManagerRegistry::class);
         $this->em           = m::mock(EntityManager::class);
@@ -167,7 +167,7 @@ class SubstituteBindingsTest extends TestCase
         $this->assertEquals(1, $router->dispatch(Request::create('foo/NAMEVALUE', 'GET'))->getContent());
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

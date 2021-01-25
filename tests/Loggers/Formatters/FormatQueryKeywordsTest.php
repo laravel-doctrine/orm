@@ -21,7 +21,7 @@ class FormatQueryKeywordsTest extends TestCase
 
     protected $platform;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mock = m::mock(QueryFormatter::class);
 
@@ -74,7 +74,7 @@ class FormatQueryKeywordsTest extends TestCase
         $this->assertEquals('UPDATE table SET column1=value, column2=value2 WHERE some_column=some_value', $this->formatter->format($this->platform, $sql, $params, $types));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

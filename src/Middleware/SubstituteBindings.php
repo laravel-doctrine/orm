@@ -65,10 +65,12 @@ class SubstituteBindings
 
         foreach ($this->signatureParameters($route) as $parameter) {
             $id    = $parameters[$parameter->name];
-            $class = $parameter->getClass()->getName();
+            $class = $this->getClassName($parameter);
 
             if ($repository = $this->registry->getRepository($class)) {
-                if ($parameter->getClass()->implementsInterface(UrlRoutable::class)) {
+                $reflectionClass = new \ReflectionClass($class);
+
+                if ($reflectionClass->implementsInterface(UrlRoutable::class)) {
                     $name = call_user_func([$class, 'getRouteKeyName']);
 
                     $entity = $repository->findOneBy([
@@ -99,7 +101,18 @@ class SubstituteBindings
                 return !array_key_exists($parameter->name, $route->parameters());
             })
             ->reject(function (ReflectionParameter $parameter) {
-                return !$parameter->getClass();
+                return !$this->getClassName($parameter);
             })->toArray();
+    }
+
+    private function getClassName(ReflectionParameter $parameter): ?string
+    {
+        $class = null;
+
+        if (($type = $parameter->getType()) && $type instanceof \ReflectionNamedType) {
+            $class = $type->getName();
+        }
+
+        return $class;
     }
 }

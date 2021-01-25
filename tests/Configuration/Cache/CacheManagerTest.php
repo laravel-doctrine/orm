@@ -27,7 +27,7 @@ class CacheManagerTest extends TestCase
      */
     protected $config;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->app = m::mock(Container::class);
         $this->app->shouldReceive('make')->andReturn(m::self());
@@ -90,7 +90,7 @@ class CacheManagerTest extends TestCase
         $this->assertEquals('provider', $this->manager->driver('memcache'));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

@@ -13,7 +13,7 @@ class SimplifiedXmlTest extends TestCase
      */
     protected $meta;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->meta = new SimplifiedXml();
     }
@@ -31,7 +31,7 @@ class SimplifiedXmlTest extends TestCase
         $this->assertInstanceOf(SimplifiedXmlDriver::class, $resolved);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

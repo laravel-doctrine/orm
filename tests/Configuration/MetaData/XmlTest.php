@@ -13,7 +13,7 @@ class XmlTest extends TestCase
      */
     protected $meta;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->meta = new Xml();
     }
@@ -49,7 +49,7 @@ class XmlTest extends TestCase
         $this->assertInstanceOf(XmlDriver::class, $resolved);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

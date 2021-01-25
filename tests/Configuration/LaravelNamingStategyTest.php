@@ -11,7 +11,7 @@ class LaravelNamingStrategyTest extends TestCase
      */
     protected $strategy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->strategy = new LaravelNamingStrategy(new Str());
     }

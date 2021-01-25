@@ -13,7 +13,7 @@ abstract class AbstractCacheProviderTest extends TestCase
         $this->assertInstanceOf($this->getExpectedInstance(), $this->getProvider()->resolve());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }
