@@ -44,7 +44,7 @@ class DoctrineManager
      * @param string|null     $connection
      * @param string|callable $callback
      */
-    public function extend($connection = null, $callback)
+    public function extend($connection, $callback)
     {
         $this->onResolve(function (ManagerRegistry $registry) use ($connection, $callback) {
             $this->callExtendOn($connection, $callback, $registry);
@@ -68,7 +68,7 @@ class DoctrineManager
      * @param string|callable $callback
      * @param ManagerRegistry $registry
      */
-    private function callExtendOn($connection = null, $callback, ManagerRegistry $registry)
+    private function callExtendOn($connection, $callback, ManagerRegistry $registry)
     {
         $manager = $registry->getManager($connection);
 
@@ -130,7 +130,7 @@ class DoctrineManager
      * @param  ManagerRegistry $registry
      * @return MappingDriver
      */
-    public function getMetaDataDriver($connection = null, ManagerRegistry $registry)
+    public function getMetaDataDriver($connection, ManagerRegistry $registry)
     {
         $registry = $registry ?: $this->container->make('registry');
         $manager  = $registry->getManager($connection);
