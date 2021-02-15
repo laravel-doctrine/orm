@@ -61,7 +61,7 @@ Because of the auto package discovery feature Laravel 5.5 has, the ServiceProvid
 To publish the config use:
 
 ```bash
-php artisan vendor:publish --tag="config"
+php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\ORM\DoctrineServiceProvider"
 ```
 
 ## License
