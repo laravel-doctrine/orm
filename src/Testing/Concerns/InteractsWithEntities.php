@@ -3,7 +3,7 @@
 namespace LaravelDoctrine\ORM\Testing\Concerns;
 
 use Doctrine\ORM\EntityManager;
-use PHPUnit_Framework_Assert as Assert;
+use PHPUnit\Framework\Assert;
 
 trait InteractsWithEntities
 {
