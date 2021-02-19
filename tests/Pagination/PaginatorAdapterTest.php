@@ -53,7 +53,7 @@ class PaginatorAdapterTest extends TestCase
 
         $paginator = $adapter->make();
 
-        $this->assertContains('foo=bar', $paginator->url(1));
+        $this->assertStringContainsString('foo=bar', $paginator->url(1));
     }
 
     public function testQueryParametersAreProducedInUrlFromRequest()
@@ -65,7 +65,7 @@ class PaginatorAdapterTest extends TestCase
 
         $paginator = $adapter->make();
 
-        $this->assertContains('foo=bar', $paginator->url(1));
+        $this->assertStringContainsString('foo=bar', $paginator->url(1));
     }
 
     /**
