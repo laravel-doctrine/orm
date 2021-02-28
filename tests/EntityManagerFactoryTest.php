@@ -9,6 +9,7 @@ use Doctrine\ORM\Cache\RegionsConfiguration;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
 use Doctrine\ORM\Query\FilterCollection;
 use Doctrine\ORM\Repository\RepositoryFactory;
 use Doctrine\ORM\Tools\Setup;
@@ -135,6 +136,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $manager = $this->factory->create($this->settings);
 
@@ -147,6 +149,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $this->config->shouldReceive('get')
                      ->with('doctrine.logger', false)
@@ -171,6 +174,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableSecondLevelCaching();
         $this->disableCustomCacheNamespace();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $this->configuration->shouldReceive('setCustomDatetimeFunctions')
                             ->once()->with(['datetime']);
@@ -189,6 +193,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableDebugbar();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
         $this->disableCustomCacheNamespace();
 
         $this->config->shouldReceive('get')
@@ -231,6 +236,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableDebugbar();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
         $this->disableSecondLevelCaching();
 
         $this->config->shouldReceive('get')
@@ -262,6 +268,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $manager = $this->factory->create($this->settings);
 
@@ -275,6 +282,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $this->settings['filters'] = [
             'name' => FilterStub::class
@@ -306,6 +314,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $this->settings['events']['listeners'] = [
             'name' => ListenerStub::class
@@ -334,6 +343,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $this->settings['events']['listeners'] = [
             'name' => [
@@ -366,6 +376,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $this->settings['events']['listeners'] = [
             'name' => 'ClassDoesNotExist'
@@ -386,6 +397,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $this->settings['events']['subscribers'] = [
             'name' => SubscriberStub::class
@@ -414,6 +426,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $this->settings['events']['subscribers'] = [
             'name' => 'ClassDoesNotExist'
@@ -428,6 +441,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableSecondLevelCaching();
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $this->settings['naming_strategy'] = 'Doctrine\ORM\Mapping\DefaultNamingStrategy';
 
@@ -444,6 +458,29 @@ class EntityManagerFactoryTest extends TestCase
         $this->assertEntityManager($manager);
     }
 
+    public function test_can_set_custom_quote_strategy()
+    {
+        $this->disableDebugbar();
+        $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
+        $this->disableCustomFunctions();
+        $this->enableLaravelNamingStrategy();
+
+        $this->settings['quote_strategy'] = 'Doctrine\ORM\Mapping\AnsiQuoteStrategy';
+
+        $strategy = m::mock('Doctrine\ORM\Mapping\AnsiQuoteStrategy');
+
+        $this->container->shouldReceive('make')
+            ->with('Doctrine\ORM\Mapping\AnsiQuoteStrategy')
+            ->once()->andReturn($strategy);
+
+        $this->configuration->shouldReceive('setQuoteStrategy')->once()->with($strategy);
+
+        $manager = $this->factory->create($this->settings);
+
+        $this->assertEntityManager($manager);
+    }
+
     public function test_can_decorate_the_entity_manager()
     {
         $this->disableDebugbar();
@@ -451,6 +488,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $this->settings['decorator'] = Decorator::class;
 
@@ -468,6 +506,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomCacheNamespace();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
+        $this->enableDefaultQuoteStrategyStrategy();
 
         $this->settings['repository_factory'] = 'RepositoryFactory';
 
@@ -1037,6 +1076,17 @@ class EntityManagerFactoryTest extends TestCase
         $this->configuration->shouldReceive('setNamingStrategy')->once()->with($strategy);
     }
 
+    protected function enableDefaultQuoteStrategyStrategy()
+    {
+        $strategy = m::mock(DefaultQuoteStrategy::class);
+
+        $this->container->shouldReceive('make')
+            ->with(DefaultQuoteStrategy::class)
+            ->once()->andReturn($strategy);
+
+        $this->configuration->shouldReceive('setQuoteStrategy')->once()->with($strategy);
+    }
+
     /**
      * Data provider for testMasterSlaveConnection.
      *
@@ -1155,6 +1205,7 @@ class EntityManagerFactoryTest extends TestCase
             $this->disableSecondLevelCaching();
             $this->disableCustomFunctions();
             $this->enableLaravelNamingStrategy();
+            $this->enableDefaultQuoteStrategyStrategy();
         }
 
         $this->settings['connection'] = 'mysql';

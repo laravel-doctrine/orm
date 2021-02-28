@@ -4,6 +4,7 @@ namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Arr;
 use LaravelDoctrine\Fluent\Builders\Builder;
@@ -51,6 +52,15 @@ class Fluent extends MetaData
     protected function getNamingStrategy(array $settings = [])
     {
         return $this->container->make(Arr::get($settings, 'naming_strategy', LaravelNamingStrategy::class));
+    }
+
+    /**
+     * @param  array $settings
+     * @return mixed
+     */
+    protected function getQuoteStrategy(array $settings = [])
+    {
+        return $this->container->make(Arr::get($settings, 'quote_strategy', DefaultQuoteStrategy::class));
     }
 
     /**
