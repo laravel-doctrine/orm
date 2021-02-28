@@ -54,6 +54,15 @@ class Fluent extends MetaData
     }
 
     /**
+     * @param  array $settings
+     * @return mixed
+     */
+    protected function getQuoteStrategy(array $settings = [])
+    {
+        return $this->container->make(Arr::get($settings, 'quote_strategy', null));
+    }
+
+    /**
      * @return string
      */
     public function getClassMetadataFactoryName()

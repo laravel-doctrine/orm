@@ -120,6 +120,7 @@ class EntityManagerFactory
         }
 
         $this->setNamingStrategy($settings, $configuration);
+        $this->setQuoteStrategy($settings, $configuration);
         $this->setCustomFunctions($configuration);
         $this->setCustomHydrationModes($configuration);
         $this->setCacheSettings($configuration);
@@ -314,6 +315,21 @@ class EntityManagerFactory
         $strategy = Arr::get($settings, 'naming_strategy', LaravelNamingStrategy::class);
 
         $configuration->setNamingStrategy(
+            $this->container->make($strategy)
+        );
+    }
+
+    /**
+     * @param array         $settings
+     * @param Configuration $configuration
+     */
+    protected function setQuoteStrategy(array $settings, Configuration $configuration)
+    {
+        $strategy = Arr::get($settings, 'quote_strategy', null);
+        if ($strategy === null) {
+            return;
+        }
+        $configuration->setQuoteStrategy(
             $this->container->make($strategy)
         );
     }
