@@ -444,6 +444,29 @@ class EntityManagerFactoryTest extends TestCase
         $this->assertEntityManager($manager);
     }
 
+    public function test_can_set_custom_quote_strategy()
+    {
+        $this->disableDebugbar();
+        $this->disableSecondLevelCaching();
+        $this->disableCustomCacheNamespace();
+        $this->disableCustomFunctions();
+        $this->enableLaravelNamingStrategy();
+
+        $this->settings['quote_strategy'] = 'Doctrine\ORM\Mapping\AnsiQuoteStrategy';
+
+        $strategy = m::mock('Doctrine\ORM\Mapping\AnsiQuoteStrategy');
+
+        $this->container->shouldReceive('make')
+            ->with('Doctrine\ORM\Mapping\AnsiQuoteStrategy')
+            ->once()->andReturn($strategy);
+
+        $this->configuration->shouldReceive('setQuoteStrategy')->once()->with($strategy);
+
+        $manager = $this->factory->create($this->settings);
+
+        $this->assertEntityManager($manager);
+    }
+
     public function test_can_decorate_the_entity_manager()
     {
         $this->disableDebugbar();
