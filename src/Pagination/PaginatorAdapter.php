@@ -31,17 +31,24 @@ class PaginatorAdapter
     private $fetchJoinCollection;
 
     /**
+     * @var array
+     */
+    private $queryParams;
+
+    /**
      * @param AbstractQuery $query
      * @param int           $perPage
      * @param callable      $pageResolver
      * @param bool          $fetchJoinCollection
+     * @param array         $queryParams
      */
-    private function __construct(AbstractQuery $query, $perPage, $pageResolver, $fetchJoinCollection)
+    private function __construct(AbstractQuery $query, $perPage, $pageResolver, $fetchJoinCollection, $queryParams = [])
     {
         $this->query               = $query;
         $this->perPage             = $perPage;
         $this->pageResolver        = $pageResolver;
         $this->fetchJoinCollection = $fetchJoinCollection;
+        $this->queryParams         = $queryParams;
     }
 
     /**
@@ -49,10 +56,11 @@ class PaginatorAdapter
      * @param int           $perPage
      * @param string        $pageName
      * @param bool          $fetchJoinCollection
+     * @param array         $queryParams
      *
      * @return PaginatorAdapter
      */
-    public static function fromRequest(AbstractQuery $query, $perPage = 15, $pageName = 'page', $fetchJoinCollection = true)
+    public static function fromRequest(AbstractQuery $query, $perPage = 15, $pageName = 'page', $fetchJoinCollection = true, $queryParams = [])
     {
         return new static(
             $query,
@@ -60,7 +68,8 @@ class PaginatorAdapter
             function () use ($pageName) {
                 return Paginator::resolveCurrentPage($pageName);
             },
-            $fetchJoinCollection
+            $fetchJoinCollection,
+            $queryParams
         );
     }
 
@@ -69,10 +78,11 @@ class PaginatorAdapter
      * @param int           $perPage
      * @param int           $page
      * @param bool          $fetchJoinCollection
+     * @param array         $queryParams
      *
      * @return PaginatorAdapter
      */
-    public static function fromParams(AbstractQuery $query, $perPage = 15, $page = 1, $fetchJoinCollection = true)
+    public static function fromParams(AbstractQuery $query, $perPage = 15, $page = 1, $fetchJoinCollection = true, $queryParams = [])
     {
         return new static(
             $query,
@@ -80,7 +90,8 @@ class PaginatorAdapter
             function () use ($page) {
                 return $page;
             },
-            $fetchJoinCollection
+            $fetchJoinCollection,
+            $queryParams
         );
     }
 
@@ -117,6 +128,26 @@ class PaginatorAdapter
     public function getQuery()
     {
         return $this->query;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return $this
+     */
+    public function queryParams(array $params = [])
+    {
+        $this->queryParams = $params;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getQueryParams()
+    {
+        return $this->queryParams;
     }
 
     /**
@@ -176,13 +207,14 @@ class PaginatorAdapter
     {
         $results     = iterator_to_array($doctrinePaginator);
         $path        = Paginator::resolveCurrentPath();
+        $query       = $this->queryParams;
 
         return new LengthAwarePaginator(
             $results,
             $doctrinePaginator->count(),
             $perPage,
             $page,
-            compact('path')
+            compact('path', 'query')
         );
     }
 

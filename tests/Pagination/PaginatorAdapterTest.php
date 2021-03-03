@@ -44,6 +44,30 @@ class PaginatorAdapterTest extends TestCase
         $this->assertEquals(13, $paginator->currentPage());
     }
 
+    public function testQueryParametersAreProducedInUrlFromParams()
+    {
+        $em      = $this->mockEntityManager();
+        $query   = (new Query($em))->setDQL('SELECT f FROM Foo f');
+        $adapter = PaginatorAdapter::fromParams($query, 15, 2, false)
+            ->queryParams(['foo' => 'bar']);
+
+        $paginator = $adapter->make();
+
+        $this->assertStringContainsString('foo=bar', $paginator->url(1));
+    }
+
+    public function testQueryParametersAreProducedInUrlFromRequest()
+    {
+        $em      = $this->mockEntityManager();
+        $query   = (new Query($em))->setDQL('SELECT f FROM Foo f');
+        $adapter = PaginatorAdapter::fromRequest($query)
+            ->queryParams(['foo' => 'bar']);
+
+        $paginator = $adapter->make();
+
+        $this->assertStringContainsString('foo=bar', $paginator->url(1));
+    }
+
     /**
      * @return EntityManagerInterface|\Mockery\Mock
      */
