@@ -4,6 +4,7 @@ namespace LaravelDoctrine\ORM;
 
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventManager;
+use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection as DocrinePrimaryReadReplicaConnection;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -17,6 +18,7 @@ use InvalidArgumentException;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\Connections\MasterSlaveConnection;
+use LaravelDoctrine\ORM\Configuration\Connections\PrimaryReadReplicaConnection;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaData;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
@@ -116,7 +118,11 @@ class EntityManagerFactory
 
         if ($this->isMasterSlaveConfigured($driver)) {
             $this->hasValidMasterSlaveConfig($driver);
-            $connection = (new MasterSlaveConnection($this->config, $connection))->resolve($driver);
+            if (class_exists(DocrinePrimaryReadReplicaConnection::class)) {
+                $connection = (new PrimaryReadReplicaConnection($this->config, $connection))->resolve($driver);
+            } else {
+                $connection = (new MasterSlaveConnection($this->config, $connection))->resolve($driver);
+            }
         }
 
         $this->setNamingStrategy($settings, $configuration);
