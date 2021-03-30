@@ -53,10 +53,10 @@ Version | Supported Laravel Versions
 Require this package  
 
 ```bash
-composer require "laravel-doctrine/orm:1.7.*"
+composer require laravel-doctrine/orm doctrine/inflector:"^1.4|^2.0"
 ```
 
-Because of the auto package discovery feature Laravel 5.5 has, the ServiceProvider and Facades are automatically registered.
+Because of the auto package discovery feature Laravel has, the ServiceProvider and Facades are automatically registered.
 
 To publish the config use:
 
