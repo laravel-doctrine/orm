@@ -167,6 +167,38 @@ class SubstituteBindingsTest extends TestCase
         $this->assertEquals(1, $router->dispatch(Request::create('foo/NAMEVALUE', 'GET'))->getContent());
     }
 
+    public function test_for_typed_value_binding()
+    {
+        $router = $this->getRouter();
+        $router->get('foo/{value}', [
+            'middleware' => SubstituteBindings::class,
+            'uses'       => function (string $value) {
+                return $value;
+            },
+        ]);
+
+        $this->assertEquals('test', $router->dispatch(Request::create('foo/test', 'GET'))->getContent());
+
+        $router = $this->getRouter();
+        $router->get('bar/{value}', [
+            'middleware' => SubstituteBindings::class,
+            'uses'       => function (int $value) {
+                return $value;
+            },
+        ]);
+
+        $this->assertEquals(123456, $router->dispatch(Request::create('bar/123456', 'GET'))->getContent());
+
+        $router->get('doc/trine', [
+            'middleware' => SubstituteBindings::class,
+            'uses'       => function (Request $request) {
+                return $request instanceof Request ? 'request' : 'something else';
+            },
+        ]);
+
+        $this->assertEquals('request', $router->dispatch(Request::create('doc/trine', 'GET'))->getContent());
+    }
+
     protected function tearDown(): void
     {
         m::close();
