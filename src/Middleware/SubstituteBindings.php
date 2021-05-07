@@ -109,7 +109,7 @@ class SubstituteBindings
     {
         $class = null;
 
-        if (($type = $parameter->getType()) && $type instanceof \ReflectionNamedType) {
+        if (($type = $parameter->getType()) && $type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
             $class = $type->getName();
         }
 
