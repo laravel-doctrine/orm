@@ -1001,7 +1001,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->configuration->shouldReceive('setQueryCacheImpl')->once();
         $this->configuration->shouldReceive('setResultCacheImpl')->once();
 
-        $this->configuration->shouldReceive('getMetadataCache')->once();
+        $this->configuration->shouldReceive('getMetadataCache')->zeroOrMoreTimes();
 
         $cache = m::mock(Cache::class);
         $this->configuration->shouldReceive('getMetadataCacheImpl')
