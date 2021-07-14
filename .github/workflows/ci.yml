@@ -7,7 +7,11 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        php: [ '7.3', '7.4', '8.0' ]
+        php: ['7.3', '7.4', '8.0']
+        doctrine: ['2.6', '2.7', '2.8', '2.9']
+        exclude:
+          - php: '8.0'
+            doctrine: '2.6'
     steps:
       - uses: actions/checkout@v2
       - name: Setup PHP
@@ -29,6 +33,8 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
       - name: Install Composer dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+      - name: Install dependencies for doctrine/orm ${{ matrix.doctrine }}
+        run: composer require --no-progress --no-scripts --no-plugins -v -W doctrine/orm ~${{ matrix.doctrine }}
       - name: PHPUnit
         run: vendor/bin/phpunit --coverage-clover=coverage.xml --coverage-text
       - uses: codecov/codecov-action@v1
