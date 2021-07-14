@@ -17,6 +17,10 @@ return [
     | Available connections: mysql|oracle|pgsql|sqlite|sqlsrv
     | (Connections can be configured in the database config)
     |
+    | Depending on chosen the database connection, various other settings are
+    | available. Check the available settings for your connection type in
+    | the LaravelDoctrine\ORM\Configuration\Connections namespace.
+    |
     | --> Warning: Proxy auto generation should only be enabled in dev!
     |
     */
