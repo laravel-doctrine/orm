@@ -40,11 +40,19 @@ class PrimaryReadReplicaConnection extends Connection
     {
         $driver = $this->resolvedBaseSettings['driver'];
 
+        $writeReplicas = $this->getReplicasConfiguration(isset($settings['write']) ? $settings['write'] : [], $driver);
+
+        if (count($writeReplicas) !== 1) {
+            throw new \InvalidArgumentException(
+                "There should be exactly 1 write replica. " . count($writeReplicas) . " found."
+            );
+        }
+
         $resolvedSettings = [
             'wrapperClass'  => $settings['wrapperClass'] ?? PrimaryReadReplicaDoctrineWrapper::class,
             'driver'        => $driver,
-            'primary'       => $this->getConnectionData(isset($settings['write']) ? $settings['write'] : [], $driver),
-            'replica'       => $this->getReplicasConfig($settings['read'], $driver),
+            'primary'       => $writeReplicas[0],
+            'replica'       => $this->getReadReplicasConfig($settings['read'], $driver),
         ];
 
         if (!empty($settings['serverVersion'])) {
@@ -60,18 +68,53 @@ class PrimaryReadReplicaConnection extends Connection
 
     /**
      * Returns config for read replicas connections.
-     *
-     * @param array  $replicas
-     * @param string $driver
-     *
-     * @return array
      */
-    public function getReplicasConfig(array $replicas, $driver)
+    public function getReadReplicasConfig(array $replicas, string $driver): array
+    {
+        // Handle undocumented laravel read/write config,
+        // which allows multiple replica configs to be specified in 'read' config option
+        // Example: 'read' => [['host' => 'host1'], ['host' => 'host2']
+        if (isset($replicas[0])) {
+            // Treat $replicas as an array of configs
+            $handledReplicas = [];
+
+            foreach ($replicas as $replicaConfig) {
+                $handledReplicas[] = $this->getReplicasConfiguration($replicaConfig, $driver);
+            }
+
+            return array_merge(...$handledReplicas);
+        }
+
+        // Or handle documented laravel configuration format
+        // Example 1: 'read' => ['host' => 'host1']
+        // Example 2: 'read' => ['host' => ['host1', 'host2']]
+        return $this->getReplicasConfiguration($replicas, $driver);
+    }
+
+    /**
+     * Creates a configuration for replica based on standard documented Laravel format:
+     * Compatible with Laravel 5.5 and Laravel 5.6+ config
+     * @see https://laravel.com/docs/8.x/database#read-and-write-connections
+     * @see https://laravel.com/docs/5.6/database#read-and-write-connections
+     */
+    private function getReplicasConfiguration(array $replicaConfig, string $driver): array
     {
         $handledReplicas = [];
-        foreach ($replicas as $replica) {
-            $handledReplicas[] = $this->getConnectionData($replica, $driver);
+
+        // Handle Laravel 5.6 config with 'host' as an array
+        if (isset($replicaConfig['host']) && is_array($replicaConfig['host'])) {
+            foreach ($replicaConfig['host'] as $host) {
+                $replica           = $this->getConnectionData($replicaConfig, $driver);
+                $replica['host']   = $host;
+                $handledReplicas[] = $replica;
+            }
+
+            return $handledReplicas;
         }
+
+        // Handle plain text single value in 'host' key and configuration array without 'host' key at all
+        $replica           = $this->getConnectionData($replicaConfig, $driver);
+        $handledReplicas[] = $replica;
 
         return $handledReplicas;
     }
