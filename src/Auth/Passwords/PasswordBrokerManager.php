@@ -20,7 +20,7 @@ class PasswordBrokerManager extends \Illuminate\Auth\Passwords\PasswordBrokerMan
             $config['table'],
             $this->app['config']['app.key'],
             $config['expire'],
-            $config['throttle'] ?? 0
+            $config['throttle'] ?? 60
         );
     }
 }
