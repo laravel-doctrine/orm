@@ -19,7 +19,8 @@ class PasswordBrokerManager extends \Illuminate\Auth\Passwords\PasswordBrokerMan
             $this->app->make('registry')->getConnection($connection),
             $config['table'],
             $this->app['config']['app.key'],
-            $config['expire']
+            $config['expire'],
+            $config['throttle'] ?? 0
         );
     }
 }
