@@ -41,8 +41,8 @@ class DoctrineSQLLogger implements SQLLogger
      */
     public function startQuery($sql, ?array $params = null, ?array $types = null)
     {
-        $this->start = microtime(true);
-        $this->query = $sql;
+        $this->start  = microtime(true);
+        $this->query  = $sql;
         $this->params = $params;
     }
 
@@ -51,13 +51,13 @@ class DoctrineSQLLogger implements SQLLogger
      */
     public function stopQuery()
     {
-        $executionTime = microtime(true) - $this->start;
+        $executionTime     = microtime(true) - $this->start;
         $wrappedConnection = $this->connection->getWrappedConnection();
         if (!$wrappedConnection instanceof PDO) {
             throw new Exception("Only PDO is supported");
         }
         $connection = new IlluminateConnection($wrappedConnection);
-        $event = new QueryExecuted($this->query, $this->params, $executionTime, $connection);
+        $event      = new QueryExecuted($this->query, $this->params, $executionTime, $connection);
 
         $this->dispatcher->dispatch($event);
     }

@@ -12,8 +12,8 @@ class LaravelEventLoggerTest extends TestCase
 {
     public function test_can_register()
     {
-        $writer = m::mock(Dispatcher::class);
-        $em = m::mock(EntityManagerInterface::class);
+        $writer        = m::mock(Dispatcher::class);
+        $em            = m::mock(EntityManagerInterface::class);
         $configuration = m::mock(Configuration::class);
 
         $configuration->shouldReceive('setSQLLogger')

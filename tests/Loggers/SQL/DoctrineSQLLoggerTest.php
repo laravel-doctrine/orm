@@ -38,7 +38,6 @@ class DoctrineSQLLoggerTest extends TestCase
         return $mock;
     }
 
-
     protected function setUp(): void
     {
         $this->connection = $this->getConnectionMock();
@@ -52,7 +51,7 @@ class DoctrineSQLLoggerTest extends TestCase
 
     public function test_transforms_query_to_event()
     {
-        $query = 'SELECT * FROM table WHERE condition = ?';
+        $query  = 'SELECT * FROM table WHERE condition = ?';
         $params = ['value'];
 
         $this->dispatcher->listen(QueryExecuted::class, function ($event) use ($query, $params) {
@@ -61,7 +60,6 @@ class DoctrineSQLLoggerTest extends TestCase
             $this->assertEquals($params, $event->bindings);
             $this->assertGreaterThan(0, $event->time);
         });
-
 
         $this->logger->startQuery($query, $params);
         usleep(10);

@@ -21,7 +21,7 @@ class LaravelEventLogger implements Logger
 
     /**
      * @param EntityManagerInterface $em
-     * @param Configuration $configuration
+     * @param Configuration          $configuration
      */
     public function register(EntityManagerInterface $em, Configuration $configuration)
     {
