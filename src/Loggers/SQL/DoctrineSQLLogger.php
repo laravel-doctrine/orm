@@ -2,11 +2,11 @@
 
 namespace LaravelDoctrine\ORM\Loggers\SQL;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\SQLLogger;
-use Doctrine\ORM\Configuration;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Illuminate\Database\Connection;
+use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
+use Illuminate\Database\Connection as IlluminateConnection;
 use Illuminate\Database\Events\QueryExecuted;
 use PDO;
 
@@ -22,18 +22,18 @@ class DoctrineSQLLogger implements SQLLogger
     public $params = null;
 
     /**
-     * @var EntityManagerInterface
+     * @var Connection
      */
-    public $em;
+    public $connection;
     /**
-     * @var Configuration
+     * @var EventDispatcher
      */
-    public $configuration;
+    public $dispatcher;
 
-    public function __construct(EntityManagerInterface $em, Configuration $configuration)
+    public function __construct(Connection $connection, EventDispatcher $dispatcher)
     {
-        $this->em            = $em;
-        $this->configuration = $configuration;
+        $this->connection = $connection;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -41,8 +41,8 @@ class DoctrineSQLLogger implements SQLLogger
      */
     public function startQuery($sql, ?array $params = null, ?array $types = null)
     {
-        $this->start  = microtime(true);
-        $this->query  = $sql;
+        $this->start = microtime(true);
+        $this->query = $sql;
         $this->params = $params;
     }
 
@@ -51,14 +51,14 @@ class DoctrineSQLLogger implements SQLLogger
      */
     public function stopQuery()
     {
-        $executionTime     = microtime(true) - $this->start;
-        $wreppedConnection = $this->em->getConnection()->getWrappedConnection();
-        if (!$wreppedConnection instanceof PDO) {
+        $executionTime = microtime(true) - $this->start;
+        $wrappedConnection = $this->connection->getWrappedConnection();
+        if (!$wrappedConnection instanceof PDO) {
             throw new Exception("Only PDO is supported");
         }
-        $connection = new Connection($wreppedConnection);
-        $event      = new QueryExecuted($this->query, $this->params, $executionTime, $connection);
+        $connection = new IlluminateConnection($wrappedConnection);
+        $event = new QueryExecuted($this->query, $this->params, $executionTime, $connection);
 
-        event($event);
+        $this->dispatcher->dispatch($event);
     }
 }
