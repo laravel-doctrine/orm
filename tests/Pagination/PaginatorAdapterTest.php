@@ -60,6 +60,7 @@ class PaginatorAdapterTest extends TestCase
         $config->shouldReceive('getDefaultQueryHints')->andReturn([]);
         $config->shouldReceive('isSecondLevelCacheEnabled')->andReturn(false);
         $config->shouldReceive('getQueryCacheImpl')->andReturn(null);
+        $config->shouldReceive('getQueryCache')->andReturn(null);
         $config->shouldReceive('getQuoteStrategy')->andReturn(new DefaultQuoteStrategy);
 
         $metadata->fieldMappings = [
