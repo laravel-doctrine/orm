@@ -1,6 +1,6 @@
 <?php
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use LaravelDoctrine\ORM\Configuration\CustomTypeManager;
@@ -43,7 +43,7 @@ class CustomTypeManagerTest extends TestCase
 
     public function test_cannot_get_non_existing_type()
     {
-        $this->expectException(DBALException::class);
+        $this->expectException(Exception::class);
 
         $manager = new CustomTypeManager;
         $manager->getType('non_existing');
