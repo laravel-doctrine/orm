@@ -7,6 +7,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Table;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Support\Str;
 
 class DoctrineTokenRepository implements TokenRepositoryInterface
@@ -17,6 +18,13 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
      * @var Connection
      */
     protected $connection;
+
+    /**
+     * The Hasher implementation.
+     *
+     * @var HasherContract
+     */
+    protected $hasher;
 
     /**
      * The token database table.
@@ -49,14 +57,22 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
     /**
      * Create a new token repository instance.
      *
-     * @param Connection $connection
-     * @param string     $table
-     * @param string     $hashKey
-     * @param int        $expires
+     * @param Connection     $connection
+     * @param HasherContract $hasher
+     * @param string         $table
+     * @param string         $hashKey
+     * @param int            $expires
      */
-    public function __construct(Connection $connection, $table, $hashKey, $expires = 60, $throttle = 60)
-    {
+    public function __construct(
+        Connection $connection,
+        HasherContract $hasher,
+        $table,
+        $hashKey,
+        $expires = 60,
+        $throttle = 60
+    ) {
         $this->table      = $table;
+        $this->hasher     = $hasher;
         $this->hashKey    = $hashKey;
         $this->expires    = $expires * 60;
         $this->connection = $connection;
@@ -89,7 +105,7 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
              ])
              ->setParameters([
                  'email' => $email,
-                 'token' => $token,
+                 'token' => $this->hasher->make($token),
                  'date'  => new Carbon('now')
              ])
              ->execute();
@@ -123,27 +139,28 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
     {
         $email = $user->getEmailForPasswordReset();
 
-        $token = $this->getTable()
+        $record = $this->getTable()
                       ->select('*')
                       ->from($this->table)
                       ->where('email = :email')
-                      ->andWhere('token = :token')
                       ->setParameter('email', $email)
-                      ->setParameter('token', $token)
+                      ->setMaxResults(1)
                       ->execute()->fetch();
 
-        return $token && !$this->tokenExpired($token);
+        return $record
+            && !$this->tokenExpired($record['created_at'])
+            && $this->hasher->check($token, $record['token']);
     }
 
     /**
      * Determine if the token has expired.
      *
-     * @param  array $token
+     * @param  string $createdAt
      * @return bool
      */
-    protected function tokenExpired($token)
+    protected function tokenExpired($createdAt)
     {
-        $expiresAt = Carbon::parse($token['created_at'])->addSeconds($this->expires);
+        $expiresAt = Carbon::parse($createdAt)->addSeconds($this->expires);
 
         return $expiresAt->isPast();
     }
