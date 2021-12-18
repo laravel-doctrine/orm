@@ -1,6 +1,5 @@
 <?php
 
-
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Illuminate\Contracts\Container\Container;
@@ -91,5 +90,4 @@ class InteractsWithEntitiesTest extends MockeryTestCase
 
         $this->noEntitiesMatch('SomeClass', ['someField' => 'someValue']);
     }
-
 }

@@ -82,14 +82,15 @@ trait InteractsWithEntities
     /**
      * Replaces entities with their ids in the criteria array and print_r them
      *
-     * @param array $criteria
+     * @param  array  $criteria
      * @return string
      */
     private function outputCriteria(array $criteria)
     {
         $criteria = collect($criteria)->map(function ($value) {
-            if (!is_object($value))
+            if (!is_object($value)) {
                 return $value;
+            }
 
             $unityOfWork = $this->entityManager()->getUnitOfWork();
             if ($unityOfWork->isInIdentityMap($value)) {
