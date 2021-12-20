@@ -50,14 +50,14 @@ trait InteractsWithEntities
     {
         $entities = $this->entityManager()->getRepository($class)->findBy($criteria);
 
-        Assert::assertNotEmpty($entities, "No [$class] entities were found with the given criteria: " . print_r($criteria, true));
+        Assert::assertNotEmpty($entities, "No [$class] entities were found with the given criteria: " . $this->outputCriteria($criteria));
 
         if ($count !== null) {
             Assert::assertCount(
                 $count,
                 $entities,
                 "Expected to find $count [$class] entities, but found " . count($entities) .
-                ' with the given criteria: ' . print_r($criteria, true)
+                ' with the given criteria: ' . $this->outputCriteria($criteria)
             );
         }
 
@@ -75,8 +75,32 @@ trait InteractsWithEntities
     {
         Assert::assertEmpty(
             $this->entityManager()->getRepository($class)->findBy($criteria),
-            "Some [$class] entities were found with the given criteria: " . print_r($criteria, true)
+            "Some [$class] entities were found with the given criteria: " . $this->outputCriteria($criteria)
         );
+    }
+
+    /**
+     * Replaces entities with their ids in the criteria array and print_r them
+     *
+     * @param  array  $criteria
+     * @return string
+     */
+    private function outputCriteria(array $criteria)
+    {
+        $criteria = collect($criteria)->map(function ($value) {
+            if (!is_object($value)) {
+                return $value;
+            }
+
+            $unityOfWork = $this->entityManager()->getUnitOfWork();
+            if ($unityOfWork->isInIdentityMap($value)) {
+                return $unityOfWork->getEntityIdentifier($value);
+            }
+
+            return $value;
+        })->all();
+
+        return print_r($criteria, true);
     }
 
     /**
