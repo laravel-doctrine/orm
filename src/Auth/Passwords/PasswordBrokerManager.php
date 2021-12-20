@@ -2,6 +2,8 @@
 
 namespace LaravelDoctrine\ORM\Auth\Passwords;
 
+use Illuminate\Support\Str;
+
 class PasswordBrokerManager extends \Illuminate\Auth\Passwords\PasswordBrokerManager
 {
     /**
@@ -13,12 +15,19 @@ class PasswordBrokerManager extends \Illuminate\Auth\Passwords\PasswordBrokerMan
      */
     protected function createTokenRepository(array $config)
     {
-        $connection = isset($config['connection']) ? $config['connection'] : null;
+        $hashKey = $this->app['config']['app.key'];
+
+        if (Str::startsWith($hashKey, 'base64:')) {
+            $hashKey = base64_decode(substr($hashKey, 7));
+        }
+
+        $connection = $config['connection'] ?? null;
 
         return new DoctrineTokenRepository(
             $this->app->make('registry')->getConnection($connection),
+            $this->app->make('hash'),
             $config['table'],
-            $this->app['config']['app.key'],
+            $hashKey,
             $config['expire'],
             $config['throttle'] ?? 60
         );

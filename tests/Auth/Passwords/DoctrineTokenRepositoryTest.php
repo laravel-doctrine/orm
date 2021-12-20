@@ -5,6 +5,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Contracts\Hashing\Hasher;
 use LaravelDoctrine\ORM\Auth\Passwords\DoctrineTokenRepository;
 use Mockery as m;
 use Mockery\Mock;
@@ -35,11 +36,17 @@ class DoctrineTokenRepositoryTest extends TestCase
     /**
      * @var Mock
      */
+    protected $hasher;
+
+    /**
+     * @var Mock
+     */
     protected $builder;
 
     protected function setUp(): void
     {
         $this->connection = m::mock(Connection::class);
+        $this->hasher     = m::mock(Hasher::class);
         $this->builder    = m::mock(QueryBuilder::class);
         $this->schema     = m::mock(AbstractSchemaManager::class);
 
@@ -52,6 +59,7 @@ class DoctrineTokenRepositoryTest extends TestCase
 
         $this->repository = new DoctrineTokenRepository(
             $this->connection,
+            $this->hasher,
             'password_resets',
             'hashkey',
             60
@@ -63,6 +71,10 @@ class DoctrineTokenRepositoryTest extends TestCase
         $this->connection->shouldReceive('createQueryBuilder')
                          ->twice()
                          ->andReturn($this->builder);
+
+        $this->hasher->shouldReceive('make')
+                     ->once()
+                     ->andReturn('token');
 
         $this->builder->shouldReceive('delete')
                       ->once()
@@ -108,6 +120,11 @@ class DoctrineTokenRepositoryTest extends TestCase
                          ->once()
                          ->andReturn($this->builder);
 
+        $this->hasher->shouldReceive('check')
+                     ->once()
+                     ->with('token', 'token')
+                     ->andReturn(true);
+
         $this->builder->shouldReceive('select')
                       ->once()
                       ->with('*')
@@ -123,19 +140,14 @@ class DoctrineTokenRepositoryTest extends TestCase
                       ->with('email = :email')
                       ->andReturnSelf();
 
-        $this->builder->shouldReceive('andWhere')
+        $this->builder->shouldReceive('setMaxResults')
                       ->once()
-                      ->with('token = :token')
+                      ->with(1)
                       ->andReturnSelf();
 
         $this->builder->shouldReceive('setParameter')
                       ->once()
                       ->with('email', 'user@mockery.mock')
-                      ->andReturnSelf();
-
-        $this->builder->shouldReceive('setParameter')
-                      ->once()
-                      ->with('token', 'token')
                       ->andReturnSelf();
 
         $this->builder->shouldReceive('execute')
