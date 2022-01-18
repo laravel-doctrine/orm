@@ -12,6 +12,8 @@ jobs:
         exclude:
           - php: '8.0'
             doctrine: '2.6'
+          - php: '8.0'
+            doctrine: '2.7'
     steps:
       - uses: actions/checkout@v2
       - name: Setup PHP
