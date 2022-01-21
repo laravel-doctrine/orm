@@ -68,11 +68,11 @@ return [
             | });
             |
             | References:
-            | http://doctrine-orm.readthedocs.org/en/latest/cookbook/custom-mapping-types.html
-            | http://doctrine-dbal.readthedocs.org/en/latest/reference/types.html#custom-mapping-types
-            | http://doctrine-orm.readthedocs.org/en/latest/cookbook/advanced-field-value-conversion-using-custom-mapping-types.html
-            | http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#reference-mapping-types
-            | http://symfony.com/doc/current/cookbook/doctrine/dbal.html#registering-custom-mapping-types-in-the-schematool
+            | https://www.doctrine-project.org/projects/doctrine-orm/en/current/cookbook/custom-mapping-types.html
+            | https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/types.html#custom-mapping-types
+            | https://www.doctrine-project.org/projects/doctrine-orm/en/current/cookbook/advanced-field-value-conversion-using-custom-mapping-types.html
+            | https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/basic-mapping.html
+            | https://symfony.com/doc/current/doctrine/dbal.html#registering-custom-mapping-types-in-the-schematool
             |--------------------------------------------------------------------------
             */
             'mapping_types' => [
