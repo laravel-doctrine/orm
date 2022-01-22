@@ -1,11 +1,13 @@
 <?php
 
-use Doctrine\Common\Cache\ArrayCache;
+use Illuminate\Contracts\Cache\Factory as CacheFactory;
+use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Cache\ArrayCacheProvider;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Cache\FileCacheProvider;
+use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheAdapter;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
@@ -40,10 +42,18 @@ class CacheManagerTest extends TestCase
 
     public function test_driver_returns_the_default_driver()
     {
-        $this->app->shouldReceive('resolve')->andReturn(new ArrayCacheProvider());
+        $repo    = m::mock(CacheRepository::class);
+        $manager = m::mock(CacheFactory::class);
+        $manager->shouldReceive('store')
+                ->with('array')
+                ->once()->andReturn($repo);
+
+        $this->app->shouldReceive('resolve')->andReturn(new ArrayCacheProvider(
+            $manager
+        ));
 
         $this->assertInstanceOf(ArrayCacheProvider::class, $this->manager->driver());
-        $this->assertInstanceOf(ArrayCache::class, $this->manager->driver()->resolve());
+        $this->assertInstanceOf(IlluminateCacheAdapter::class, $this->manager->driver()->resolve());
     }
 
     public function test_driver_can_return_a_given_driver()

@@ -1,6 +1,5 @@
 <?php
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Connection;
@@ -13,6 +12,7 @@ use Doctrine\ORM\Query\FilterCollection;
 use Doctrine\ORM\Repository\RepositoryFactory;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
+use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
@@ -872,11 +872,15 @@ class EntityManagerFactoryTest extends TestCase
 
     protected function mockCache()
     {
+        $repository = m::mock(CacheRepository::class);
+
         $this->cache = m::mock(CacheManager::class);
 
         $this->cache->shouldReceive('driver')
                     ->times(count($this->caches) + 1) // one for each cache driver + one default
-                    ->andReturn(new ArrayCache());
+                    ->andReturn(new IlluminateCacheAdapter(
+                        $repository
+                    ));
     }
 
     protected function mockConnection()

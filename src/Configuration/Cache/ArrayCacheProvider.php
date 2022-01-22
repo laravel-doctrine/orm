@@ -2,18 +2,10 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Doctrine\Common\Cache\ArrayCache;
-use LaravelDoctrine\ORM\Configuration\Driver;
-
-class ArrayCacheProvider implements Driver
+class ArrayCacheProvider extends IlluminateCacheProvider
 {
     /**
-     * @param array $settings
-     *
-     * @return ArrayCache
+     * @var string
      */
-    public function resolve(array $settings = [])
-    {
-        return new ArrayCache();
-    }
+    protected $store = 'array';
 }
