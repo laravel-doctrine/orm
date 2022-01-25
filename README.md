@@ -9,7 +9,7 @@
 [![Packagist](https://img.shields.io/packagist/dm/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
 [![Packagist](https://img.shields.io/packagist/dt/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
 
-*A drop-in Doctrine ORM 2 implementation for Laravel 5+*
+*A drop-in Doctrine ORM 2 implementation for Laravel*
 
 ```php
 $scientist = new Scientist(
@@ -49,6 +49,7 @@ Version | Supported Laravel Versions
 ~1.5 | 6.x
 ~1.6 | 7.x
 ~1.7 | 8.x
+~1.8 | 9.x
 
 Require this package  
 
