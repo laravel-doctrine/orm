@@ -51,12 +51,6 @@ Version | Supported Laravel Versions
 ~1.7 | 8.x
 ~1.8 | 9.x
 
-Require this package  
-
-```bash
-composer require laravel-doctrine/orm doctrine/inflector:"^1.4|^2.0"
-```
-
 Because of the auto package discovery feature Laravel has, the ServiceProvider and Facades are automatically registered.
 
 To publish the config use:
