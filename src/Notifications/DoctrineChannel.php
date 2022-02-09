@@ -32,8 +32,10 @@ class DoctrineChannel
     {
         $entity = $this->getEntity($notifiable, $notification);
 
-        if ($channel = $notifiable->routeNotificationFor('doctrine')) {
-            $em = $this->registry->getManager($channel);
+        if (method_exists($notifiable, 'routeNotificationForDoctrine')) {
+            $em = $this->registry->getManager(
+                $notifiable->routeNotificationFor('doctrine', $notification)
+            );
         } else {
             $em = $this->registry->getManagerForClass(get_class($entity));
         }

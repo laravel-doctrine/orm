@@ -7,8 +7,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        php: ['7.3', '7.4', '8.0', '8.1']
-        doctrine: ['2.8', '2.9', '2.10', '2.11']
+        php: ['8.0', '8.1']
+        doctrine: ['2.11']
     steps:
       - uses: actions/checkout@v2
       - name: Setup PHP

@@ -13,10 +13,7 @@ class ArraySerializer
      */
     public function serialize($entity)
     {
-        $format = 'array';
-        $data   = $this->getNormalizer()->normalize($entity, $format);
-
-        return $this->getEncoder()->encode($data, $format);
+        return $this->getNormalizer()->normalize($entity, 'array');
     }
 
     /**
@@ -25,13 +22,5 @@ class ArraySerializer
     protected function getNormalizer()
     {
         return new GetSetMethodNormalizer;
-    }
-
-    /**
-     * @return ArrayEncoder
-     */
-    protected function getEncoder()
-    {
-        return new ArrayEncoder;
     }
 }
