@@ -1,5 +1,6 @@
 {
     "name": "laravel-doctrine/orm",
+    "type": "library",
     "description": "A Doctrine ORM bridge for Laravel 5",
     "license": "MIT",
     "keywords": [
