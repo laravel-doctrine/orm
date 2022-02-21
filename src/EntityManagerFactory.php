@@ -24,7 +24,10 @@ use LaravelDoctrine\ORM\Configuration\MetaData\MetaData;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
+use Psr\Cache\CacheItemPoolInterface;
 use ReflectionException;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class EntityManagerFactory
 {
@@ -97,12 +100,9 @@ class EntityManagerFactory
      */
     public function create(array $settings = [])
     {
-        $defaultDriver = $this->config->get('doctrine.cache.default', 'array');
-
         $configuration = $this->setup->createConfiguration(
             Arr::get($settings, 'dev', false),
-            Arr::get($settings, 'proxies.path'),
-            $this->cache->driver($defaultDriver)
+            Arr::get($settings, 'proxies.path')
         );
 
         $this->setMetadataDriver($settings, $configuration);
@@ -366,16 +366,16 @@ class EntityManagerFactory
      */
     protected function setCacheSettings(Configuration $configuration)
     {
-        $configuration->setQueryCacheImpl($this->applyNamedCacheConfiguration('query'));
-        $configuration->setResultCacheImpl($this->applyNamedCacheConfiguration('result'));
-        $configuration->setMetadataCacheImpl($this->applyNamedCacheConfiguration('metadata'));
+        $configuration->setQueryCache($this->applyNamedCacheConfiguration('query'));
+        $configuration->setMetadataCache($this->applyNamedCacheConfiguration('metadata'));
+        $configuration->setResultCache($this->applyNamedCacheConfiguration('result'));
 
         $this->setSecondLevelCaching($configuration);
     }
 
     /**
      * @param  string $cacheName
-     * @return Cache
+     * @return CacheItemPoolInterface
      */
     private function applyNamedCacheConfiguration($cacheName)
     {
@@ -383,13 +383,12 @@ class EntityManagerFactory
         $defaultNamespace = $this->config->get('doctrine.cache.namespace');
 
         $settings = $this->config->get('doctrine.cache.' . $cacheName, []);
+        if (!isset($settings['namespace'])) {
+            $settings['namespace'] = $defaultNamespace;
+        }
         $driver   = $settings['driver'] ?? $defaultDriver;
 
         $cache = $this->cache->driver($driver, $settings);
-
-        if ($namespace = $this->config->get('doctrine.cache.' . $cacheName . '.namespace', $defaultNamespace)) {
-            $cache->setNamespace($namespace);
-        }
 
         return $cache;
     }
@@ -477,7 +476,7 @@ class EntityManagerFactory
      * @param                        $settings
      * @param EntityManagerInterface $manager
      *
-     * @throws \Doctrine\DBAL\DBALException If Database Type or Doctrine Type is not found.
+     * @throws \Doctrine\DBAL\Exception If Database Type or Doctrine Type is not found.
      */
     protected function registerMappingTypes(array $settings, EntityManagerInterface $manager)
     {

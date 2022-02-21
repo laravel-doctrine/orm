@@ -2,18 +2,19 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Doctrine\Common\Cache\ArrayCache;
 use LaravelDoctrine\ORM\Configuration\Driver;
+use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class ArrayCacheProvider implements Driver
 {
     /**
      * @param array $settings
      *
-     * @return ArrayCache
+     * @return CacheItemPoolInterface
      */
     public function resolve(array $settings = [])
     {
-        return new ArrayCache();
+        return new ArrayAdapter();
     }
 }

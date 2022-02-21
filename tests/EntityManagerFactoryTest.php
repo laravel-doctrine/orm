@@ -1,6 +1,5 @@
 <?php
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Connection;
@@ -29,6 +28,7 @@ use LaravelDoctrine\ORM\Testing\ConfigRepository;
 use Mockery as m;
 use Mockery\Mock;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class EntityManagerFactoryTest extends TestCase
 {
@@ -239,17 +239,21 @@ class EntityManagerFactoryTest extends TestCase
                      ->andReturn('namespace');
 
         foreach ($this->caches as $cache) {
-            $this->config->shouldReceive('get')
-                         ->with('doctrine.cache.' . $cache . '.namespace', 'namespace')
+            $this->config->shouldNotReceive('get')
+                         ->with('doctrine.cache.' . $cache, [])
                          ->once()
-                         ->andReturn('namespace');
+                         ->andReturn([
+                             'namespace' => $cache,
+                         ])->byDefault();
         }
 
         $cache = m::mock(Cache::class);
 
-        $this->cache->shouldReceive('driver')->andReturn($cache);
-
-        $cache->shouldReceive('setNamespace')->with('namespace');
+        $this->cache->shouldReceive('driver')
+                ->withArgs(function ($driver, $settings) {
+                    return $settings['namespace'] === 'namespace';
+                })
+                ->andReturn($cache);
 
         $manager = $this->factory->create($this->settings);
 
@@ -742,8 +746,8 @@ class EntityManagerFactoryTest extends TestCase
 
         $manager = $factory->create($config->get('doctrine'));
 
-        $this->assertInstanceOf(\Doctrine\Common\Cache\PhpFileCache::class, $manager->getConfiguration()->getMetadataCacheImpl());
-        $this->assertStringEndsWith('myCustomPath', $manager->getConfiguration()->getMetadataCacheImpl()->getDirectory());
+        $this->assertInstanceOf(\Symfony\Component\Cache\Adapter\PhpFilesAdapter::class, $manager->getConfiguration()->getMetadataCache());
+        //$this->assertStringEndsWith('myCustomPath', $manager->getConfiguration()->getMetadataCache()->getNamespace());
     }
 
     public function test_wrapper_connection()
@@ -847,9 +851,9 @@ class EntityManagerFactoryTest extends TestCase
         $this->config = m::mock(Repository::class);
 
         $this->config->shouldReceive('get')
-                     ->with('doctrine.cache.default', 'array')
-                     ->atLeast()->once()
-                     ->andReturn('array');
+            ->with('doctrine.cache.default', 'array')
+            ->andReturn('array');
+
 
         foreach ($this->caches as $cache) {
             $expectation = $this->config->shouldReceive('get')
@@ -892,6 +896,7 @@ class EntityManagerFactoryTest extends TestCase
                      ->andReturn([]);
 
         $strictCallCountChecking ? $expectation->once() : $expectation->never();
+
     }
 
     protected function mockCache()
@@ -899,8 +904,8 @@ class EntityManagerFactoryTest extends TestCase
         $this->cache = m::mock(CacheManager::class);
 
         $this->cache->shouldReceive('driver')
-                    ->times(count($this->caches) + 1) // one for each cache driver + one default
-                    ->andReturn(new ArrayCache());
+                    ->times(count($this->caches)) // one for each cache driver
+                    ->andReturn(new ArrayAdapter());
     }
 
     protected function mockConnection()
@@ -963,13 +968,6 @@ class EntityManagerFactoryTest extends TestCase
                      ->with('doctrine.cache.namespace')
                      ->atLeast()->once()
                      ->andReturn(null);
-
-        foreach ($this->caches as $cache) {
-            $this->config->shouldReceive('get')
-                         ->with('doctrine.cache.' . $cache . '.namespace', null)
-                         ->atLeast()->once()
-                         ->andReturn(null);
-        }
     }
 
     protected function disableCustomFunctions()
@@ -998,9 +996,10 @@ class EntityManagerFactoryTest extends TestCase
                             ->atLeast()->once()
                             ->andReturn('Doctrine\ORM\Mapping\ClassMetadataFactory');
 
-        $this->configuration->shouldReceive('setMetadataCacheImpl')->once();
-        $this->configuration->shouldReceive('setQueryCacheImpl')->once();
-        $this->configuration->shouldReceive('setResultCacheImpl')->once();
+        $this->configuration->shouldReceive('setMetadataCache')->once();
+        $this->configuration->shouldReceive('setQueryCache')->once();
+        $this->configuration->shouldReceive('setResultCache')->once();
+        $this->configuration->shouldReceive('getMiddlewares')->once();
 
         $this->configuration->shouldReceive('getMetadataCache')->zeroOrMoreTimes();
 
@@ -1148,10 +1147,10 @@ class EntityManagerFactoryTest extends TestCase
         $this->mockResolver();
         $this->mockConfig($inputConfig, empty($expectedException));
 
-        $this->cache = m::mock(CacheManager::class);
-        $this->cache->shouldReceive('driver')
-            ->times(empty($expectedException) ? 4 : 1)
-            ->andReturn(new ArrayCache());
+//        $this->cache = m::mock(CacheManager::class);
+//        $this->cache->shouldReceive('driver')
+//            ->times(empty($expectedException) ? 3 : 0)
+//            ->andReturn(new ArrayAdapter());
 
         $this->setup = m::mock(Setup::class);
         $this->setup->shouldReceive('createConfiguration')->once()->andReturn($this->configuration);
@@ -1206,8 +1205,8 @@ class EntityManagerFactoryTest extends TestCase
 
         $this->cache = m::mock(CacheManager::class);
         $this->cache->shouldReceive('driver')
-            ->times(4)
-            ->andReturn(new ArrayCache());
+            ->times(3)
+            ->andReturn(new ArrayAdapter());
 
         $this->setup = m::mock(Setup::class);
         $this->setup->shouldReceive('createConfiguration')->once()->andReturn($this->configuration);

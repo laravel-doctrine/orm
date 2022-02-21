@@ -5,6 +5,7 @@ use Illuminate\Contracts\Cache\Repository;
 use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheAdapter;
 use LaravelDoctrine\ORM\Configuration\Cache\MemcachedCacheProvider;
 use Mockery as m;
+use Psr\Cache\CacheItemPoolInterface;
 
 class MemcachedCacheProviderTest extends AbstractCacheProviderTest
 {
@@ -23,6 +24,6 @@ class MemcachedCacheProviderTest extends AbstractCacheProviderTest
 
     public function getExpectedInstance()
     {
-        return IlluminateCacheAdapter::class;
+        return CacheItemPoolInterface::class;
     }
 }

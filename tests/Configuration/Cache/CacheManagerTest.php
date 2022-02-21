@@ -1,6 +1,5 @@
 <?php
 
-use Doctrine\Common\Cache\ArrayCache;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Cache\ArrayCacheProvider;
@@ -9,6 +8,7 @@ use LaravelDoctrine\ORM\Configuration\Cache\FileCacheProvider;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class CacheManagerTest extends TestCase
 {
@@ -43,7 +43,7 @@ class CacheManagerTest extends TestCase
         $this->app->shouldReceive('resolve')->andReturn(new ArrayCacheProvider());
 
         $this->assertInstanceOf(ArrayCacheProvider::class, $this->manager->driver());
-        $this->assertInstanceOf(ArrayCache::class, $this->manager->driver()->resolve());
+        $this->assertInstanceOf(ArrayAdapter::class, $this->manager->driver()->resolve());
     }
 
     public function test_driver_can_return_a_given_driver()

@@ -2,7 +2,7 @@
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
@@ -81,6 +81,8 @@ class PaginatorAdapterTest extends TestCase
         $platform   = \Mockery::mock(AbstractPlatform::class);
         $hydrator   = \Mockery::mock(AbstractHydrator::class);
 
+        $result = \Mockery::mock(\Doctrine\DBAL\Result::class);
+
         $config->shouldReceive('getDefaultQueryHints')->andReturn([]);
         $config->shouldReceive('isSecondLevelCacheEnabled')->andReturn(false);
         $config->shouldReceive('getQueryCacheImpl')->andReturn(null);
@@ -91,14 +93,14 @@ class PaginatorAdapterTest extends TestCase
             'id' => [
                 'fieldName'  => 'id',
                 'columnName' => 'id',
-                'type'       => Type::INTEGER,
+                'type'       => Types::INTEGER,
                 'id'         => true,
                 'options'    => ['unsigned' => true],
             ],
             'name' => [
                 'fieldName'  => 'name',
                 'columnName' => 'name',
-                'type'       => Type::STRING,
+                'type'       => Types::STRING,
             ],
         ];
 
@@ -117,10 +119,10 @@ class PaginatorAdapterTest extends TestCase
         $metadata->shouldReceive('isInheritanceTypeSingleTable')->andReturn(false);
         $metadata->shouldReceive('isInheritanceTypeJoined')->andReturn(false);
         $metadata->shouldReceive('getTableName')->andReturn('fooes');
-        $metadata->shouldReceive('getTypeOfField')->andReturn(Type::INTEGER);
+        $metadata->shouldReceive('getTypeOfField')->andReturn(Types::INTEGER);
 
         $connection->shouldReceive('getDatabasePlatform')->andReturn($platform);
-        $connection->shouldReceive('executeQuery')->andReturn([]);
+        $connection->shouldReceive('executeQuery')->andReturn($result);
         $connection->shouldReceive('getParams')->andReturn([]);
 
         $platform->shouldReceive('appendLockHint')->andReturnUsing(function ($a) {

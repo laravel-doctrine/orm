@@ -35,7 +35,7 @@ class ClearMetadataCacheCommand extends Command
 
         foreach ($names as $name) {
             $em    = $registry->getManager($name);
-            $cache = $em->getConfiguration()->getMetadataCacheImpl();
+            $cache = $em->getConfiguration()->getMetadataCache();
 
             if (!$cache) {
                 throw new InvalidArgumentException('No Result cache driver is configured on given EntityManager.');

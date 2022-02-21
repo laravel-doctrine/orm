@@ -1,7 +1,7 @@
 <?php
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\JsonArrayType;
+use Doctrine\DBAL\Types\JsonType;
 use Doctrine\DBAL\Types\Type;
 use LaravelDoctrine\ORM\Loggers\Formatters\ReplaceQueryParams;
 use Mockery as m;
@@ -168,7 +168,7 @@ class StringClass
     }
 }
 
-class ObjectType extends JsonArrayType
+class ObjectType extends JsonType
 {
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {

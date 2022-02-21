@@ -2,7 +2,6 @@
 
 namespace LaravelDoctrine\ORM\Loggers;
 
-use Doctrine\DBAL\Logging\EchoSQLLogger;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 
