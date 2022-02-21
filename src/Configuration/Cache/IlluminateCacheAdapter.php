@@ -77,7 +77,7 @@ class IlluminateCacheAdapter extends CacheProvider
      */
     protected function doFlush()
     {
-        return $this->cache->clear();
+        return $this->cache->flush();
     }
 
     /**
