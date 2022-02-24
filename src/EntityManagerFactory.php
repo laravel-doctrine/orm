@@ -2,9 +2,8 @@
 
 namespace LaravelDoctrine\ORM;
 
-use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventManager;
-use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection as DocrinePrimaryReadReplicaConnection;
+use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection as DoctrinePrimaryReadReplicaConnection;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -26,8 +25,6 @@ use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
 use Psr\Cache\CacheItemPoolInterface;
 use ReflectionException;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Contracts\Cache\CacheInterface;
 
 class EntityManagerFactory
 {
@@ -118,7 +115,7 @@ class EntityManagerFactory
 
         if ($this->isMasterSlaveConfigured($driver)) {
             $this->hasValidMasterSlaveConfig($driver);
-            if (class_exists(DocrinePrimaryReadReplicaConnection::class)) {
+            if (class_exists(DoctrinePrimaryReadReplicaConnection::class)) {
                 $connection = (new PrimaryReadReplicaConnection($this->config, $connection))->resolve($driver);
             } else {
                 $connection = (new MasterSlaveConnection($this->config, $connection))->resolve($driver);
