@@ -125,7 +125,7 @@ class DoctrineManager
     }
 
     /**
-     * @param null $connection
+     * @param string|null $connection
      *
      * @param  ManagerRegistry $registry
      * @return MappingDriver

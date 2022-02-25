@@ -50,4 +50,9 @@ class IlluminateCacheProvider implements Driver
             new IlluminateCacheAdapter($this->cache->store($store))
         );
     }
+
+    public function getStore(): string
+    {
+        return $this->store;
+    }
 }

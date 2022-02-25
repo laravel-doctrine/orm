@@ -1,6 +1,6 @@
 <?php
 
-use Doctrine\DBAL\Connections\MasterSlaveConnection as MasterSlaveDoctrineWrapper;
+use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection as MasterSlaveDoctrineWrapper;
 use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Connections\MasterSlaveConnection;
 use Mockery as m;

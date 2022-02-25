@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-use Doctrine\DBAL\Connections\MasterSlaveConnection as MasterSlaveDoctrineWrapper;
+use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection as MasterSlaveDoctrineWrapper;
 use Illuminate\Contracts\Config\Repository;
 
 /**

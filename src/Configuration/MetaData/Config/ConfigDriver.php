@@ -2,11 +2,11 @@
 
 namespace LaravelDoctrine\ORM\Configuration\MetaData\Config;
 
-use Doctrine\ORM\Mapping\Driver\YamlDriver;
+use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Illuminate\Support\Arr;
 
-class ConfigDriver extends YamlDriver implements MappingDriver
+class ConfigDriver extends XmlDriver implements MappingDriver
 {
     /**
      * @var array

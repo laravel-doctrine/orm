@@ -3,7 +3,7 @@
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
-use LaravelDoctrine\ORM\Configuration\MetaData\Yaml;
+use LaravelDoctrine\ORM\Configuration\MetaData\Xml;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
@@ -39,9 +39,9 @@ class MetaDataManagerTest extends TestCase
 
     public function test_driver_can_return_a_given_driver()
     {
-        $this->app->shouldReceive('resolve')->andReturn(new Yaml());
+        $this->app->shouldReceive('resolve')->andReturn(new Xml());
 
-        $this->assertInstanceOf(Yaml::class, $this->manager->driver('yaml'));
+        $this->assertInstanceOf(Xml::class, $this->manager->driver('xml'));
     }
 
     public function test_cant_resolve_unsupported_drivers()

@@ -2,10 +2,9 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\Common\Cache\ApcCache;
-use Doctrine\Common\Cache\XcacheCache;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
+use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheProvider;
 use LogicException;
 
 class ClearMetadataCacheCommand extends Command
@@ -41,12 +40,8 @@ class ClearMetadataCacheCommand extends Command
                 throw new InvalidArgumentException('No Result cache driver is configured on given EntityManager.');
             }
 
-            if ($cache instanceof ApcCache) {
+            if ($cache instanceof IlluminateCacheProvider && $cache->getStore() === "apc") {
                 throw new LogicException("Cannot clear APC Cache from Console, its shared in the Webserver memory and not accessible from the CLI.");
-            }
-
-            if ($cache instanceof XcacheCache) {
-                throw new LogicException("Cannot clear XCache Cache from Console, its shared in the Webserver memory and not accessible from the CLI.");
             }
 
             $this->message('Clearing result cache entries for <info>' . $name . '</info> entity manager');
