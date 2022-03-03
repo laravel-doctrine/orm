@@ -370,11 +370,7 @@ class EntityManagerFactory
         $this->setSecondLevelCaching($configuration);
     }
 
-    /**
-     * @param  string $cacheName
-     * @return CacheItemPoolInterface
-     */
-    private function applyNamedCacheConfiguration($cacheName)
+    private function applyNamedCacheConfiguration(string $cacheName): CacheItemPoolInterface
     {
         $defaultDriver    = $this->config->get('doctrine.cache.default', 'array');
         $defaultNamespace = $this->config->get('doctrine.cache.namespace');
@@ -390,10 +386,7 @@ class EntityManagerFactory
         return $cache;
     }
 
-    /**
-     * @param Configuration $configuration
-     */
-    protected function setSecondLevelCaching(Configuration $configuration)
+    protected function setSecondLevelCaching(Configuration $configuration): void
     {
         if ($this->config->get('doctrine.cache.second_level', false)) {
             $configuration->setSecondLevelCacheEnabled(true);
@@ -408,11 +401,7 @@ class EntityManagerFactory
         }
     }
 
-    /**
-     * @param array         $settings
-     * @param Configuration $configuration
-     */
-    protected function setCustomMappingDriverChain(array $settings, Configuration $configuration)
+    protected function setCustomMappingDriverChain(array $settings, Configuration $configuration): void
     {
         $chain = new MappingDriverChain(
             $configuration->getMetadataDriverImpl(),
@@ -433,13 +422,7 @@ class EntityManagerFactory
         );
     }
 
-    /**
-     * @param                        $settings
-     * @param EntityManagerInterface $manager
-     *
-     * @return mixed
-     */
-    protected function decorateManager(array $settings, EntityManagerInterface $manager)
+    protected function decorateManager(array $settings, EntityManagerInterface $manager): mixed
     {
         if ($decorator = Arr::get($settings, 'decorator', false)) {
             if (!class_exists($decorator)) {
@@ -452,12 +435,7 @@ class EntityManagerFactory
         return $manager;
     }
 
-    /**
-     * @param array $settings
-     *
-     * @return array
-     */
-    protected function getConnectionDriver(array $settings = [])
+    protected function getConnectionDriver(array $settings = []): array
     {
         $connection = Arr::get($settings, 'connection');
         $key        = 'database.connections.' . $connection;

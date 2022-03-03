@@ -6,6 +6,7 @@ use Illuminate\Contracts\Config\Repository;
 use LaravelDoctrine\ORM\Configuration\Driver;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
+use Symfony\Component\Cache\Exception\CacheException;
 
 class PhpFileCacheProvider implements Driver
 {
@@ -25,15 +26,18 @@ class PhpFileCacheProvider implements Driver
     /**
      * @param array $settings
      *
+     * @throws CacheException
      * @return CacheItemPoolInterface
-     * @throws \Symfony\Component\Cache\Exception\CacheException
      */
     public function resolve(array $settings = [])
     {
+        $path = $settings['path'] ?? $this->config->get('cache.stores.file.path', storage_path('framework/cache'));
         $namespace = $settings['namespace'] ?? $this->config->get('doctrine.cache.namespace', 'doctrine-cache');
 
         return new PhpFilesAdapter(
-            $namespace
+            $namespace,
+            0,
+            $path
         );
     }
 }

@@ -3,11 +3,11 @@
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
 use Doctrine\Common\Cache\Psr6\CacheAdapter;
-use Psr\Cache\CacheItemPoolInterface;
 use const E_USER_DEPRECATED;
 use Illuminate\Contracts\Cache\Factory;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Configuration\Driver;
+use Psr\Cache\CacheItemPoolInterface;
 
 class IlluminateCacheProvider implements Driver
 {

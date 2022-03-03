@@ -4,6 +4,7 @@ namespace LaravelDoctrine\ORM\Console;
 
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
+use LaravelDoctrine\ORM\Configuration\Cache\ApcCacheProvider;
 use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheProvider;
 use LogicException;
 
@@ -40,7 +41,7 @@ class ClearResultCacheCommand extends Command
                 throw new InvalidArgumentException('No Result cache driver is configured on given EntityManager.');
             }
 
-            if ($cache instanceof IlluminateCacheProvider && $cache->getStore() === "apc") {
+            if ($cache instanceof ApcCacheProvider) {
                 throw new LogicException("Cannot clear APC Cache from Console, its shared in the Webserver memory and not accessible from the CLI.");
             }
 

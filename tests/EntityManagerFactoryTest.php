@@ -854,7 +854,6 @@ class EntityManagerFactoryTest extends TestCase
             ->with('doctrine.cache.default', 'array')
             ->andReturn('array');
 
-
         foreach ($this->caches as $cache) {
             $expectation = $this->config->shouldReceive('get')
                          ->with('doctrine.cache.' . $cache, [])
@@ -896,7 +895,6 @@ class EntityManagerFactoryTest extends TestCase
                      ->andReturn([]);
 
         $strictCallCountChecking ? $expectation->once() : $expectation->never();
-
     }
 
     protected function mockCache()
