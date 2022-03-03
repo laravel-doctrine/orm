@@ -13,6 +13,10 @@ class PhpFileCacheProviderTest extends AbstractCacheProviderTest
             ->with('doctrine.cache.namespace', 'doctrine-cache')
             ->once()
             ->andReturn('doctrine-cache');
+        $config->shouldReceive('get')
+            ->with('cache.stores.file.path', storage_path('framework/cache'))
+            ->once()
+            ->andReturn('/tmp');
 
         return new PhpFileCacheProvider(
             $config
