@@ -29,7 +29,7 @@ class FileCacheProvider implements Driver
      */
     public function resolve(array $settings = [])
     {
-        $path = $settings['path'] ?? $this->config->get('cache.stores.file.path', storage_path('framework/cache'));
+        $path      = $settings['path'] ?? $this->config->get('cache.stores.file.path', storage_path('framework/cache'));
         $namespace = $settings['namespace'] ?? $this->config->get('doctrine.cache.namespace', 'doctrine-cache');
 
         return new FilesystemAdapter(

@@ -5,7 +5,6 @@ namespace LaravelDoctrine\ORM\Console;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Configuration\Cache\ApcCacheProvider;
-use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheProvider;
 use LogicException;
 
 class ClearMetadataCacheCommand extends Command
