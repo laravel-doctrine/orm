@@ -41,7 +41,8 @@
         "itsgoingd/clockwork": "~1.9|^5.0",
         "illuminate/log": "^8.0",
         "illuminate/notifications": "^8.0",
-        "illuminate/queue": "^8.0"
+        "illuminate/queue": "^8.0",
+        "friendsofphp/php-cs-fixer": "^3.6"
     },
     "autoload": {
         "psr-4": {
