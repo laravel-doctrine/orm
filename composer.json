@@ -42,7 +42,7 @@
         "illuminate/log": "^8.0",
         "illuminate/notifications": "^8.0",
         "illuminate/queue": "^8.0",
-        "friendsofphp/php-cs-fixer": "^3.6"
+        "friendsofphp/php-cs-fixer": "^3.4"
     },
     "autoload": {
         "psr-4": {
