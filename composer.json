@@ -31,7 +31,8 @@
         "illuminate/support": "^9.0",
         "illuminate/validation": "^9.0",
         "illuminate/view": "^9.0",
-        "symfony/serializer": "^6.0"
+        "symfony/serializer": "^6.0",
+        "symfony/yaml": "^5.0|^6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.3",
