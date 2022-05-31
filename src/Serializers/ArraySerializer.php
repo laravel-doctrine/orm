@@ -7,6 +7,16 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 class ArraySerializer
 {
     /**
+     * @var Serializer
+     */
+    protected $serializer;
+
+    public function __construct()
+    {
+        $this->serializer = new Serializer([$this->getNormalizer()]);
+    }
+    
+    /**
      * @param $entity
      *
      * @return array
@@ -14,7 +24,7 @@ class ArraySerializer
     public function serialize($entity)
     {
         $format = 'array';
-        $data   = $this->getNormalizer()->normalize($entity, $format);
+        $data = $this->serializer->normalize($entity, $format);
 
         return $this->getEncoder()->encode($data, $format);
     }
