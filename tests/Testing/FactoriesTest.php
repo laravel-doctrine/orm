@@ -8,7 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Factories\CrossJoinSequence;
 use LaravelDoctrine\ORM\Testing\Factories\Factory;
-use LaravelDoctrine\ORM\Testing\Factories\HasFactory;
+use LaravelDoctrine\ORM\Testing\Factories\HasEntityFactory;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class FactoriesTest extends MockeryTestCase
@@ -234,7 +234,7 @@ class FactoriesTest extends MockeryTestCase
  */
 class FactoriesEntityStub
 {
-    use HasFactory;
+    use HasEntityFactory;
 
     protected static function newFactory()
     {

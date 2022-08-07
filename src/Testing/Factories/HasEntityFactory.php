@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM\Testing\Factories;
 
-trait HasFactory
+trait HasEntityFactory
 {
     /**
      * Get a new factory instance for the model.
