@@ -1,7 +1,9 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Events\Dispatcher;
@@ -29,11 +31,23 @@ class SubstituteBindingsTest extends TestCase
      */
     private $repository;
 
+    /**
+     * @var Mock
+     */
+    private $classMetadata;
+
+    /**
+     * @var Mock
+     */
+    private $objectManager;
+
     public function setUp(): void
     {
-        $this->registry     = m::mock(ManagerRegistry::class);
-        $this->em           = m::mock(EntityManager::class);
-        $this->repository   = m::mock(\Doctrine\Persistence\ObjectRepository::class);
+        $this->registry      = m::mock(ManagerRegistry::class);
+        $this->em            = m::mock(EntityManager::class);
+        $this->repository    = m::mock(\Doctrine\Persistence\ObjectRepository::class);
+        $this->classMetadata = m::mock(ClassMetadataInfo::class);
+        $this->objectManager = m::mock(ObjectManager::class);
     }
 
     protected function getRouter()
@@ -52,8 +66,35 @@ class SubstituteBindingsTest extends TestCase
         return $router;
     }
 
+    protected function mockClassMetadata(): void
+    {
+        $this->classMetadata
+            ->shouldReceive('getSingleIdentifierFieldName')
+            ->once()
+            ->andReturn('id');
+        $this->classMetadata
+            ->shouldReceive('getTypeOfField')
+            ->once()
+            ->with('EntityIdName')
+            ->andReturn('integer');
+    }
+
+    protected function mockObjectManager(): void
+    {
+        $this->mockClassMetadata();
+
+        $this->objectManager
+            ->shouldReceive('getClassMetadata')
+            ->once()
+            ->with('BindableEntity')
+            ->andReturn($this->classMetadata);
+    }
+
     protected function mockRegistry()
     {
+        $this->mockObjectManager();
+
+        $this->registry->shouldReceive('getManager')->once()->with('BindableEntity')->andReturn($this->objectManager);
         $this->registry->shouldReceive('getRepository')->once()->with('BindableEntity')->andReturn($this->repository);
     }
 
