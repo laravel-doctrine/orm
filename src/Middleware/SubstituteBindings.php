@@ -72,12 +72,12 @@ class SubstituteBindings
                 $bindingFields = $route->bindingFields();
                 $fieldName = null;
 
-                if (array_key_exists($parameter->name, $bindingFields)) {
-                    $fieldName = $bindingFields[$parameter->name];
-                }
-
                 if ($reflectionClass->implementsInterface(UrlRoutable::class)) {
                     $fieldName = call_user_func([$class, 'getRouteKeyName']);
+                }
+
+                if (array_key_exists($parameter->name, $bindingFields)) {
+                    $fieldName = $bindingFields[$parameter->name];
                 }
 
                 if ($fieldName) {
