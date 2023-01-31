@@ -1,5 +1,9 @@
 name: CI
-on: [push, pull_request]
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+  pull_request:
 jobs:
   tests:
     name: Tests
@@ -8,7 +12,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         php: ['8.0', '8.1', '8.2']
-        doctrine: ['2.11']
+        doctrine: ['2.11', '2.12', '2.13', '2.14']
     steps:
       - uses: actions/checkout@v3
       - name: Setup PHP
