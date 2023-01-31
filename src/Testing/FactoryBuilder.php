@@ -66,6 +66,20 @@ class FactoryBuilder
     protected $activeStates = [];
 
     /**
+     * The registered after making callbacks.
+     *
+     * @var array
+     */
+    public $afterMaking = [];
+
+    /**
+     * The registered after creating callbacks.
+     *
+     * @var array
+     */
+    public $afterCreating = [];
+
+    /**
      * Create an new builder instance.
      *
      * @param ManagerRegistry  $registry
