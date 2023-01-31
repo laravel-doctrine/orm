@@ -6,6 +6,8 @@ use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Http\Request;
+use Illuminate\Routing\CallableDispatcher;
+use Illuminate\Routing\Contracts\CallableDispatcher as CallableDispatcherContract;
 use Illuminate\Routing\Router;
 use LaravelDoctrine\ORM\Middleware\SubstituteBindings;
 use Mockery as m;
@@ -39,6 +41,7 @@ class SubstituteBindingsTest extends TestCase
     protected function getRouter()
     {
         $container = new Container;
+        $container->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
         $router    = new Router(new Dispatcher, $container);
 
         $container->singleton(Registrar::class, function () use ($router) {

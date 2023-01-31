@@ -33,6 +33,6 @@ class SqliteConnection extends Connection
      */
     protected function isMemory(array $settings = [])
     {
-        return Str::startsWith(Arr::get($settings, 'database'), ':memory');
+        return Str::startsWith(Arr::get($settings, 'database', ''), ':memory');
     }
 }

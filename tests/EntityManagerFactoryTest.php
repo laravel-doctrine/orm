@@ -1050,6 +1050,9 @@ class EntityManagerFactoryTest extends TestCase
         $this->configuration->shouldReceive('setDefaultRepositoryClassName')
                             ->once()
                             ->with('Repo');
+
+        $this->configuration->shouldReceive('isLazyGhostObjectEnabled')
+                            ->andReturn(false);
     }
 
     protected function enableLaravelNamingStrategy()
