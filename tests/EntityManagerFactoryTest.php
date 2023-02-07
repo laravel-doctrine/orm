@@ -1,10 +1,8 @@
 <?php
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection as DoctrinePrimaryReadReplicaConnection;
 use Doctrine\ORM\Cache\CacheFactory;
 use Doctrine\ORM\Cache\RegionsConfiguration;
 use Doctrine\ORM\Configuration;
@@ -24,11 +22,12 @@ use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\EntityManagerFactory;
 use LaravelDoctrine\ORM\Loggers\Logger;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
-use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver as LaravelDoctrineEntityListenerResolver;
+use LaravelDoctrine\ORM\ORMSetupResolver;
 use LaravelDoctrine\ORM\Testing\ConfigRepository;
 use Mockery as m;
 use Mockery\Mock;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class EntityManagerFactoryTest extends TestCase
 {
@@ -108,7 +107,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->mockResolver();
         $this->mockConfig();
 
-        $this->setup = m::mock(Setup::class);
+        $this->setup = m::mock(ORMSetupResolver::class);
         $this->setup->shouldReceive('createConfiguration')->once()->andReturn($this->configuration);
 
         $this->factory = new EntityManagerFactory(
@@ -239,10 +238,12 @@ class EntityManagerFactoryTest extends TestCase
                      ->andReturn('namespace');
 
         foreach ($this->caches as $cache) {
-            $this->config->shouldReceive('get')
-                         ->with('doctrine.cache.' . $cache . '.namespace', 'namespace')
+            $this->config->shouldNotReceive('get')
+                         ->with('doctrine.cache.' . $cache, [])
                          ->once()
-                         ->andReturn('namespace');
+                         ->andReturn([
+                            'namespace' => $cache,
+                        ])->byDefault();
         }
 
         $cache = m::mock(Cache::class);
@@ -556,7 +557,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new Setup(),
+            new ORMSetupResolver,
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -614,7 +615,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new Setup(),
+            new ORMSetupResolver,
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -672,7 +673,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new Setup(),
+            new ORMSetupResolver,
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -732,7 +733,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new Setup(),
+            new ORMSetupResolver,
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -777,7 +778,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new Setup(),
+            new ORMSetupResolver,
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -823,7 +824,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new Setup(),
+            new ORMSetupResolver,
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -899,8 +900,8 @@ class EntityManagerFactoryTest extends TestCase
         $this->cache = m::mock(CacheManager::class);
 
         $this->cache->shouldReceive('driver')
-                    ->times(count($this->caches) + 1) // one for each cache driver + one default
-                    ->andReturn(new ArrayCache());
+                    ->times(count($this->caches)) // one for each cache driver
+                    ->andReturn(new ArrayAdapter());
     }
 
     protected function mockConnection()
@@ -936,7 +937,7 @@ class EntityManagerFactoryTest extends TestCase
 
     protected function mockResolver()
     {
-        $this->listenerResolver = m::mock(LaravelDoctrineEntityListenerResolver::class);
+        $this->listenerResolver = m::mock(EntityListenerResolver::class);
     }
 
     protected function disableDebugbar()
@@ -962,14 +963,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->config->shouldReceive('get')
                      ->with('doctrine.cache.namespace')
                      ->atLeast()->once()
-                     ->andReturn(null);
-
-        foreach ($this->caches as $cache) {
-            $this->config->shouldReceive('get')
-                         ->with('doctrine.cache.' . $cache . '.namespace', null)
-                         ->atLeast()->once()
-                         ->andReturn(null);
-        }
+                     ->andReturn(null);        
     }
 
     protected function disableCustomFunctions()
@@ -998,9 +992,9 @@ class EntityManagerFactoryTest extends TestCase
                             ->atLeast()->once()
                             ->andReturn('Doctrine\ORM\Mapping\ClassMetadataFactory');
 
-        $this->configuration->shouldReceive('setMetadataCacheImpl')->once();
-        $this->configuration->shouldReceive('setQueryCacheImpl')->once();
-        $this->configuration->shouldReceive('setResultCacheImpl')->once();
+        $this->configuration->shouldReceive('setMetadataCache')->once();
+        $this->configuration->shouldReceive('setQueryCache')->once();
+        $this->configuration->shouldReceive('setResultCache')->once();
 
         $this->configuration->shouldReceive('getMetadataCache')->zeroOrMoreTimes();
 
@@ -1068,11 +1062,11 @@ class EntityManagerFactoryTest extends TestCase
     }
 
     /**
-     * Data provider for testMasterSlaveConnection.
+     * Data provider for testPrimaryReadReplicaConnection.
      *
      * @return array
      */
-    public function getTestMasterSlaveConnectionData()
+    public function getTestPrimaryReadReplicaConnectionData()
     {
         $out = [];
 
@@ -1139,9 +1133,9 @@ class EntityManagerFactoryTest extends TestCase
      * @param string $expectedException
      * @param string $msg
      *
-     * @dataProvider getTestMasterSlaveConnectionData
+     * @dataProvider getTestPrimaryReadReplicaConnectionData
      */
-    public function testMasterSlaveConnection(
+    public function testPrimaryReadReplicaConnection(
         array $inputConfig,
         $expectedException = '',
         $msg = ''
@@ -1152,12 +1146,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->mockResolver();
         $this->mockConfig($inputConfig, empty($expectedException));
 
-        $this->cache = m::mock(CacheManager::class);
-        $this->cache->shouldReceive('driver')
-            ->times(empty($expectedException) ? 4 : 1)
-            ->andReturn(new ArrayCache());
-
-        $this->setup = m::mock(Setup::class);
+        $this->setup = m::mock(ORMSetupResolver::class);
         $this->setup->shouldReceive('createConfiguration')->once()->andReturn($this->configuration);
 
         $this->connection = m::mock(ConnectionManager::class);
@@ -1191,57 +1180,6 @@ class EntityManagerFactoryTest extends TestCase
         $factory->create($this->settings);
 
         $this->assertTrue(true);
-    }
-
-    /**
-     * doctrine/dbal 2.11 has MasterSlaveConnection class deprecated in favour of PrimaryReadReplicaConnection
-     */
-    public function testPrimaryReadReplicaConnectionIsUsedWhenAvailable()
-    {
-        if (!class_exists(DoctrinePrimaryReadReplicaConnection::class)) {
-            $this->markTestSkipped('Skipped for doctrine/dbal < 2.11');
-        }
-
-        m::resetContainer();
-
-        $this->mockApp();
-        $this->mockResolver();
-        $this->mockConfig($this->getDummyBaseInputConfig());
-
-        $this->cache = m::mock(CacheManager::class);
-        $this->cache->shouldReceive('driver')
-            ->times(4)
-            ->andReturn(new ArrayCache());
-
-        $this->setup = m::mock(Setup::class);
-        $this->setup->shouldReceive('createConfiguration')->once()->andReturn($this->configuration);
-
-        $this->connection = m::mock(ConnectionManager::class);
-        $this->connection->shouldReceive('driver')
-            ->once()
-            ->with('mysql', $this->getDummyBaseInputConfig())
-            ->andReturn(['driver' => 'pdo_mysql']);
-
-        $factory = new EntityManagerFactory(
-            $this->container,
-            $this->setup,
-            $this->meta,
-            $this->connection,
-            $this->cache,
-            $this->config,
-            $this->listenerResolver
-        );
-
-        $this->disableDebugbar();
-        $this->disableCustomCacheNamespace();
-        $this->disableSecondLevelCaching();
-        $this->disableCustomFunctions();
-        $this->enableLaravelNamingStrategy();
-
-        $this->settings['connection'] = 'mysql';
-        $entityManager                = $factory->create($this->settings);
-
-        $this->assertInstanceOf(DoctrinePrimaryReadReplicaConnection::class, $entityManager->getConnection());
     }
 
     protected function tearDown(): void

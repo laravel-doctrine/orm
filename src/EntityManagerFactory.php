@@ -2,7 +2,6 @@
 
 namespace LaravelDoctrine\ORM;
 
-use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection as DocrinePrimaryReadReplicaConnection;
 use Doctrine\DBAL\DriverManager;
@@ -11,6 +10,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\Setup;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
@@ -18,13 +18,14 @@ use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
-use LaravelDoctrine\ORM\Configuration\Connections\MasterSlaveConnection;
 use LaravelDoctrine\ORM\Configuration\Connections\PrimaryReadReplicaConnection;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaData;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
+use LaravelDoctrine\ORM\ORMSetupResolver;
+use Psr\Cache\CacheItemPoolInterface;
 use ReflectionException;
 
 class EntityManagerFactory
@@ -55,7 +56,7 @@ class EntityManagerFactory
     protected $container;
 
     /**
-     * @var Setup
+     * @var ORMSetupResolver
      */
     private $setup;
 
@@ -66,7 +67,7 @@ class EntityManagerFactory
 
     /**
      * @param Container              $container
-     * @param Setup                  $setup
+     * @param ORMSetupResolver       $setup
      * @param MetaDataManager        $meta
      * @param ConnectionManager      $connection
      * @param CacheManager           $cache
@@ -75,7 +76,7 @@ class EntityManagerFactory
      */
     public function __construct(
         Container $container,
-        Setup $setup,
+        ORMSetupResolver $setup,
         MetaDataManager $meta,
         ConnectionManager $connection,
         CacheManager $cache,
@@ -103,9 +104,8 @@ class EntityManagerFactory
         $configuration = $this->setup->createConfiguration(
             Arr::get($settings, 'dev', false),
             Arr::get($settings, 'proxies.path'),
-            $this->cache->driver($defaultDriver)
         );
-
+    
         $this->setMetadataDriver($settings, $configuration);
 
         $eventManager = $this->createEventManager($settings);
@@ -117,12 +117,9 @@ class EntityManagerFactory
             $driver
         );
 
-        if ($this->isMasterSlaveConfigured($driver)) {
-            $this->hasValidMasterSlaveConfig($driver);
-            if (class_exists(DocrinePrimaryReadReplicaConnection::class)) {
+        if ($this->isPrimaryReadReplicaConfigured($driver)) {
+            if($this->hasValidPrimaryReadReplicaConfig($driver)) {
                 $connection_configuration = (new PrimaryReadReplicaConnection($this->config, $connection_configuration))->resolve($driver);
-            } else {
-                $connection_configuration = (new MasterSlaveConnection($this->config, $connection_configuration))->resolve($driver);
             }
         }
 
@@ -373,9 +370,9 @@ class EntityManagerFactory
      */
     protected function setCacheSettings(Configuration $configuration)
     {
-        $configuration->setQueryCacheImpl($this->applyNamedCacheConfiguration('query'));
-        $configuration->setResultCacheImpl($this->applyNamedCacheConfiguration('result'));
-        $configuration->setMetadataCacheImpl($this->applyNamedCacheConfiguration('metadata'));
+        $configuration->setQueryCache($this->applyNamedCacheConfiguration('query'));
+        $configuration->setResultCache($this->applyNamedCacheConfiguration('result'));
+        $configuration->setMetadataCache($this->applyNamedCacheConfiguration('metadata'));
 
         $this->setSecondLevelCaching($configuration);
     }
@@ -384,19 +381,19 @@ class EntityManagerFactory
      * @param  string $cacheName
      * @return Cache
      */
-    private function applyNamedCacheConfiguration($cacheName)
+    private function applyNamedCacheConfiguration($cacheName): CacheItemPoolInterface
     {
         $defaultDriver    = $this->config->get('doctrine.cache.default', 'array');
         $defaultNamespace = $this->config->get('doctrine.cache.namespace');
 
         $settings = $this->config->get('doctrine.cache.' . $cacheName, []);
+        if (!isset($settings['namespace'])) {
+            $settings['namespace'] = $defaultNamespace;
+        }
+
         $driver   = $settings['driver'] ?? $defaultDriver;
 
         $cache = $this->cache->driver($driver, $settings);
-
-        if ($namespace = $this->config->get('doctrine.cache.' . $cacheName . '.namespace', $defaultNamespace)) {
-            $cache->setNamespace($namespace);
-        }
 
         return $cache;
     }
@@ -518,7 +515,7 @@ class EntityManagerFactory
      *
      * @return bool
      */
-    private function isMasterSlaveConfigured(array $driverConfig)
+    private function isPrimaryReadReplicaConfigured(array $driverConfig)
     {
         // Setting read is mandatory for master/slave configuration. Setting write is optional.
         // But if write was set and read wasn't, it means configuration is incorrect and we must inform the user.
@@ -530,7 +527,7 @@ class EntityManagerFactory
      *
      * @param array $driverConfig
      */
-    private function hasValidMasterSlaveConfig(array $driverConfig)
+    private function hasValidPrimaryReadReplicaConfig(array $driverConfig)
     {
         if (!isset($driverConfig['read'])) {
             throw new \InvalidArgumentException("Parameter 'read' must be set for read/write config.");
