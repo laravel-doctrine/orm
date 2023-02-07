@@ -65,9 +65,7 @@ class SubstituteBindingsTest extends TestCase
         $router = $this->getRouter();
         $router->get('foo/{entity}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => function (BindableEntity $entity) {
-                return $entity->getName();
-            },
+            'uses'       => 'EntityController@returnEntityName',     
         ]);
 
         $this->mockRegistry();
@@ -87,9 +85,7 @@ class SubstituteBindingsTest extends TestCase
 
         $router->get('foo/{entity}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => function (BindableEntity $entity) {
-                return $entity->getName();
-            },
+            'uses'       => 'EntityController@returnEntityName',                       
         ]);
 
         $this->mockRegistry();
@@ -103,9 +99,7 @@ class SubstituteBindingsTest extends TestCase
         $router = $this->getRouter();
         $router->get('foo/{entity}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => function (BindableEntity $entity = null) {
-                return $entity;
-            },
+            'uses'       => 'EntityController@returnEntity',            
         ]);
 
         $this->mockRegistry();
@@ -119,18 +113,14 @@ class SubstituteBindingsTest extends TestCase
         $router = $this->getRouter();
         $router->get('foo/{value}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => function ($value) {
-                return $value;
-            },
+            'uses'       => 'EntityController@returnValue',
         ]);
 
         $this->assertEquals(123456, $router->dispatch(Request::create('foo/123456', 'GET'))->getContent());
 
         $router->get('doc/trine', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => function (Request $request) {
-                return $request instanceof Request ? 'request' : 'something else';
-            },
+            'uses'       => 'EntityController@checkRequest',        
         ]);
 
         $this->assertEquals('request', $router->dispatch(Request::create('doc/trine', 'GET'))->getContent());
@@ -175,9 +165,7 @@ class SubstituteBindingsTest extends TestCase
         $router = $this->getRouter();
         $router->get('foo/{value}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => function (string $value) {
-                return $value;
-            },
+            'uses'       => 'EntityController@returnValue',
         ]);
 
         $this->assertEquals('test', $router->dispatch(Request::create('foo/test', 'GET'))->getContent());
@@ -185,18 +173,14 @@ class SubstituteBindingsTest extends TestCase
         $router = $this->getRouter();
         $router->get('bar/{value}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => function (int $value) {
-                return $value;
-            },
+            'uses'       => 'EntityController@returnValue',
         ]);
 
         $this->assertEquals(123456, $router->dispatch(Request::create('bar/123456', 'GET'))->getContent());
 
         $router->get('doc/trine', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => function (Request $request) {
-                return $request instanceof Request ? 'request' : 'something else';
-            },
+            'uses'       => 'EntityController@checkRequest',
         ]);
 
         $this->assertEquals('request', $router->dispatch(Request::create('doc/trine', 'GET'))->getContent());
@@ -257,5 +241,22 @@ class EntityController
     public function interfacer(BindableEntityWithInterface $entity)
     {
         return $entity->getId();
+    }
+
+    public function returnValue(string $value)
+    {
+        return $value;
+    }
+
+    public function returnEntity(BindableEntity $entity = null) {
+        return $entity;
+    }
+
+    public function returnEntityName(BindableEntity $entity) {
+        return $entity->getName();
+    }
+
+    public function checkRequest(Request $request) {
+        return $request instanceof Request ? 'request' : 'something else';
     }
 }

@@ -262,7 +262,7 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
     }
 
     /**
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception
      * @return Table
      */
     protected function getTableDefinition()

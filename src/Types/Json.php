@@ -3,7 +3,6 @@
 namespace LaravelDoctrine\ORM\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\JsonArrayType;
 
 /**
  * Custom Doctrine data type for JSON.
@@ -18,7 +17,7 @@ use Doctrine\DBAL\Types\JsonArrayType;
  * @deprecated Replaced by JsonType in Doctrine.
  * You can safely remove usage of this type in your 'custom_type' configuration.
  */
-class Json extends JsonArrayType
+class Json extends \Doctrine\DBAL\Types\JsonType
 {
     /**
      * Made to be compatible with Doctrine 2.4 and 2.5; 2.5 added getJsonTypeDeclarationSQL().

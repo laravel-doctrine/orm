@@ -5,6 +5,7 @@ namespace LaravelDoctrine\ORM;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection as DocrinePrimaryReadReplicaConnection;
+use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -111,7 +112,7 @@ class EntityManagerFactory
 
         $driver = $this->getConnectionDriver($settings);
 
-        $connection = $this->connection->driver(
+        $connection_configuration = $this->connection->driver(
             $driver['driver'],
             $driver
         );
@@ -119,11 +120,17 @@ class EntityManagerFactory
         if ($this->isMasterSlaveConfigured($driver)) {
             $this->hasValidMasterSlaveConfig($driver);
             if (class_exists(DocrinePrimaryReadReplicaConnection::class)) {
-                $connection = (new PrimaryReadReplicaConnection($this->config, $connection))->resolve($driver);
+                $connection_configuration = (new PrimaryReadReplicaConnection($this->config, $connection_configuration))->resolve($driver);
             } else {
-                $connection = (new MasterSlaveConnection($this->config, $connection))->resolve($driver);
+                $connection_configuration = (new MasterSlaveConnection($this->config, $connection_configuration))->resolve($driver);
             }
         }
+
+        $connection = DriverManager::getConnection(
+            $connection_configuration,
+            $configuration,
+            $eventManager,
+        );
 
         $this->setNamingStrategy($settings, $configuration);
         $this->setQuoteStrategy($settings, $configuration);
@@ -141,7 +148,7 @@ class EntityManagerFactory
 
         $configuration->setEntityListenerResolver($this->resolver);
 
-        $manager = EntityManager::create(
+        $manager = new EntityManager(
             $connection,
             $configuration,
             $eventManager
@@ -477,12 +484,12 @@ class EntityManagerFactory
      * @param                        $settings
      * @param EntityManagerInterface $manager
      *
-     * @throws \Doctrine\DBAL\DBALException If Database Type or Doctrine Type is not found.
+     * @throws \Doctrine\DBAL\Exception If Database Type or Doctrine Type is not found.
      */
     protected function registerMappingTypes(array $settings, EntityManagerInterface $manager)
     {
         foreach (Arr::get($settings, 'mapping_types', []) as $dbType => $doctrineType) {
-            // Throw DBALException if Doctrine Type is not found.
+            // Throw \Doctrine\DBAL\Exception if Doctrine Type is not found.
             $manager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($dbType, $doctrineType);
         }
     }

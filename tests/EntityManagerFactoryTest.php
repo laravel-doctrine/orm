@@ -315,8 +315,8 @@ class EntityManagerFactoryTest extends TestCase
         $manager = $this->factory->create($this->settings);
 
         $this->assertEntityManager($manager);
-        $this->assertCount(1, $manager->getEventManager()->getListeners());
-        $this->assertTrue(array_key_exists('name', $manager->getEventManager()->getListeners()));
+        $this->assertCount(1, $manager->getEventManager()->getAllListeners());
+        $this->assertTrue(array_key_exists('name', $manager->getEventManager()->getAllListeners()));
     }
 
     public function test_can_set_multiple_listeners()
@@ -346,8 +346,8 @@ class EntityManagerFactoryTest extends TestCase
         $manager = $this->factory->create($this->settings);
 
         $this->assertEntityManager($manager);
-        $this->assertCount(1, $manager->getEventManager()->getListeners());
-        $this->assertTrue(array_key_exists('name', $manager->getEventManager()->getListeners()));
+        $this->assertCount(1, $manager->getEventManager()->getAllListeners());
+        $this->assertTrue(array_key_exists('name', $manager->getEventManager()->getAllListeners()));
         $this->assertCount(2, $manager->getEventManager()->getListeners('name'));
     }
 
@@ -395,8 +395,8 @@ class EntityManagerFactoryTest extends TestCase
         $manager = $this->factory->create($this->settings);
 
         $this->assertEntityManager($manager);
-        $this->assertCount(1, $manager->getEventManager()->getListeners());
-        $this->assertTrue(array_key_exists('onFlush', $manager->getEventManager()->getListeners()));
+        $this->assertCount(1, $manager->getEventManager()->getAllListeners());
+        $this->assertTrue(array_key_exists('onFlush', $manager->getEventManager()->getAllListeners()));
     }
 
     public function test_setting_non_existent_subscriber_throws_exception()
@@ -1051,8 +1051,9 @@ class EntityManagerFactoryTest extends TestCase
                             ->once()
                             ->with('Repo');
 
-        $this->configuration->shouldReceive('isLazyGhostObjectEnabled')
-                            ->andReturn(false);
+        $this->configuration->shouldReceive('getMiddlewares')->once()->andReturn([]);
+
+        $this->configuration->shouldReceive('isLazyGhostObjectEnabled')->once()->andReturnFalse();
     }
 
     protected function enableLaravelNamingStrategy()
