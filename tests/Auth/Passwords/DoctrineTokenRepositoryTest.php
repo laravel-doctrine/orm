@@ -50,7 +50,7 @@ class DoctrineTokenRepositoryTest extends TestCase
         $this->builder    = m::mock(QueryBuilder::class);
         $this->schema     = m::mock(AbstractSchemaManager::class);
 
-        $this->connection->shouldReceive('getSchemaManager')
+        $this->connection->shouldReceive('createSchemaManager')
                          ->andReturn($this->schema);
 
         $this->schema->shouldReceive('tablesExist')

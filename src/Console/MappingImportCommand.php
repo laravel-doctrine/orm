@@ -66,7 +66,7 @@ class MappingImportCommand extends Command
             $exporter->setEntityGenerator($entityGenerator);
         }
 
-        $databaseDriver = new DatabaseDriver($em->getConnection()->getSchemaManager());
+        $databaseDriver = new DatabaseDriver($em->getConnection()->createSchemaManager());
 
         // set namespace that will be used to generate metadata files
         $namespace = $this->option('namespace');

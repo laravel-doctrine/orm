@@ -48,7 +48,7 @@ class ConvertMappingCommand extends Command
 
             if ($this->option('from-database') === true) {
                 $databaseDriver = new DatabaseDriver(
-                    $em->getConnection()->getSchemaManager()
+                    $em->getConnection()->createSchemaManager()
                 );
 
                 $em->getConfiguration()->setMetadataDriverImpl(

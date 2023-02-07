@@ -6,6 +6,7 @@ use Clockwork\DataSource\DataSource;
 use Clockwork\Request\Request;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\SQLLogger;
+use Illuminate\Support\Str;
 use LaravelDoctrine\ORM\Loggers\Formatters\FormatQueryKeywords;
 use LaravelDoctrine\ORM\Loggers\Formatters\QueryFormatter;
 use LaravelDoctrine\ORM\Loggers\Formatters\ReplaceQueryParams;
@@ -59,10 +60,14 @@ class DoctrineDataSource extends DataSource
     {
         $queries = [];
         foreach ($this->logger->queries as $query) {
+            $connection_string = Str::of(
+                (new \ReflectionClass($this->connection->getDatabasePlatform()))->getShortName(),
+            )->lower()->remove('platform')->toString();
+
             $queries[] = [
                 'query'      => $this->formatter->format($this->connection->getDatabasePlatform(), $query['sql'], $query['params']),
                 'duration'   => $query['executionMS'] * 1000,
-                'connection' => $this->connection->getDriver()->getName()
+                'connection' => $connection_string,
             ];
         }
 
