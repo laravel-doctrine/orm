@@ -2,13 +2,11 @@
 
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
-use Doctrine\Common\Cache\PhpFileCache;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Foundation\Application;
 use LaravelDoctrine\ORM\Configuration\Driver;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
-
-use function storage_path;
 
 class PhpFileCacheProvider implements Driver
 {

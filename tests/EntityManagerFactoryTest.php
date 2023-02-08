@@ -743,8 +743,14 @@ class EntityManagerFactoryTest extends TestCase
 
         $manager = $factory->create($config->get('doctrine'));
 
-        $this->assertInstanceOf(\Doctrine\Common\Cache\PhpFileCache::class, $manager->getConfiguration()->getMetadataCacheImpl());
-        $this->assertStringEndsWith('myCustomPath', $manager->getConfiguration()->getMetadataCacheImpl()->getDirectory());
+        $metadata_cache = $manager->getConfiguration()->getMetadataCache();
+        $this->assertInstanceOf(\Symfony\Component\Cache\Adapter\PhpFilesAdapter::class, $metadata_cache);
+
+        $reflection_cache = new ReflectionObject($metadata_cache);
+        $directory_property = $reflection_cache->getProperty('directory');
+        $directory_property->setAccessible(true);
+
+        $this->assertStringContainsString('myCustomPath', $directory_property->getValue($metadata_cache));
     }
 
     public function test_wrapper_connection()
@@ -1015,7 +1021,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $this->configuration->shouldReceive('setEntityListenerResolver')
                             ->atLeast()->once()
-                            ->with(m::type(LaravelDoctrineEntityListenerResolver::class));
+                            ->with(m::type(EntityListenerResolver::class));
 
         $this->configuration->shouldReceive('getProxyDir')
                             ->atLeast()->once()
