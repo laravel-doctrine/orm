@@ -152,32 +152,6 @@ class DoctrineManagerTest extends TestCase
         BootChain::boot($this->registry);
     }
 
-    public function test_can_add_a_new_namespace_to_default_connection()
-    {
-        $this->registry->shouldReceive('getManager')
-                       ->once()
-                       ->with('default')
-                       ->andReturn($this->em);
-
-        $configuration = m::mock(Configuration::class);
-
-        $mappingDriver = m::mock(MappingDriverChain::class);
-        $mappingDriver->shouldReceive('addNamespace')->once()->with('NewNamespace');
-
-        $configuration->shouldReceive('getMetadataDriverImpl')
-            ->once()
-            ->andReturn($mappingDriver);
-
-        $this->em->shouldReceive('getConfiguration')
-                 ->once()->andReturn($configuration);
-
-        $this->manager->addNamespace('NewNamespace', 'default');
-
-        BootChain::boot($this->registry);
-
-        $this->assertTrue(true);
-    }
-
     public function test_can_add_paths_to_default_connection()
     {
         $this->registry->shouldReceive('getManager')

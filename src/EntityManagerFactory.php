@@ -3,15 +3,13 @@
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\Common\EventManager;
-use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection as DocrinePrimaryReadReplicaConnection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\ORMSetup;
-use Doctrine\ORM\Tools\Setup;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Arr;
@@ -105,6 +103,8 @@ class EntityManagerFactory
             Arr::get($settings, 'dev', false),
             Arr::get($settings, 'proxies.path'),
         );
+
+        $configuration->setSchemaManagerFactory(new DefaultSchemaManagerFactory);
     
         $this->setMetadataDriver($settings, $configuration);
 
@@ -377,11 +377,7 @@ class EntityManagerFactory
         $this->setSecondLevelCaching($configuration);
     }
 
-    /**
-     * @param  string $cacheName
-     * @return Cache
-     */
-    private function applyNamedCacheConfiguration($cacheName): CacheItemPoolInterface
+    private function applyNamedCacheConfiguration(string $cacheName): CacheItemPoolInterface
     {
         $defaultDriver    = $this->config->get('doctrine.cache.default', 'array');
         $defaultNamespace = $this->config->get('doctrine.cache.namespace');
@@ -426,15 +422,6 @@ class EntityManagerFactory
             $configuration->getMetadataDriverImpl(),
             'LaravelDoctrine'
         );
-
-        foreach (Arr::get($settings, 'namespaces', []) as $alias => $namespace) {
-            // Add an alias for the namespace using the key
-            if (is_string($alias)) {
-                $configuration->addEntityNamespace($alias, $namespace);
-            }
-
-            $chain->addNamespace($namespace);
-        }
 
         $configuration->setMetadataDriverImpl(
             $chain

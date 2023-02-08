@@ -3,6 +3,7 @@
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
 use Doctrine\ORM\Cache\CacheFactory;
 use Doctrine\ORM\Cache\RegionsConfiguration;
 use Doctrine\ORM\Configuration;
@@ -380,7 +381,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->container->shouldReceive('make')
                 ->with(SubscriberStub::class)
                 ->once()
-                ->andReturn(new SubscriberStub);
+                ->andReturn(new SubscriberStub());
 
         $this->disableDebugbar();
         $this->disableSecondLevelCaching();
@@ -556,7 +557,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new ORMSetupResolver,
+            new ORMSetupResolver(),
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -614,7 +615,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new ORMSetupResolver,
+            new ORMSetupResolver(),
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -672,7 +673,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new ORMSetupResolver,
+            new ORMSetupResolver(),
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -732,7 +733,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new ORMSetupResolver,
+            new ORMSetupResolver(),
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -783,7 +784,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new ORMSetupResolver,
+            new ORMSetupResolver(),
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -829,7 +830,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $factory = new EntityManagerFactory(
             $container,
-            new ORMSetupResolver,
+            new ORMSetupResolver(),
             new MetaDataManager($container),
             new ConnectionManager($container),
             new CacheManager($container),
@@ -968,7 +969,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->config->shouldReceive('get')
                      ->with('doctrine.cache.namespace')
                      ->atLeast()->once()
-                     ->andReturn(null);        
+                     ->andReturn(null);
     }
 
     protected function disableCustomFunctions()
@@ -1011,7 +1012,7 @@ class EntityManagerFactoryTest extends TestCase
                             ->atLeast()->once()
                             ->andReturn($repoFactory);
 
-        $entityListenerResolver = m::mock(LaravelDoctrineEntityListenerResolver::class);
+        $entityListenerResolver = m::mock(EntityListenerResolver::class);
         $this->configuration->shouldReceive('getEntityListenerResolver')
                             ->atLeast()->once()
                             ->andReturn($entityListenerResolver);
@@ -1051,6 +1052,10 @@ class EntityManagerFactoryTest extends TestCase
         $this->configuration->shouldReceive('getMiddlewares')->once()->andReturn([]);
 
         $this->configuration->shouldReceive('isLazyGhostObjectEnabled')->once()->andReturnFalse();
+
+        $schema_manager_factory = new DefaultSchemaManagerFactory();
+        $this->configuration->shouldReceive('setSchemaManagerFactory')->once();
+        $this->configuration->shouldReceive('getSchemaManagerFactory')->once()->andReturn($schema_manager_factory);
     }
 
     protected function enableLaravelNamingStrategy()

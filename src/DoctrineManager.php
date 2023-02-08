@@ -93,17 +93,6 @@ class DoctrineManager
     }
 
     /**
-     * @param             $namespace
-     * @param string|null $connection
-     */
-    public function addNamespace($namespace, $connection = null)
-    {
-        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $namespace) {
-            $this->getMetaDataDriver($connection, $registry)->addNamespace($namespace);
-        });
-    }
-
-    /**
      * @param array       $paths
      * @param string|null $connection
      */
