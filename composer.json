@@ -18,7 +18,7 @@
     "require": {
         "php": "^8.0",
         "doctrine/annotations": "^1.13",
-        "doctrine/dbal": "^3.0",
+        "doctrine/dbal": "^3.2",
         "doctrine/orm": "^2.11",
         "doctrine/persistence": "^1.3.5|^2.0",
         "illuminate/auth": "^9.0",
