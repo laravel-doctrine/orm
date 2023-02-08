@@ -40,6 +40,7 @@ class ExtensionManager
      */
     public function boot(ManagerRegistry $registry)
     {
+        /** @var \Doctrine\ORM\EntityManagerInterface $em */
         foreach ($registry->getManagers() as $connection => $em) {
             foreach ($this->extensions as $extension) {
                 $extension = $this->container->make($extension);

@@ -10,12 +10,10 @@ use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\FilterCollection;
 use Doctrine\ORM\Repository\RepositoryFactory;
-use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use LaravelDoctrine\ORM\Configuration\Cache\CacheManager;
-use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheAdapter;
 use LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
@@ -27,6 +25,7 @@ use LaravelDoctrine\ORM\Testing\ConfigRepository;
 use Mockery as m;
 use Mockery\Mock;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class EntityManagerFactoryTest extends TestCase
@@ -67,7 +66,7 @@ class EntityManagerFactoryTest extends TestCase
     protected $configuration;
 
     /**
-     * @var LaravelDoctrineEntityListenerResolver|Mock
+     * @var EntityListenerResolver|Mock
      */
     protected $listenerResolver;
 
@@ -567,7 +566,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $manager = $factory->create($config->get('doctrine'));
 
-        $this->assertInstanceOf(IlluminateCacheAdapter::class, $manager->getConfiguration()->getMetadataCacheImpl());
+        $this->assertInstanceOf(CacheItemPoolInterface::class, $manager->getConfiguration()->getMetadataCache());
     }
 
     public function test_illuminate_cache_provider_redis()
@@ -625,7 +624,7 @@ class EntityManagerFactoryTest extends TestCase
 
         $manager = $factory->create($config->get('doctrine'));
 
-        $this->assertInstanceOf(IlluminateCacheAdapter::class, $manager->getConfiguration()->getMetadataCacheImpl());
+        $this->assertInstanceOf(CacheItemPoolInterface::class, $manager->getConfiguration()->getMetadataCache());
     }
 
     public function test_illuminate_cache_provider_invalid_store()
@@ -1002,10 +1001,8 @@ class EntityManagerFactoryTest extends TestCase
         $this->configuration->shouldReceive('setQueryCache')->once();
         $this->configuration->shouldReceive('setResultCache')->once();
 
-        $this->configuration->shouldReceive('getMetadataCache')->zeroOrMoreTimes();
-
-        $cache = m::mock(Cache::class);
-        $this->configuration->shouldReceive('getMetadataCacheImpl')
+        $cache = m::mock(CacheItemPoolInterface::class);
+        $this->configuration->shouldReceive('getMetadataCache')
                             ->atLeast()->once()
                             ->andReturn($cache);
 

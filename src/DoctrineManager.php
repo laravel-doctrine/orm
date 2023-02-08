@@ -70,6 +70,7 @@ class DoctrineManager
      */
     private function callExtendOn($connection, $callback, ManagerRegistry $registry)
     {
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
         $manager = $registry->getManager($connection);
 
         if (!is_callable($callback)) {

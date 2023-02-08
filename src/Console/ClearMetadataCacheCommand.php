@@ -2,10 +2,9 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\Common\Cache\ApcCache;
-use Doctrine\Common\Cache\XcacheCache;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
+use LaravelDoctrine\ORM\Configuration\Cache\ApcCacheProvider;
 use LogicException;
 
 class ClearMetadataCacheCommand extends Command
@@ -15,7 +14,6 @@ class ClearMetadataCacheCommand extends Command
      * @var string
      */
     protected $signature = 'doctrine:clear:metadata:cache
-    {--flush : If defined, cache entries will be flushed instead of deleted/invalidated.}
     {--em= : Clear cache for a specific entity manager }';
 
     /**
@@ -34,30 +32,22 @@ class ClearMetadataCacheCommand extends Command
         $names = $this->option('em') ? [$this->option('em')] : $registry->getManagerNames();
 
         foreach ($names as $name) {
+            /** @var \Doctrine\ORM\EntityManagerInterface $em */
             $em    = $registry->getManager($name);
-            $cache = $em->getConfiguration()->getMetadataCacheImpl();
+            $cache = $em->getConfiguration()->getMetadataCache();
 
             if (!$cache) {
                 throw new InvalidArgumentException('No Result cache driver is configured on given EntityManager.');
             }
 
-            if ($cache instanceof ApcCache) {
+            if ($cache instanceof ApcCacheProvider) {
                 throw new LogicException("Cannot clear APC Cache from Console, its shared in the Webserver memory and not accessible from the CLI.");
-            }
-
-            if ($cache instanceof XcacheCache) {
-                throw new LogicException("Cannot clear XCache Cache from Console, its shared in the Webserver memory and not accessible from the CLI.");
             }
 
             $this->message('Clearing result cache entries for <info>' . $name . '</info> entity manager');
 
-            $result  = $cache->deleteAll();
+            $result  = $cache->clear();
             $message = ($result) ? 'Successfully deleted cache entries.' : 'No cache entries were deleted.';
-
-            if ($this->option('flush')) {
-                $result  = $cache->flushAll();
-                $message = ($result) ? 'Successfully flushed cache entries.' : $message;
-            }
 
             $this->info($message);
         }
