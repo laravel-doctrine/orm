@@ -29,7 +29,6 @@ return [
             'dev'           => env('APP_DEBUG', false),
             'meta'          => env('DOCTRINE_METADATA', 'annotations'),
             'connection'    => env('DB_CONNECTION', 'mysql'),
-            'namespaces'    => [],
             'paths'         => [
                 base_path('app/Entities')
             ],

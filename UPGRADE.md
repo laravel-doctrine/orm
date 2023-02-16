@@ -2,7 +2,7 @@
 
 ## Breaking Change: DBAL 3
 
-The most significant change in version 2.0 is using doctrine/dbal 3. You should review their upgrade guide in addition to this one: [https://github.com/doctrine/dbal/blob/3.5.x/UPGRADE.md](https://github.com/doctrine/dbal/blob/3.5.x/UPGRADE.md).
+The most significant change in version 2.0 is using doctrine/dbal 3. You should [review their upgrade guide](https://github.com/doctrine/dbal/blob/bd54f5043eaff656b314037bf285d8b7f1c311b8/UPGRADE.md) in addition to this one.
 
 ## Breaking Change: Removed JSON type
 If you were still including this line in your custom_types config, it should be removed:
