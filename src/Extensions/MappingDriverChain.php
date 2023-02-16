@@ -22,14 +22,6 @@ class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDr
     }
 
     /**
-     * @param $namespace
-     */
-    public function addNamespace($namespace)
-    {
-        $this->addDriver($this->getDefaultDriver(), $namespace);
-    }
-
-    /**
      * @param array $paths
      */
     public function addPaths(array $paths = [])
@@ -39,10 +31,12 @@ class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDr
         if (method_exists($driver, 'addPaths')) {
             $driver->addPaths($paths);
         } elseif ($driver instanceof FileDriver) {
-            if ($driver->getLocator() instanceof DefaultFileLocator) {
-                $driver->getLocator()->addPaths($paths);
-            } elseif ($driver->getLocator() instanceof SymfonyFileLocator) {
-                $driver->getLocator()->addNamespacePrefixes($paths);
+            $locator = $driver->getLocator();
+
+            if ($locator instanceof DefaultFileLocator) {
+                $locator->addPaths($paths);
+            } elseif ($locator instanceof SymfonyFileLocator) {
+                $locator->addNamespacePrefixes($paths);
             }
         }
     }

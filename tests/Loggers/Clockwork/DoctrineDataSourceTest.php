@@ -27,7 +27,7 @@ class DoctrineDataSourceTest extends TestCase
     /**
      * @var Mock
      */
-    protected $driver;
+    protected $platform;
 
     protected function setUp(): void
     {
@@ -41,12 +41,10 @@ class DoctrineDataSourceTest extends TestCase
         ];
 
         $this->connection = m::mock(\Doctrine\DBAL\Connection::class);
-        $this->driver     = m::mock(\Doctrine\DBAL\Driver::class);
+        $this->platform     = m::mock();
 
-        $this->driver->shouldReceive('getName')->once()->andReturn('mysql');
 
-        $this->connection->shouldReceive('getDriver')->once()->andReturn($this->driver);
-        $this->connection->shouldReceive('getDatabasePlatform')->once()->andReturn('mysql');
+        $this->connection->shouldReceive('getDatabasePlatform')->twice(2)->andReturn(new \Doctrine\DBAL\Platforms\PostgreSQLPlatform);
 
         $this->source = new DoctrineDataSource($this->logger, $this->connection);
     }
@@ -59,8 +57,13 @@ class DoctrineDataSourceTest extends TestCase
             [
                 'query'      => 'SELECT * FROM table WHERE condition = "value"',
                 'duration'   => 1,
-                'connection' => 'mysql'
+                'connection' => 'postgresql'
             ]
         ], $request->databaseQueries);
+    }
+
+    protected function tearDown(): void
+    {
+        m::close();
     }
 }

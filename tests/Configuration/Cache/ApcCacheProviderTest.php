@@ -3,8 +3,8 @@
 use Illuminate\Contracts\Cache\Factory;
 use Illuminate\Contracts\Cache\Repository;
 use LaravelDoctrine\ORM\Configuration\Cache\ApcCacheProvider;
-use LaravelDoctrine\ORM\Configuration\Cache\IlluminateCacheAdapter;
 use Mockery as m;
+use Psr\Cache\CacheItemPoolInterface;
 
 class ApcCacheProviderTest extends AbstractCacheProviderTest
 {
@@ -23,6 +23,6 @@ class ApcCacheProviderTest extends AbstractCacheProviderTest
 
     public function getExpectedInstance()
     {
-        return IlluminateCacheAdapter::class;
+        return CacheItemPoolInterface::class;
     }
 }

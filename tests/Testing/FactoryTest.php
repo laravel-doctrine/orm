@@ -19,7 +19,7 @@ class FactoryTest extends MockeryTestCase
 
         $builder = $factory->of('SomeClass');
 
-        $this->assertObjectHasAttribute('states', $builder);
+        $this->assertTrue(property_exists($builder, 'states'));
         $this->assertArrayHasKey('SomeClass', $builder->getStates());
         $this->assertArrayHasKey('withState', $builder->getStates()['SomeClass']);
     }
@@ -37,7 +37,7 @@ class FactoryTest extends MockeryTestCase
 
         $builder = $factory->of('SomeClass');
 
-        $this->assertObjectHasAttribute('afterCreating', $builder);
+        $this->assertTrue(property_exists($builder, 'afterCreating'));
         $this->assertArrayHasKey('SomeClass', $builder->afterCreating);
         $this->assertArrayHasKey('default', $builder->afterCreating['SomeClass']);
     }
@@ -54,7 +54,7 @@ class FactoryTest extends MockeryTestCase
         });
 
         $builder = $factory->of('SomeClass');
-        $this->assertObjectHasAttribute('afterMaking', $builder);
+        $this->assertTrue(property_exists($builder, 'afterMaking'));
         $this->assertArrayHasKey('SomeClass', $builder->afterMaking);
         $this->assertArrayHasKey('default', $builder->afterMaking['SomeClass']);
     }
@@ -71,7 +71,7 @@ class FactoryTest extends MockeryTestCase
         });
 
         $builder = $factory->of('SomeClass');
-        $this->assertObjectHasAttribute('afterCreating', $builder);
+        $this->assertTrue(property_exists($builder, 'afterCreating'));
         $this->assertArrayHasKey('SomeClass', $builder->afterCreating);
         $this->assertArrayHasKey('withState', $builder->afterCreating['SomeClass']);
     }
@@ -89,7 +89,7 @@ class FactoryTest extends MockeryTestCase
 
         $builder = $factory->of('SomeClass');
 
-        $this->assertObjectHasAttribute('afterMaking', $builder);
+        $this->assertTrue(property_exists($builder, 'afterMaking'));
         $this->assertArrayHasKey('SomeClass', $builder->afterMaking);
         $this->assertArrayHasKey('withState', $builder->afterMaking['SomeClass']);
     }

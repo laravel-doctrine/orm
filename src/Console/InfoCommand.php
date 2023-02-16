@@ -34,6 +34,7 @@ class InfoCommand extends Command
         $exit  = 0;
 
         foreach ($names as $name) {
+            /** @var \Doctrine\ORM\EntityManagerInterface $em */
             $em = $registry->getManager($name);
 
             $entityClassNames = $em->getConfiguration()

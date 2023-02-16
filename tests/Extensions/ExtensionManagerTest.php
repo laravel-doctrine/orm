@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 class ExtensionManagerTest extends TestCase
 {
     /**
-     * @var Mock
+     * @var ManagerRegistry|Mock
      */
     protected $registry;
 
@@ -52,7 +52,7 @@ class ExtensionManagerTest extends TestCase
     protected $reader;
 
     /**
-     * @var Mock
+     * @var Container|Mock
      */
     protected $container;
 
