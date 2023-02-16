@@ -411,14 +411,17 @@ class FluentExporter extends AbstractExporter
 
                 case ClassMetadataInfo::FETCH_LAZY:
                     $fetch = ''; // Lazy is default anyway
+
                     break;
 
                 case ClassMetadataInfo::FETCH_EAGER:
                     $fetch = "->fetchEager()";
+
                     break;
 
                 case ClassMetadataInfo::FETCH_EXTRA_LAZY:
                     $fetch = "->fetchExtraLazy()";
+
                     break;
             }
         }
@@ -429,7 +432,7 @@ class FluentExporter extends AbstractExporter
                 $columnName           = $c['name'];
                 $referencedColumnName = $c['referencedColumnName'];
                 $nullable             = !isset($c['nullable']) || $c['nullable'] == true ? 'true' : 'false';
-                $unique               = !isset($c['unique']) || $c['nullable'] == false ? 'false' : 'true';
+                $unique               = !isset($c['unique']) || $c['nullable']   == false ? 'false' : 'true';
                 $onDelete             = isset($c['onDelete']) ? '\'' . $c['onDelete'] . '\'' : 'null';
                 $columnDefinition     = isset($c['columnDefinition']) ? '\'' . $c['columnDefinition'] . '\'' : 'null';
 

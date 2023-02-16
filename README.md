@@ -4,7 +4,6 @@
 
 [![GitHub release](https://img.shields.io/github/release/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
 [![Github actions](https://github.com/laravel-doctrine/orm/workflows/CI/badge.svg?branch=1.8)](https://github.com/laravel-doctrine/orm/actions?query=workflow%3ACI+branch%3A1.7)
-[![StyleCI](https://styleci.io/repos/39036008/shield)](https://styleci.io/repos/39036008)
 [![Scrutinizer](https://img.shields.io/scrutinizer/g/laravel-doctrine/orm.svg?style=flat-square)](https://github.com/laravel-doctrine/orm)
 [![Packagist](https://img.shields.io/packagist/dm/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
 [![Packagist](https://img.shields.io/packagist/dt/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
