@@ -36,7 +36,7 @@ class DoctrineDataSource extends DataSource
     {
         $this->logger     = $logger;
         $this->connection = $connection;
-        $this->formatter  = new FormatQueryKeywords(new ReplaceQueryParams);
+        $this->formatter  = new FormatQueryKeywords(new ReplaceQueryParams());
     }
 
     /**
@@ -59,11 +59,12 @@ class DoctrineDataSource extends DataSource
     protected function getDatabaseQueries()
     {
         $queries = [];
-        foreach ($this->logger->queries as $query) {
-            $connection_string = Str::of(
-                (new \ReflectionClass($this->connection->getDatabasePlatform()))->getShortName(),
-            )->lower()->remove('platform')->toString();
 
+        $connection_string = Str::of(
+            (new \ReflectionClass($this->connection->getDatabasePlatform()))->getShortName(),
+        )->lower()->remove('platform')->toString();
+
+        foreach ($this->logger->queries as $query) {
             $queries[] = [
                 'query'      => $this->formatter->format($this->connection->getDatabasePlatform(), $query['sql'], $query['params']),
                 'duration'   => $query['executionMS'] * 1000,
