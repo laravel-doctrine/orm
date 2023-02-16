@@ -4,10 +4,10 @@ namespace LaravelDoctrine\ORM\Validation;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Illuminate\Validation\PresenceVerifierInterface;
+use Illuminate\Validation\DatabasePresenceVerifierInterface;
 use InvalidArgumentException;
 
-class DoctrinePresenceVerifier implements PresenceVerifierInterface
+class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
 {
     /**
      * @var ManagerRegistry
