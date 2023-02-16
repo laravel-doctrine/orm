@@ -22,7 +22,8 @@ class ArraySerializerTest extends TestCase
 
         $this->assertEquals([
             'id'   => 'IDVALUE',
-            'name' => 'NAMEVALUE'
+            'name' => 'NAMEVALUE',
+            'list' => ['item1', 'item2']
         ], $array);
     }
 }
@@ -35,6 +36,8 @@ class ArrayableEntity
 
     protected $name = 'NAMEVALUE';
 
+    protected $list = ['item1', 'item2'];
+
     public function getId()
     {
         return $this->id;
@@ -43,5 +46,10 @@ class ArrayableEntity
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getList()
+    {
+        return $this->list;
     }
 }
