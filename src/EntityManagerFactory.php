@@ -3,6 +3,7 @@
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\Common\EventManager;
+use Doctrine\DBAL\Driver\Middleware;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
@@ -23,6 +24,7 @@ use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
 use LaravelDoctrine\ORM\ORMSetupResolver;
+use LogicException;
 use Psr\Cache\CacheItemPoolInterface;
 use ReflectionException;
 
@@ -105,8 +107,9 @@ class EntityManagerFactory
         );
 
         $configuration->setSchemaManagerFactory(new DefaultSchemaManagerFactory);
-    
+
         $this->setMetadataDriver($settings, $configuration);
+        $this->setMiddlewares($settings, $configuration);
 
         $eventManager = $this->createEventManager($settings);
 
@@ -180,6 +183,28 @@ class EntityManagerFactory
         } else {
             $configuration->setMetadataDriverImpl($metadata);
         }
+    }
+
+    /**
+     * @param array{middlewares?: class-string[]} $settings
+     * @param Configuration $configuration
+     * @return void
+     */
+    private function setMiddlewares(array $settings, Configuration $configuration): void
+    {
+        $middlewares = [];
+
+        foreach($settings['middlewares'] ?? [] as $middlewareClass) {
+            $middleware = $this->container->make($middlewareClass);
+
+            if (!($middleware instanceof Middleware)) {
+                throw new LogicException($middlewareClass . 'does not implement ' . Middleware::class);
+            }
+
+            $middlewares[] = $middleware;
+        }
+
+        $configuration->setMiddlewares($middlewares);
     }
 
     /**
