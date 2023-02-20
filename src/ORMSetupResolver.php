@@ -3,7 +3,6 @@
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\ORM\Configuration;
-use Doctrine\ORM\ORMSetup;
 
 class ORMSetupResolver
 {
@@ -12,9 +11,11 @@ class ORMSetupResolver
         ?string $proxyDir = null,
     ): Configuration
     {
-        return ORMSetup::createConfiguration(
-           $isDevMode,
-           $proxyDir,
-        );
+        $config = new Configuration();
+
+        $config->setProxyDir($proxyDir);
+        $config->setAutoGenerateProxyClasses($isDevMode);
+
+        return $config;
     }
 }
