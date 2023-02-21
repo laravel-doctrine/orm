@@ -4,6 +4,9 @@
 
 The most significant change in version 2.0 is using doctrine/dbal 3. You should [review their upgrade guide](https://github.com/doctrine/dbal/blob/bd54f5043eaff656b314037bf285d8b7f1c311b8/UPGRADE.md) in addition to this one.
 
+## Lumen supported dropped
+We recommend using eloquent instead.
+
 ## Minimum Doctrine/ORM version to 2.14
 
 This release supports a minimum doctrine/orm version of 2.14 due to a number of deprecations and new features that we are taking advantage of.
