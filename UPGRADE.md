@@ -8,6 +8,9 @@ The most significant change in version 2.0 is using doctrine/dbal 3. You should 
 
 This release supports a minimum doctrine/orm version of 2.14 due to a number of deprecations and new features that we are taking advantage of.
 
+## Proxy namespace required
+You must now set a namespace for your proxies. Use the configuration option `proxies.namespace`. the previous default value was `DoctrineProxies`.
+
 ## Command signature changed
 
 All doctrine commands are now extended from `doctrine` itself. Some of the command options have been changed or removed, and some have been added.
