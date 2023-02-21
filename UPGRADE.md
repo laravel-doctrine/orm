@@ -11,6 +11,7 @@ We recommend using eloquent instead.
 
 This release supports a minimum doctrine/orm version of 2.14 due to a number of deprecations and new features that we are taking advantage of.
 
+
 ## Proxy namespace required
 You must now set a namespace for your proxies. Use the configuration option `proxies.namespace`. the previous default value was `DoctrineProxies`.
 
@@ -44,3 +45,15 @@ Short namespaces such as `Entities:User` are no longer supported by Doctrine and
 
 ## Metadata driver `config` removed
 Used deprecated YamlDriver and was not supported by doctrine.
+
+## Logging configuration changed
+DBAL deprecated the SQLLogger functionality in favor of the new middleware functionality.
+Logging moved to the new middlewares section.
+```php
+  'middlewares' => [
+    \LaravelDoctrine\ORM\Loggers\FileLogger::class
+  ],
+```
+
+### Clockwork logger removed
+Out of scope for this package.
