@@ -5,7 +5,7 @@ namespace LaravelDoctrine\ORM\Serializers;
 trait Arrayable
 {
     /**
-     * @return string
+     * @return array<string, mixed>
      */
     public function toArray()
     {

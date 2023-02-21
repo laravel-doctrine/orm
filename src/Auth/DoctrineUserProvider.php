@@ -23,16 +23,16 @@ class DoctrineUserProvider implements UserProvider
     protected $em;
 
     /**
-     * @var string
+     * @var class-string<Authenticatable>
      */
     protected $entity;
 
     /**
      * @param Hasher                 $hasher
      * @param EntityManagerInterface $em
-     * @param string                 $entity
+     * @param class-string<Authenticatable>                 $entity
      */
-    public function __construct(Hasher $hasher, EntityManagerInterface $em, $entity)
+    public function __construct(Hasher $hasher, EntityManagerInterface $em, string $entity)
     {
         $this->hasher = $hasher;
         $this->entity = $entity;
@@ -79,7 +79,7 @@ class DoctrineUserProvider implements UserProvider
     {
         $user->setRememberToken($token);
         $this->em->persist($user);
-        $this->em->flush($user);
+        $this->em->flush();
     }
 
     /**
@@ -116,7 +116,7 @@ class DoctrineUserProvider implements UserProvider
 
     /**
      * Returns repository for the entity.
-     * @return EntityRepository
+     * @return EntityRepository<Authenticatable>
      */
     protected function getRepository()
     {

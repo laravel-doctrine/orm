@@ -21,7 +21,7 @@ class FactoryBuilder
     /**
      * The model being built.
      *
-     * @var string
+     * @var class-string
      */
     protected $class;
 
@@ -83,7 +83,7 @@ class FactoryBuilder
      * Create an new builder instance.
      *
      * @param ManagerRegistry  $registry
-     * @param string           $class
+     * @param class-string     $class
      * @param string           $name
      * @param array            $definitions
      * @param \Faker\Generator $faker
