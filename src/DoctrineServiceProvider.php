@@ -368,8 +368,6 @@ class DoctrineServiceProvider extends ServiceProvider
             ClearQueryCacheCommand::class,
             EnsureProductionSettingsCommand::class,
             GenerateProxiesCommand::class,
-            ConvertConfigCommand::class,
-            MappingImportCommand::class,
             DumpDatabaseCommand::class
         ]);
     }
