@@ -2001,11 +2001,6 @@ parameters:
 			path: src/Testing/FactoryBuilder.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getClassMetadata\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
-			count: 1
-			path: src/Testing/FactoryBuilder.php
-
-		-
 			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:\\$activeStates type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Testing/FactoryBuilder.php
@@ -2027,11 +2022,6 @@ parameters:
 
 		-
 			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:\\$states type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Testing/FactoryBuilder.php
-
-		-
-			message: "#^Unable to resolve the template type T in call to method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getClassMetadata\\(\\)$#"
 			count: 1
 			path: src/Testing/FactoryBuilder.php
 
