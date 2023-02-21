@@ -57,3 +57,6 @@ Logging moved to the new middlewares section.
 
 ### Clockwork logger removed
 Out of scope for this package.
+
+### Laravel debugbar logger removed
+Laravel debugbar does not support the new Middleware to Doctrine. Open for PR to re-add this functionality.
