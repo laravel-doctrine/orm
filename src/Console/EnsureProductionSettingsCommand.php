@@ -5,48 +5,20 @@ namespace LaravelDoctrine\ORM\Console;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 
-class EnsureProductionSettingsCommand extends Command
+/**
+ * @deprecated
+ */
+class EnsureProductionSettingsCommand extends \Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand
 {
-    /**
-     * The name and signature of the console command.
-     * @var string
-     */
-    protected $signature = 'doctrine:ensure:production
-    {--with-db : Flag to also inspect database connection existence.}
-    {--em= : Ensure production settings for a specific entity manager }';
-
-    /**
-     * The console command description.
-     * @var string
-     */
-    protected $description = 'Verify that Doctrine is properly configured for a production environment.';
-
-    /**
-     * Execute the console command.
-     *
-     * @param ManagerRegistry $registry
-     */
-    public function handle(ManagerRegistry $registry)
+    public function __construct(EntityManagerProvider $entityManagerProvider)
     {
-        $names = $this->option('em') ? [$this->option('em')] : $registry->getManagerNames();
+        parent::__construct($entityManagerProvider);
+    }
 
-        foreach ($names as $name) {
-            $em = $registry->getManager($name);
+    protected function configure(): void
+    {
+        parent::configure();
 
-            try {
-                $em->getConfiguration()->ensureProductionSettings();
-
-                if ($this->option('with-db')) {
-                    $em->getConnection()->connect();
-                }
-            } catch (Exception $e) {
-                $this->error('Error for ' . $name . ' entity manager');
-                $this->error($e->getMessage());
-
-                return 1;
-            }
-
-            $this->comment('Environment for <info>' . $name . '</info> entity manager is correctly configured for production.');
-        }
+        $this->setName('doctrine:ensure:production');
     }
 }
