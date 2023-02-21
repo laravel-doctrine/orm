@@ -1,0 +1,36 @@
+name: "Static Analysis"
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  static-analysis-phpstan:
+    name: "Static Analysis with PHPStan"
+    runs-on: "ubuntu-22.04"
+
+    strategy:
+      matrix:
+        php-version:
+          - "8.0"
+          - "8.1"
+          - "8.2"
+
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          extensions: "pdo_sqlite"
+
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+
+      - name: "Run a static analysis with phpstan/phpstan"
+        run: "vendor/bin/phpstan analyse -c phpstan.neon.dist"

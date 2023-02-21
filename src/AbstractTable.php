@@ -7,17 +7,18 @@ use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Type;
 
+/** @interal  */
 abstract class AbstractTable
 {
     /**
      * @var string
      */
-    protected $table;
+    protected string $table;
 
     /**
      * @param string $table
      */
-    public function __construct($table)
+    public function __construct(string $table)
     {
         $this->table = $table;
     }
@@ -25,7 +26,7 @@ abstract class AbstractTable
     /**
      * @return Table
      */
-    public function build()
+    public function build(): Table
     {
         return new Table(
             $this->table,
@@ -40,7 +41,7 @@ abstract class AbstractTable
      * @param  bool   $autoincrement
      * @return Column
      */
-    protected function column($name, $type, $autoincrement = false)
+    protected function column($name, string $type, bool $autoincrement = false): Column
     {
         $column = new Column($name, Type::getType($type));
         $column->setAutoincrement($autoincrement);
@@ -50,12 +51,12 @@ abstract class AbstractTable
 
     /**
      * @param  string $name
-     * @param  array  $columns
+     * @param  string[]  $columns
      * @param  bool   $unique
      * @param  bool   $primary
      * @return Index
      */
-    protected function index($name, array $columns, $unique = false, $primary = false)
+    protected function index(string $name, array $columns, bool $unique = false, bool $primary = false): Index
     {
         return new Index($name, $columns, $unique, $primary);
     }

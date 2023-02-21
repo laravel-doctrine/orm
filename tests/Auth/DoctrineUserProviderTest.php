@@ -102,7 +102,7 @@ class DoctrineUserProviderTest extends TestCase
         $user = new AuthenticableMock;
 
         $this->em->shouldReceive('persist')->once()->with($user);
-        $this->em->shouldReceive('flush')->once()->with($user);
+        $this->em->shouldReceive('flush')->once()->withNoArgs();
 
         $this->provider->updateRememberToken($user, 'newToken');
 

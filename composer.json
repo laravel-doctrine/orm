@@ -41,7 +41,8 @@
         "itsgoingd/clockwork": "^5.0",
         "illuminate/log": "^9.0",
         "illuminate/notifications": "^9.0",
-        "illuminate/queue": "^9.0"
+        "illuminate/queue": "^9.0",
+        "phpstan/phpstan": "^1.9"
     },
     "autoload": {
         "psr-4": {
