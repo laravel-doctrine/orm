@@ -2,54 +2,19 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\Persistence\ManagerRegistry;
-use InvalidArgumentException;
-use LaravelDoctrine\ORM\Configuration\Cache\ApcCacheProvider;
-use LogicException;
+use Doctrine\ORM\Tools\Console\Command\ClearCache\ResultCommand;
 
-class ClearResultCacheCommand extends Command
+class ClearResultCacheCommand extends ResultCommand
 {
-    /**
-     * The name and signature of the console command.
-     * @var string
-     */
-    protected $signature = 'doctrine:clear:result:cache
-    {--em= : Clear cache for a specific entity manager }';
-
-    /**
-     * The console command description.
-     * @var string
-     */
-    protected $description = 'Clear all result cache of the various cache drivers.';
-
-    /**
-     * Execute the console command.
-     *
-     * @param ManagerRegistry $registry
-     */
-    public function handle(ManagerRegistry $registry)
+    public function __construct(EntityManagerProvider $entityManagerProvider)
     {
-        $names = $this->option('em') ? [$this->option('em')] : $registry->getManagerNames();
+        parent::__construct($entityManagerProvider);
+    }
 
-        foreach ($names as $name) {
-            /** @var \Doctrine\ORM\EntityManagerInterface $em */
-            $em    = $registry->getManager($name);
-            $cache = $em->getConfiguration()->getResultCache();
+    protected function configure(): void
+    {
+        parent::configure();
 
-            if (!$cache) {
-                throw new InvalidArgumentException('No Result cache driver is configured on given EntityManager.');
-            }
-
-            if ($cache instanceof ApcCacheProvider) {
-                throw new LogicException("Cannot clear APC Cache from Console, its shared in the Webserver memory and not accessible from the CLI.");
-            }
-
-            $this->message('Clearing result cache entries for <info>' . $name . '</info> entity manager');
-
-            $result  = $cache->clear();
-            $message = ($result) ? 'Successfully deleted cache entries.' : 'No cache entries were deleted.';
-
-            $this->info($message);
-        }
+        $this->setName('doctrine:clear:result:cache');
     }
 }
