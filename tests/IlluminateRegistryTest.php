@@ -347,7 +347,7 @@ class IlluminateRegistryTest extends TestCase
     public function test_get_alias_namespace_from_unknown_namespace()
     {
         $this->expectException(ORMException::class);
-        $this->expectExceptionMessage('Unknown Entity namespace alias \'Alias\'');
+        $this->expectExceptionMessage('Unknown Entity namespace alias "Alias"');
 
         $this->registry->getAliasNamespace('Alias');
     }

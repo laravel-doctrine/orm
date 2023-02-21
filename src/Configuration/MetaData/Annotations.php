@@ -5,6 +5,9 @@ namespace LaravelDoctrine\ORM\Configuration\MetaData;
 use Doctrine\ORM\ORMSetup;
 use Illuminate\Support\Arr;
 
+/**
+ * @deprecated
+ */
 class Annotations extends MetaData
 {
     /**

@@ -41,3 +41,6 @@ is removed in Doctrine.
 ## Short namespaces
 
 Short namespaces such as `Entities:User` are no longer supported by Doctrine and have been removed.
+
+## Metadata driver `config` removed
+Used deprecated YamlDriver and was not supported by doctrine.

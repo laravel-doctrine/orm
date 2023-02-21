@@ -5,6 +5,9 @@ namespace LaravelDoctrine\ORM\Configuration\MetaData;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use Illuminate\Support\Arr;
 
+/**
+ * @deprecated
+ */
 class Yaml extends MetaData
 {
     /**

@@ -108,7 +108,7 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
                  'token' => $this->hasher->make($token),
                  'date'  => new Carbon('now')
              ])
-             ->execute();
+             ->executeStatement();
 
         return $token;
     }
@@ -125,7 +125,7 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
                     ->delete($this->table)
                     ->where('email = :email')
                     ->setParameter('email', $user->getEmailForPasswordReset())
-                    ->execute();
+                    ->executeStatement();
     }
 
     /**
@@ -145,7 +145,7 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
                       ->where('email = :email')
                       ->setParameter('email', $email)
                       ->setMaxResults(1)
-                      ->execute()->fetch();
+                      ->executeQuery()->fetchAssociative();
 
         return $record
             && !$this->tokenExpired($record['created_at'])
@@ -178,7 +178,7 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
                        ->from($this->table)
                        ->where('email = :email')
                        ->setParameter('email', $user->getEmailForPasswordReset())
-                       ->execute()->fetch();
+                       ->executeQuery()->fetchAssociative();
 
         return $record && $this->tokenRecentlyCreated($record['created_at']);
     }
@@ -224,7 +224,7 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
              ->delete($this->table)
              ->where('created_at < :expiredAt')
              ->setParameter('expiredAt', $expiredAt)
-             ->execute();
+             ->executeStatement();
     }
 
     /**

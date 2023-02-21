@@ -12,4 +12,5 @@ parameters:
             message: '~^Function app not found.$~'
 
 includes:
-	- phpstan-baseline.neon
+    - phpstan-baseline.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
