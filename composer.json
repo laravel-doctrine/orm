@@ -34,6 +34,9 @@
         "symfony/serializer": "^5.0|^6.0",
         "symfony/yaml": "^5.0|^6.0"
     },
+    "conflict": {
+        "laravel/lumen": "*"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.3",
         "mockery/mockery": "^1.3.1",
