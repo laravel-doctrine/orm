@@ -149,6 +149,7 @@ return [
     | - LaravelDoctrine\ORM\Loggers\LaravelDebugbarLogger
     | - LaravelDoctrine\ORM\Loggers\ClockworkLogger
     | - LaravelDoctrine\ORM\Loggers\FileLogger
+    | - LaravelDoctrine\ORM\Loggers\LaravelEventLogger
     |--------------------------------------------------------------------------
     */
     'logger'                     => env('DOCTRINE_LOGGER', false),
