@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\MappedSuperclass
  */
+#[ORM\MappedSuperclass]
 class Notification
 {
     /**
@@ -14,6 +15,9 @@ class Notification
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     protected $id;
 
     /**
@@ -26,6 +30,7 @@ class Notification
      * @ORM\Column(type="string")
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     protected $level = 'info';
 
     /**
@@ -33,6 +38,7 @@ class Notification
      * @ORM\Column(type="string")
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     protected $message;
 
     /**
@@ -40,6 +46,7 @@ class Notification
      * @ORM\Column(type="string")
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     protected $actionText;
 
     /**
@@ -47,6 +54,7 @@ class Notification
      * @ORM\Column(type="string")
      * @var string
      */
+    #[ORM\Column(type: 'string')]
     protected $actionUrl;
 
     /**
