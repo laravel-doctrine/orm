@@ -60,7 +60,7 @@ class DoctrineDataSource extends DataSource
         $queries = [];
         foreach ($this->logger->queries as $query) {
             $queries[] = [
-                'query'      => $this->formatter->format($this->connection->getDatabasePlatform(), $query['sql'], $query['params']),
+                'query'      => $this->formatter->format($this->connection->getDatabasePlatform(), $query['sql'], $query['params'], $query['types']),
                 'duration'   => $query['executionMS'] * 1000,
                 'connection' => $this->connection->getDriver()->getName()
             ];
