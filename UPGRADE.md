@@ -33,6 +33,11 @@ If you were still including this line in your custom_types config, it should be 
 'json' => LaravelDoctrine\ORM\Types\Json::class
 ```
 
+## Removed 'simple' Annotations
+The `simple` configuration option for simple annotation reader has been removed as support for this 
+is removed in Doctrine.
+
+
 ## Short namespaces
 
 Short namespaces such as `Entities:User` are no longer supported by Doctrine and have been removed.
