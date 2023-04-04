@@ -127,6 +127,6 @@ class LaravelNamingStrategy implements NamingStrategy
         $className = null,
         $embeddedClassName = null
     ) {
-        return $propertyName . '_' . $embeddedColumnName;
+        return $propertyName . '_' . $this->propertyToColumnName($embeddedColumnName);
     }
 }
