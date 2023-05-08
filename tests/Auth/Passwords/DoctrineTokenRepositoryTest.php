@@ -91,7 +91,7 @@ class DoctrineTokenRepositoryTest extends TestCase
                       ->with('email', 'user@mockery.mock')
                       ->andReturnSelf();
 
-        $this->builder->shouldReceive('execute')
+        $this->builder->shouldReceive('executeStatement')
                       ->twice()
                       ->andReturn(true);
 
@@ -150,11 +150,13 @@ class DoctrineTokenRepositoryTest extends TestCase
                       ->with('email', 'user@mockery.mock')
                       ->andReturnSelf();
 
-        $this->builder->shouldReceive('execute')
-                      ->once()
-                      ->andReturnSelf();
+        $result = m::mock(\Doctrine\DBAL\Result::class);
 
-        $this->builder->shouldReceive('fetch')
+        $this->builder->shouldReceive('executeQuery')
+                      ->once()
+                      ->andReturn($result);
+
+        $result->shouldReceive('fetchAssociative')
                       ->once()
                       ->andReturn([
                           'email'      => 'user@mockery.mock',
@@ -191,17 +193,19 @@ class DoctrineTokenRepositoryTest extends TestCase
                       ->with('email', 'user@mockery.mock')
                       ->andReturnSelf();
 
-        $this->builder->shouldReceive('execute')
-                      ->once()
-                      ->andReturnSelf();
+        $result = m::mock(\Doctrine\DBAL\Result::class);
 
-        $this->builder->shouldReceive('fetch')
-                      ->once()
-                      ->andReturn([
-                          'email'      => 'user@mockery.mock',
-                          'token'      => 'token',
-                          'created_at' => Carbon::now()
-                      ]);
+        $this->builder->shouldReceive('executeQuery')
+            ->once()
+            ->andReturn($result);
+
+        $result->shouldReceive('fetchAssociative')
+              ->once()
+              ->andReturn([
+                  'email'      => 'user@mockery.mock',
+                  'token'      => 'token',
+                  'created_at' => Carbon::now()
+              ]);
 
         $this->assertTrue($this->repository->recentlyCreatedToken(new UserMock));
     }
@@ -227,7 +231,8 @@ class DoctrineTokenRepositoryTest extends TestCase
                       ->with('email', 'user@mockery.mock')
                       ->andReturnSelf();
 
-        $this->builder->shouldReceive('execute')
+
+        $this->builder->shouldReceive('executeStatement')
                       ->once()
                       ->andReturn(true);
 
@@ -256,7 +261,7 @@ class DoctrineTokenRepositoryTest extends TestCase
                       ->once()
                       ->andReturnSelf();
 
-        $this->builder->shouldReceive('execute')
+        $this->builder->shouldReceive('executeStatement')
                       ->once();
 
         $this->repository->deleteExpired();

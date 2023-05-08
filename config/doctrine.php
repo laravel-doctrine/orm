@@ -12,7 +12,7 @@ return [
     | paths setting to the appropriate path and replace App namespace
     | by your own namespace.
     |
-    | Available meta drivers: attributes|fluent|annotations|yaml|simplified_yaml|xml|simplified_xml|config|static_php|php
+    | Available meta drivers: attributes|fluent|xml|simplified_xml|static_php|php
     |
     | Available connections: mysql|oracle|pgsql|sqlite|sqlsrv
     | (Connections can be configured in the database config)
@@ -32,12 +32,15 @@ return [
             'paths'         => [
                 base_path('app/Entities')
             ],
+
             'repository'    => Doctrine\ORM\EntityRepository::class,
+
             'proxies'       => [
                 'namespace'     => 'DoctrineProxies',
                 'path'          => storage_path('proxies'),
                 'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', false)
             ],
+
             /*
             |--------------------------------------------------------------------------
             | Doctrine events
@@ -51,7 +54,9 @@ return [
                 'listeners'   => [],
                 'subscribers' => []
             ],
+
             'filters'       => [],
+
             /*
             |--------------------------------------------------------------------------
             | Doctrine mapping types
@@ -76,6 +81,14 @@ return [
             */
             'mapping_types' => [
                 //'enum' => 'string'
+            ],
+
+            /**
+             * References:
+             * https://www.doctrine-project.org/projects/doctrine-dbal/en/current/reference/architecture.html#middlewares
+             */
+            'middlewares' => [
+                // Doctrine\DBAL\Logging\Middleware::class
             ]
         ]
     ],
@@ -138,19 +151,6 @@ return [
     'custom_hydration_modes'     => [
         // e.g. 'hydrationModeName' => MyHydrator::class,
     ],
-    /*
-    |--------------------------------------------------------------------------
-    | Enable query logging with laravel file logging,
-    | debugbar, clockwork or an own implementation.
-    | Setting it to false, will disable logging
-    |
-    | Available:
-    | - LaravelDoctrine\ORM\Loggers\LaravelDebugbarLogger
-    | - LaravelDoctrine\ORM\Loggers\ClockworkLogger
-    | - LaravelDoctrine\ORM\Loggers\FileLogger
-    |--------------------------------------------------------------------------
-    */
-    'logger'                     => env('DOCTRINE_LOGGER', false),
     /*
     |--------------------------------------------------------------------------
     | Cache

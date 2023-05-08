@@ -8,6 +8,7 @@ use Doctrine\Persistence\Proxy;
 use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 use ReflectionClass;
+use Doctrine\ORM\Exception\UnknownEntityNamespace;
 
 final class IlluminateRegistry implements ManagerRegistry
 {
@@ -328,7 +329,7 @@ final class IlluminateRegistry implements ManagerRegistry
             }
         }
 
-        throw ORMException::unknownEntityNamespace($alias);
+        throw UnknownEntityNamespace::fromNamespaceAlias($alias);
     }
 
     /**

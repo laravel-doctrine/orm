@@ -148,18 +148,6 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
 
-        $this->config->shouldReceive('get')
-                     ->with('doctrine.logger', false)
-                     ->twice()->andReturn('LoggerMock');
-
-        $logger = m::mock(Logger::class);
-
-        $this->container->shouldReceive('make')
-                        ->with('LoggerMock')->once()
-                        ->andReturn($logger);
-
-        $logger->shouldReceive('register')->once();
-
         $manager = $this->factory->create($this->settings);
 
         $this->assertEntityManager($manager);
@@ -948,9 +936,6 @@ class EntityManagerFactoryTest extends TestCase
 
     protected function disableDebugbar()
     {
-        $this->config->shouldReceive('get')
-                     ->with('doctrine.logger', false)
-                     ->once()->andReturn(false);
     }
 
     protected function disableSecondLevelCaching()
@@ -991,7 +976,7 @@ class EntityManagerFactoryTest extends TestCase
                             ->atLeast()->once();
         $this->configuration->shouldReceive('setMiddlewares')
             ->atLeast()->once();
-        
+
         $this->configuration->shouldReceive('getAutoCommit')
                             ->atLeast()->once()
                             ->andReturn(true);
