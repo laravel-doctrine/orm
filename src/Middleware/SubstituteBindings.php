@@ -69,12 +69,20 @@ class SubstituteBindings
 
             if ($repository = $this->registry->getRepository($class)) {
                 $reflectionClass = new \ReflectionClass($class);
+                $bindingFields = $route->bindingFields();
+                $fieldName = null;
 
                 if ($reflectionClass->implementsInterface(UrlRoutable::class)) {
-                    $name = call_user_func([$class, 'getRouteKeyName']);
+                    $fieldName = call_user_func([$class, 'getRouteKeyName']);
+                }
 
+                if (array_key_exists($parameter->name, $bindingFields)) {
+                    $fieldName = $bindingFields[$parameter->name];
+                }
+
+                if ($fieldName) {
                     $entity = $repository->findOneBy([
-                        $name => $id
+                        $fieldName => $id
                     ]);
                 } else {
                     $entity = $repository->find($id);
