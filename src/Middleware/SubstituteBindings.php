@@ -3,7 +3,9 @@
 namespace LaravelDoctrine\ORM\Middleware;
 
 use Closure;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Routing\Route;
@@ -70,6 +72,9 @@ class SubstituteBindings
             if ($repository = $this->registry->getRepository($class)) {
                 $reflectionClass = new \ReflectionClass($class);
 
+                $identifierType = $this->getIdentifierType($class);
+                $id = $identifierType === Types::INTEGER ? (int)$id : (string)$id;
+
                 if ($reflectionClass->implementsInterface(UrlRoutable::class)) {
                     $name = call_user_func([$class, 'getRouteKeyName']);
 
@@ -114,5 +119,14 @@ class SubstituteBindings
         }
 
         return $class;
+    }
+
+    private function getIdentifierType(string $className): string
+    {
+        $manager = $this->registry->getManager();
+        /** @var ClassMetadataInfo $classMetadata */
+        $classMetadata = $manager->getClassMetadata($className);
+
+        return (string)$classMetadata->getTypeOfField($classMetadata->getSingleIdentifierFieldName());
     }
 }
