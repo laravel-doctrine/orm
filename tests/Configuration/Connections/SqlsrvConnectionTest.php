@@ -37,6 +37,7 @@ class SqlsrvConnectionTest extends TestCase
             'prefix'              => 'prefix',
             'charset'             => 'charset',
             'defaultTableOptions' => [],
+            'driverOptions'       => [],
         ]);
 
         $this->assertEquals('pdo_sqlsrv', $resolved['driver']);
@@ -48,6 +49,7 @@ class SqlsrvConnectionTest extends TestCase
         $this->assertEquals('prefix', $resolved['prefix']);
         $this->assertEquals('charset', $resolved['charset']);
         $this->assertCount(0, $resolved['defaultTableOptions']);
+        $this->assertCount(0, $resolved['driverOptions']);
     }
 
     protected function tearDown(): void
