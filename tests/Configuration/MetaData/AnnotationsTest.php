@@ -24,7 +24,6 @@ class AnnotationsTest extends TestCase
             'paths'   => ['entities'],
             'dev'     => true,
             'proxies' => ['path' => 'path'],
-            'simple'  => false
         ]);
 
         $this->assertInstanceOf(MappingDriver::class, $resolved);

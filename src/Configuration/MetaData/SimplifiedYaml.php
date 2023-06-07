@@ -5,6 +5,9 @@ namespace LaravelDoctrine\ORM\Configuration\MetaData;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Illuminate\Support\Arr;
 
+/**
+ * @deprecated
+ */
 class SimplifiedYaml extends MetaData
 {
     /**

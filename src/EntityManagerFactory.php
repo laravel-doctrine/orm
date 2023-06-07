@@ -156,7 +156,6 @@ class EntityManagerFactory
 
         $manager = $this->decorateManager($settings, $manager);
 
-        $this->setLogger($manager, $configuration);
         $this->registerListeners($settings, $manager);
         $this->registerSubscribers($settings, $manager);
         $this->registerFilters($settings, $configuration, $manager);
@@ -325,19 +324,6 @@ class EntityManagerFactory
 
         if ($namespace = Arr::get($settings, 'proxies.namespace', false)) {
             $configuration->setProxyNamespace($namespace);
-        }
-    }
-
-    /**
-     * @param EntityManagerInterface $em
-     * @param Configuration          $configuration
-     */
-    protected function setLogger(EntityManagerInterface $em, Configuration $configuration)
-    {
-        if ($this->config->get('doctrine.logger', false)) {
-            $this->container->make(
-                $this->config->get('doctrine.logger', false)
-            )->register($em, $configuration);
         }
     }
 

@@ -11,6 +11,7 @@ We recommend using eloquent instead.
 
 This release supports a minimum doctrine/orm version of 2.14 due to a number of deprecations and new features that we are taking advantage of.
 
+
 ## Proxy namespace required
 You must now set a namespace for your proxies. Use the configuration option `proxies.namespace`. the previous default value was `DoctrineProxies`.
 
@@ -33,6 +34,11 @@ If you were still including this line in your custom_types config, it should be 
 'json' => LaravelDoctrine\ORM\Types\Json::class
 ```
 
+## Removed 'simple' Annotations
+The `simple` configuration option for simple annotation reader has been removed as support for this 
+is removed in Doctrine.
+
+
 ## Short namespaces
 
 Short namespaces such as `Entities:User` are no longer supported by Doctrine and have been removed.
@@ -40,3 +46,21 @@ Short namespaces such as `Entities:User` are no longer supported by Doctrine and
 ## Driver Options Rename
 
 If you have been setting "driverOptions" on your MySQL database config, you should rename it to "options" to align with Laravel's naming scheme.
+
+## Metadata driver `config` removed
+Used deprecated YamlDriver and was not supported by doctrine.
+
+## Logging configuration changed
+DBAL deprecated the SQLLogger functionality in favor of the new middleware functionality.
+Logging moved to the new middlewares section.
+```php
+  'middlewares' => [
+    \LaravelDoctrine\ORM\Loggers\FileLogger::class
+  ],
+```
+
+### Clockwork logger removed
+Out of scope for this package.
+
+### Laravel debugbar logger removed
+Laravel debugbar does not support the new Middleware to Doctrine. Open for PR to re-add this functionality.

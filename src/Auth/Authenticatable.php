@@ -9,11 +9,13 @@ trait Authenticatable
     /**
      * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected $password;
 
     /**
      * @ORM\Column(name="remember_token", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'remember_token', type: 'string', nullable: true)]
     protected $rememberToken;
 
     /**

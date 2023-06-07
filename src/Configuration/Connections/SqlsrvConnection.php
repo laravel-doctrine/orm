@@ -23,9 +23,16 @@ class SqlsrvConnection extends Connection
             'prefix'              => Arr::get($settings, 'prefix'),
             'charset'             => Arr::get($settings, 'charset'),
             'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
-            'driverOptions'       => Arr::get($settings, 'options', []),
             'serverVersion'       => Arr::get($settings, 'serverVersion'),
             'wrapperClass'        => Arr::get($settings, 'wrapperClass'),
+            'driverOptions'       => array_merge(Arr::get($settings, 'options', []),
+                isset($settings['encrypt'])
+                    ? ['encrypt' => Arr::get($settings, 'encrypt')]
+                    : [],
+                isset($settings['trust_server_certificate'])
+                    ? ['trustServerCertificate' => Arr::get($settings, 'trust_server_certificate')]
+                    : [],
+            ),
         ];
     }
 }
