@@ -25,7 +25,7 @@ class SqlsrvConnection extends Connection
             'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
             'driverOptions'       => Arr::get($settings, 'options', []),
             'serverVersion'       => Arr::get($settings, 'serverVersion'),
-            'wrapperClass'        => Arr::get($settings, 'wrapperClass')
+            'wrapperClass'        => Arr::get($settings, 'wrapperClass'),
         ];
     }
 }
