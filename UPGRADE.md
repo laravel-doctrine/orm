@@ -36,3 +36,7 @@ If you were still including this line in your custom_types config, it should be 
 ## Short namespaces
 
 Short namespaces such as `Entities:User` are no longer supported by Doctrine and have been removed.
+
+## Driver Options Rename
+
+If you have been setting "driverOptions" on your MySQL database config, you should rename it to "options" to align with Laravel's naming scheme.
