@@ -25,7 +25,8 @@ class PgsqlConnection extends Connection
             'prefix'              => Arr::get($settings, 'prefix'),
             'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
             'serverVersion'       => Arr::get($settings, 'serverVersion'),
-            'wrapperClass'        => Arr::get($settings, 'wrapperClass')
+            'wrapperClass'        => Arr::get($settings, 'wrapperClass'),
+            'driverOptions'       => Arr::get($settings, 'options', []),
         ];
     }
 }

@@ -24,9 +24,9 @@ class MysqlConnection extends Connection
             'unix_socket'           => Arr::get($settings, 'unix_socket'),
             'prefix'                => Arr::get($settings, 'prefix'),
             'defaultTableOptions'   => Arr::get($settings, 'defaultTableOptions', []),
-            'driverOptions'         => Arr::get($settings, 'driverOptions', []),
             'serverVersion'         => Arr::get($settings, 'serverVersion'),
-            'wrapperClass'          => Arr::get($settings, 'wrapperClass')
+            'wrapperClass'          => Arr::get($settings, 'wrapperClass'),
+            'driverOptions'         => Arr::get($settings, 'options', []),
         ];
     }
 }

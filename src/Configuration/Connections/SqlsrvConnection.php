@@ -25,7 +25,7 @@ class SqlsrvConnection extends Connection
             'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
             'serverVersion'       => Arr::get($settings, 'serverVersion'),
             'wrapperClass'        => Arr::get($settings, 'wrapperClass'),
-            'driverOptions'       => array_merge([],
+            'driverOptions'       => array_merge(Arr::get($settings, 'options', []),
                 isset($settings['encrypt'])
                     ? ['encrypt' => Arr::get($settings, 'encrypt')]
                     : [],

@@ -43,6 +43,10 @@ is removed in Doctrine.
 
 Short namespaces such as `Entities:User` are no longer supported by Doctrine and have been removed.
 
+## Driver Options Rename
+
+If you have been setting "driverOptions" on your MySQL database config, you should rename it to "options" to align with Laravel's naming scheme.
+
 ## Metadata driver `config` removed
 Used deprecated YamlDriver and was not supported by doctrine.
 
