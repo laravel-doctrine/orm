@@ -212,7 +212,7 @@ class DoctrinePresenceVerifierTest extends TestCase
         $this->em->shouldReceive('createQueryBuilder')
                  ->once()->andReturn($this->builder);
 
-        $this->builder->shouldReceive('select')
+        $this->builder->shouldReceive('selectCount')
                       ->with('count(e)')->once()
                       ->andReturn($this->builder);
 
@@ -241,7 +241,7 @@ class DoctrinePresenceVerifierTest extends TestCase
         $this->em->shouldReceive('createQueryBuilder')
                  ->once()->andReturn($this->builder);
 
-        $this->builder->shouldReceive('select')
+        $this->builder->shouldReceive('selectCount')
                       ->with('count(e)')->once()
                       ->andReturn($this->builder);
 
