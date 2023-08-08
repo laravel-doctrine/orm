@@ -4,5 +4,5 @@ namespace LaravelDoctrine\ORM\Contracts;
 
 interface UrlRoutable
 {
-    public static function getRouteKeyName(): string;
+    public static function getRouteKeyNameStatic(): string;
 }

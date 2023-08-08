@@ -9,6 +9,8 @@ use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Routing\Route;
 use LaravelDoctrine\ORM\Contracts\UrlRoutable;
 use ReflectionParameter;
+use function class_exists;
+use function is_a;
 
 class SubstituteBindings
 {
@@ -67,11 +69,11 @@ class SubstituteBindings
             $id    = $parameters[$parameter->name];
             $class = $this->getClassName($parameter);
 
-            if ($repository = $this->registry->getRepository($class)) {
-                $reflectionClass = new \ReflectionClass($class);
+            if ($class) {
+                $repository = $this->registry->getRepository($class);
 
-                if ($reflectionClass->implementsInterface(UrlRoutable::class)) {
-                    $name = call_user_func([$class, 'getRouteKeyName']);
+                if (is_a($class, UrlRoutable::class, true)) {
+                    $name = call_user_func([$class, 'getRouteKeyNameStatic']);
 
                     $entity = $repository->findOneBy([
                         $name => $id
@@ -105,6 +107,9 @@ class SubstituteBindings
             })->toArray();
     }
 
+    /**
+     * @return class-string
+     */
     private function getClassName(ReflectionParameter $parameter): ?string
     {
         $class = null;
@@ -113,6 +118,6 @@ class SubstituteBindings
             $class = $type->getName();
         }
 
-        return $class;
+        return class_exists($class) ? $class : null;
     }
 }

@@ -65,7 +65,7 @@ class SubstituteBindingsTest extends TestCase
         $router = $this->getRouter();
         $router->get('foo/{entity}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => 'EntityController@returnEntityName',     
+            'uses'       => 'EntityController@returnEntityName',
         ]);
 
         $this->mockRegistry();
@@ -85,7 +85,7 @@ class SubstituteBindingsTest extends TestCase
 
         $router->get('foo/{entity}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => 'EntityController@returnEntityName',                       
+            'uses'       => 'EntityController@returnEntityName',
         ]);
 
         $this->mockRegistry();
@@ -99,7 +99,7 @@ class SubstituteBindingsTest extends TestCase
         $router = $this->getRouter();
         $router->get('foo/{entity}', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => 'EntityController@returnEntity',            
+            'uses'       => 'EntityController@returnEntity',
         ]);
 
         $this->mockRegistry();
@@ -120,7 +120,7 @@ class SubstituteBindingsTest extends TestCase
 
         $router->get('doc/trine', [
             'middleware' => SubstituteBindings::class,
-            'uses'       => 'EntityController@checkRequest',        
+            'uses'       => 'EntityController@checkRequest',
         ]);
 
         $this->assertEquals('request', $router->dispatch(Request::create('doc/trine', 'GET'))->getContent());
@@ -225,7 +225,7 @@ class BindableEntityWithInterface implements \LaravelDoctrine\ORM\Contracts\UrlR
         return strtolower($this->name);
     }
 
-    public static function getRouteKeyName(): string
+    public static function getRouteKeyNameStatic(): string
     {
         return 'name';
     }

@@ -46,6 +46,9 @@ Short namespaces such as `Entities:User` are no longer supported by Doctrine and
 ## Metadata driver `config` removed
 Used deprecated YamlDriver and was not supported by doctrine.
 
+## UrlRoutable::getRouteKeyName renamed to getRouteKeyNameStatic
+This method was renamed to not conflict with the UrlRoutable trait of Laravel.
+
 ## Logging configuration changed
 DBAL deprecated the SQLLogger functionality in favor of the new middleware functionality.
 Logging moved to the new middlewares section.

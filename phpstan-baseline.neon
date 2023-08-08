@@ -1179,32 +1179,7 @@ parameters:
 			path: src/Loggers/Logger.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Middleware/SubstituteBindings.php
-
-		-
 			message: "#^Method LaravelDoctrine\\\\ORM\\\\Middleware\\\\SubstituteBindings\\:\\:substituteImplicitBindings\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Middleware/SubstituteBindings.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{string\\|null, 'getRouteKeyName'\\} given\\.$#"
-			count: 1
-			path: src/Middleware/SubstituteBindings.php
-
-		-
-			message: "#^Parameter \\#1 \\$criteria of method Doctrine\\\\Persistence\\\\ObjectRepository\\<object\\>\\:\\:findOneBy\\(\\) expects array\\<string, mixed\\>, array\\<int\\|string, mixed\\> given\\.$#"
-			count: 1
-			path: src/Middleware/SubstituteBindings.php
-
-		-
-			message: "#^Parameter \\#1 \\$objectOrClass of class ReflectionClass constructor expects class\\-string\\<T of object\\>\\|T of object, string\\|null given\\.$#"
-			count: 1
-			path: src/Middleware/SubstituteBindings.php
-
-		-
-			message: "#^Parameter \\#1 \\$persistentObject of method Doctrine\\\\Persistence\\\\ManagerRegistry\\:\\:getRepository\\(\\) expects class\\-string\\<object\\>, string\\|null given\\.$#"
 			count: 1
 			path: src/Middleware/SubstituteBindings.php
 
@@ -1215,11 +1190,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$route of method LaravelDoctrine\\\\ORM\\\\Middleware\\\\SubstituteBindings\\:\\:substituteImplicitBindings\\(\\) expects Illuminate\\\\Routing\\\\Route, object\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Middleware/SubstituteBindings.php
-
-		-
-			message: "#^Unable to resolve the template type T in call to method Doctrine\\\\Persistence\\\\ManagerRegistry\\:\\:getRepository\\(\\)$#"
 			count: 1
 			path: src/Middleware/SubstituteBindings.php
 
