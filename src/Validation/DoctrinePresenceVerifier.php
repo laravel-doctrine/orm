@@ -43,7 +43,7 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
      */
     public function getCount($collection, $column, $value, $excludeId = null, $idColumn = null, array $extra = [])
     {
-        $builder = $this->select($collection);
+        $builder = $this->selectCount($collection);
         $builder->where("e.{$column} = :" . $this->prepareParam($column));
 
         if (!is_null($excludeId) && $excludeId != 'NULL') {
@@ -60,7 +60,7 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
             $query->setParameter($this->prepareParam($idColumn), $excludeId);
         }
 
-        return $query->getSingleScalarResult();
+        return (int) $query->getSingleScalarResult();
     }
 
     /**
@@ -75,25 +75,25 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
      */
     public function getMultiCount($collection, $column, array $values, array $extra = [])
     {
-        $builder = $this->select($collection);
+        $builder = $this->selectCount($collection);
         $builder->where($builder->expr()->in("e.{$column}", $values));
 
         $this->queryExtraConditions($extra, $builder);
 
-        return $builder->getQuery()->getSingleScalarResult();
+        return (int) $builder->getQuery()->getSingleScalarResult();
     }
 
     /**
-     * @param string $collection
+     * @param string $entity
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    protected function select($collection)
+    protected function selectCount($entity)
     {
-        $em      = $this->getEntityManager($collection);
+        $em      = $this->getEntityManager($entity);
         $builder = $em->createQueryBuilder();
 
-        $builder->select('count(e)')->from($collection, 'e');
+        $builder->selectCount('count(e)')->from($entity, 'e');
 
         return $builder;
     }
@@ -122,7 +122,7 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
     /**
      * @param string $entity
      *
-     * @return \Doctrine\Persistence\ObjectManager|null
+     * @return \Doctrine\Persistence\ObjectManager
      */
     protected function getEntityManager($entity)
     {
