@@ -93,7 +93,7 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
         $em      = $this->getEntityManager($entity);
         $builder = $em->createQueryBuilder();
 
-        $builder->selectCount('count(e)')->from($entity, 'e');
+        $builder->select('count(e)')->from($entity, 'e');
 
         return $builder;
     }
