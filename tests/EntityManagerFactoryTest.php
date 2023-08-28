@@ -3,6 +3,7 @@
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection;
 use Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
 use Doctrine\ORM\Cache\CacheFactory;
 use Doctrine\ORM\Cache\RegionsConfiguration;
@@ -1172,9 +1173,9 @@ class EntityManagerFactoryTest extends TestCase
         }
 
         $this->settings['connection'] = 'mysql';
-        $factory->create($this->settings);
+        $em = $factory->create($this->settings);
 
-        $this->assertTrue(true);
+        $this->assertInstanceOf(PrimaryReadReplicaConnection::class, $em->getConnection());
     }
 
     protected function tearDown(): void
