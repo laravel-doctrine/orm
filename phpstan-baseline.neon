@@ -696,11 +696,6 @@ parameters:
 			path: src/EntityManagerFactory.php
 
 		-
-			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:hasValidPrimaryReadReplicaConfig\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/EntityManagerFactory.php
-
-		-
 			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:hasValidPrimaryReadReplicaConfig\\(\\) has parameter \\$driverConfig with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/EntityManagerFactory.php
