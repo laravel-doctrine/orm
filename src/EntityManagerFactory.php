@@ -524,6 +524,7 @@ class EntityManagerFactory
      * Check if slave configuration is valid.
      *
      * @param array $driverConfig
+     * @return bool
      */
     private function hasValidPrimaryReadReplicaConfig(array $driverConfig)
     {
@@ -540,5 +541,7 @@ class EntityManagerFactory
         if (($key = array_search(0, array_map('count', $slaves))) !== false) {
             throw new \InvalidArgumentException("Parameter 'read' config no. {$key} is empty.");
         }
+
+        return true;
     }
 }
