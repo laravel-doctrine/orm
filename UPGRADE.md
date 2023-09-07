@@ -58,7 +58,7 @@ DBAL deprecated the SQLLogger functionality in favor of the new middleware funct
 Logging moved to the new middlewares section.
 ```php
   'middlewares' => [
-    \LaravelDoctrine\ORM\Loggers\FileLogger::class
+    \Doctrine\DBAL\Logging\Middleware::class
   ],
 ```
 
