@@ -62,6 +62,9 @@ Logging moved to the new middlewares section.
   ],
 ```
 
+### Classes and interface in `LaravelDoctrine\ORM\Loggers` removed
+Use new "middleware" logic, see above.
+
 ### Clockwork logger removed
 Out of scope for this package.
 
