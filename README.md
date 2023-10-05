@@ -49,6 +49,7 @@ Version | Supported Laravel Versions
 ~1.6 | 7.x
 ~1.7 | 8.x
 ~1.8 | 9.x
+~2.0 | 10.x
 
 Because of the auto package discovery feature Laravel has, the ServiceProvider and Facades are automatically registered.
 
