@@ -10,16 +10,12 @@ class Connection extends AbstractConnectionMiddleware
 {
     use ExecutionTime;
 
-    private ?Statement $statement = null;
-
     /**
      * {@inheritDoc}
      */
     public function prepare(string $sql): StatementInterface
     {
-        $this->statement = new Statement(parent::prepare($sql), $sql);
-
-        return $this->statement;
+        return new Statement(parent::prepare($sql), $sql);
     }
 
     /**
@@ -27,6 +23,6 @@ class Connection extends AbstractConnectionMiddleware
      */
     public function query(string $sql): Result
     {
-        return $this->time(fn() => parent::query($sql), $sql, $this->statement?->params);
+        return $this->time(fn() => parent::query($sql), $sql);
     }
 }

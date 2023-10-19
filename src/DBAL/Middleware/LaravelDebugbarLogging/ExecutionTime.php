@@ -16,7 +16,7 @@ trait ExecutionTime
      *
      * @return mixed
      */
-    protected function time(callable $callable, string $sql, ?array $params)
+    protected function time(callable $callable, string $sql, ?array $params = null)
     {
         $start = microtime(true);
         $result = $callable();
