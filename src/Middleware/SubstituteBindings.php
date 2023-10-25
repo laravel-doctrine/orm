@@ -112,12 +112,11 @@ class SubstituteBindings
      */
     private function getClassName(ReflectionParameter $parameter): ?string
     {
-        $class = null;
-
         if (($type = $parameter->getType()) && $type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
             $class = $type->getName();
+            return class_exists($class) ? $class : null;
         }
 
-        return class_exists($class) ? $class : null;
+        return null;
     }
 }
