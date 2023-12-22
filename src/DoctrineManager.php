@@ -70,6 +70,7 @@ class DoctrineManager
      */
     private function callExtendOn($connection, $callback, ManagerRegistry $registry)
     {
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
         $manager = $registry->getManager($connection);
 
         if (!is_callable($callback)) {
@@ -89,17 +90,6 @@ class DoctrineManager
             $manager->getConnection(),
             $manager->getEventManager()
         ]);
-    }
-
-    /**
-     * @param             $namespace
-     * @param string|null $connection
-     */
-    public function addNamespace($namespace, $connection = null)
-    {
-        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $namespace) {
-            $this->getMetaDataDriver($connection, $registry)->addNamespace($namespace);
-        });
     }
 
     /**
@@ -125,7 +115,7 @@ class DoctrineManager
     }
 
     /**
-     * @param null $connection
+     * @param string|null $connection
      *
      * @param  ManagerRegistry $registry
      * @return MappingDriver

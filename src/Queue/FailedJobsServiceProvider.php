@@ -18,7 +18,7 @@ class FailedJobsServiceProvider extends ServiceProvider
 
             $schema = $this->app['registry']
                 ->getConnection($connection)
-                ->getSchemaManager();
+                ->createSchemaManager();
 
             if (!$schema->tablesExist($tableName)) {
                 $schema->createTable(

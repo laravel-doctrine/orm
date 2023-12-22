@@ -10,7 +10,7 @@ class CustomTypeManager
      * @param $name
      * @param $class
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception
      */
     public function addType($name, $class)
     {
@@ -34,7 +34,7 @@ class CustomTypeManager
     /**
      * @param $type
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception
      * @return Type
      */
     public function getType($type)

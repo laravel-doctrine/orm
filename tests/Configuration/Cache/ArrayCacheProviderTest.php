@@ -1,7 +1,7 @@
 <?php
 
-use Doctrine\Common\Cache\ArrayCache;
 use LaravelDoctrine\ORM\Configuration\Cache\ArrayCacheProvider;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class ArrayCacheProviderTest extends AbstractCacheProviderTest
 {
@@ -12,6 +12,6 @@ class ArrayCacheProviderTest extends AbstractCacheProviderTest
 
     public function getExpectedInstance()
     {
-        return ArrayCache::class;
+        return ArrayAdapter::class;
     }
 }

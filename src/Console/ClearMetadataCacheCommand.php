@@ -2,64 +2,19 @@
 
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\Common\Cache\ApcCache;
-use Doctrine\Common\Cache\XcacheCache;
-use Doctrine\Persistence\ManagerRegistry;
-use InvalidArgumentException;
-use LogicException;
+use Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand;
 
-class ClearMetadataCacheCommand extends Command
+class ClearMetadataCacheCommand extends MetadataCommand
 {
-    /**
-     * The name and signature of the console command.
-     * @var string
-     */
-    protected $signature = 'doctrine:clear:metadata:cache
-    {--flush : If defined, cache entries will be flushed instead of deleted/invalidated.}
-    {--em= : Clear cache for a specific entity manager }';
-
-    /**
-     * The console command description.
-     * @var string
-     */
-    protected $description = 'Clear all metadata cache of the various cache drivers.';
-
-    /**
-     * Execute the console command.
-     *
-     * @param ManagerRegistry $registry
-     */
-    public function handle(ManagerRegistry $registry)
+    public function __construct(EntityManagerProvider $entityManagerProvider)
     {
-        $names = $this->option('em') ? [$this->option('em')] : $registry->getManagerNames();
+        parent::__construct($entityManagerProvider);
+    }
 
-        foreach ($names as $name) {
-            $em    = $registry->getManager($name);
-            $cache = $em->getConfiguration()->getMetadataCacheImpl();
+    protected function configure(): void
+    {
+        parent::configure();
 
-            if (!$cache) {
-                throw new InvalidArgumentException('No Result cache driver is configured on given EntityManager.');
-            }
-
-            if ($cache instanceof ApcCache) {
-                throw new LogicException("Cannot clear APC Cache from Console, its shared in the Webserver memory and not accessible from the CLI.");
-            }
-
-            if ($cache instanceof XcacheCache) {
-                throw new LogicException("Cannot clear XCache Cache from Console, its shared in the Webserver memory and not accessible from the CLI.");
-            }
-
-            $this->message('Clearing result cache entries for <info>' . $name . '</info> entity manager');
-
-            $result  = $cache->deleteAll();
-            $message = ($result) ? 'Successfully deleted cache entries.' : 'No cache entries were deleted.';
-
-            if ($this->option('flush')) {
-                $result  = $cache->flushAll();
-                $message = ($result) ? 'Successfully flushed cache entries.' : $message;
-            }
-
-            $this->info($message);
-        }
+        $this->setName('doctrine:clear:metadata:cache');
     }
 }

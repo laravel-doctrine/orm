@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void detach(object $object)
  * @method static void refresh(object $object)
  * @method static void flush()
- * @method static \Doctrine\Persistence\ObjectRepository getRepository(string $className)
+ * @method static \Doctrine\ORM\EntityRepository getRepository(string $className)
  * @method static \Doctrine\Persistence\Mapping\ClassMetadata getClassMetadata(string $className)
  * @method static \Doctrine\Persistence\Mapping\ClassMetadataFactory getMetadataFactory()
  * @method static void initializeObject(object $obj)

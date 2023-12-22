@@ -3,6 +3,8 @@ composer.phar
 composer.lock
 .DS_Store
 .php_cs.cache
+.php-cs-fixer.cache
+.phpunit.result.cache
 
 /tests/Stubs/storage/framework/views/*
 !/tests/Stubs/storage/framework/views/.gitkeep

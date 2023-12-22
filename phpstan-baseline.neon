@@ -1,0 +1,1569 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Auth\\\\DoctrineUserProvider\\:\\:retrieveByCredentials\\(\\) has parameter \\$credentials with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Auth/DoctrineUserProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Auth\\\\DoctrineUserProvider\\:\\:validateCredentials\\(\\) has parameter \\$credentials with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Auth/DoctrineUserProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Auth\\\\Passwords\\\\DoctrineTokenRepository\\:\\:__construct\\(\\) has parameter \\$throttle with no type specified\\.$#"
+			count: 1
+			path: src/Auth/Passwords/DoctrineTokenRepository.php
+
+		-
+			message: "#^Cannot access offset 'config' on Illuminate\\\\Contracts\\\\Foundation\\\\Application\\.$#"
+			count: 1
+			path: src/Auth/Passwords/PasswordBrokerManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Auth\\\\Passwords\\\\PasswordBrokerManager\\:\\:createTokenRepository\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Auth/Passwords/PasswordBrokerManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Auth\\\\Passwords\\\\PasswordResetServiceProvider\\:\\:provides\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Auth/Passwords/PasswordResetServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Auth\\\\Passwords\\\\PasswordResetTable\\:\\:columns\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Auth/Passwords/PasswordResetTable.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Auth\\\\Passwords\\\\PasswordResetTable\\:\\:indices\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Auth/Passwords/PasswordResetTable.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\BootChain\\:\\:add\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/BootChain.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\BootChain\\:\\:boot\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/BootChain.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\BootChain\\:\\:flush\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/BootChain.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Cache\\\\ArrayCacheProvider\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Cache/ArrayCacheProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Cache\\\\FileCacheProvider\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Cache/FileCacheProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Cache\\\\IlluminateCacheProvider\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Cache/IlluminateCacheProvider.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Configuration\\\\Cache\\\\IlluminateCacheProvider\\:\\:\\$store \\(string\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: src/Configuration/Cache/IlluminateCacheProvider.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
+			count: 1
+			path: src/Configuration/Cache/IlluminateCacheProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Cache\\\\PhpFileCacheProvider\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Cache/PhpFileCacheProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\MysqlConnection\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/MysqlConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\MysqlConnection\\:\\:resolve\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/MysqlConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\OracleConnection\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/OracleConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\OracleConnection\\:\\:resolve\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/OracleConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PgsqlConnection\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PgsqlConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PgsqlConnection\\:\\:resolve\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PgsqlConnection.php
+
+		-
+			message: "#^Cannot access offset 'driver' on array\\|LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\Connection\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:__construct\\(\\) has parameter \\$resolvedBaseSettings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:getConnectionData\\(\\) has parameter \\$connection with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:getConnectionData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:getFilteredConfig\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:getReadReplicasConfig\\(\\) has parameter \\$replicas with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:getReadReplicasConfig\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:getReplicasConfiguration\\(\\) has parameter \\$replicaConfig with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:getReplicasConfiguration\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:replaceKeyIfExists\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:replaceKeyIfExists\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_diff_key expects array, array\\|LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\Connection given\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:\\$primaryReadReplicaConfigIgnored type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\PrimaryReadReplicaConnection\\:\\:\\$resolvedBaseSettings type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/PrimaryReadReplicaConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\SqliteConnection\\:\\:isMemory\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/SqliteConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\SqliteConnection\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/SqliteConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\SqliteConnection\\:\\:resolve\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/SqliteConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\SqlsrvConnection\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/SqlsrvConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Connections\\\\SqlsrvConnection\\:\\:resolve\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Connections/SqlsrvConnection.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\CustomTypeManager\\:\\:addCustomTypes\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Configuration/CustomTypeManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\CustomTypeManager\\:\\:addCustomTypes\\(\\) has parameter \\$typeMap with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/CustomTypeManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\CustomTypeManager\\:\\:addType\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Configuration/CustomTypeManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\CustomTypeManager\\:\\:addType\\(\\) has parameter \\$class with no type specified\\.$#"
+			count: 1
+			path: src/Configuration/CustomTypeManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\CustomTypeManager\\:\\:addType\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: src/Configuration/CustomTypeManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\CustomTypeManager\\:\\:getType\\(\\) has parameter \\$type with no type specified\\.$#"
+			count: 1
+			path: src/Configuration/CustomTypeManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Driver\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Driver.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\LaravelNamingStrategy\\:\\:classToFieldName\\(\\) has parameter \\$className with no type specified\\.$#"
+			count: 1
+			path: src/Configuration/LaravelNamingStrategy.php
+
+		-
+			message: "#^Parameter \\#3 \\$className \\(null\\) of method LaravelDoctrine\\\\ORM\\\\Configuration\\\\LaravelNamingStrategy\\:\\:embeddedFieldToColumnName\\(\\) should be compatible with parameter \\$className \\(class\\-string\\) of method Doctrine\\\\ORM\\\\Mapping\\\\NamingStrategy\\:\\:embeddedFieldToColumnName\\(\\)$#"
+			count: 1
+			path: src/Configuration/LaravelNamingStrategy.php
+
+		-
+			message: "#^Parameter \\#4 \\$embeddedClassName \\(null\\) of method LaravelDoctrine\\\\ORM\\\\Configuration\\\\LaravelNamingStrategy\\:\\:embeddedFieldToColumnName\\(\\) should be compatible with parameter \\$embeddedClassName \\(class\\-string\\) of method Doctrine\\\\ORM\\\\Mapping\\\\NamingStrategy\\:\\:embeddedFieldToColumnName\\(\\)$#"
+			count: 1
+			path: src/Configuration/LaravelNamingStrategy.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Manager\\:\\:__call\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Manager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Manager\\:\\:callCustomCreator\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Manager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Manager\\:\\:createDriver\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Manager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Manager\\:\\:driver\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Manager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\Manager\\:\\:getDrivers\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Manager.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of function call_user_func_array expects callable\\(\\)\\: mixed, array\\{mixed, string\\} given\\.$#"
+			count: 1
+			path: src/Configuration/Manager.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Configuration\\\\Manager\\:\\:\\$customCreators type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Manager.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Configuration\\\\Manager\\:\\:\\$drivers type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/Manager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\Annotations\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Annotations.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\Attributes\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Attributes.php
+
+		-
+			message: "#^Call to method setFluentFactory\\(\\) on an unknown class LaravelDoctrine\\\\Fluent\\\\FluentDriver\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Fluent.php
+
+		-
+			message: "#^Class LaravelDoctrine\\\\Fluent\\\\Extensions\\\\ExtensibleClassMetadataFactory not found\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Fluent.php
+
+		-
+			message: "#^Instantiated class LaravelDoctrine\\\\Fluent\\\\Builders\\\\Builder not found\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Fluent.php
+
+		-
+			message: "#^Instantiated class LaravelDoctrine\\\\Fluent\\\\FluentDriver not found\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Fluent.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\Fluent\\:\\:getNamingStrategy\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Fluent.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\Fluent\\:\\:getQuoteStrategy\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Fluent.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\Fluent\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Fluent.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\MetaDataManager\\:\\:getClassSuffix\\(\\) should return string but returns null\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/MetaDataManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\Php\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Php.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\SimplifiedXml\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/SimplifiedXml.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\SimplifiedYaml\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/SimplifiedYaml.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\StaticPhp\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/StaticPhp.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\Xml\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Xml.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Configuration\\\\MetaData\\\\Yaml\\:\\:resolve\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration/MetaData/Yaml.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Console\\\\Command\\:\\:message\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Console/Command.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Console\\\\Command\\:\\:message\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: src/Console/Command.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ManagerRegistry\\:\\:addConnection\\(\\)\\.$#"
+			count: 1
+			path: src/Console/DumpDatabaseCommand.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ManagerRegistry\\:\\:addManager\\(\\)\\.$#"
+			count: 1
+			path: src/Console/DumpDatabaseCommand.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getConnection\\(\\)\\.$#"
+			count: 1
+			path: src/Console/DumpDatabaseCommand.php
+
+		-
+			message: "#^Function base_path not found\\.$#"
+			count: 1
+			path: src/Console/DumpDatabaseCommand.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Console\\\\DumpDatabaseCommand\\:\\:createSchema\\(\\) has parameter \\$em with no type specified\\.$#"
+			count: 1
+			path: src/Console/DumpDatabaseCommand.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Console\\\\DumpDatabaseCommand\\:\\:dropSchema\\(\\) has parameter \\$em with no type specified\\.$#"
+			count: 1
+			path: src/Console/DumpDatabaseCommand.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Console\\\\DumpDatabaseCommand\\:\\:handle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Console/DumpDatabaseCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$connection of method LaravelDoctrine\\\\ORM\\\\Console\\\\DumpDatabaseCommand\\:\\:connect\\(\\) expects string, array\\|bool\\|string\\|null given\\.$#"
+			count: 1
+			path: src/Console/DumpDatabaseCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$em of method LaravelDoctrine\\\\ORM\\\\Console\\\\DumpDatabaseCommand\\:\\:dump\\(\\) expects string, array\\|bool\\|string\\|null given\\.$#"
+			count: 1
+			path: src/Console/DumpDatabaseCommand.php
+
+		-
+			message: "#^Parameter \\#2 \\$em of method LaravelDoctrine\\\\ORM\\\\Console\\\\DumpDatabaseCommand\\:\\:connect\\(\\) expects string, array\\|bool\\|string\\|null given\\.$#"
+			count: 1
+			path: src/Console/DumpDatabaseCommand.php
+
+		-
+			message: "#^Part \\$binary \\(array\\|bool\\|string\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: src/Console/DumpDatabaseCommand.php
+
+		-
+			message: "#^Class LaravelDoctrine\\\\ORM\\\\Console\\\\EnsureProductionSettingsCommand extends deprecated class Doctrine\\\\ORM\\\\Tools\\\\Console\\\\Command\\\\EnsureProductionSettingsCommand\\.$#"
+			count: 1
+			path: src/Console/EnsureProductionSettingsCommand.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineExtender\\:\\:extend\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineExtender.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\Mapping\\\\Driver\\\\MappingDriver\\:\\:addMappings\\(\\)\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\Mapping\\\\Driver\\\\MappingDriver\\:\\:addPaths\\(\\)\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getConfiguration\\(\\)\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineManager\\:\\:addMappings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineManager\\:\\:addMappings\\(\\) has parameter \\$mappings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineManager\\:\\:addPaths\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineManager\\:\\:addPaths\\(\\) has parameter \\$paths with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineManager\\:\\:callExtendOn\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineManager\\:\\:extend\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineManager\\:\\:extendAll\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineManager\\:\\:onResolve\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Ternary operator condition is always true\\.$#"
+			count: 1
+			path: src/DoctrineManager.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Foundation\\\\Application\\:\\:configure\\(\\)\\.$#"
+			count: 3
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Call to static method create\\(\\) on an unknown class Faker\\\\Factory\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Cannot access offset 'config' on Illuminate\\\\Contracts\\\\Foundation\\\\Application\\.$#"
+			count: 2
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Cannot access offset 'db' on Illuminate\\\\Contracts\\\\Foundation\\\\Application\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Cannot access offset 'events' on Illuminate\\\\Contracts\\\\Foundation\\\\Application\\.$#"
+			count: 2
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Cannot access offset 'registry' on Illuminate\\\\Contracts\\\\Foundation\\\\Application\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Class Doctrine\\\\Common\\\\Persistence\\\\ManagerRegistry not found\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Expression \"\\$this\\-\\>app\\['db'\\]\" on a separate line does not do anything\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Fetching class constant class of deprecated class LaravelDoctrine\\\\ORM\\\\Console\\\\EnsureProductionSettingsCommand\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:boot\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:bootExtensionManager\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:ensureValidatorIsUsable\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:extendAuthManager\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:extendNotificationChannel\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:mergeConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:registerClassMetaDataFactory\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:registerConsoleCommands\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:registerCustomTypes\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:registerEntityManager\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:registerExtensions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:registerManagerRegistry\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:registerPresenceVerifierProvider\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:setupCache\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:setupConnection\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:setupConnection\\(\\) should return array but return statement is missing\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\DoctrineServiceProvider\\:\\:setupMetaData\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\Mapping\\\\Driver\\\\MappingDriver\\:\\:addPaths\\(\\)\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Dead catch \\- ReflectionException is never thrown in the try block\\.$#"
+			count: 2
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:configureProxies\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:configureProxies\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:create\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:createEventManager\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:decorateManager\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:getConnectionDriver\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:getConnectionDriver\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:hasValidPrimaryReadReplicaConfig\\(\\) has parameter \\$driverConfig with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:isPrimaryReadReplicaConfigured\\(\\) has parameter \\$driverConfig with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:registerFilters\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:registerFilters\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:registerListener\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:registerListeners\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:registerListeners\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:registerMappingTypes\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:registerMappingTypes\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:registerPaths\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:registerPaths\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:registerSubscribers\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:registerSubscribers\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setCacheSettings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setCustomFunctions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setCustomHydrationModes\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setCustomMappingDriverChain\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setCustomMappingDriverChain\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setMetadataDriver\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setMetadataDriver\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setNamingStrategy\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setNamingStrategy\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setQuoteStrategy\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setQuoteStrategy\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setRepositoryFactory\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setRepositoryFactory\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\EntityManagerFactory\\:\\:setSecondLevelCaching\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Parameter \\#1 \\$cmfName of method Doctrine\\\\ORM\\\\Configuration\\:\\:setClassMetadataFactoryName\\(\\) expects class\\-string, string given\\.$#"
+			count: 1
+			path: src/EntityManagerFactory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\Extension\\:\\:addSubscribers\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Extensions/Extension.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\Extension\\:\\:getFilters\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Extensions/Extension.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\Mapping\\\\Driver\\\\MappingDriver\\:\\:getReader\\(\\)\\.$#"
+			count: 1
+			path: src/Extensions/ExtensionManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\ExtensionManager\\:\\:boot\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Extensions/ExtensionManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\ExtensionManager\\:\\:bootExtension\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Extensions/ExtensionManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\ExtensionManager\\:\\:bootExtension\\(\\) has parameter \\$connection with no type specified\\.$#"
+			count: 1
+			path: src/Extensions/ExtensionManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\ExtensionManager\\:\\:getBootedExtensions\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Extensions/ExtensionManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\ExtensionManager\\:\\:getExtensions\\(\\) should return array\\<LaravelDoctrine\\\\ORM\\\\Extensions\\\\Extension\\> but returns array\\<string\\>\\.$#"
+			count: 1
+			path: src/Extensions/ExtensionManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\ExtensionManager\\:\\:markAsBooted\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Extensions/ExtensionManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\ExtensionManager\\:\\:markAsBooted\\(\\) has parameter \\$connection with no type specified\\.$#"
+			count: 1
+			path: src/Extensions/ExtensionManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\ExtensionManager\\:\\:notBootedYet\\(\\) has parameter \\$connection with no type specified\\.$#"
+			count: 1
+			path: src/Extensions/ExtensionManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\ExtensionManager\\:\\:register\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Extensions/ExtensionManager.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Extensions\\\\ExtensionManager\\:\\:\\$bootedExtensions type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Extensions/ExtensionManager.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\MappingDriverChain\\:\\:__construct\\(\\) has parameter \\$namespace with no type specified\\.$#"
+			count: 1
+			path: src/Extensions/MappingDriverChain.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\MappingDriverChain\\:\\:addMappings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Extensions/MappingDriverChain.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\MappingDriverChain\\:\\:addMappings\\(\\) has parameter \\$mappings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Extensions/MappingDriverChain.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\MappingDriverChain\\:\\:addPaths\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Extensions/MappingDriverChain.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\MappingDriverChain\\:\\:addPaths\\(\\) has parameter \\$paths with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Extensions/MappingDriverChain.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\MappingDriverChain\\:\\:getReader\\(\\) should return Doctrine\\\\Common\\\\Annotations\\\\Reader\\|null but return statement is missing\\.$#"
+			count: 1
+			path: src/Extensions/MappingDriverChain.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\TablePrefix\\\\TablePrefixExtension\\:\\:addSubscribers\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Extensions/TablePrefix/TablePrefixExtension.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\TablePrefix\\\\TablePrefixExtension\\:\\:getFilters\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Extensions/TablePrefix/TablePrefixExtension.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\TablePrefix\\\\TablePrefixListener\\:\\:getSubscribedEvents\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Extensions/TablePrefix/TablePrefixListener.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Extensions\\\\TablePrefix\\\\TablePrefixListener\\:\\:loadClassMetadata\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Extensions/TablePrefix/TablePrefixListener.php
+
+		-
+			message: "#^Offset 'joinTable' does not exist on array\\{cache\\?\\: array, cascade\\: array\\<string\\>, declared\\?\\: class\\-string, fetch\\: mixed, fieldName\\: string, id\\?\\: bool, inherited\\?\\: class\\-string, indexBy\\?\\: string, \\.\\.\\.\\}\\.$#"
+			count: 1
+			path: src/Extensions/TablePrefix/TablePrefixListener.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getConfiguration\\(\\)\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getConnection\\(\\)\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Container\\\\Container\\:\\:forgetInstance\\(\\)\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: """
+				#^Call to method fromNamespaceAlias\\(\\) of deprecated class Doctrine\\\\ORM\\\\Exception\\\\UnknownEntityNamespace\\:
+				No replacement planned\\.$#
+			"""
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Cannot call method getName\\(\\) on ReflectionClass\\|false\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:addConnection\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:addConnection\\(\\) has parameter \\$connection with no type specified\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:addConnection\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:addManager\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:addManager\\(\\) has parameter \\$manager with no type specified\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:addManager\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:closeManager\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:getConnectionBindingName\\(\\) has parameter \\$connection with no type specified\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:getConnectionNames\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:getConnections\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:getManager\\(\\) should return Doctrine\\\\Persistence\\\\ObjectManager but returns object\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:getManagerBindingName\\(\\) has parameter \\$manager with no type specified\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:getManagerForClass\\(\\) should return Doctrine\\\\Persistence\\\\ObjectManager\\|null but return statement is missing\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:getManagerNames\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:getRepository\\(\\) return type with generic interface Doctrine\\\\Persistence\\\\ObjectRepository does not specify its types\\: T$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:purgeManager\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:setDefaultConnection\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:setDefaultManager\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\Persistence\\\\Mapping\\\\ClassMetadataFactory\\<Doctrine\\\\Persistence\\\\Mapping\\\\ClassMetadata\\<object\\>\\>\\:\\:isTransient\\(\\) expects class\\-string, string given\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getRepository\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Parameter \\#1 \\$objectOrClass of class ReflectionClass constructor expects class\\-string\\<T of object\\>\\|T of object, string given\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:\\$connections type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:\\$connectionsMap type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:\\$managers type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\IlluminateRegistry\\:\\:\\$managersMap type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getRepository\\(\\)$#"
+			count: 1
+			path: src/IlluminateRegistry.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Middleware\\\\SubstituteBindings\\:\\:substituteImplicitBindings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Middleware/SubstituteBindings.php
+
+		-
+			message: "#^Parameter \\#1 \\$route of method Illuminate\\\\Contracts\\\\Routing\\\\Registrar\\:\\:substituteBindings\\(\\) expects Illuminate\\\\Routing\\\\Route, object\\|string\\|null given\\.$#"
+			count: 1
+			path: src/Middleware/SubstituteBindings.php
+
+		-
+			message: "#^Parameter \\#1 \\$route of method LaravelDoctrine\\\\ORM\\\\Middleware\\\\SubstituteBindings\\:\\:substituteImplicitBindings\\(\\) expects Illuminate\\\\Routing\\\\Route, object\\|string\\|null given\\.$#"
+			count: 1
+			path: src/Middleware/SubstituteBindings.php
+
+		-
+			message: "#^Cannot call method routeNotificationFor\\(\\) on class\\-string\\|object\\.$#"
+			count: 1
+			path: src/Notifications/DoctrineChannel.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Notifications\\\\DoctrineChannel\\:\\:send\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Notifications/DoctrineChannel.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Notifications\\\\Notification\\:\\:\\$id has no type specified\\.$#"
+			count: 1
+			path: src/Notifications/Notification.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\AbstractQuery\\:\\:setFirstResult\\(\\)\\.$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\AbstractQuery\\:\\:setMaxResults\\(\\)\\.$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Pagination\\\\PaginatorAdapter\\:\\:__construct\\(\\) has parameter \\$queryParams with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Pagination\\\\PaginatorAdapter\\:\\:convertToLaravelPaginator\\(\\) has parameter \\$doctrinePaginator with generic class Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator but does not specify its types\\: T$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Pagination\\\\PaginatorAdapter\\:\\:fromParams\\(\\) has parameter \\$queryParams with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Pagination\\\\PaginatorAdapter\\:\\:fromRequest\\(\\) has parameter \\$queryParams with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Pagination\\\\PaginatorAdapter\\:\\:getDoctrinePaginator\\(\\) return type with generic class Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator does not specify its types\\: T$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Pagination\\\\PaginatorAdapter\\:\\:getQueryParams\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Pagination\\\\PaginatorAdapter\\:\\:make\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Pagination\\\\PaginatorAdapter\\:\\:queryParams\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Parameter \\#1 \\$query of class Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator constructor expects Doctrine\\\\ORM\\\\Query\\|Doctrine\\\\ORM\\\\QueryBuilder, Doctrine\\\\ORM\\\\AbstractQuery given\\.$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Pagination\\\\PaginatorAdapter\\:\\:\\$queryParams type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 2
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Cannot access offset 'config' on Illuminate\\\\Contracts\\\\Foundation\\\\Application\\.$#"
+			count: 2
+			path: src/Queue/FailedJobsServiceProvider.php
+
+		-
+			message: "#^Cannot access offset 'events' on Illuminate\\\\Contracts\\\\Foundation\\\\Application\\.$#"
+			count: 1
+			path: src/Queue/FailedJobsServiceProvider.php
+
+		-
+			message: "#^Cannot access offset 'registry' on Illuminate\\\\Contracts\\\\Foundation\\\\Application\\.$#"
+			count: 1
+			path: src/Queue/FailedJobsServiceProvider.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Serializers\\\\ArraySerializer\\:\\:serialize\\(\\) has parameter \\$entity with no type specified\\.$#"
+			count: 1
+			path: src/Serializers/ArraySerializer.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Serializers\\\\ArraySerializer\\:\\:serialize\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Serializers/ArraySerializer.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Serializers\\\\ArraySerializer\\:\\:serialize\\(\\) should return array but returns array\\|ArrayObject\\|bool\\|float\\|int\\|string\\|null\\.$#"
+			count: 1
+			path: src/Serializers/ArraySerializer.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Serializers\\\\JsonSerializer\\:\\:serialize\\(\\) has parameter \\$entity with no type specified\\.$#"
+			count: 1
+			path: src/Serializers/JsonSerializer.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\ConfigRepository\\:\\:__construct\\(\\) has parameter \\$items with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/ConfigRepository.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\ConfigRepository\\:\\:all\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/ConfigRepository.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\ConfigRepository\\:\\:get\\(\\) has parameter \\$key with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/ConfigRepository.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\ConfigRepository\\:\\:set\\(\\) has parameter \\$key with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/ConfigRepository.php
+
+		-
+			message: "#^Parameter \\#2 \\$key of static method Illuminate\\\\Support\\\\Arr\\:\\:get\\(\\) expects int\\|string\\|null, array\\|string given\\.$#"
+			count: 1
+			path: src/Testing/ConfigRepository.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\ConfigRepository\\:\\:\\$items type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/ConfigRepository.php
+
+		-
+			message: "#^Class LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory implements generic interface ArrayAccess but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:create\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:createAs\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:make\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:makeAs\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:raw\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:raw\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:rawOf\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:rawOf\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:state\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:\\$afterCreating type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:\\$afterMaking type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:\\$definitions type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:\\$states \\(array\\<array\\>\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\Factory\\:\\:\\$states type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Testing/Factory.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:__construct\\(\\) has parameter \\$afterCreating with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:__construct\\(\\) has parameter \\$afterMaking with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:__construct\\(\\) has parameter \\$definitions with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:applyStates\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:applyStates\\(\\) has parameter \\$definition with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:applyStates\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:callAfter\\(\\) has parameter \\$afterCallbacks with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:callAfter\\(\\) has parameter \\$models with generic class Illuminate\\\\Support\\\\Collection but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:callAfterCallbacks\\(\\) has parameter \\$afterCallbacks with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:callAfterCreating\\(\\) has parameter \\$models with generic class Illuminate\\\\Support\\\\Collection but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:callAfterMaking\\(\\) has parameter \\$models with generic class Illuminate\\\\Support\\\\Collection but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:callClosureAttributes\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:callClosureAttributes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:construct\\(\\) has parameter \\$afterCreating with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:construct\\(\\) has parameter \\$afterMaking with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:construct\\(\\) has parameter \\$definitions with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:construct\\(\\) has parameter \\$states with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:create\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:getStates\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:make\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:makeInstance\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:stateAttributes\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:stateAttributes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$metadata contains generic class Doctrine\\\\ORM\\\\Mapping\\\\ClassMetadata but does not specify its types\\: T$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:\\$activeStates type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:\\$afterCreating type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:\\$afterMaking type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:\\$definitions type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Property LaravelDoctrine\\\\ORM\\\\Testing\\\\FactoryBuilder\\:\\:\\$states type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Testing/FactoryBuilder.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\SimpleHydrator\\:\\:hydrate\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Testing/SimpleHydrator.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\SimpleHydrator\\:\\:hydrate\\(\\) has parameter \\$class with no type specified\\.$#"
+			count: 1
+			path: src/Testing/SimpleHydrator.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\SimpleHydrator\\:\\:hydrateReflection\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Testing/SimpleHydrator.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Testing\\\\SimpleHydrator\\:\\:hydrateReflection\\(\\) has parameter \\$reflection with generic class ReflectionClass but does not specify its types\\: T$#"
+			count: 1
+			path: src/Testing/SimpleHydrator.php
+
+		-
+			message: "#^Unsafe call to private method LaravelDoctrine\\\\ORM\\\\Testing\\\\SimpleHydrator\\:\\:hydrateReflection\\(\\) through static\\:\\:\\.$#"
+			count: 1
+			path: src/Testing/SimpleHydrator.php
+
+		-
+			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:createQueryBuilder\\(\\)\\.$#"
+			count: 1
+			path: src/Validation/DoctrinePresenceVerifier.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#"
+			count: 1
+			path: src/Validation/DoctrinePresenceVerifier.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Validation\\\\DoctrinePresenceVerifier\\:\\:getCount\\(\\) has parameter \\$extra with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Validation/DoctrinePresenceVerifier.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Validation\\\\DoctrinePresenceVerifier\\:\\:getMultiCount\\(\\) has parameter \\$extra with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Validation/DoctrinePresenceVerifier.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Validation\\\\DoctrinePresenceVerifier\\:\\:getMultiCount\\(\\) has parameter \\$values with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Validation/DoctrinePresenceVerifier.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Validation\\\\DoctrinePresenceVerifier\\:\\:queryExtraConditions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Validation/DoctrinePresenceVerifier.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Validation\\\\DoctrinePresenceVerifier\\:\\:queryExtraConditions\\(\\) has parameter \\$extra with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Validation/DoctrinePresenceVerifier.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/Validation/DoctrinePresenceVerifier.php

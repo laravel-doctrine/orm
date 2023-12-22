@@ -22,6 +22,7 @@ class SqliteConnection extends Connection
             'memory'              => $this->isMemory($settings),
             'path'                => Arr::get($settings, 'database'),
             'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
+            'driverOptions'       => Arr::get($settings, 'options', []),
             'wrapperClass'        => Arr::get($settings, 'wrapperClass')
         ];
     }
@@ -33,6 +34,6 @@ class SqliteConnection extends Connection
      */
     protected function isMemory(array $settings = [])
     {
-        return Str::startsWith(Arr::get($settings, 'database'), ':memory');
+        return Str::startsWith(Arr::get($settings, 'database', ''), ':memory');
     }
 }

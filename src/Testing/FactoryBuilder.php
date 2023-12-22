@@ -21,7 +21,7 @@ class FactoryBuilder
     /**
      * The model being built.
      *
-     * @var string
+     * @var class-string
      */
     protected $class;
 
@@ -66,10 +66,24 @@ class FactoryBuilder
     protected $activeStates = [];
 
     /**
+     * The registered after making callbacks.
+     *
+     * @var array
+     */
+    public $afterMaking = [];
+
+    /**
+     * The registered after creating callbacks.
+     *
+     * @var array
+     */
+    public $afterCreating = [];
+
+    /**
      * Create an new builder instance.
      *
      * @param ManagerRegistry  $registry
-     * @param string           $class
+     * @param class-string     $class
      * @param string           $name
      * @param array            $definitions
      * @param \Faker\Generator $faker

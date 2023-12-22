@@ -93,7 +93,7 @@ class FactoryBuilderTest extends MockeryTestCase
             'database' => ':memory:',
         ];
 
-        $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
+        $config = Setup::createAttributeMetadataConfiguration([__DIR__], true);
 
         return EntityManager::create($conn, $config);
     }
@@ -263,27 +263,29 @@ class FactoryBuilderTest extends MockeryTestCase
     }
 }
 
-/**
- * @Entity
- */
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\InverseJoinColumn;
+
+#[Entity]
 class EntityStub
 {
-    /**
-     * @Id @GeneratedValue @Column(type="integer")
-     */
+    #[Id]
+    #[GeneratedValue]
+    #[Column(type: "integer")]
     public $id;
 
-    /**
-     * @Column(type="string")
-     */
+    #[Column(type: "string")]
     public $name;
 
-    /**
-     * @ManyToMany(targetEntity="EntityStub")
-     * @JoinTable(name="stub_stubs",
-     *      joinColumns={@JoinColumn(name="owner_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="owned_id", referencedColumnName="id")}
-     * )
-     */
+    #[ManyToMany(targetEntity: "EntityStub")]
+    #[JoinTable(name: "stub_stubs")]
+    #[JoinColumn(name: "owner_id", referencedColumnName: "id")]
+    #[InverseJoinColumn(name: "owned_id", referencedColumnName: "id")]
     public $others;
 }

@@ -1,0 +1,16 @@
+parameters:
+    level: 7
+    paths:
+        - src
+
+    ignoreErrors:
+        -
+            message: '~^Function config_path not found.$~'
+        -
+            message: '~^Function database_path not found.$~'
+        -
+            message: '~^Function app not found.$~'
+
+includes:
+    - phpstan-baseline.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
