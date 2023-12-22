@@ -21,7 +21,7 @@ class IlluminateCacheProvider implements Driver
      * @var string
      */
     protected $store;
-    
+
     /**
      * @param Factory $cache
      */
@@ -42,7 +42,7 @@ class IlluminateCacheProvider implements Driver
             trigger_error('Using driver "' . $this->store . '" with a custom store is deprecated. Please use the "illuminate" driver.', E_USER_DEPRECATED);
         }
 
-        return new Psr16Adapter($this->cache->store($store), $settings['namespace'] ?? '');
+        return new Psr16Adapter($this->cache->store($store), $settings['namespace'] ?? '', $settings['default_lifetime'] ?? 0);
     }
 
     public function getStore(): string
