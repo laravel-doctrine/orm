@@ -142,4 +142,15 @@ class DoctrineUserProvider implements UserProvider
     {
         return $this->entity;
     }
+
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false)
+    {
+        if (! $this->hasher->needsRehash($user->getAuthPassword()) && ! $force) {
+            return;
+        }
+
+        $user->setPassword($this->hasher->make($credentials['password']));
+        $this->em->persist($user);
+        $this->em->flush();
+    }
 }
