@@ -88,6 +88,7 @@ class DoctrineServiceProvider extends ServiceProvider
         if (!$this->isLumen()) {
             return;
         }
+        assert(property_exists($this->app, 'availableBindings'));
 
         if ($this->shouldRegisterDoctrinePresenceValidator()) {
             // due to weirdness the default presence verifier overrides one set by a service provider
