@@ -92,4 +92,9 @@ trait Authenticatable
     {
         return 'rememberToken';
     }
+
+    public function getAuthPasswordName()
+    {
+        return 'password';
+    }
 }
