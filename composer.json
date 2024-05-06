@@ -19,7 +19,7 @@
         "php": "^8.0",
         "doctrine/annotations": "^2",
         "doctrine/dbal": "^3.2",
-        "doctrine/orm": "^2.14|^3.0",
+        "doctrine/orm": "^2.14",
         "doctrine/persistence": "^3",
         "illuminate/auth": "^9.0|^10.0|^11.0",
         "illuminate/console": "^9.0|^10.0|^11.0",
