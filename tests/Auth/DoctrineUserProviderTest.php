@@ -140,6 +140,43 @@ class DoctrineUserProviderTest extends TestCase
         ));
     }
 
+    public function test_rehash_password_if_required_rehash()
+    {
+        $user = new AuthenticableMock;
+
+        $this->hasher->shouldReceive('needsRehash')->once()->andReturn(true);
+        $this->hasher->shouldReceive('make')->once()->andReturn('hashedPassword');
+        $this->em->shouldReceive('persist')->once();
+        $this->em->shouldReceive('flush')->once();
+
+        $this->provider->rehashPasswordIfRequired($user, ['password' => 'rawPassword'], false);
+        $this->assertEquals('hashedPassword', $user->getPassword());
+    }
+
+    public function test_rehash_password_if_required_rehash_force()
+    {
+        $user = new AuthenticableMock;
+
+        $this->hasher->shouldReceive('needsRehash')->once()->andReturn(false);
+        $this->hasher->shouldReceive('make')->once()->andReturn('hashedPassword');
+        $this->em->shouldReceive('persist')->once();
+        $this->em->shouldReceive('flush')->once();
+
+        $this->provider->rehashPasswordIfRequired($user, ['password' => 'rawPassword'], true);
+        $this->assertEquals('hashedPassword', $user->getPassword());
+    }
+
+    public function test_rehash_password_if_required_rehash_norehash_needed()
+    {
+        $user = new AuthenticableMock;
+        $user->setPassword('originalPassword');
+
+        $this->hasher->shouldReceive('needsRehash')->once()->andReturn(false);
+
+        $this->provider->rehashPasswordIfRequired($user, ['password' => 'rawPassword'], false);
+        $this->assertEquals('originalPassword', $user->getPassword());
+    }
+
     protected function mockGetRepository($class = AuthenticableMock::class)
     {
         $this->em->shouldReceive('getRepository')
