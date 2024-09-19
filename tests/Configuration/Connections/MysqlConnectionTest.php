@@ -36,6 +36,11 @@ class MysqlConnectionTest extends TestCase
             'charset'             => 'charset',
             'port'                => 'port',
             'unix_socket'         => 'unix_socket',
+            'ssl_key'             => 'ssl_key',
+            'ssl_cert'            => 'ssl_cert',
+            'ssl_ca'              => 'ssl_ca',
+            'ssl_capath'          => 'ssl_capath',
+            'ssl_cipher'          => 'ssl_cipher',
             'prefix'              => 'prefix',
             'defaultTableOptions' => [],
             'driverOptions'       => [],
@@ -49,6 +54,11 @@ class MysqlConnectionTest extends TestCase
         $this->assertEquals('charset', $resolved['charset']);
         $this->assertEquals('port', $resolved['port']);
         $this->assertEquals('unix_socket', $resolved['unix_socket']);
+        $this->assertEquals('ssl_key', $resolved['ssl_key']);
+        $this->assertEquals('ssl_cert', $resolved['ssl_cert']);
+        $this->assertEquals('ssl_ca', $resolved['ssl_ca']);
+        $this->assertEquals('ssl_capath', $resolved['ssl_capath']);
+        $this->assertEquals('ssl_cipher', $resolved['ssl_cipher']);
         $this->assertEquals('prefix', $resolved['prefix']);
         $this->assertCount(0, $resolved['defaultTableOptions']);
         $this->assertCount(0, $resolved['driverOptions']);
