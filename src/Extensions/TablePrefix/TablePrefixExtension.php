@@ -2,7 +2,6 @@
 
 namespace LaravelDoctrine\ORM\Extensions\TablePrefix;
 
-use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,9 +13,8 @@ class TablePrefixExtension implements Extension
     /**
      * @param EventManager           $manager
      * @param EntityManagerInterface $em
-     * @param Reader|null            $reader
      */
-    public function addSubscribers(EventManager $manager, EntityManagerInterface $em, Reader $reader = null)
+    public function addSubscribers(EventManager $manager, EntityManagerInterface $em)
     {
         $manager->addEventSubscriber(
             new TablePrefixListener(
