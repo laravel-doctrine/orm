@@ -1,6 +1,5 @@
 <?php
 
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\Persistence\Mapping\Driver\DefaultFileLocator;
@@ -24,7 +23,7 @@ class MappingDriverChainTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->driver = m::mock(AnnotationDriver::class);
+        $this->driver = m::mock(XmlDriver::class);
         $this->chain  = new MappingDriverChain($this->driver, 'Namespace');
     }
 
@@ -74,15 +73,6 @@ class MappingDriverChainTest extends TestCase
         $chain->addPaths(['paths2']);
 
         $this->assertTrue(true);
-    }
-
-    public function test_can_get_annotation_reader()
-    {
-        $this->driver->shouldReceive('getReader')
-                     ->once()
-                     ->andReturn('reader');
-
-        $this->assertEquals('reader', $this->chain->getReader());
     }
 
     protected function tearDown(): void

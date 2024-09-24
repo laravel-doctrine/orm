@@ -88,7 +88,7 @@ class EntityManagerFactoryTest extends TestCase
      * @var array
      */
     protected $settings = [
-        'meta'       => 'annotations',
+        'meta'       => 'xml',
         'connection' => 'mysql',
         'paths'      => ['Entities'],
         'proxies'    => [
@@ -509,7 +509,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver' => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
@@ -568,7 +568,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver' => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
@@ -626,7 +626,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver' => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
@@ -685,7 +685,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver' => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
@@ -752,7 +752,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver'       => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
@@ -795,7 +795,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver'       => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
