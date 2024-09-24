@@ -1,7 +1,7 @@
 <?php
 
+use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Illuminate\Contracts\Container\Container;
-use LaravelDoctrine\ORM\Configuration\MetaData\Annotations;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Configuration\MetaData\Yaml;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
@@ -32,9 +32,9 @@ class MetaDataManagerTest extends TestCase
 
     public function test_driver_returns_the_default_driver()
     {
-        $this->app->shouldReceive('resolve')->andReturn(new Annotations());
+        $this->app->shouldReceive('resolve')->andReturn(new XmlDriver('locator', '.xml'));
 
-        $this->assertInstanceOf(Annotations::class, $this->manager->driver());
+        $this->assertInstanceOf(XmlDriver::class, $this->manager->driver());
     }
 
     public function test_driver_can_return_a_given_driver()
@@ -70,11 +70,11 @@ class MetaDataManagerTest extends TestCase
 
     public function test_can_replace_an_existing_driver()
     {
-        $this->manager->extend('annotations', function () {
+        $this->manager->extend('xml', function () {
             return 'configuration';
         });
 
-        $this->assertEquals('configuration', $this->manager->driver('annotations'));
+        $this->assertEquals('configuration', $this->manager->driver('xml'));
     }
 
     protected function tearDown(): void

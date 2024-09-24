@@ -1,6 +1,5 @@
 <?php
 
-use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,18 +19,12 @@ class TablePrefixExtensionTest extends TestCase
      */
     protected $em;
 
-    /**
-     * @var \Mockery\MockInterface
-     */
-    protected $reader;
-
     public function setUp(): void
     {
         $this->evm = m::mock(EventManager::class);
         $this->evm->shouldReceive('addEventSubscriber')->once();
 
         $this->em     = m::mock(EntityManagerInterface::class);
-        $this->reader = m::mock(Reader::class);
     }
 
     public function test_can_register_extension()
@@ -50,7 +43,6 @@ class TablePrefixExtensionTest extends TestCase
         $extension->addSubscribers(
             $this->evm,
             $this->em,
-            $this->reader
         );
 
         $this->assertEmpty($extension->getFilters());

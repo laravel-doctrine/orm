@@ -1,10 +1,8 @@
 <?php
 
-use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Query\FilterCollection;
 use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Contracts\Container\Container;
@@ -63,7 +61,7 @@ class ExtensionManagerTest extends TestCase
         $this->em            = m::mock(EntityManagerInterface::class);
         $this->evm           = m::mock(EventManager::class);
         $this->configuration = m::mock(Configuration::class);
-        $this->driver        = m::mock(AnnotationDriver::class);
+        $this->driver        = m::mock(\Doctrine\ORM\Mapping\Driver\XmlDriver::class);
         $this->reader        = m::mock(Reader::class);
 
         $this->manager = $this->newManager();
