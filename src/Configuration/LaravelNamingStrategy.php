@@ -27,7 +27,7 @@ class LaravelNamingStrategy implements NamingStrategy
      *
      * @return string A table name.
      */
-    public function classToTableName($className)
+    public function classToTableName(string $className): string
     {
         return $this->str->plural($this->classToFieldName($className));
     }
@@ -40,7 +40,7 @@ class LaravelNamingStrategy implements NamingStrategy
      *
      * @return string A column name.
      */
-    public function propertyToColumnName($propertyName, $className = null)
+    public function propertyToColumnName(string $propertyName, string $className = null): string
     {
         return $this->str->snake($propertyName);
     }
@@ -49,7 +49,7 @@ class LaravelNamingStrategy implements NamingStrategy
      * Returns the default reference column name.
      * @return string A column name.
      */
-    public function referenceColumnName()
+    public function referenceColumnName(): string
     {
         return 'id';
     }
@@ -61,7 +61,7 @@ class LaravelNamingStrategy implements NamingStrategy
      *
      * @return string A join column name.
      */
-    public function joinColumnName($propertyName)
+    public function joinColumnName(string $propertyName, string $className): string
     {
         return $this->str->snake($this->str->singular($propertyName)) . '_' . $this->referenceColumnName();
     }
@@ -75,7 +75,7 @@ class LaravelNamingStrategy implements NamingStrategy
      *
      * @return string A join table name.
      */
-    public function joinTableName($sourceEntity, $targetEntity, $propertyName = null)
+    public function joinTableName(string $sourceEntity, string $targetEntity, ?string $propertyName = null): string
     {
         $names = [
             $this->classToFieldName($sourceEntity),
@@ -95,7 +95,7 @@ class LaravelNamingStrategy implements NamingStrategy
      *
      * @return string A join column name.
      */
-    public function joinKeyColumnName($entityName, $referencedColumnName = null)
+    public function joinKeyColumnName(string $entityName, ?string $referencedColumnName = null): string
     {
         return $this->classToFieldName($entityName) . '_' .
         ($referencedColumnName ?: $this->referenceColumnName());
@@ -122,11 +122,11 @@ class LaravelNamingStrategy implements NamingStrategy
      * @return string
      */
     public function embeddedFieldToColumnName(
-        $propertyName,
-        $embeddedColumnName,
-        $className = null,
-        $embeddedClassName = null
-    ) {
+        string $propertyName,
+        string $embeddedColumnName,
+        ?string $className = null,
+        ?string $embeddedClassName = null
+    ): string {
         return $propertyName . '_' . $embeddedColumnName;
     }
 }
