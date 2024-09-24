@@ -76,7 +76,7 @@ class LaravelNamingStrategyTest extends TestCase
         // Given a User -> belongsTo -> Group
         $field = 'group';
 
-        $columnName = $this->strategy->joinColumnName($field);
+        $columnName = $this->strategy->joinColumnName($field, 'className');
 
         // We expect to have a group_id in the users table
         $this->assertEquals('group_id', $columnName);
