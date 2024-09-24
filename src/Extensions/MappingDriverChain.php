@@ -2,7 +2,6 @@
 
 namespace LaravelDoctrine\ORM\Extensions;
 
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\Persistence\Mapping\Driver\DefaultFileLocator;
 use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
@@ -50,18 +49,6 @@ class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDr
 
         if (method_exists($driver, 'addMappings')) {
             $driver->addMappings($mappings);
-        }
-    }
-
-    /**
-     * @return \Doctrine\Common\Annotations\Reader|null
-     */
-    public function getReader()
-    {
-        $driver = $this->getDefaultDriver();
-
-        if ($driver instanceof AnnotationDriver) {
-            return $driver->getReader();
         }
     }
 }
