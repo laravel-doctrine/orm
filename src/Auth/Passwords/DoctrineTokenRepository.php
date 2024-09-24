@@ -245,7 +245,7 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
     {
         $schema = $this->connection->createSchemaManager();
 
-        if (!$schema->tablesExist($this->table)) {
+        if (!$schema->tablesExist([$this->table])) {
             $schema->createTable($this->getTableDefinition());
         }
 

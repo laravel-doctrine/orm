@@ -54,7 +54,7 @@ class DoctrineTokenRepositoryTest extends TestCase
                          ->andReturn($this->schema);
 
         $this->schema->shouldReceive('tablesExist')
-                     ->with('password_resets')
+                     ->with(['password_resets'])
                      ->andReturn(true);
 
         $this->repository = new DoctrineTokenRepository(
