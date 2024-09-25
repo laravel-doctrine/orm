@@ -1,9 +1,10 @@
 <?php
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\ORMSetup as Setup;
 use Doctrine\Persistence\ManagerRegistry;
 use LaravelDoctrine\ORM\Testing\FactoryBuilder;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -88,14 +89,14 @@ class FactoryBuilderTest extends MockeryTestCase
 
     protected function getEntityManager()
     {
-        $conn = [
-            'driver'   => 'pdo_sqlite',
-            'database' => ':memory:',
-        ];
-
         $config = Setup::createAttributeMetadataConfiguration([__DIR__], true);
 
-        return EntityManager::create($conn, $config);
+        $conn = DriverManager::getConnection([
+            'driver'   => 'pdo_sqlite',
+            'database' => ':memory:',
+        ], $config);
+
+        return new EntityManager($conn, $config);
     }
 
     public function test_it_makes_instances_of_the_class()
