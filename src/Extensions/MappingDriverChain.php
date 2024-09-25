@@ -29,14 +29,6 @@ class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDr
 
         if (method_exists($driver, 'addPaths')) {
             $driver->addPaths($paths);
-        } elseif ($driver instanceof FileDriver) {
-            $locator = $driver->getLocator();
-
-            if ($locator instanceof DefaultFileLocator) {
-                $locator->addPaths($paths);
-            } elseif ($locator instanceof SymfonyFileLocator) {
-                $locator->addNamespacePrefixes($paths);
-            }
         }
     }
 
