@@ -2,7 +2,7 @@
 
 namespace LaravelDoctrine\ORM;
 
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Proxy;
 use Illuminate\Contracts\Container\Container;

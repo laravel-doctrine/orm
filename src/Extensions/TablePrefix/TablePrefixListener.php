@@ -5,7 +5,7 @@ namespace LaravelDoctrine\ORM\Extensions\TablePrefix;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 class TablePrefixListener implements EventSubscriber
 {
@@ -45,8 +45,11 @@ class TablePrefixListener implements EventSubscriber
         }
 
         foreach ($classMetadata->getAssociationMappings() as $fieldName => $mapping) {
-            if ($mapping['type'] == ClassMetadataInfo::MANY_TO_MANY && $mapping['isOwningSide']
-                    && (!array_key_exists("inherited", $mapping) || $mapping["inherited"] === $classMetadata->getName())) {
+
+
+            if ($mapping['type'] === ClassMetadata::MANY_TO_MANY
+                && $mapping['isOwningSide']
+                && (! array_key_exists("inherited", $mapping) || $mapping["inherited"] === $classMetadata->getName())) {
                 $mappedTableName                                                     = $mapping['joinTable']['name'];
                 $classMetadata->associationMappings[$fieldName]['joinTable']['name'] = $this->prefix . $mappedTableName;
             }

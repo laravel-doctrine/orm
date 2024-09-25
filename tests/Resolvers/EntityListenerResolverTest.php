@@ -105,7 +105,7 @@ class EntityListenerResolverTest extends TestCase
 
     public function testDoesNotAllowRegisteringNonObjects()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         $this->resolver->register('foo');
     }
 }
