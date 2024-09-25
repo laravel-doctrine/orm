@@ -73,8 +73,6 @@ class PaginatorAdapterTest extends TestCase
      */
     private function mockEntityManager()
     {
-        $this->markTestSkipped('This test is not working anymore');
-
         /** @var EntityManagerInterface|\Mockery\Mock $em */
         $em         = \Mockery::mock(EntityManagerInterface::class);
         $config     = \Mockery::mock(Configuration::class);
@@ -89,19 +87,21 @@ class PaginatorAdapterTest extends TestCase
         $config->shouldReceive('getQueryCache')->andReturn(null);
         $config->shouldReceive('getQuoteStrategy')->andReturn(new DefaultQuoteStrategy);
 
+        $id = new stdClass();
+        $id->fieldName = 'id';
+        $id->columnName = 'id';
+        $id->type = Types::INTEGER;
+        $id->id = true;
+        $id->options = ['unsigned' => true];
+
+        $name = new stdClass();
+        $name->fieldName = 'name';
+        $name->columnName = 'name';
+        $name->type = Types::STRING;
+
         $metadata->fieldMappings = [
-            'id' => [
-                'fieldName'  => 'id',
-                'columnName' => 'id',
-                'type'       => Types::INTEGER,
-                'id'         => true,
-                'options'    => ['unsigned' => true],
-            ],
-            'name' => [
-                'fieldName'  => 'name',
-                'columnName' => 'name',
-                'type'       => Types::STRING,
-            ],
+            'id' => $id,
+            'name' => $name,
         ];
 
         $metadata->subClasses                = [];

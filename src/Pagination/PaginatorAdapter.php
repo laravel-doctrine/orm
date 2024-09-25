@@ -205,14 +205,11 @@ class PaginatorAdapter
      */
     protected function convertToLaravelPaginator(DoctrinePaginator $doctrinePaginator, $perPage, $page)
     {
-        $results     = iterator_to_array($doctrinePaginator);
-
-        die('convert');
-        $path        = Paginator::resolveCurrentPath();
-        $query       = $this->queryParams;
+        $path  = Paginator::resolveCurrentPath();
+        $query = $this->queryParams;
 
         return new LengthAwarePaginator(
-            $results,
+            $doctrinePaginator->getQuery()->getResult(),
             $doctrinePaginator->count(),
             $perPage,
             $page,
