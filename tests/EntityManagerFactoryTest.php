@@ -175,8 +175,6 @@ class EntityManagerFactoryTest extends TestCase
 
     public function test_second_level_caching_can_be_enabled()
     {
-        $this->markTestSkipped('Second Level Cache');
-
         $this->disableDebugbar();
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
@@ -187,10 +185,6 @@ class EntityManagerFactoryTest extends TestCase
                      ->andReturn(false);
 
         $cacheConfig = m::mock(\Doctrine\ORM\Cache\CacheConfiguration::class);
-        $cacheConfig->shouldReceive('setCacheFactory')->once();
-        $cacheConfig->shouldReceive('getRegionsConfiguration')->once()->andReturn(
-            m::mock(RegionsConfiguration::class)
-        );
 
         $cacheFactory = m::mock(CacheFactory::class);
         $cacheFactory->shouldReceive('createCache')->atLeast()->once();
@@ -202,8 +196,6 @@ class EntityManagerFactoryTest extends TestCase
                             ->atLeast()->once()->andReturn($cacheConfig);
 
         $cacheImpl = m::mock(Cache::class);
-        $this->cache->shouldReceive('driver')
-                    ->once()->andReturn($cacheImpl);
 
         $this->configuration->shouldReceive('isSecondLevelCacheEnabled')
                             ->atLeast()->once()
