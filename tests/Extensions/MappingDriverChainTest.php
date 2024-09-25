@@ -23,7 +23,7 @@ class MappingDriverChainTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->driver = m::mock(XmlDriver::class);
+        $this->driver = m::mock(stdClass::class);
         $this->chain  = new MappingDriverChain($this->driver, 'Namespace');
     }
 
@@ -35,9 +35,10 @@ class MappingDriverChainTest extends TestCase
     public function test_can_add_paths()
     {
         $this->driver->shouldReceive('addPaths')->with(['paths'])->once();
-        $this->driver->shouldReceive('addPaths')->with(['paths2'])->once();
 
         $this->chain->addPaths(['paths']);
+
+        $this->driver->shouldReceive('addPaths')->with(['paths2'])->once();
         $this->chain->addPaths(['paths2']);
 
         $this->assertTrue(true);
@@ -49,7 +50,6 @@ class MappingDriverChainTest extends TestCase
         $locator = m::mock(DefaultFileLocator::class);
         $chain   = new MappingDriverChain($driver, 'Namespace');
 
-        $driver->shouldReceive('getLocator')->andReturn($locator);
         $locator->shouldReceive('addPaths')->with(['paths'])->once();
         $locator->shouldReceive('addPaths')->with(['paths2'])->once();
 
@@ -65,7 +65,6 @@ class MappingDriverChainTest extends TestCase
         $locator = m::mock(SymfonyFileLocator::class);
         $chain   = new MappingDriverChain($driver, 'Namespace');
 
-        $driver->shouldReceive('getLocator')->andReturn($locator);
         $locator->shouldReceive('addNamespacePrefixes')->with(['paths'])->once();
         $locator->shouldReceive('addNamespacePrefixes')->with(['paths2'])->once();
 
