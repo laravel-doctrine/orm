@@ -165,8 +165,6 @@ class DoctrinePresenceVerifierTest extends TestCase
 
     public function test_can_get_multi_count()
     {
-        $this->markTestSkipped('Revisit this tests');
-
         $this->defaultGetMultiCountMocks();
 
         $this->verifier->getMultiCount(CountableEntityMock::class, 'email', ['test@email.com']);
@@ -176,8 +174,6 @@ class DoctrinePresenceVerifierTest extends TestCase
 
     public function test_can_get_multi_count_with_extra_conditions()
     {
-        $this->markTestSkipped('Revisit this tests');
-
         $this->defaultGetMultiCountMocks();
 
         $this->builder->shouldReceive('andWhere')
@@ -258,7 +254,7 @@ class DoctrinePresenceVerifierTest extends TestCase
         $this->builder->shouldReceive('where')
                       ->once();
 
-        $this->builder->shouldReceive('expr')->andReturn($this->builder);
+        $this->builder->shouldReceive('expr')->andReturn(new \Doctrine\ORM\Query\Expr());
         $this->builder->shouldReceive('in')->with("e.email", ['test@email.com']);
 
         $this->builder->shouldReceive('getQuery')

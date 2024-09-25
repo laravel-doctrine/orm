@@ -76,7 +76,7 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
     public function getMultiCount($collection, $column, array $values, array $extra = [])
     {
         $builder = $this->selectCount($collection);
-        $builder->where($builder->expr()->in("e.{$column}", $values));
+        $builder->where($builder->expr()->in('e.' . $column, $values));
 
         $this->queryExtraConditions($extra, $builder);
 
