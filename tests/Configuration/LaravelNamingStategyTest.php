@@ -57,7 +57,7 @@ class LaravelNamingStrategyTest extends TestCase
         $embeddedField = 'address';
         $field         = 'street1';
 
-        $columnName = $this->strategy->embeddedFieldToColumnName($embeddedField, $field);
+        $columnName = $this->strategy->embeddedFieldToColumnName($embeddedField, $field, '', '');
 
         // So this is just like Doctrine's default naming strategy
         $this->assertEquals('address_street1', $columnName);
