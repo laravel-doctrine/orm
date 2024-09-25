@@ -114,18 +114,14 @@ class LaravelNamingStrategy implements NamingStrategy
     /**
      * Returns a column name for an embedded property.
      *
-     * @param string $propertyName
-     * @param string $embeddedColumnName
-     * @param null   $className
-     * @param null   $embeddedClassName
-     *
-     * @return string
+     * @param class-string $className
+     * @param class-string $embeddedClassName
      */
     public function embeddedFieldToColumnName(
         string $propertyName,
         string $embeddedColumnName,
-        ?string $className = null,
-        ?string $embeddedClassName = null
+        string $className,
+        string $embeddedClassName
     ): string {
         return $propertyName . '_' . $embeddedColumnName;
     }
