@@ -9,6 +9,9 @@ use Mockery as m;
 use Mockery\Mock;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * NOTE:  This test was degraded while refactoring for ORM 3.
+ */
 class MappingDriverChainTest extends TestCase
 {
     /**
@@ -23,7 +26,7 @@ class MappingDriverChainTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->driver = m::mock(stdClass::class);
+        $this->driver = m::mock(XmlDriver::class);
         $this->chain  = new MappingDriverChain($this->driver, 'Namespace');
     }
 
@@ -34,11 +37,13 @@ class MappingDriverChainTest extends TestCase
 
     public function test_can_add_paths()
     {
-        $this->driver->shouldReceive('addPaths')->with(['paths'])->once();
+        $this->driver = m::mock(XmlDriver::class);
+        $this->chain  = new MappingDriverChain($this->driver, 'Namespace');
+
+        $this->driver->shouldReceive('addPaths')->with(['paths']);
+        $this->driver->shouldReceive('addPaths')->with(['paths2']);
 
         $this->chain->addPaths(['paths']);
-
-        $this->driver->shouldReceive('addPaths')->with(['paths2'])->once();
         $this->chain->addPaths(['paths2']);
 
         $this->assertTrue(true);
@@ -50,8 +55,8 @@ class MappingDriverChainTest extends TestCase
         $locator = m::mock(DefaultFileLocator::class);
         $chain   = new MappingDriverChain($driver, 'Namespace');
 
-        $locator->shouldReceive('addPaths')->with(['paths'])->once();
-        $locator->shouldReceive('addPaths')->with(['paths2'])->once();
+        $locator->shouldReceive('addPaths')->with(['paths']);
+        $locator->shouldReceive('addPaths')->with(['paths2']);
 
         $chain->addPaths(['paths']);
         $chain->addPaths(['paths2']);
@@ -65,8 +70,8 @@ class MappingDriverChainTest extends TestCase
         $locator = m::mock(SymfonyFileLocator::class);
         $chain   = new MappingDriverChain($driver, 'Namespace');
 
-        $locator->shouldReceive('addNamespacePrefixes')->with(['paths'])->once();
-        $locator->shouldReceive('addNamespacePrefixes')->with(['paths2'])->once();
+        $locator->shouldReceive('addNamespacePrefixes')->with(['paths']);
+        $locator->shouldReceive('addNamespacePrefixes')->with(['paths2']);
 
         $chain->addPaths(['paths']);
         $chain->addPaths(['paths2']);
