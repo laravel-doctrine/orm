@@ -16,11 +16,11 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "doctrine/cache": "^2.2",
         "doctrine/dbal": "^4.1",
         "doctrine/orm": "^3.1",
-        "doctrine/persistence": "^3",
+        "doctrine/persistence": "^3.3",
         "illuminate/auth": "^9.0|^10.0|^11.0",
         "illuminate/console": "^9.0|^10.0|^11.0",
         "illuminate/container": "^9.0|^10.0|^11.0",
@@ -31,8 +31,7 @@
         "illuminate/validation": "^9.0|^10.0|^11.0",
         "illuminate/view": "^9.0|^10.0|^11.0",
         "symfony/cache": "^6.0|^7.0",
-        "symfony/serializer": "^5.0|^6.0|^7.0",
-        "symfony/yaml": "^5.0|^6.0|^7.0"
+        "symfony/serializer": "^5.0|^6.0|^7.0"
     },
     "conflict": {
         "laravel/lumen": "*"
@@ -77,6 +76,11 @@
                 "Doctrine": "LaravelDoctrine\\ORM\\Facades\\Doctrine",
                 "EntityManager": "LaravelDoctrine\\ORM\\Facades\\EntityManager"
             }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }
