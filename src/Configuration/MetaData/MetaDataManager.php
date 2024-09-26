@@ -12,7 +12,7 @@ class MetaDataManager extends Manager
      */
     public function getDefaultDriver()
     {
-        return 'xml';
+        return 'attributes';
     }
 
     /**
