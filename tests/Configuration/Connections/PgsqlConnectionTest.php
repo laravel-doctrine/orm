@@ -37,6 +37,11 @@ class PgsqlConnectionTest extends TestCase
             'port'                => 'port',
             'prefix'              => 'prefix',
             'sslmode'             => 'sslmode',
+            'sslkey'              => 'sslkey',
+            'sslcert'             => 'sslcert',
+            'sslrootcert'         => 'sslrootcert',
+            'sslcrl'              => 'sslcrl',
+            'gssencmode'          => 'gssencmode',
             'defaultTableOptions' => [],
             'driverOptions'       => [],
         ]);
@@ -49,6 +54,11 @@ class PgsqlConnectionTest extends TestCase
         $this->assertEquals('charset', $resolved['charset']);
         $this->assertEquals('port', $resolved['port']);
         $this->assertEquals('sslmode', $resolved['sslmode']);
+        $this->assertEquals('sslkey', $resolved['sslkey']);
+        $this->assertEquals('sslcert', $resolved['sslcert']);
+        $this->assertEquals('sslrootcert', $resolved['sslrootcert']);
+        $this->assertEquals('sslcrl', $resolved['sslcrl']);
+        $this->assertEquals('gssencmode', $resolved['gssencmode']);
         $this->assertEquals('prefix', $resolved['prefix']);
         $this->assertCount(0, $resolved['defaultTableOptions']);
         $this->assertCount(0, $resolved['driverOptions']);
