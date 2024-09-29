@@ -688,7 +688,7 @@ class EntityManagerFactoryTest extends TestCase
                 'cache' => [
                     'metadata' => [
                         'driver' => 'php_file',
-                        'path'   => 'tests/metadata'
+                        'path'   => 'tests/cache'
                     ]
                 ]
             ],
@@ -730,7 +730,8 @@ class EntityManagerFactoryTest extends TestCase
         $directory_property = $reflection_cache->getProperty('directory');
         $directory_property->setAccessible(true);
 
-        $this->assertStringContainsString('tests/metadata', $directory_property->getValue($metadata_cache));
+        $this->assertStringContainsString('tests/cache', $directory_property->getValue($metadata_cache));
+        rmdir(__DIR__ . '/../cache/doctrine-cache');
     }
 
     public function test_wrapper_connection()
