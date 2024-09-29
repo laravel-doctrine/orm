@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Extensions;
 
 use Doctrine\Common\EventManager;
@@ -8,92 +10,64 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Contracts\Container\Container;
 
+use function assert;
+use function count;
+use function is_array;
+
 class ExtensionManager
 {
-    /**
-     * @var string[]
-     */
-    protected $extensions = [];
+    /** @var string[] */
+    protected array $extensions = [];
 
-    /**
-     * @var array
-     */
-    protected $bootedExtensions = [];
+    /** @var string[] */
+    protected array $bootedExtensions = [];
 
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * ExtensionManager constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    public function __construct(protected Container $container)
     {
-        $this->container = $container;
     }
 
     /**
      * Boot the extensions
-     * @param ManagerRegistry $registry
      */
-    public function boot(ManagerRegistry $registry)
+    public function boot(ManagerRegistry $registry): void
     {
-        /** @var \Doctrine\ORM\EntityManagerInterface $em */
         foreach ($registry->getManagers() as $connection => $em) {
+            assert($em instanceof EntityManagerInterface);
             foreach ($this->extensions as $extension) {
                 $extension = $this->container->make($extension);
 
-                if ($this->notBootedYet($connection, $extension)) {
-                    $this->bootExtension(
-                        $connection,
-                        $extension,
-                        $em,
-                        $em->getEventManager(),
-                        $em->getConfiguration()
-                    );
+                if (! $this->notBootedYet($connection, $extension)) {
+                    continue;
                 }
+
+                $this->bootExtension(
+                    $connection,
+                    $extension,
+                    $em,
+                    $em->getEventManager(),
+                    $em->getConfiguration(),
+                );
             }
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function needsBooting()
+    public function needsBooting(): bool
     {
         return count($this->extensions) > 0;
     }
 
-    /**
-     * @param string $extension
-     */
-    public function register($extension)
+    public function register(mixed $extension): void
     {
         $this->extensions[] = $extension;
     }
 
-    /**
-     * @param                        $connection
-     * @param Extension              $extension
-     * @param EntityManagerInterface $em
-     * @param EventManager           $evm
-     * @param Configuration          $configuration
-     */
     protected function bootExtension(
-        $connection,
+        mixed $connection,
         Extension $extension,
         EntityManagerInterface $em,
         EventManager $evm,
-        Configuration $configuration
-    ) {
-        $extension->addSubscribers(
-            $evm,
-            $em,
-            $configuration->getMetadataDriverImpl()->getReader()
-        );
-
+        Configuration $configuration,
+    ): void {
         if (is_array($extension->getFilters())) {
             foreach ($extension->getFilters() as $name => $filter) {
                 $configuration->addFilter($name, $filter);
@@ -104,38 +78,24 @@ class ExtensionManager
         $this->markAsBooted($connection, $extension);
     }
 
-    /**
-     * @param           $connection
-     * @param Extension $extension
-     *
-     * @return bool
-     */
-    protected function notBootedYet($connection, Extension $extension)
+    protected function notBootedYet(string $connection, Extension $extension): bool
     {
-        return !isset($this->bootedExtensions[$connection][get_class($extension)]);
+        return ! isset($this->bootedExtensions[$connection][$extension::class]);
     }
 
-    /**
-     * @param           $connection
-     * @param Extension $extension
-     */
-    protected function markAsBooted($connection, Extension $extension)
+    protected function markAsBooted(string $connection, Extension $extension): void
     {
-        $this->bootedExtensions[$connection][get_class($extension)] = true;
+        $this->bootedExtensions[$connection][$extension::class] = true;
     }
 
-    /**
-     * @return array|Extension[]
-     */
-    public function getExtensions()
+    /** @return array|Extension[] */
+    public function getExtensions(): array
     {
         return $this->extensions;
     }
 
-    /**
-     * @return array
-     */
-    public function getBootedExtensions()
+    /** @return string[] */
+    public function getBootedExtensions(): array
     {
         return $this->bootedExtensions;
     }

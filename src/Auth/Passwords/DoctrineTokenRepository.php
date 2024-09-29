@@ -1,75 +1,63 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use Carbon\Carbon;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\Table;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Support\Str;
 
+use function hash_hmac;
+
 class DoctrineTokenRepository implements TokenRepositoryInterface
 {
     /**
      * The database connection instance.
-     *
-     * @var Connection
      */
-    protected $connection;
+    protected Connection $connection;
 
     /**
      * The Hasher implementation.
-     *
-     * @var HasherContract
      */
-    protected $hasher;
+    protected HasherContract $hasher;
 
     /**
      * The token database table.
-     *
-     * @var string
      */
-    protected $table;
+    protected string $table;
 
     /**
      * The hashing key.
-     *
-     * @var string
      */
-    protected $hashKey;
+    protected string $hashKey;
 
     /**
      * The number of seconds a token should last.
-     *
-     * @var int
      */
-    protected $expires;
+    protected int $expires;
 
     /**
      * Minimum number of seconds before re-redefining the token.
-     *
-     * @var int
      */
-    protected $throttle;
+    protected int $throttle;
 
     /**
      * Create a new token repository instance.
-     *
-     * @param Connection     $connection
-     * @param HasherContract $hasher
-     * @param string         $table
-     * @param string         $hashKey
-     * @param int            $expires
      */
     public function __construct(
         Connection $connection,
         HasherContract $hasher,
-        $table,
-        $hashKey,
-        $expires = 60,
-        $throttle = 60
+        string $table,
+        string $hashKey,
+        int $expires = 60,
+        int $throttle = 60,
     ) {
         $this->table      = $table;
         $this->hasher     = $hasher;
@@ -81,11 +69,8 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
 
     /**
      * Create a new token record.
-     *
-     * @param  CanResetPassword $user
-     * @return string
      */
-    public function create(CanResetPassword $user)
+    public function create(CanResetPassword $user): string
     {
         $email = $user->getEmailForPasswordReset();
 
@@ -101,12 +86,12 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
              ->values([
                  'email'      => ':email',
                  'token'      => ':token',
-                 'created_at' => ':date'
+                 'created_at' => ':date',
              ])
              ->setParameters([
                  'email' => $email,
                  'token' => $this->hasher->make($token),
-                 'date'  => new Carbon('now')
+                 'date'  => new Carbon('now'),
              ])
              ->executeStatement();
 
@@ -127,13 +112,11 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
 
     /**
      * Determine if a token record exists and is valid.
-     *
-     * @param  CanResetPassword $user
-     * @param  string           $token
-     * @return bool
      */
-    public function exists(CanResetPassword $user, $token)
+    // phpcs:disable
+    public function exists(CanResetPassword $user, $token): bool
     {
+        // phpcs:enable
         $email = $user->getEmailForPasswordReset();
 
         $record = $this->getTable()
@@ -145,17 +128,14 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
                       ->executeQuery()->fetchAssociative();
 
         return $record
-            && !$this->tokenExpired($record['created_at'])
+            && ! $this->tokenExpired($record['created_at'])
             && $this->hasher->check($token, $record['token']);
     }
 
     /**
      * Determine if the token has expired.
-     *
-     * @param  string $createdAt
-     * @return bool
      */
-    protected function tokenExpired($createdAt)
+    protected function tokenExpired(mixed $createdAt): bool
     {
         $expiresAt = Carbon::parse($createdAt)->addSeconds($this->expires);
 
@@ -164,11 +144,8 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
 
     /**
      * Determine if the given user recently created a password reset token.
-     *
-     * @param  CanResetPassword $user
-     * @return bool
      */
-    public function recentlyCreatedToken(CanResetPassword $user)
+    public function recentlyCreatedToken(CanResetPassword $user): bool
     {
         $record = $this->getTable()
                        ->select('*')
@@ -182,38 +159,30 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
 
     /**
      * Determine if the token was recently created.
-     *
-     * @param  string $createdAt
-     * @return bool
      */
-    protected function tokenRecentlyCreated($createdAt)
+    protected function tokenRecentlyCreated(mixed $createdAt): bool
     {
         if ($this->throttle <= 0) {
             return false;
         }
 
         return Carbon::parse($createdAt)->addSeconds(
-            $this->throttle
+            $this->throttle,
         )->isFuture();
     }
 
     /**
      * Delete a token record by token.
-     *
-     * @param  CanResetPassword $user
-     * @return void
      */
-    public function delete(CanResetPassword $user)
+    public function delete(CanResetPassword $user): void
     {
         $this->deleteExisting($user);
     }
 
     /**
      * Delete expired tokens.
-     *
-     * @return void
      */
-    public function deleteExpired()
+    public function deleteExpired(): void
     {
         $expiredAt = Carbon::now()->subSeconds($this->expires);
 
@@ -226,23 +195,20 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
 
     /**
      * Create a new token for the user.
-     *
-     * @return string
      */
-    public function createNewToken()
+    public function createNewToken(): string
     {
         return hash_hmac('sha256', Str::random(40), $this->hashKey);
     }
 
     /**
      * Begin a new database query against the table.
-     * @return \Doctrine\DBAL\Query\QueryBuilder
      */
-    protected function getTable()
+    protected function getTable(): QueryBuilder
     {
         $schema = $this->connection->createSchemaManager();
 
-        if (!$schema->tablesExist([$this->table])) {
+        if (! $schema->tablesExist([$this->table])) {
             $schema->createTable($this->getTableDefinition());
         }
 
@@ -251,18 +217,14 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
 
     /**
      * Get the database connection instance.
-     * @return Connection
      */
-    public function getConnection()
+    public function getConnection(): Connection
     {
         return $this->connection;
     }
 
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     * @return Table
-     */
-    protected function getTableDefinition()
+    /** @throws Exception */
+    protected function getTableDefinition(): Table
     {
         return (new PasswordResetTable($this->table))->build();
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace LaravelDoctrine\ORM\Configuration\Cache;
+declare(strict_types=1);
 
-use const E_USER_DEPRECATED;
+namespace LaravelDoctrine\ORM\Configuration\Cache;
 
 use Illuminate\Contracts\Cache\Factory;
 use InvalidArgumentException;
@@ -10,26 +10,19 @@ use LaravelDoctrine\ORM\Configuration\Driver;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\Psr16Adapter;
 
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
+
 class IlluminateCacheProvider implements Driver
 {
-    /**
-     * @var Factory
-     */
-    protected $cache;
+    protected string|null $store = null;
 
-    /**
-     * @var string
-     */
-    protected $store;
-
-    /**
-     * @param Factory $cache
-     */
-    public function __construct(Factory $cache)
+    public function __construct(protected Factory $cache)
     {
-        $this->cache = $cache;
     }
 
+    /** @param mixed[] $settings */
     public function resolve(array $settings = []): CacheItemPoolInterface
     {
         $store = $this->store ?? $settings['store'] ?? null;

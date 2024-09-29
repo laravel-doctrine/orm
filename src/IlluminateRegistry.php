@@ -1,82 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\Exception\UnknownEntityNamespace;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\Proxy;
 use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 use ReflectionClass;
-use Doctrine\ORM\Exception\UnknownEntityNamespace;
+
+use function count;
+use function explode;
+use function head;
+use function reset;
+use function sprintf;
+use function strpos;
 
 final class IlluminateRegistry implements ManagerRegistry
 {
-    /**
-     * @const
-     */
-    const MANAGER_BINDING_PREFIX = 'doctrine.managers.';
+    /** @const */
+    public const MANAGER_BINDING_PREFIX = 'doctrine.managers.';
 
-    /**
-     * @const
-     */
-    const CONNECTION_BINDING_PREFIX = 'doctrine.connections.';
+    /** @const */
+    public const CONNECTION_BINDING_PREFIX = 'doctrine.connections.';
 
-    /**
-     * @var string
-     */
-    protected $defaultManager = 'default';
+    protected string $defaultManager = 'default';
 
-    /**
-     * @var string
-     */
-    protected $defaultConnection = 'default';
+    protected string $defaultConnection = 'default';
 
-    /**
-     * @var Container
-     */
-    protected $container;
+    /** @var mixed[] */
+    protected array $managers = [];
 
-    /**
-     * @var EntityManagerFactory
-     */
-    protected $factory;
+    /** @var mixed[] */
+    protected array $connections = [];
 
-    /**
-     * @var array
-     */
-    protected $managers = [];
+    /** @var mixed[] */
+    protected array $managersMap = [];
 
-    /**
-     * @var array
-     */
-    protected $connections = [];
+    /** @var mixed[] */
+    protected array $connectionsMap = [];
 
-    /**
-     * @var array
-     */
-    protected $managersMap = [];
-
-    /**
-     * @var array
-     */
-    protected $connectionsMap = [];
-
-    /**
-     * @param Container            $container
-     * @param EntityManagerFactory $factory
-     */
-    public function __construct(Container $container, EntityManagerFactory $factory)
+    public function __construct(protected Container $container, protected EntityManagerFactory $factory)
     {
-        $this->container = $container;
-        $this->factory   = $factory;
     }
 
-    /**
-     * @param       $manager
-     * @param array $settings
-     */
-    public function addManager($manager, array $settings = [])
+    /** @param mixed[] $settings */
+    public function addManager(string $manager, array $settings = []): void
     {
         $this->container->singleton($this->getManagerBindingName($manager), function () use ($settings) {
             return $this->factory->create($settings);
@@ -87,11 +61,8 @@ final class IlluminateRegistry implements ManagerRegistry
         $this->addConnection($manager, $settings);
     }
 
-    /**
-     * @param       $connection
-     * @param array $settings
-     */
-    public function addConnection($connection, array $settings = [])
+    /** @param mixed[] $settings */
+    public function addConnection(string $connection, array $settings = []): void
     {
         $this->container->singleton($this->getConnectionBindingName($connection), function () use ($connection) {
             return $this->getManager($connection)->getConnection();
@@ -105,7 +76,7 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @return string The default connection name.
      */
-    public function getDefaultConnectionName()
+    public function getDefaultConnectionName(): string
     {
         if (isset($this->connections[$this->defaultConnection])) {
             return $this->defaultConnection;
@@ -118,14 +89,12 @@ final class IlluminateRegistry implements ManagerRegistry
      * Gets the named connection.
      *
      * @param string $name The connection name (null for the default one).
-     *
-     * @return object
      */
-    public function getConnection($name = null)
+    public function getConnection(string|null $name = null): mixed
     {
         $name = $name ?: $this->getDefaultConnectionName();
 
-        if (!$this->connectionExists($name)) {
+        if (! $this->connectionExists($name)) {
             throw new InvalidArgumentException(sprintf('Doctrine Connection named "%s" does not exist.', $name));
         }
 
@@ -134,16 +103,11 @@ final class IlluminateRegistry implements ManagerRegistry
         }
 
         return $this->connectionsMap[$name] = $this->getService(
-            $this->getConnectionBindingName($this->connections[$name])
+            $this->getConnectionBindingName($this->connections[$name]),
         );
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function connectionExists($name)
+    public function connectionExists(string $name): bool
     {
         return isset($this->connections[$name]);
     }
@@ -151,9 +115,9 @@ final class IlluminateRegistry implements ManagerRegistry
     /**
      * Gets an array of all registered connections.
      *
-     * @return array An array of Connection instances.
+     * @return mixed[] An array of Connection instances.
      */
-    public function getConnections()
+    public function getConnections(): array
     {
         $connections = [];
         foreach ($this->getConnectionNames() as $name) {
@@ -166,9 +130,9 @@ final class IlluminateRegistry implements ManagerRegistry
     /**
      * Gets all connection names.
      *
-     * @return array An array of connection names.
+     * @return mixed[] An array of connection names.
      */
-    public function getConnectionNames()
+    public function getConnectionNames(): array
     {
         return $this->connections;
     }
@@ -178,7 +142,7 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @return string The default object manager name.
      */
-    public function getDefaultManagerName()
+    public function getDefaultManagerName(): string
     {
         if (isset($this->managers[$this->defaultManager])) {
             return $this->defaultManager;
@@ -191,14 +155,12 @@ final class IlluminateRegistry implements ManagerRegistry
      * Gets a named object manager.
      *
      * @param string $name The object manager name (null for the default one).
-     *
-     * @return \Doctrine\Persistence\ObjectManager
      */
-    public function getManager($name = null)
+    public function getManager(string|null $name = null): mixed
     {
         $name = $name ?: $this->getDefaultManagerName();
 
-        if (!$this->managerExists($name)) {
+        if (! $this->managerExists($name)) {
             throw new InvalidArgumentException(sprintf('Doctrine Manager named "%s" does not exist.', $name));
         }
 
@@ -207,16 +169,11 @@ final class IlluminateRegistry implements ManagerRegistry
         }
 
         return $this->managersMap[$name] = $this->getService(
-            $this->getManagerBindingName($this->managers[$name])
+            $this->getManagerBindingName($this->managers[$name]),
         );
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function managerExists($name)
+    public function managerExists(string $name): bool
     {
         return isset($this->managers[$name]);
     }
@@ -224,9 +181,9 @@ final class IlluminateRegistry implements ManagerRegistry
     /**
      * Gets all connection names.
      *
-     * @return array An array of connection names.
+     * @return mixed[] An array of connection names.
      */
-    public function getManagerNames()
+    public function getManagerNames(): array
     {
         return $this->managers;
     }
@@ -234,9 +191,9 @@ final class IlluminateRegistry implements ManagerRegistry
     /**
      * Gets an array of all registered object managers.
      *
-     * @return \Doctrine\Persistence\ObjectManager[] An array of ObjectManager instances
+     * @return ObjectManager[] An array of ObjectManager instances
      */
-    public function getManagers()
+    public function getManagers(): array
     {
         $managers = [];
         foreach ($this->getManagerNames() as $name) {
@@ -248,24 +205,25 @@ final class IlluminateRegistry implements ManagerRegistry
 
     /**
      * Close an existing object manager.
+     *
      * @param string|null $name The object manager name (null for the default one).
      */
-    public function closeManager($name = null)
+    public function closeManager(string|null $name = null): void
     {
         $name = $name ?: $this->getDefaultManagerName();
 
-        if (!$this->managerExists($name)) {
+        if (! $this->managerExists($name)) {
             throw new InvalidArgumentException(sprintf('Doctrine Manager named "%s" does not exist.', $name));
         }
 
         // force the creation of a new document manager
         // if the current one is closed
         $this->resetService(
-            $this->getManagerBindingName($this->managers[$name])
+            $this->getManagerBindingName($this->managers[$name]),
         );
 
         $this->resetService(
-            $this->getConnectionBindingName($this->connections[$name])
+            $this->getConnectionBindingName($this->connections[$name]),
         );
 
         unset($this->managersMap[$name]);
@@ -280,7 +238,7 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @param string|null $name The object manager name (null for the default one).
      */
-    public function purgeManager($name = null)
+    public function purgeManager(string|null $name = null): void
     {
         $name = $name ?: $this->getDefaultManagerName();
         $this->closeManager($name);
@@ -301,10 +259,8 @@ final class IlluminateRegistry implements ManagerRegistry
      * to avoid this problem.
      *
      * @param string|null $name The object manager name (null for the default one).
-     *
-     * @return \Doctrine\Persistence\ObjectManager
      */
-    public function resetManager($name = null)
+    public function resetManager(string|null $name = null): mixed
     {
         $this->closeManager($name);
 
@@ -317,15 +273,16 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @param string $alias The alias.
      *
-     * @throws ORMException
      * @return string       The full namespace.
+     *
+     * @throws ORMException
      */
-    public function getAliasNamespace($alias)
+    public function getAliasNamespace(string $alias): string
     {
         foreach ($this->getManagerNames() as $name) {
             try {
                 return $this->getManager($name)->getConfiguration()->getEntityNamespace($alias);
-            } catch (ORMException $e) {
+            } catch (ORMException) {
             }
         }
 
@@ -337,10 +294,8 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @param string $persistentObject      The name of the persistent object.
      * @param string $persistentManagerName The object manager name (null for the default one).
-     *
-     * @return \Doctrine\Persistence\ObjectRepository
      */
-    public function getRepository($persistentObject, $persistentManagerName = null)
+    public function getRepository(string $persistentObject, string|null $persistentManagerName = null): ObjectRepository
     {
         return $this->getManager($persistentManagerName)->getRepository($persistentObject);
     }
@@ -349,15 +304,13 @@ final class IlluminateRegistry implements ManagerRegistry
      * Gets the object manager associated with a given class.
      *
      * @param string $class A persistent object class name.
-     *
-     * @return \Doctrine\Persistence\ObjectManager|null
      */
-    public function getManagerForClass($class)
+    public function getManagerForClass(string $class): ObjectManager|null
     {
         // Check for namespace alias
         if (strpos($class, ':') !== false) {
-            list($namespaceAlias, $simpleClassName) = explode(':', $class, 2);
-            $class                                  = $this->getAliasNamespace($namespaceAlias) . '\\' . $simpleClassName;
+            [$namespaceAlias, $simpleClassName] = explode(':', $class, 2);
+            $class                              = $this->getAliasNamespace($namespaceAlias) . '\\' . $simpleClassName;
         }
 
         $proxyClass = new ReflectionClass($class);
@@ -374,11 +327,13 @@ final class IlluminateRegistry implements ManagerRegistry
         foreach ($managerNames as $name) {
             $manager = $this->getManager($name);
 
-            if (!$manager->getMetadataFactory()->isTransient($class)) {
-                foreach ($manager->getMetadataFactory()->getAllMetadata() as $metadata) {
-                    if ($metadata->getName() === $class) {
-                        return $manager;
-                    }
+            if ($manager->getMetadataFactory()->isTransient($class)) {
+                continue;
+            }
+
+            foreach ($manager->getMetadataFactory()->getAllMetadata() as $metadata) {
+                if ($metadata->getName() === $class) {
+                    return $manager;
                 }
             }
         }
@@ -392,7 +347,7 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @return object The instance of the given service.
      */
-    protected function getService($name)
+    protected function getService(string $name): mixed
     {
         return $this->container->make($name);
     }
@@ -402,46 +357,28 @@ final class IlluminateRegistry implements ManagerRegistry
      * A service in this context is connection or a manager instance.
      *
      * @param string $name The name of the service.
-     *
-     * @return void
      */
-    protected function resetService($name)
+    protected function resetService(string $name): void
     {
         $this->container->forgetInstance($name);
     }
 
-    /**
-     * @param $manager
-     *
-     * @return string
-     */
-    protected function getManagerBindingName($manager)
+    protected function getManagerBindingName(string $manager): string
     {
         return self::MANAGER_BINDING_PREFIX . $manager;
     }
 
-    /**
-     * @param $connection
-     *
-     * @return string
-     */
-    protected function getConnectionBindingName($connection)
+    protected function getConnectionBindingName(string $connection): string
     {
         return self::CONNECTION_BINDING_PREFIX . $connection;
     }
 
-    /**
-     * @param string $defaultManager
-     */
-    public function setDefaultManager($defaultManager)
+    public function setDefaultManager(string $defaultManager): void
     {
         $this->defaultManager = $defaultManager;
     }
 
-    /**
-     * @param string $defaultConnection
-     */
-    public function setDefaultConnection($defaultConnection)
+    public function setDefaultConnection(string $defaultConnection): void
     {
         $this->defaultConnection = $defaultConnection;
     }

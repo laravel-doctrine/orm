@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Auth;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,73 +12,48 @@ use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Support\Str;
 use ReflectionClass;
 
+use function assert;
+use function method_exists;
+
 class DoctrineUserProvider implements UserProvider
 {
-    /**
-     * @var Hasher
-     */
-    protected $hasher;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    /**
-     * @var class-string<Authenticatable>
-     */
+    /** @var class-string<Authenticatable> */
     protected $entity;
 
-    /**
-     * @param Hasher                 $hasher
-     * @param EntityManagerInterface $em
-     * @param class-string<Authenticatable>                 $entity
-     */
-    public function __construct(Hasher $hasher, EntityManagerInterface $em, string $entity)
+    /** @param class-string<Authenticatable> $entity */
+    public function __construct(protected Hasher $hasher, protected EntityManagerInterface $em, string $entity)
     {
-        $this->hasher = $hasher;
         $this->entity = $entity;
-        $this->em     = $em;
     }
 
     /**
      * Retrieve a user by their unique identifier.
-     *
-     * @param mixed $identifier
-     *
-     * @return Authenticatable|null
      */
-    public function retrieveById($identifier)
+    public function retrieveById(mixed $identifier): Authenticatable|null
     {
         return $this->getRepository()->find($identifier);
     }
 
     /**
      * Retrieve a user by by their unique identifier and "remember me" token.
-     *
-     * @param mixed  $identifier
-     * @param string $token
-     *
-     * @return Authenticatable|null
      */
-    public function retrieveByToken($identifier, $token)
+    // phpcs:disable
+    public function retrieveByToken(mixed $identifier, $token): Authenticatable|null
     {
+        // phpcs:enable
         return $this->getRepository()->findOneBy([
             $this->getEntity()->getAuthIdentifierName() => $identifier,
-            $this->getEntity()->getRememberTokenName()  => $token
+            $this->getEntity()->getRememberTokenName()  => $token,
         ]);
     }
 
     /**
      * Update the "remember me" token for the given user in storage.
-     *
-     * @param Authenticatable $user
-     * @param string          $token
-     *
-     * @return void
      */
-    public function updateRememberToken(Authenticatable $user, $token)
+    // phpcs:disable
+    public function updateRememberToken(Authenticatable $user, $token): void
     {
+        // phpcs:enable
         $user->setRememberToken($token);
         $this->em->persist($user);
         $this->em->flush();
@@ -85,17 +62,17 @@ class DoctrineUserProvider implements UserProvider
     /**
      * Retrieve a user by the given credentials.
      *
-     * @param array $credentials
-     *
-     * @return Authenticatable|null
+     * @param mixed[] $credentials
      */
-    public function retrieveByCredentials(array $credentials)
+    public function retrieveByCredentials(array $credentials): Authenticatable|null
     {
         $criteria = [];
         foreach ($credentials as $key => $value) {
-            if (!Str::contains($key, 'password')) {
-                $criteria[$key] = $value;
+            if (Str::contains($key, 'password')) {
+                continue;
             }
+
+            $criteria[$key] = $value;
         }
 
         return $this->getRepository()->findOneBy($criteria);
@@ -104,30 +81,27 @@ class DoctrineUserProvider implements UserProvider
     /**
      * Validate a user against the given credentials.
      *
-     * @param Authenticatable $user
-     * @param array           $credentials
-     *
-     * @return bool
+     * @param mixed[] $credentials
      */
-    public function validateCredentials(Authenticatable $user, array $credentials)
+    public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
         return $this->hasher->check($credentials['password'], $user->getAuthPassword());
     }
 
     /**
      * Returns repository for the entity.
+     *
      * @return EntityRepository<Authenticatable>
      */
-    protected function getRepository()
+    protected function getRepository(): EntityRepository
     {
         return $this->em->getRepository($this->entity);
     }
 
     /**
      * Returns instantiated entity.
-     * @return Authenticatable
      */
-    protected function getEntity()
+    protected function getEntity(): Authenticatable
     {
         $refEntity = new ReflectionClass($this->entity);
 
@@ -136,22 +110,19 @@ class DoctrineUserProvider implements UserProvider
 
     /**
      * Returns entity namespace.
-     * @return string
      */
-    public function getModel()
+    public function getModel(): string
     {
         return $this->entity;
     }
 
-    /**
-     * @param array{password: string} $credentials
-     * @return void
-     */
-    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false)
+    /** @param mixed[] $credentials */
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {
         if (! $this->hasher->needsRehash($user->getAuthPassword()) && ! $force) {
             return;
         }
+
         assert(method_exists($user, 'setPassword'));
 
         $user->setPassword($this->hasher->make($credentials['password']));

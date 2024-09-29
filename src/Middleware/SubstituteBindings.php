@@ -1,49 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Middleware;
 
 use Closure;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Contracts\Routing\Registrar;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use LaravelDoctrine\ORM\Contracts\UrlRoutable;
+use ReflectionNamedType;
 use ReflectionParameter;
+
+use function array_key_exists;
+use function call_user_func;
 use function class_exists;
+use function collect;
 use function is_a;
 
 class SubstituteBindings
 {
     /**
      * The router instance.
-     *
-     * @var Registrar
      */
-    protected $router;
+    protected Registrar $router;
 
-    /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
-
-    /**
-     * @param Registrar       $router
-     * @param ManagerRegistry $registry
-     */
-    public function __construct(Registrar $router, ManagerRegistry $registry)
+    public function __construct(Registrar $router, protected ManagerRegistry $registry)
     {
-        $this->router   = $router;
-        $this->registry = $registry;
+        $this->router = $router;
     }
 
     /**
      * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         $route = $request->route();
 
@@ -57,11 +49,9 @@ class SubstituteBindings
     /**
      * Substitute the implicit Doctrine entity bindings for the route.
      *
-     * @param Route $route
-     *
      * @throws EntityNotFoundException
      */
-    protected function substituteImplicitBindings(Route $route)
+    protected function substituteImplicitBindings(Route $route): void
     {
         $parameters = $route->parameters();
 
@@ -69,51 +59,47 @@ class SubstituteBindings
             $id    = $parameters[$parameter->name];
             $class = $this->getClassName($parameter);
 
-            if ($class) {
-                $repository = $this->registry->getRepository($class);
-
-                if (is_a($class, UrlRoutable::class, true)) {
-                    $name = call_user_func([$class, 'getRouteKeyNameStatic']);
-
-                    $entity = $repository->findOneBy([
-                        $name => $id
-                    ]);
-                } else {
-                    $entity = $repository->find($id);
-                }
-
-                if (is_null($entity) && !$parameter->isDefaultValueAvailable()) {
-                    throw EntityNotFoundException::fromClassNameAndIdentifier($class, ['id' => $id]);
-                }
-
-                $route->setParameter($parameter->name, $entity);
+            if (! $class) {
+                continue;
             }
+
+            $repository = $this->registry->getRepository($class);
+
+            if (is_a($class, UrlRoutable::class, true)) {
+                $name = call_user_func([$class, 'getRouteKeyNameStatic']);
+
+                $entity = $repository->findOneBy([$name => $id]);
+            } else {
+                $entity = $repository->find($id);
+            }
+
+            if ($entity === null && ! $parameter->isDefaultValueAvailable()) {
+                throw EntityNotFoundException::fromClassNameAndIdentifier($class, ['id' => $id]);
+            }
+
+            $route->setParameter($parameter->name, $entity);
         }
     }
 
-    /**
-     * @param Route $route
-     *
-     * @return ReflectionParameter[]
-     */
-    private function signatureParameters(Route $route)
+    /** @return ReflectionParameter[] */
+    private function signatureParameters(Route $route): array
     {
         return collect($route->signatureParameters())
-            ->reject(function (ReflectionParameter $parameter) use ($route) {
-                return !array_key_exists($parameter->name, $route->parameters());
+            ->reject(static function (ReflectionParameter $parameter) use ($route) {
+                return ! array_key_exists($parameter->name, $route->parameters());
             })
             ->reject(function (ReflectionParameter $parameter) {
-                return !$this->getClassName($parameter);
+                return ! $this->getClassName($parameter);
             })->toArray();
     }
 
-    /**
-     * @return class-string
-     */
-    private function getClassName(ReflectionParameter $parameter): ?string
+    /** @return class-string */
+    private function getClassName(ReflectionParameter $parameter): string|null
     {
-        if (($type = $parameter->getType()) && $type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
+        $type = $parameter->getType();
+        if ($type && $type instanceof ReflectionNamedType && ! $type->isBuiltin()) {
             $class = $type->getName();
+
             return class_exists($class) ? $class : null;
         }
 

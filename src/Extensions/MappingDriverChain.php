@@ -1,46 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Extensions;
 
-use Doctrine\Persistence\Mapping\Driver\DefaultFileLocator;
-use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain as DoctrineMappingDriverChain;
-use Doctrine\Persistence\Mapping\Driver\SymfonyFileLocator;
+
+use function method_exists;
 
 class MappingDriverChain extends DoctrineMappingDriverChain implements MappingDriver
 {
-    /**
-     * @param MappingDriver $driver
-     * @param               $namespace
-     */
-    public function __construct(MappingDriver $driver, $namespace)
+    public function __construct(MappingDriver $driver, string $namespace)
     {
         $this->addDriver($driver, $namespace);
         $this->setDefaultDriver($driver);
     }
 
-    /**
-     * @param array $paths
-     */
-    public function addPaths(array $paths = [])
+    /** @param mixed[] $paths */
+    public function addPaths(array $paths = []): void
     {
         $driver = $this->getDefaultDriver();
 
-        if (method_exists($driver, 'addPaths')) {
-            $driver->addPaths($paths);
+        if (! method_exists($driver, 'addPaths')) {
+            return;
         }
+
+        $driver->addPaths($paths);
     }
 
-    /**
-     * @param array $mappings
-     */
-    public function addMappings(array $mappings = [])
+    /** @param mixed[] $mappings */
+    public function addMappings(array $mappings = []): void
     {
         $driver = $this->getDefaultDriver();
 
-        if (method_exists($driver, 'addMappings')) {
-            $driver->addMappings($mappings);
+        if (! method_exists($driver, 'addMappings')) {
+            return;
         }
+
+        $driver->addMappings($mappings);
     }
 }

@@ -1,17 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
 use Illuminate\Support\Arr;
 
+use function array_merge;
+
 class SqlsrvConnection extends Connection
 {
     /**
-     * @param array $settings
+     * @param mixed[] $settings
      *
-     * @return array
+     * @return mixed[]
      */
-    public function resolve(array $settings = [])
+    public function resolve(array $settings = []): array
     {
         return [
             'driver'              => 'pdo_sqlsrv',
@@ -25,7 +29,8 @@ class SqlsrvConnection extends Connection
             'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
             'serverVersion'       => Arr::get($settings, 'serverVersion'),
             'wrapperClass'        => Arr::get($settings, 'wrapperClass'),
-            'driverOptions'       => array_merge(Arr::get($settings, 'options', []),
+            'driverOptions'       => array_merge(
+                Arr::get($settings, 'options', []),
                 isset($settings['encrypt'])
                     ? ['encrypt' => Arr::get($settings, 'encrypt')]
                     : [],

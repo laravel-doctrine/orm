@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Validation;
 
 use Illuminate\Validation\Factory;
@@ -9,19 +11,15 @@ class PresenceVerifierProvider extends ValidationServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
      */
-    protected $defer = true;
+    protected bool $defer = true;
 
     /**
      * Register the validation factory.
-     *
-     * @return void
      */
-    protected function registerValidationFactory()
+    protected function registerValidationFactory(): void
     {
-        $this->app->singleton('validator', function ($app) {
+        $this->app->singleton('validator', static function ($app) {
             $validator = new Factory($app['translator'], $app);
 
             // The validation presence verifier is responsible for determining the existence of
@@ -37,24 +35,20 @@ class PresenceVerifierProvider extends ValidationServiceProvider
 
     /**
      * Register the database presence verifier.
-     *
-     * @return void
      */
-    protected function registerPresenceVerifier()
+    protected function registerPresenceVerifier(): void
     {
-        $this->app->singleton('validation.presence', function ($app) {
+        $this->app->singleton('validation.presence', static function ($app) {
             return new DoctrinePresenceVerifier($app['registry']);
         });
     }
 
-    /**
-     * @return string[]
-     */
-    public function provides()
+    /** @return string[] */
+    public function provides(): array
     {
         return [
             'validator',
-            'validation.presence'
+            'validation.presence',
         ];
     }
 }

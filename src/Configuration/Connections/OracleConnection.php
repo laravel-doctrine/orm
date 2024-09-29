@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
 use Illuminate\Support\Arr;
@@ -7,11 +9,11 @@ use Illuminate\Support\Arr;
 class OracleConnection extends Connection
 {
     /**
-     * @param array $settings
+     * @param mixed[] $settings
      *
-     * @return array
+     * @return mixed[]
      */
-    public function resolve(array $settings = [])
+    public function resolve(array $settings = []): array
     {
         return [
             'driver'                => 'oci8',
@@ -27,7 +29,7 @@ class OracleConnection extends Connection
             'defaultTableOptions'   => Arr::get($settings, 'defaultTableOptions', []),
             'persistent'            => Arr::get($settings, 'persistent'),
             'wrapperClass'          => Arr::get($settings, 'wrapperClass'),
-            'connectstring'         => Arr::get($settings, 'connectstring')
+            'connectstring'         => Arr::get($settings, 'connectstring'),
         ];
     }
 }

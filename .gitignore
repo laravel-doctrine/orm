@@ -2,8 +2,7 @@
 composer.phar
 composer.lock
 .DS_Store
-.php_cs.cache
-.php-cs-fixer.cache
+.phpcs-cache
 .phpunit.result.cache
 
 /tests/Stubs/storage/framework/views/*

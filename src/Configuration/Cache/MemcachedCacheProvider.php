@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
 class MemcachedCacheProvider extends IlluminateCacheProvider
 {
-    /**
-     * @var string
-     */
-    protected $store = 'memcached';
+    protected string|null $store = 'memcached';
 }

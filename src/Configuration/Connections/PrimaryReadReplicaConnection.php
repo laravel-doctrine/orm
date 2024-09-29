@@ -1,50 +1,46 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
 use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection as PrimaryReadReplicaDoctrineWrapper;
 use Illuminate\Contracts\Config\Repository;
+use InvalidArgumentException;
+
+use function array_diff_key;
+use function array_flip;
+use function array_merge;
+use function count;
+use function is_array;
 
 /**
  * Handles primary read replica connection settings.
  */
 class PrimaryReadReplicaConnection extends Connection
 {
-    /**
-     * @var array|Connection
-     */
-    private $resolvedBaseSettings;
+    /** @var mixed[] Ignored configuration fields for master slave configuration. */
+    private array $primaryReadReplicaConfigIgnored = ['driver'];
 
-    /**
-     * @var array Ignored configuration fields for master slave configuration.
-     */
-    private $primaryReadReplicaConfigIgnored = ['driver'];
-
-    /**
-     * PrimaryReadReplicaConnection constructor.
-     *
-     * @param Repository       $config
-     * @param array|Connection $resolvedBaseSettings
-     */
-    public function __construct(Repository $config, $resolvedBaseSettings)
+    public function __construct(Repository $config, private mixed $resolvedBaseSettings)
     {
         parent::__construct($config);
-
-        $this->resolvedBaseSettings = $resolvedBaseSettings;
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed[] $settings
+     *
+     * @return mixed[]
      */
-    public function resolve(array $settings = [])
+    public function resolve(array $settings = []): array
     {
         $driver = $this->resolvedBaseSettings['driver'];
 
-        $writeReplicas = $this->getReplicasConfiguration(isset($settings['write']) ? $settings['write'] : [], $driver);
+        $writeReplicas = $this->getReplicasConfiguration($settings['write'] ?? [], $driver);
 
         if (count($writeReplicas) !== 1) {
-            throw new \InvalidArgumentException(
-                "There should be exactly 1 write replica. " . count($writeReplicas) . " found."
+            throw new InvalidArgumentException(
+                'There should be exactly 1 write replica. ' . count($writeReplicas) . ' found.',
             );
         }
 
@@ -55,11 +51,11 @@ class PrimaryReadReplicaConnection extends Connection
             'replica'       => $this->getReadReplicasConfig($settings['read'], $driver),
         ];
 
-        if (!empty($settings['serverVersion'])) {
+        if (! empty($settings['serverVersion'])) {
             $resolvedSettings['serverVersion'] = $settings['serverVersion'];
         }
 
-        if (!empty($settings['defaultTableOptions'])) {
+        if (! empty($settings['defaultTableOptions'])) {
             $resolvedSettings['defaultTableOptions'] = $settings['defaultTableOptions'];
         }
 
@@ -68,6 +64,10 @@ class PrimaryReadReplicaConnection extends Connection
 
     /**
      * Returns config for read replicas connections.
+     *
+     * @param mixed[] $replicas
+     *
+     * @return mixed[]
      */
     public function getReadReplicasConfig(array $replicas, string $driver): array
     {
@@ -94,8 +94,13 @@ class PrimaryReadReplicaConnection extends Connection
     /**
      * Creates a configuration for replica based on standard documented Laravel format:
      * Compatible with Laravel 5.5 and Laravel 5.6+ config
+     *
      * @see https://laravel.com/docs/8.x/database#read-and-write-connections
      * @see https://laravel.com/docs/5.6/database#read-and-write-connections
+     *
+     * @param mixed[] $replicaConfig
+     *
+     * @return mixed[]
      */
     private function getReplicasConfiguration(array $replicaConfig, string $driver): array
     {
@@ -122,12 +127,11 @@ class PrimaryReadReplicaConnection extends Connection
     /**
      * Returns single connection (replica or primary) config.
      *
-     * @param array  $connection
-     * @param string $driver
+     * @param mixed[] $connection
      *
-     * @return array
+     * @return mixed[]
      */
-    private function getConnectionData(array $connection, $driver)
+    private function getConnectionData(array $connection, string $driver): array
     {
         $connection = $this->replaceKeyIfExists($connection, 'database', $driver === 'pdo_sqlite' ? 'path' : 'dbname');
         $connection = $this->replaceKeyIfExists($connection, 'username', 'user');
@@ -138,9 +142,9 @@ class PrimaryReadReplicaConnection extends Connection
     /**
      * Returns filtered configuration to use in slaves/masters.
      *
-     * @return array
+     * @return mixed[]
      */
-    private function getFilteredConfig()
+    private function getFilteredConfig(): array
     {
         return array_diff_key($this->resolvedBaseSettings, array_flip($this->primaryReadReplicaConfigIgnored));
     }
@@ -148,15 +152,13 @@ class PrimaryReadReplicaConnection extends Connection
     /**
      * Replaces key in array if it exists.
      *
-     * @param array  $array
-     * @param string $oldKey
-     * @param string $newKey
+     * @param mixed[] $array
      *
-     * @return array
+     * @return mixed[]
      */
-    private function replaceKeyIfExists(array $array, $oldKey, $newKey)
+    private function replaceKeyIfExists(array $array, string $oldKey, string $newKey): array
     {
-        if (!isset($array[$oldKey])) {
+        if (! isset($array[$oldKey])) {
             return $array;
         }
 

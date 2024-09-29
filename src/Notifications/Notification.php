@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Notifications;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\MappedSuperclass
- */
+/** @ORM\MappedSuperclass */
 #[ORM\MappedSuperclass]
 class Notification
 {
@@ -18,44 +18,41 @@ class Notification
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var object
-     */
-    protected $user;
+    protected object $user;
 
     /**
      * The "level" of the notification (info, success, error).
+     *
      * @ORM\Column(type="string")
-     * @var string
      */
     #[ORM\Column(type: 'string')]
-    protected $level = 'info';
+    protected string $level = 'info';
 
     /**
      * The message of the notification.
+     *
      * @ORM\Column(type="string")
-     * @var string
      */
     #[ORM\Column(type: 'string')]
-    protected $message;
+    protected string $message;
 
     /**
      * The text / label for the action.
+     *
      * @ORM\Column(type="string")
-     * @var string
      */
     #[ORM\Column(type: 'string')]
-    protected $actionText;
+    protected string $actionText;
 
     /**
      * The action URL.
+     *
      * @ORM\Column(type="string")
-     * @var string
      */
     #[ORM\Column(type: 'string')]
-    protected $actionUrl;
+    protected string $actionUrl;
 
     /**
      * Indicate that the notification gives information about a successful operation.
@@ -84,21 +81,17 @@ class Notification
     /**
      * Set the "level" of the notification (success, error, etc.).
      *
-     * @param  string $level
      * @return $this
      */
-    public function level($level)
+    public function level(string $level)
     {
         $this->level = $level;
 
         return $this;
     }
 
-    /**
-     * @param  string $message
-     * @return $this
-     */
-    public function message($message)
+    /** @return $this */
+    public function message(string $message)
     {
         $this->message = $message;
 
@@ -108,11 +101,9 @@ class Notification
     /**
      * Configure the "call to action" button.
      *
-     * @param  string $text
-     * @param  string $url
      * @return $this
      */
-    public function action($text, $url)
+    public function action(string $text, string $url)
     {
         $this->actionText = $text;
         $this->actionUrl  = $url;
@@ -120,61 +111,39 @@ class Notification
         return $this;
     }
 
-    /**
-     * @param  mixed        $user
-     * @return Notification
-     */
-    public function to($user)
+    public function to(mixed $user): Notification
     {
         $this->user = $user;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): mixed
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUser()
+    public function getUser(): mixed
     {
         return $this->user;
     }
 
-    /**
-     * @return string
-     */
-    public function getLevel()
+    public function getLevel(): string
     {
         return $this->level;
     }
 
-    /**
-     * @return string
-     */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
-    /**
-     * @return string
-     */
-    public function getActionText()
+    public function getActionText(): string
     {
         return $this->actionText;
     }
 
-    /**
-     * @return string
-     */
-    public function getActionUrl()
+    public function getActionUrl(): string
     {
         return $this->actionUrl;
     }

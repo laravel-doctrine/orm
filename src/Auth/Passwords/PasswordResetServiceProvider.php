@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use Illuminate\Support\ServiceProvider;
@@ -8,24 +10,22 @@ class PasswordResetServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->registerPasswordBroker();
     }
 
     /**
      * Register the password broker instance.
-     * @return void
      */
-    protected function registerPasswordBroker()
+    protected function registerPasswordBroker(): void
     {
-        $this->app->singleton('auth.password', function ($app) {
+        $this->app->singleton('auth.password', static function ($app) {
             return new PasswordBrokerManager($app);
         });
 
-        $this->app->bind('auth.password.broker', function ($app) {
+        $this->app->bind('auth.password.broker', static function ($app) {
             return $app->make('auth.password')->broker();
         });
     }
@@ -33,9 +33,9 @@ class PasswordResetServiceProvider extends ServiceProvider
     /**
      * Get the services provided by the provider.
      *
-     * @return array
+     * @return mixed[]
      */
-    public function provides()
+    public function provides(): array
     {
         return ['auth.password', 'auth.password.broker'];
     }

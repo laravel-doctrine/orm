@@ -1,54 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Validation;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
+use Illuminate\Support\Str;
 use Illuminate\Validation\DatabasePresenceVerifierInterface;
 use InvalidArgumentException;
+
+use function mb_substr;
+use function sprintf;
+use function str_replace;
+use function substr;
 
 class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
 {
     /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
-
-    /**
      * The database connection to use.
-     *
-     * @var string
      */
-    protected $connection = null;
+    protected mixed $connection = null;
 
-    /**
-     * @param ManagerRegistry $registry
-     */
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(protected ManagerRegistry $registry)
     {
-        $this->registry = $registry;
     }
 
     /**
      * Count the number of objects in a collection having the given value.
-     *
-     * @param string $collection
-     * @param string $column
-     * @param string $value
-     * @param int    $excludeId
-     * @param string $idColumn
-     * @param array  $extra
-     *
-     * @return int
      */
+    // phpcs:disable
     public function getCount($collection, $column, $value, $excludeId = null, $idColumn = null, array $extra = [])
     {
+        // phpcs:enable
         $builder = $this->selectCount($collection);
-        $builder->where("e.{$column} = :" . $this->prepareParam($column));
+        $builder->where('e.' . $column . ' = :' . $this->prepareParam($column));
 
-        if (!is_null($excludeId) && $excludeId != 'NULL') {
+        if ($excludeId !== null && $excludeId !== 'NULL') {
             $idColumn = $idColumn ?: 'id';
-            $builder->andWhere("e.{$idColumn} <> :" . $this->prepareParam($idColumn));
+            $builder->andWhere('e.' . $idColumn . ' <> :' . $this->prepareParam($idColumn));
         }
 
         $this->queryExtraConditions($extra, $builder);
@@ -56,7 +47,7 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
         $query = $builder->getQuery();
         $query->setParameter($this->prepareParam($column), $value);
 
-        if (!is_null($excludeId) && $excludeId != 'NULL') {
+        if ($excludeId !== null && $excludeId !== 'NULL') {
             $query->setParameter($this->prepareParam($idColumn), $excludeId);
         }
 
@@ -65,16 +56,11 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
 
     /**
      * Count the number of objects in a collection with the given values.
-     *
-     * @param string $collection
-     * @param string $column
-     * @param array  $values
-     * @param array  $extra
-     *
-     * @return int
      */
+    // phpcs:disable
     public function getMultiCount($collection, $column, array $values, array $extra = [])
     {
+        // phpcs:enable
         $builder = $this->selectCount($collection);
         $builder->where($builder->expr()->in('e.' . $column, $values));
 
@@ -83,12 +69,7 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
         return (int) $builder->getQuery()->getSingleScalarResult();
     }
 
-    /**
-     * @param string $entity
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    protected function selectCount($entity)
+    protected function selectCount(string $entity): QueryBuilder
     {
         $em      = $this->getEntityManager($entity);
         $builder = $em->createQueryBuilder();
@@ -98,35 +79,27 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
         return $builder;
     }
 
-    /**
-     * @param array        $extra
-     * @param QueryBuilder $builder
-     */
-    protected function queryExtraConditions(array $extra, QueryBuilder $builder)
+    /** @param mixed[] $extra */
+    protected function queryExtraConditions(array $extra, QueryBuilder $builder): void
     {
         foreach ($extra as $key => $extraValue) {
             if ($extraValue === 'NULL') {
-                $builder->andWhere("e.{$key} IS NULL");
+                $builder->andWhere('e.' . $key . ' IS NULL');
             } elseif ($extraValue === 'NOT_NULL') {
-                $builder->andWhere("e.{$key} IS NOT NULL");
-            } elseif (\Illuminate\Support\Str::startsWith($extraValue, '!')) {
-                $builder->andWhere("e.{$key} != :" . $this->prepareParam($key));
+                $builder->andWhere('e.' . $key . ' IS NOT NULL');
+            } elseif (Str::startsWith($extraValue, '!')) {
+                $builder->andWhere('e.' . $key . ' != :' . $this->prepareParam($key));
                 $builder->setParameter($this->prepareParam($key), mb_substr($extraValue, 1));
             } else {
-                $builder->andWhere("e.{$key} = :" . $this->prepareParam($key));
+                $builder->andWhere('e.' . $key . ' = :' . $this->prepareParam($key));
                 $builder->setParameter($this->prepareParam($key), $extraValue);
             }
         }
     }
 
-    /**
-     * @param string $entity
-     *
-     * @return \Doctrine\Persistence\ObjectManager
-     */
-    protected function getEntityManager($entity)
+    protected function getEntityManager(string $entity): ObjectManager
     {
-        if (!is_null($this->connection)) {
+        if ($this->connection !== null) {
             return $this->registry->getManager($this->connection);
         }
 
@@ -137,31 +110,24 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
         $em = $this->registry->getManagerForClass($entity);
 
         if ($em === null) {
-            throw new InvalidArgumentException(sprintf("No Entity Manager could be found for [%s].", $entity));
+            throw new InvalidArgumentException(sprintf('No Entity Manager could be found for [%s].', $entity));
         }
 
         return $em;
     }
 
-    /**
-     * @param string $column
-     *
-     * @return string
-     */
-    protected function prepareParam($column)
+    protected function prepareParam(string $column): string
     {
         return str_replace('.', '', $column);
     }
 
     /**
      * Set the connection to be used.
-     *
-     * @param string $connection
-     *
-     * @return void
      */
-    public function setConnection($connection)
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
+    public function setConnection($connection): void
     {
+        // phpcs:enable SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
         $this->connection = $connection;
     }
 }

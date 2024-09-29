@@ -1,23 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration;
 
 use Doctrine\ORM\Mapping\NamingStrategy;
 use Illuminate\Support\Str;
 
+use function class_basename;
+use function implode;
+use function sort;
+
 class LaravelNamingStrategy implements NamingStrategy
 {
-    /**
-     * @var Str
-     */
-    protected $str;
-
-    /**
-     * @param Str $str
-     */
-    public function __construct(Str $str)
+    public function __construct(protected Str $str)
     {
-        $this->str = $str;
     }
 
     /**
@@ -40,13 +37,14 @@ class LaravelNamingStrategy implements NamingStrategy
      *
      * @return string A column name.
      */
-    public function propertyToColumnName(string $propertyName, string $className = null): string
+    public function propertyToColumnName(string $propertyName, string|null $className = null): string
     {
         return $this->str->snake($propertyName);
     }
 
     /**
      * Returns the default reference column name.
+     *
      * @return string A column name.
      */
     public function referenceColumnName(): string
@@ -75,11 +73,11 @@ class LaravelNamingStrategy implements NamingStrategy
      *
      * @return string A join table name.
      */
-    public function joinTableName(string $sourceEntity, string $targetEntity, ?string $propertyName = null): string
+    public function joinTableName(string $sourceEntity, string $targetEntity, string|null $propertyName = null): string
     {
         $names = [
             $this->classToFieldName($sourceEntity),
-            $this->classToFieldName($targetEntity)
+            $this->classToFieldName($targetEntity),
         ];
 
         sort($names);
@@ -95,18 +93,13 @@ class LaravelNamingStrategy implements NamingStrategy
      *
      * @return string A join column name.
      */
-    public function joinKeyColumnName(string $entityName, ?string $referencedColumnName = null): string
+    public function joinKeyColumnName(string $entityName, string|null $referencedColumnName = null): string
     {
         return $this->classToFieldName($entityName) . '_' .
         ($referencedColumnName ?: $this->referenceColumnName());
     }
 
-    /**
-     * @param $className
-     *
-     * @return string
-     */
-    protected function classToFieldName($className)
+    protected function classToFieldName(string $className): string
     {
         return $this->str->snake(class_basename($className));
     }
@@ -121,7 +114,7 @@ class LaravelNamingStrategy implements NamingStrategy
         string $propertyName,
         string $embeddedColumnName,
         string $className,
-        string $embeddedClassName
+        string $embeddedClassName,
     ): string {
         return $propertyName . '_' . $embeddedColumnName;
     }
