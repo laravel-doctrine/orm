@@ -21,8 +21,8 @@ class MetaDataManager extends Manager
         return __NAMESPACE__;
     }
 
-    public function getClassSuffix(): string|null
+    public function getClassSuffix(): string
     {
-        return null;
+        return '';
     }
 }
