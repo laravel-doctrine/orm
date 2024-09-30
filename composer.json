@@ -13,6 +13,10 @@
         {
             "name": "Patrick Brouwers",
             "email": "patrick@maatwebsite.nl"
+        },
+        {
+            "name": "Tom H Anderson",
+            "email": "tom.h.anderson@gmail.com"
         }
     ],
     "require": {
