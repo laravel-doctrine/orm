@@ -44,7 +44,8 @@
         "illuminate/queue": "^9.0|^10.0|^11.0",
         "phpstan/phpstan": "^1.9",
         "phpstan/phpstan-deprecation-rules": "^1.1",
-        "doctrine/coding-standard": "^12.0"
+        "doctrine/coding-standard": "^12.0",
+        "php-parallel-lint/php-parallel-lint": "^1.4"
     },
     "autoload": {
         "psr-4": {
@@ -83,5 +84,13 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "scripts": {
+        "test": [
+            "vendor/bin/parallel-lint src",
+            "vendor/bin/phpcs",
+            "vendor/bin/psalm",
+            "vendor/bin/phpunit"
+        ]
     }
 }
