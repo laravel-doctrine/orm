@@ -6,7 +6,6 @@ namespace LaravelDoctrine\ORM\Validation;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
 use Illuminate\Support\Str;
 use Illuminate\Validation\DatabasePresenceVerifierInterface;
 use InvalidArgumentException;
@@ -97,7 +96,7 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
         }
     }
 
-    protected function getEntityManager(string $entity): ObjectManager
+    protected function getEntityManager(string $entity): mixed
     {
         if ($this->connection !== null) {
             return $this->registry->getManager($this->connection);
