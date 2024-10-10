@@ -83,7 +83,6 @@ class EntityManagerFactory
         $connection = DriverManager::getConnection(
             $connectionConfiguration,
             $configuration,
-            $eventManager,
         );
 
         $this->setNamingStrategy($settings, $configuration);
