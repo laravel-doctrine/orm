@@ -1,56 +1,33 @@
-# Laravel Doctrine ORM
+<p align="center">
+    <img src="https://placehold.co/10x10/337ab7/337ab7.png" width="100%" height="15px">
+    <img width="450px" src="https://private-user-images.githubusercontent.com/493920/375536074-18bfa85b-082d-4b53-b6ce-d2757c4b163c.svg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3Mjg1OTI1MTIsIm5iZiI6MTcyODU5MjIxMiwicGF0aCI6Ii80OTM5MjAvMzc1NTM2MDc0LTE4YmZhODViLTA4MmQtNGI1My1iNmNlLWQyNzU3YzRiMTYzYy5zdmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQxMDEwJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MTAxMFQyMDMwMTJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0yYzQ5ZWEyZWJkYjcwY2NkZmRkMjFhN2ZiOTlkMmZjMDJiNTUyMTIxNWFhYjg0Nzc0ZGQyODE0YTk2YmRlZTU3JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.rQ87Pep6Ki44HHXayqZWI7q8uXUObdVmzODUqq_HiPE"/>
+</p>
 
-<img src="https://cloud.githubusercontent.com/assets/7728097/12726966/cf009822-c91a-11e5-8f19-63ce1d77e8b2.jpg"/>
+Laravel Doctrine ORM
+====================
 
-[![GitHub release](https://img.shields.io/github/release/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
-[![Github actions](https://github.com/laravel-doctrine/orm/workflows/CI/badge.svg?branch=1.8)](https://github.com/laravel-doctrine/orm/actions?query=workflow%3ACI+branch%3A1.7)
-[![Scrutinizer](https://img.shields.io/scrutinizer/g/laravel-doctrine/orm.svg?style=flat-square)](https://github.com/laravel-doctrine/orm)
-[![Packagist](https://img.shields.io/packagist/dm/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
-[![Packagist](https://img.shields.io/packagist/dt/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
+An integration library for Laravel and Doctrine ORM
 
-*A drop-in Doctrine ORM 2 implementation for Laravel*
 
-```php
-$scientist = new Scientist(
-    'Albert',
-    'Einstein'
-);
+Version 3.0 Notes
+-----------------
 
-$scientist->addTheory(
-    new Theory('Theory of relativity')
-);
+This library has been around for years as version 1 and 2.  However these old versions don't
+support the latest Doctrine libraries.  Version 3 does not try to maintain backwards compatibility
+with the old versions of this library.  Version 3 supports DBAL ^4.0 and ORM ^3.0.
 
-EntityManager::persist($scientist);
-EntityManager::flush();
+
+Installation
+------------
+
+Via composer:
+
+```bash
+composer require laravel-doctrine/orm ^3.0
 ```
 
-* Easy configuration
-* Pagination
-* Pre-configured metadata, connections and caching
-* Extendable: extend or add your own drivers for metadata, connections or cache
-* Multiple entity managers and connections
-* Laravel naming strategy
-* Simple authentication implementation
-* Password reminders implementation
-* Doctrine console commands
-* DoctrineExtensions supported
-* Timestamps, Softdeletes and TablePrefix listeners
-
-## Documentation
-
-[Read the full documentation](http://laraveldoctrine.org/docs/current/orm).
-
-## Versions
-
-Version | Supported Laravel Versions
-:---------|:----------
-~1.5 | 6.x
-~1.6 | 7.x
-~1.7 | 8.x
-~1.8 | 9.x
-~2.0 | 10.x
-
-Because of the auto package discovery feature Laravel has, the ServiceProvider and Facades are automatically registered.
+Because of the auto package discovery feature Laravel has, the ServiceProvider and Facades 
+are automatically registered.
 
 To publish the config use:
 
@@ -58,6 +35,31 @@ To publish the config use:
 php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\ORM\DoctrineServiceProvider"
 ```
 
-## License
+Documentation
+-------------
 
-This package is licensed under the [MIT license](https://github.com/laravel-doctrine/orm/blob/master/LICENSE).
+Full documentation of this library does not exist at this time.  However, the library is
+very similar to the old versions of this library.
+
+
+Features
+--------
+
+* Easy configuration
+* Pre-configured metadata, connections and caching
+* Support for multiple entity managers and connections
+* Laravel naming strategy
+* Pagination
+* Simple authentication implementation
+* Password reminders implementation
+* Doctrine console commands
+* DoctrineExtensions supported
+* Timestamps and SoftDelete listeners
+* Extendable: extend or add your own drivers for metadata, connections or cache
+
+
+License
+-------
+
+See [LICENSE](https://github.com/laravel-doctrine/orm/blob/master/LICENSE).
+
