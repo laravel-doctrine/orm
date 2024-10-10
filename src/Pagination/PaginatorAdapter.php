@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LaravelDoctrine\ORM\Pagination;
 
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -18,13 +17,13 @@ class PaginatorAdapter
     private $pageResolver;
 
     /** @param mixed[] $queryParams */
-    private function __construct(protected AbstractQuery $query, private int $perPage, callable $pageResolver, private bool $fetchJoinCollection, private array $queryParams = [])
+    private function __construct(protected Query $query, private int $perPage, callable $pageResolver, private bool $fetchJoinCollection, private array $queryParams = [])
     {
         $this->pageResolver = $pageResolver;
     }
 
     /** @param mixed[] $queryParams */
-    public static function fromRequest(AbstractQuery $query, int $perPage = 15, string $pageName = 'page', bool $fetchJoinCollection = true, array $queryParams = []): PaginatorAdapter
+    public static function fromRequest(Query $query, int $perPage = 15, string $pageName = 'page', bool $fetchJoinCollection = true, array $queryParams = []): PaginatorAdapter
     {
         return new self(
             $query,
@@ -38,7 +37,7 @@ class PaginatorAdapter
     }
 
     /** @param mixed[] $queryParams */
-    public static function fromParams(AbstractQuery $query, int $perPage = 15, int $page = 1, bool $fetchJoinCollection = true, array $queryParams = []): PaginatorAdapter
+    public static function fromParams(Query $query, int $perPage = 15, int $page = 1, bool $fetchJoinCollection = true, array $queryParams = []): PaginatorAdapter
     {
         return new self(
             $query,
@@ -67,14 +66,14 @@ class PaginatorAdapter
     }
 
     /** @return $this */
-    protected function query(AbstractQuery $query)
+    protected function query(Query $query): self
     {
         $this->query = $query;
 
         return $this;
     }
 
-    public function getQuery(): AbstractQuery|Query
+    public function getQuery(): Query
     {
         return $this->query;
     }

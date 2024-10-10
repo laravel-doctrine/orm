@@ -6,7 +6,7 @@ namespace LaravelDoctrine\ORM\Notifications;
 
 use Illuminate\Notifications\RoutesNotifications;
 
-trait Notifiable
+abstract class Notifiable
 {
     use RoutesNotifications;
 }

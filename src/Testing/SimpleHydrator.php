@@ -15,7 +15,7 @@ class SimpleHydrator
         $instance   = $reflection->newInstanceWithoutConstructor();
 
         foreach ($attributes as $field => $value) {
-            static::hydrateReflection($reflection, $instance, $field, $value);
+            self::hydrateReflection($reflection, $instance, $field, $value);
         }
 
         return $instance;

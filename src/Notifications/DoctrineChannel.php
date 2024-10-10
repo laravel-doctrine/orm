@@ -20,7 +20,7 @@ class DoctrineChannel
     /**
      * Send the given notification.
      */
-    public function send(mixed $notifiable, LaravelNotification $notification): void
+    public function send(Notifiable $notifiable, LaravelNotification $notification): void
     {
         $entity = $this->getEntity($notifiable, $notification);
 

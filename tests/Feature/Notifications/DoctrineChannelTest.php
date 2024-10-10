@@ -82,15 +82,12 @@ class NotificationStub extends \Illuminate\Notifications\Notification
     }
 }
 
-class NotifiableStub
+class NotifiableStub extends Notifiable
 {
-    use Notifiable;
 }
 
-class CustomNotifiableStub
+class CustomNotifiableStub extends Notifiable
 {
-    use Notifiable;
-
     public function routeNotificationForDoctrine()
     {
         return 'custom';

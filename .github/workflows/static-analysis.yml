@@ -33,4 +33,4 @@ jobs:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Run a static analysis with phpstan/phpstan"
-        run: "vendor/bin/phpstan analyse src --level 1"
+        run: "vendor/bin/phpstan analyse src --level 2"
