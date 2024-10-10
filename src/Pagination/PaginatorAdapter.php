@@ -26,7 +26,7 @@ class PaginatorAdapter
     /** @param mixed[] $queryParams */
     public static function fromRequest(AbstractQuery $query, int $perPage = 15, string $pageName = 'page', bool $fetchJoinCollection = true, array $queryParams = []): PaginatorAdapter
     {
-        return new static(
+        return new self(
             $query,
             $perPage,
             static function () use ($pageName) {
@@ -40,7 +40,7 @@ class PaginatorAdapter
     /** @param mixed[] $queryParams */
     public static function fromParams(AbstractQuery $query, int $perPage = 15, int $page = 1, bool $fetchJoinCollection = true, array $queryParams = []): PaginatorAdapter
     {
-        return new static(
+        return new self(
             $query,
             $perPage,
             static function () use ($page) {

@@ -5,3 +5,7 @@
  * are used in phpstan analysis
  */
 function app($param) {}
+
+function database_path($path = '') {
+    return '';
+}
