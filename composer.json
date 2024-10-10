@@ -94,7 +94,7 @@
             "vendor/bin/parallel-lint src tests",
             "vendor/bin/phpcs",
             "vendor/bin/phpunit",
-            "vendor/bin/phpstan analyze src --level 0"
+            "vendor/bin/phpstan analyze src --level 1"
         ],
         "coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html=coverage"
     }
