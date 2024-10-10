@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace LaravelDoctrine\ORM;
 
-use Doctrine\Common\Proxy\Autoloader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
+use Doctrine\ORM\Proxy\Autoloader;
 use Doctrine\Persistence\ManagerRegistry;
-use Faker\Factory as FakerFactory;
-use Faker\Generator as FakerGenerator;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Notifications\ChannelManager;
@@ -26,7 +24,6 @@ use LaravelDoctrine\ORM\Console\ClearMetadataCacheCommand;
 use LaravelDoctrine\ORM\Console\ClearQueryCacheCommand;
 use LaravelDoctrine\ORM\Console\ClearResultCacheCommand;
 use LaravelDoctrine\ORM\Console\DumpDatabaseCommand;
-use LaravelDoctrine\ORM\Console\EnsureProductionSettingsCommand;
 use LaravelDoctrine\ORM\Console\GenerateProxiesCommand;
 use LaravelDoctrine\ORM\Console\InfoCommand;
 use LaravelDoctrine\ORM\Console\SchemaCreateCommand;
@@ -36,7 +33,6 @@ use LaravelDoctrine\ORM\Console\SchemaValidateCommand;
 use LaravelDoctrine\ORM\Exceptions\ExtensionNotFound;
 use LaravelDoctrine\ORM\Extensions\ExtensionManager;
 use LaravelDoctrine\ORM\Notifications\DoctrineChannel;
-use LaravelDoctrine\ORM\Testing\Factory as EntityFactory;
 use LaravelDoctrine\ORM\Validation\PresenceVerifierProvider;
 
 use function assert;
@@ -77,7 +73,6 @@ class DoctrineServiceProvider extends ServiceProvider
         $this->registerExtensions();
         $this->registerConsoleCommands();
         $this->registerCustomTypes();
-        $this->registerEntityFactory();
         $this->registerProxyAutoloader();
 
         if (! $this->shouldRegisterDoctrinePresenceValidator()) {
@@ -171,7 +166,7 @@ class DoctrineServiceProvider extends ServiceProvider
         // This namespace has been deprecated in doctrine/persistence and we have
         // stopped referring to it. Alias is necessary to let other use it until
         // its removed.
-        $this->app->alias('registry', \Doctrine\Common\Persistence\ManagerRegistry::class);
+        $this->app->alias('registry', ManagerRegistry::class);
     }
 
     /**
@@ -319,24 +314,6 @@ class DoctrineServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Entity factory instance in the container.
-     */
-    protected function registerEntityFactory(): void
-    {
-        $this->app->singleton(FakerGenerator::class, static function ($app) {
-            return FakerFactory::create($app['config']->get('app.faker_locale', 'en_US'));
-        });
-
-        $this->app->singleton(EntityFactory::class, static function ($app) {
-            return EntityFactory::construct(
-                $app->make(FakerGenerator::class),
-                $app->make('registry'),
-                database_path('factories'),
-            );
-        });
-    }
-
-    /**
      * Register proxy autoloader
      */
     public function registerProxyAutoloader(): void
@@ -371,7 +348,6 @@ class DoctrineServiceProvider extends ServiceProvider
             ClearMetadataCacheCommand::class,
             ClearResultCacheCommand::class,
             ClearQueryCacheCommand::class,
-            EnsureProductionSettingsCommand::class,
             GenerateProxiesCommand::class,
             DumpDatabaseCommand::class,
         ]);

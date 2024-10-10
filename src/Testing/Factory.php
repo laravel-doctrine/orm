@@ -65,7 +65,7 @@ class Factory implements ArrayAccess
     {
         $pathToFactories = $pathToFactories ?: database_path('factories');
 
-        return (new static($faker, $registry))->load($pathToFactories);
+        return (new self($faker, $registry))->load($pathToFactories);
     }
 
     /**

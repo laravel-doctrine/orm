@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\Exception\UnknownEntityNamespace;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\Proxy;
+use Exception;
 use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 use ReflectionClass;
@@ -280,13 +280,10 @@ final class IlluminateRegistry implements ManagerRegistry
     public function getAliasNamespace(string $alias): string
     {
         foreach ($this->getManagerNames() as $name) {
-            try {
-                return $this->getManager($name)->getConfiguration()->getEntityNamespace($alias);
-            } catch (ORMException) {
-            }
+            return $this->getManager($name)->getConfiguration()->getEntityNamespace($alias);
         }
 
-        throw UnknownEntityNamespace::fromNamespaceAlias($alias);
+        throw new Exception('Namespace "' . $alias . '" not found');
     }
 
     /**
@@ -337,6 +334,8 @@ final class IlluminateRegistry implements ManagerRegistry
                 }
             }
         }
+
+        return null;
     }
 
     /**
