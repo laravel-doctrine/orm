@@ -9,6 +9,13 @@ Laravel Doctrine ORM
 An integration library for Laravel and Doctrine ORM
 
 
+UNDER DEVELOPMENT
+-----------------
+
+Version 3.0 of this library is under active development.  If you would like to help, please
+fork the repository at branch 3.0.x and submit a pull request.
+
+
 Version 3.0 Notes
 -----------------
 
@@ -22,9 +29,9 @@ Installation
 
 Via composer:
 
-```bash
-composer require laravel-doctrine/orm ^3.0
-```
+~~composer require laravel-doctrine/orm ^3.0~~
+
+**No stable release yet.  Use the development branch 3.0.x for now.**
 
 Because of the auto package discovery feature Laravel has, the ServiceProvider and Facades 
 are automatically registered.
