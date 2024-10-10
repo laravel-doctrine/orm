@@ -52,8 +52,9 @@ class CustomTypeManagerTest extends TestCase
 
 class TypeMock extends Type
 {
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
+        return '';
     }
 
     public function getName()
@@ -62,8 +63,9 @@ class TypeMock extends Type
 }
 class TypeMock2 extends Type
 {
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
+        return '';
     }
 
     public function getName()

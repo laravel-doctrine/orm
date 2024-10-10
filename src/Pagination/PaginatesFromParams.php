@@ -1,49 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Pagination;
 
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\QueryBuilder;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 trait PaginatesFromParams
 {
-    /**
-     * @param int $perPage
-     * @param int $page
-     *
-     * @return \Illuminate\Pagination\LengthAwarePaginator
-     */
-    public function paginateAll($perPage = 15, $page = 1)
+    public function paginateAll(int $perPage = 15, int $page = 1): LengthAwarePaginator
     {
         $query = $this->createQueryBuilder('o')->getQuery();
 
         return $this->paginate($query, $perPage, $page, false);
     }
 
-    /**
-     * @param AbstractQuery $query
-     * @param int           $perPage
-     * @param int           $page
-     * @param bool          $fetchJoinCollection
-     *
-     * @return \Illuminate\Pagination\LengthAwarePaginator
-     */
-    public function paginate(AbstractQuery $query, $perPage, $page = 1, $fetchJoinCollection = true)
+    public function paginate(AbstractQuery $query, int $perPage, int $page = 1, bool $fetchJoinCollection = true): LengthAwarePaginator
     {
         return PaginatorAdapter::fromParams(
             $query,
             $perPage,
             $page,
-            $fetchJoinCollection
+            $fetchJoinCollection,
         )->make();
     }
 
     /**
      * Creates a new QueryBuilder instance that is prepopulated for this entity name.
      *
-     * @param string $alias
      * @param string $indexBy The index for the from.
-     *
-     * @return \Doctrine\ORM\QueryBuilder
      */
-    abstract public function createQueryBuilder($alias, $indexBy = null);
+    abstract public function createQueryBuilder(string $alias, string|null $indexBy = null): QueryBuilder;
 }

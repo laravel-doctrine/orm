@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
 use Illuminate\Support\Arr;
@@ -8,11 +10,11 @@ use Illuminate\Support\Str;
 class SqliteConnection extends Connection
 {
     /**
-     * @param array $settings
+     * @param mixed[] $settings
      *
-     * @return array
+     * @return mixed[]
      */
-    public function resolve(array $settings = [])
+    public function resolve(array $settings = []): array
     {
         return [
             'driver'              => 'pdo_sqlite',
@@ -23,16 +25,12 @@ class SqliteConnection extends Connection
             'path'                => Arr::get($settings, 'database'),
             'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
             'driverOptions'       => Arr::get($settings, 'options', []),
-            'wrapperClass'        => Arr::get($settings, 'wrapperClass')
+            'wrapperClass'        => Arr::get($settings, 'wrapperClass'),
         ];
     }
 
-    /**
-     * @param array $settings
-     *
-     * @return bool
-     */
-    protected function isMemory(array $settings = [])
+    /** @param mixed[] $settings */
+    protected function isMemory(array $settings = []): bool
     {
         return Str::startsWith(Arr::get($settings, 'database', ''), ':memory');
     }

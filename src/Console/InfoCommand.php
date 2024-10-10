@@ -1,10 +1,8 @@
 <?php
 
-namespace LaravelDoctrine\ORM\Console;
+declare(strict_types=1);
 
-use Doctrine\ORM\Mapping\MappingException;
-use Doctrine\Persistence\ManagerRegistry;
-use Exception;
+namespace LaravelDoctrine\ORM\Console;
 
 class InfoCommand extends \Doctrine\ORM\Tools\Console\Command\InfoCommand
 {

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Driver\Middleware;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
 use Doctrine\ORM\Cache\DefaultCacheFactory;
 use Doctrine\ORM\Configuration;
@@ -12,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
@@ -23,81 +27,31 @@ use LaravelDoctrine\ORM\Configuration\MetaData\MetaData;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
-use LaravelDoctrine\ORM\ORMSetupResolver;
 use LogicException;
 use Psr\Cache\CacheItemPoolInterface;
 use ReflectionException;
 
+use function array_map;
+use function array_search;
+use function class_exists;
+use function in_array;
+use function is_array;
+
 class EntityManagerFactory
 {
-    /**
-     * @var MetaDataManager
-     */
-    protected $meta;
-
-    /**
-     * @var ConnectionManager
-     */
-    protected $connection;
-
-    /**
-     * @var Repository
-     */
-    protected $config;
-
-    /**
-     * @var CacheManager
-     */
-    protected $cache;
-
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * @var ORMSetupResolver
-     */
-    private $setup;
-
-    /**
-     * @var EntityListenerResolver
-     */
-    private $resolver;
-
-    /**
-     * @param Container              $container
-     * @param ORMSetupResolver       $setup
-     * @param MetaDataManager        $meta
-     * @param ConnectionManager      $connection
-     * @param CacheManager           $cache
-     * @param Repository             $config
-     * @param EntityListenerResolver $resolver
-     */
     public function __construct(
-        Container $container,
-        ORMSetupResolver $setup,
-        MetaDataManager $meta,
-        ConnectionManager $connection,
-        CacheManager $cache,
-        Repository $config,
-        EntityListenerResolver $resolver
+        protected Container $container,
+        private ORMSetupResolver $setup,
+        protected MetaDataManager $meta,
+        protected ConnectionManager $connection,
+        protected CacheManager $cache,
+        protected Repository $config,
+        private EntityListenerResolver $resolver,
     ) {
-        $this->meta       = $meta;
-        $this->connection = $connection;
-        $this->config     = $config;
-        $this->cache      = $cache;
-        $this->container  = $container;
-        $this->setup      = $setup;
-        $this->resolver   = $resolver;
     }
 
-    /**
-     * @param array $settings
-     *
-     * @return EntityManagerInterface
-     */
-    public function create(array $settings = [])
+    /** @param mixed[] $settings */
+    public function create(array $settings = []): EntityManagerInterface
     {
         $defaultDriver = $this->config->get('doctrine.cache.default', 'array');
 
@@ -106,7 +60,7 @@ class EntityManagerFactory
             Arr::get($settings, 'proxies.path'),
         );
 
-        $configuration->setSchemaManagerFactory(new DefaultSchemaManagerFactory);
+        $configuration->setSchemaManagerFactory(new DefaultSchemaManagerFactory());
 
         $this->setMetadataDriver($settings, $configuration);
         $this->setMiddlewares($settings, $configuration);
@@ -115,19 +69,19 @@ class EntityManagerFactory
 
         $driver = $this->getConnectionDriver($settings);
 
-        $connection_configuration = $this->connection->driver(
+        $connectionConfiguration = $this->connection->driver(
             $driver['driver'],
-            $driver
+            $driver,
         );
 
         if ($this->isPrimaryReadReplicaConfigured($driver)) {
-            if($this->hasValidPrimaryReadReplicaConfig($driver)) {
-                $connection_configuration = (new PrimaryReadReplicaConnection($this->config, $connection_configuration))->resolve($driver);
+            if ($this->hasValidPrimaryReadReplicaConfig($driver)) {
+                $connectionConfiguration = (new PrimaryReadReplicaConnection($this->config, $connectionConfiguration))->resolve($driver);
             }
         }
 
         $connection = DriverManager::getConnection(
-            $connection_configuration,
+            $connectionConfiguration,
             $configuration,
             $eventManager,
         );
@@ -143,7 +97,7 @@ class EntityManagerFactory
         $this->setRepositoryFactory($settings, $configuration);
 
         $configuration->setDefaultRepositoryClassName(
-            Arr::get($settings, 'repository', EntityRepository::class)
+            Arr::get($settings, 'repository', EntityRepository::class),
         );
 
         $configuration->setEntityListenerResolver($this->resolver);
@@ -151,7 +105,7 @@ class EntityManagerFactory
         $manager = new EntityManager(
             $connection,
             $configuration,
-            $eventManager
+            $eventManager,
         );
 
         $manager = $this->decorateManager($settings, $manager);
@@ -164,16 +118,13 @@ class EntityManagerFactory
         return $manager;
     }
 
-    /**
-     * @param array $settings
-     * @param       $configuration
-     */
-    private function setMetadataDriver(array $settings, Configuration $configuration)
+    /** @param mixed[] $settings */
+    private function setMetadataDriver(array $settings, Configuration $configuration): void
     {
         $metadata = $this->meta->driver(
             Arr::get($settings, 'meta'),
             $settings,
-            false
+            false,
         );
 
         if ($metadata instanceof MetaData) {
@@ -184,19 +135,15 @@ class EntityManagerFactory
         }
     }
 
-    /**
-     * @param array{middlewares?: class-string[]} $settings
-     * @param Configuration $configuration
-     * @return void
-     */
+    /** @param array{middlewares?: class-string[]} $settings */
     private function setMiddlewares(array $settings, Configuration $configuration): void
     {
         $middlewares = [];
 
-        foreach($settings['middlewares'] ?? [] as $middlewareClass) {
+        foreach ($settings['middlewares'] ?? [] as $middlewareClass) {
             $middleware = $this->container->make($middlewareClass);
 
-            if (!($middleware instanceof Middleware)) {
+            if (! ($middleware instanceof Middleware)) {
                 throw new LogicException($middlewareClass . 'does not implement ' . Middleware::class);
             }
 
@@ -206,25 +153,20 @@ class EntityManagerFactory
         $configuration->setMiddlewares($middlewares);
     }
 
-    /**
-     * @param array                  $settings
-     * @param EntityManagerInterface $manager
-     */
-    protected function registerListeners(array $settings, EntityManagerInterface $manager)
+    /** @param mixed[] $settings */
+    protected function registerListeners(array $settings, EntityManagerInterface $manager): void
     {
-        if (isset($settings['events']['listeners'])) {
-            foreach ($settings['events']['listeners'] as $event => $listener) {
-                $this->registerListener($event, $listener, $manager);
-            }
+        if (! isset($settings['events']['listeners'])) {
+            return;
+        }
+
+        foreach ($settings['events']['listeners'] as $event => $listener) {
+            $this->registerListener($event, $listener, $manager);
         }
     }
 
-    /**
-     * @param string                 $event
-     * @param string|string[]        $listener
-     * @param EntityManagerInterface $manager
-     */
-    private function registerListener($event, $listener, EntityManagerInterface $manager)
+    /** @param string|string[] $listener */
+    private function registerListener(string $event, string|array $listener, EntityManagerInterface $manager): void
     {
         if (is_array($listener)) {
             foreach ($listener as $individualListener) {
@@ -238,137 +180,119 @@ class EntityManagerFactory
             $resolvedListener = $this->container->make($listener);
         } catch (ReflectionException $e) {
             throw new InvalidArgumentException(
-                "Listener {$listener} could not be resolved: {$e->getMessage()}",
+                'Listener ' . $listener . ' could not be resolved: ' . $e->getMessage(),
                 0,
-                $e
+                $e,
             );
         }
 
         $manager->getEventManager()->addEventListener($event, $resolvedListener);
     }
 
-    /**
-     * @param array                  $settings
-     * @param EntityManagerInterface $manager
-     */
-    protected function registerSubscribers(array $settings, EntityManagerInterface $manager)
+    /** @param mixed[] $settings */
+    protected function registerSubscribers(array $settings, EntityManagerInterface $manager): void
     {
-        if (isset($settings['events']['subscribers'])) {
-            foreach ($settings['events']['subscribers'] as $subscriber) {
-                try {
-                    $resolvedSubscriber = $this->container->make($subscriber);
-                } catch (ReflectionException $e) {
-                    throw new InvalidArgumentException("Listener {$subscriber} could not be resolved: {$e->getMessage()}");
-                }
+        if (! isset($settings['events']['subscribers'])) {
+            return;
+        }
 
-                $manager->getEventManager()->addEventSubscriber($resolvedSubscriber);
+        foreach ($settings['events']['subscribers'] as $subscriber) {
+            try {
+                $resolvedSubscriber = $this->container->make($subscriber);
+            } catch (ReflectionException $e) {
+                throw new InvalidArgumentException('Listener ' . $subscriber . ' could not be resolved: ' . $e->getMessage());
             }
+
+            $manager->getEventManager()->addEventSubscriber($resolvedSubscriber);
         }
     }
 
-    /**
-     * @param array                  $settings
-     * @param Configuration          $configuration
-     * @param EntityManagerInterface $manager
-     */
+    /** @param mixed[] $settings */
     protected function registerFilters(
         array $settings,
         Configuration $configuration,
-        EntityManagerInterface $manager
-    ) {
-        if (isset($settings['filters'])) {
-            foreach ($settings['filters'] as $name => $filter) {
-                $configuration->addFilter($name, $filter);
-                $manager->getFilters()->enable($name);
-            }
+        EntityManagerInterface $manager,
+    ): void {
+        if (! isset($settings['filters'])) {
+            return;
+        }
+
+        foreach ($settings['filters'] as $name => $filter) {
+            $configuration->addFilter($name, $filter);
+            $manager->getFilters()->enable($name);
         }
     }
 
-    /**
-     * @param array         $settings
-     * @param Configuration $configuration
-     */
-    protected function registerPaths(array $settings, Configuration $configuration)
+    /** @param mixed[] $settings */
+    protected function registerPaths(array $settings, Configuration $configuration): void
     {
         $configuration->getMetadataDriverImpl()->addPaths(
-            Arr::get($settings, 'paths', [])
+            Arr::get($settings, 'paths', []),
         );
     }
 
-    /**
-     * @param array         $settings
-     * @param Configuration $configuration
-     */
-    protected function setRepositoryFactory($settings, Configuration $configuration)
+    /** @param mixed[] $settings */
+    protected function setRepositoryFactory(array $settings, Configuration $configuration): void
     {
-        if (Arr::get($settings, 'repository_factory', false)) {
-            $configuration->setRepositoryFactory(
-                $this->container->make(Arr::get($settings, 'repository_factory', false))
-            );
+        if (! Arr::get($settings, 'repository_factory', false)) {
+            return;
         }
+
+        $configuration->setRepositoryFactory(
+            $this->container->make(Arr::get($settings, 'repository_factory', false)),
+        );
     }
 
-    /**
-     * @param array         $settings
-     * @param Configuration $configuration
-     */
-    protected function configureProxies(array $settings, Configuration $configuration)
+    /** @param mixed[] $settings */
+    protected function configureProxies(array $settings, Configuration $configuration): void
     {
         $configuration->setProxyDir(
-            Arr::get($settings, 'proxies.path')
+            Arr::get($settings, 'proxies.path'),
         );
 
         $configuration->setAutoGenerateProxyClasses(
-            Arr::get($settings, 'proxies.auto_generate', false)
+            Arr::get($settings, 'proxies.auto_generate', false),
         );
 
-        if ($namespace = Arr::get($settings, 'proxies.namespace', false)) {
-            $configuration->setProxyNamespace($namespace);
+        $namespace = Arr::get($settings, 'proxies.namespace', false);
+        if (! $namespace) {
+            return;
         }
+
+        $configuration->setProxyNamespace($namespace);
     }
 
-    /**
-     * @param array         $settings
-     * @param Configuration $configuration
-     */
-    protected function setNamingStrategy(array $settings, Configuration $configuration)
+    /** @param mixed[] $settings */
+    protected function setNamingStrategy(array $settings, Configuration $configuration): void
     {
         $strategy = Arr::get($settings, 'naming_strategy', LaravelNamingStrategy::class);
 
         $configuration->setNamingStrategy(
-            $this->container->make($strategy)
+            $this->container->make($strategy),
         );
     }
 
-    /**
-     * @param array         $settings
-     * @param Configuration $configuration
-     */
-    protected function setQuoteStrategy(array $settings, Configuration $configuration)
+    /** @param mixed[] $settings */
+    protected function setQuoteStrategy(array $settings, Configuration $configuration): void
     {
         $strategy = Arr::get($settings, 'quote_strategy', null);
         if ($strategy === null) {
             return;
         }
+
         $configuration->setQuoteStrategy(
-            $this->container->make($strategy)
+            $this->container->make($strategy),
         );
     }
 
-    /**
-     * @param Configuration $configuration
-     */
-    protected function setCustomFunctions(Configuration $configuration)
+    protected function setCustomFunctions(Configuration $configuration): void
     {
         $configuration->setCustomDatetimeFunctions($this->config->get('doctrine.custom_datetime_functions'));
         $configuration->setCustomNumericFunctions($this->config->get('doctrine.custom_numeric_functions'));
         $configuration->setCustomStringFunctions($this->config->get('doctrine.custom_string_functions'));
     }
 
-    /**
-     * @param Configuration $configuration
-     */
-    protected function setCustomHydrationModes(Configuration $configuration)
+    protected function setCustomHydrationModes(Configuration $configuration): void
     {
         $hydratorConfig = $this->config->get('doctrine.custom_hydration_modes', []);
         foreach ($hydratorConfig as $hydrationModeName => $customHydratorClass) {
@@ -376,10 +300,7 @@ class EntityManagerFactory
         }
     }
 
-    /**
-     * @param Configuration $configuration
-     */
-    protected function setCacheSettings(Configuration $configuration)
+    protected function setCacheSettings(Configuration $configuration): void
     {
         $configuration->setQueryCache($this->applyNamedCacheConfiguration('query'));
         $configuration->setResultCache($this->applyNamedCacheConfiguration('result'));
@@ -394,62 +315,52 @@ class EntityManagerFactory
         $defaultNamespace = $this->config->get('doctrine.cache.namespace');
 
         $settings = $this->config->get('doctrine.cache.' . $cacheName, []);
-        if (!isset($settings['namespace'])) {
+        if (! isset($settings['namespace'])) {
             $settings['namespace'] = $defaultNamespace;
         }
 
-        $driver   = $settings['driver'] ?? $defaultDriver;
+        $driver = $settings['driver'] ?? $defaultDriver;
 
-        $cache = $this->cache->driver($driver, $settings);
-
-        return $cache;
+        return $this->cache->driver($driver, $settings);
     }
 
-    /**
-     * @param Configuration $configuration
-     */
-    protected function setSecondLevelCaching(Configuration $configuration)
+    protected function setSecondLevelCaching(Configuration $configuration): void
     {
-        if ($this->config->get('doctrine.cache.second_level', false)) {
-            $configuration->setSecondLevelCacheEnabled(true);
-
-            $cacheConfig = $configuration->getSecondLevelCacheConfiguration();
-            $cacheConfig->setCacheFactory(
-                new DefaultCacheFactory(
-                    $cacheConfig->getRegionsConfiguration(),
-                    $this->cache->driver()
-                )
-            );
+        if (! $this->config->get('doctrine.cache.second_level', false)) {
+            return;
         }
+
+        $configuration->setSecondLevelCacheEnabled(true);
+
+        $cacheConfig = $configuration->getSecondLevelCacheConfiguration();
+        $cacheConfig->setCacheFactory(
+            new DefaultCacheFactory(
+                $cacheConfig->getRegionsConfiguration(),
+                $this->cache->driver(),
+            ),
+        );
     }
 
-    /**
-     * @param array         $settings
-     * @param Configuration $configuration
-     */
-    protected function setCustomMappingDriverChain(array $settings, Configuration $configuration)
+    /** @param mixed[] $settings */
+    protected function setCustomMappingDriverChain(array $settings, Configuration $configuration): void
     {
         $chain = new MappingDriverChain(
             $configuration->getMetadataDriverImpl(),
-            'LaravelDoctrine'
+            'LaravelDoctrine',
         );
 
         $configuration->setMetadataDriverImpl(
-            $chain
+            $chain,
         );
     }
 
-    /**
-     * @param                        $settings
-     * @param EntityManagerInterface $manager
-     *
-     * @return mixed
-     */
-    protected function decorateManager(array $settings, EntityManagerInterface $manager)
+    /** @param mixed[] $settings */
+    protected function decorateManager(array $settings, EntityManagerInterface $manager): mixed
     {
-        if ($decorator = Arr::get($settings, 'decorator', false)) {
-            if (!class_exists($decorator)) {
-                throw new InvalidArgumentException("EntityManagerDecorator {$decorator} does not exist");
+        $decorator = Arr::get($settings, 'decorator', false);
+        if ($decorator) {
+            if (! class_exists($decorator)) {
+                throw new InvalidArgumentException('EntityManagerDecorator ' . $decorator . ' does not exist');
             }
 
             $manager = new $decorator($manager);
@@ -459,29 +370,28 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array $settings
+     * @param mixed[] $settings
      *
-     * @return array
+     * @return mixed[]
      */
-    protected function getConnectionDriver(array $settings = [])
+    protected function getConnectionDriver(array $settings = []): array
     {
         $connection = Arr::get($settings, 'connection');
         $key        = 'database.connections.' . $connection;
 
-        if (!$this->config->has($key)) {
-            throw new InvalidArgumentException("Connection [{$connection}] has no configuration in [{$key}]");
+        if (! $this->config->has($key)) {
+            throw new InvalidArgumentException('Connection [' . $connection . '] has no configuration in [' . $key . ']');
         }
 
         return $this->config->get($key);
     }
 
     /**
-     * @param                        $settings
-     * @param EntityManagerInterface $manager
+     * @param mixed[] $settings
      *
-     * @throws \Doctrine\DBAL\Exception If Database Type or Doctrine Type is not found.
+     * @throws Exception If Database Type or Doctrine Type is not found.
      */
-    protected function registerMappingTypes(array $settings, EntityManagerInterface $manager)
+    protected function registerMappingTypes(array $settings, EntityManagerInterface $manager): void
     {
         foreach (Arr::get($settings, 'mapping_types', []) as $dbType => $doctrineType) {
             // Throw \Doctrine\DBAL\Exception if Doctrine Type is not found.
@@ -490,16 +400,15 @@ class EntityManagerFactory
     }
 
     /**
-     * @param array $settings
+     * @param mixed[] $settings
      *
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     * @return null|EventManager
+     * @throws BindingResolutionException
      */
-    private function createEventManager(array $settings = [])
+    private function createEventManager(array $settings = []): EventManager|null
     {
         $customEventManager = Arr::get($settings, 'event_manager');
 
-        if (!$customEventManager) {
+        if (! $customEventManager) {
             return null;
         }
 
@@ -509,11 +418,9 @@ class EntityManagerFactory
     /**
      * Check if master slave connection was being configured.
      *
-     * @param array $driverConfig
-     *
-     * @return bool
+     * @param mixed[] $driverConfig
      */
-    private function isPrimaryReadReplicaConfigured(array $driverConfig)
+    private function isPrimaryReadReplicaConfigured(array $driverConfig): bool
     {
         // Setting read is mandatory for master/slave configuration. Setting write is optional.
         // But if write was set and read wasn't, it means configuration is incorrect and we must inform the user.
@@ -523,23 +430,23 @@ class EntityManagerFactory
     /**
      * Check if slave configuration is valid.
      *
-     * @param array $driverConfig
-     * @return bool
+     * @param mixed[] $driverConfig
      */
-    private function hasValidPrimaryReadReplicaConfig(array $driverConfig)
+    private function hasValidPrimaryReadReplicaConfig(array $driverConfig): bool
     {
-        if (!isset($driverConfig['read'])) {
-            throw new \InvalidArgumentException("Parameter 'read' must be set for read/write config.");
+        if (! isset($driverConfig['read'])) {
+            throw new InvalidArgumentException("Parameter 'read' must be set for read/write config.");
         }
 
         $slaves = $driverConfig['read'];
 
-        if (!is_array($slaves) || in_array(false, array_map('is_array', $slaves))) {
-            throw new \InvalidArgumentException("Parameter 'read' must be an array containing multiple arrays.");
+        if (! is_array($slaves) || in_array(false, array_map('is_array', $slaves))) {
+            throw new InvalidArgumentException("Parameter 'read' must be an array containing multiple arrays.");
         }
 
-        if (($key = array_search(0, array_map('count', $slaves))) !== false) {
-            throw new \InvalidArgumentException("Parameter 'read' config no. {$key} is empty.");
+        $key = array_search(0, array_map('count', $slaves));
+        if ($key !== false) {
+            throw new InvalidArgumentException('Parameter \'read\' config no. ' . $key . ' is empty.');
         }
 
         return true;

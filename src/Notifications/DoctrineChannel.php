@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Notifications;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -7,62 +9,49 @@ use Illuminate\Notifications\Notification as LaravelNotification;
 use LaravelDoctrine\ORM\Exceptions\NoEntityManagerFound;
 use RuntimeException;
 
+use function method_exists;
+
 class DoctrineChannel
 {
-    /**
-     * @var ManagerRegistry
-     */
-    private $registry;
-
-    /**
-     * @param ManagerRegistry $registry
-     */
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private ManagerRegistry $registry)
     {
-        $this->registry = $registry;
     }
 
     /**
      * Send the given notification.
-     *
-     * @param mixed               $notifiable
-     * @param LaravelNotification $notification
      */
-    public function send($notifiable, LaravelNotification $notification)
+    public function send(mixed $notifiable, LaravelNotification $notification): void
     {
         $entity = $this->getEntity($notifiable, $notification);
 
         if (method_exists($notifiable, 'routeNotificationForDoctrine')) {
             $em = $this->registry->getManager(
-                $notifiable->routeNotificationFor('doctrine', $notification)
+                $notifiable->routeNotificationFor('doctrine', $notification),
             );
         } else {
-            $em = $this->registry->getManagerForClass(get_class($entity));
+            $em = $this->registry->getManagerForClass($entity::class);
         }
 
-        if (is_null($em)) {
-            throw new NoEntityManagerFound;
+        if ($em === null) {
+            throw new NoEntityManagerFound();
         }
 
         $em->persist($entity);
         $em->flush();
     }
 
-    /**
-     * @param  mixed               $notifiable
-     * @param  LaravelNotification $notification
-     * @return object
-     */
-    public function getEntity($notifiable, LaravelNotification $notification)
+    public function getEntity(mixed $notifiable, LaravelNotification $notification): object
     {
         if (method_exists($notification, 'toEntity')) {
             return $notification->toEntity($notifiable);
-        } elseif (method_exists($notification, 'toDatabase')) {
+        }
+
+        if (method_exists($notification, 'toDatabase')) {
             return $notification->toDatabase($notifiable);
         }
 
         throw new RuntimeException(
-            'Notification is missing toDatabase / toEntity method.'
+            'Notification is missing toDatabase / toEntity method.',
         );
     }
 }

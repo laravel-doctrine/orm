@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Pagination;
 
 use Doctrine\ORM\AbstractQuery;
@@ -8,94 +10,48 @@ use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
+use function call_user_func;
+
 class PaginatorAdapter
 {
-    /**
-     * @var AbstractQuery
-     */
-    protected $query;
-
-    /**
-     * @var int
-     */
-    private $perPage;
-
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $pageResolver;
 
-    /**
-     * @var bool
-     */
-    private $fetchJoinCollection;
-
-    /**
-     * @var array
-     */
-    private $queryParams;
-
-    /**
-     * @param AbstractQuery $query
-     * @param int           $perPage
-     * @param callable      $pageResolver
-     * @param bool          $fetchJoinCollection
-     * @param array         $queryParams
-     */
-    private function __construct(AbstractQuery $query, $perPage, $pageResolver, $fetchJoinCollection, $queryParams = [])
+    /** @param mixed[] $queryParams */
+    private function __construct(protected AbstractQuery $query, private int $perPage, callable $pageResolver, private bool $fetchJoinCollection, private array $queryParams = [])
     {
-        $this->query               = $query;
-        $this->perPage             = $perPage;
-        $this->pageResolver        = $pageResolver;
-        $this->fetchJoinCollection = $fetchJoinCollection;
-        $this->queryParams         = $queryParams;
+        $this->pageResolver = $pageResolver;
     }
 
-    /**
-     * @param AbstractQuery $query
-     * @param int           $perPage
-     * @param string        $pageName
-     * @param bool          $fetchJoinCollection
-     * @param array         $queryParams
-     *
-     * @return PaginatorAdapter
-     */
-    public static function fromRequest(AbstractQuery $query, $perPage = 15, $pageName = 'page', $fetchJoinCollection = true, $queryParams = [])
+    /** @param mixed[] $queryParams */
+    public static function fromRequest(AbstractQuery $query, int $perPage = 15, string $pageName = 'page', bool $fetchJoinCollection = true, array $queryParams = []): PaginatorAdapter
     {
         return new static(
             $query,
             $perPage,
-            function () use ($pageName) {
+            static function () use ($pageName) {
                 return Paginator::resolveCurrentPage($pageName);
             },
             $fetchJoinCollection,
-            $queryParams
+            $queryParams,
         );
     }
 
-    /**
-     * @param AbstractQuery $query
-     * @param int           $perPage
-     * @param int           $page
-     * @param bool          $fetchJoinCollection
-     * @param array         $queryParams
-     *
-     * @return PaginatorAdapter
-     */
-    public static function fromParams(AbstractQuery $query, $perPage = 15, $page = 1, $fetchJoinCollection = true, $queryParams = [])
+    /** @param mixed[] $queryParams */
+    public static function fromParams(AbstractQuery $query, int $perPage = 15, int $page = 1, bool $fetchJoinCollection = true, array $queryParams = []): PaginatorAdapter
     {
         return new static(
             $query,
             $perPage,
-            function () use ($page) {
+            static function () use ($page) {
                 return $page;
             },
             $fetchJoinCollection,
-            $queryParams
+            $queryParams,
         );
     }
 
-    public function make()
+    public function make(): LengthAwarePaginator
     {
         $page = $this->getCurrentPage();
 
@@ -106,15 +62,11 @@ class PaginatorAdapter
         return $this->convertToLaravelPaginator(
             $this->getDoctrinePaginator(),
             $this->perPage,
-            $page
+            $page,
         );
     }
 
-    /**
-     * @param AbstractQuery $query
-     *
-     * @return $this
-     */
+    /** @return $this */
     protected function query(AbstractQuery $query)
     {
         $this->query = $query;
@@ -122,106 +74,70 @@ class PaginatorAdapter
         return $this;
     }
 
-    /**
-     * @return AbstractQuery|Query
-     */
-    public function getQuery()
+    public function getQuery(): AbstractQuery|Query
     {
         return $this->query;
     }
 
-    /**
-     * @param array $params
-     *
-     * @return $this
-     */
-    public function queryParams(array $params = [])
+    /** @param mixed[] $params */
+    public function queryParams(array $params = []): self
     {
         $this->queryParams = $params;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getQueryParams()
+    /** @return mixed[] */
+    public function getQueryParams(): array
     {
         return $this->queryParams;
     }
 
-    /**
-     * @param int $start
-     *
-     * @return $this
-     */
-    protected function skip($start)
+    protected function skip(int $start): self
     {
         $this->getQuery()->setFirstResult($start);
 
         return $this;
     }
 
-    /**
-     * @param int $perPage
-     *
-     * @return $this
-     */
-    protected function take($perPage)
+    protected function take(int $perPage): self
     {
         $this->getQuery()->setMaxResults($perPage);
 
         return $this;
     }
 
-    /**
-     * @param int $perPage
-     * @param int $page
-     *
-     * @return int
-     */
-    protected function getSkipAmount($perPage, $page)
+    protected function getSkipAmount(int $perPage, int $page): int
     {
         return ($page - 1) * $perPage;
     }
 
-    /**
-     * @return DoctrinePaginator
-     */
-    private function getDoctrinePaginator()
+    private function getDoctrinePaginator(): DoctrinePaginator
     {
         return new DoctrinePaginator(
             $this->getQuery(),
-            $this->fetchJoinCollection
+            $this->fetchJoinCollection,
         );
     }
 
-    /**
-     * @param DoctrinePaginator $doctrinePaginator
-     * @param int               $perPage
-     * @param int               $page
-     *
-     * @return LengthAwarePaginator
-     */
-    protected function convertToLaravelPaginator(DoctrinePaginator $doctrinePaginator, $perPage, $page)
+    protected function convertToLaravelPaginator(DoctrinePaginator $doctrinePaginator, int $perPage, int $page): LengthAwarePaginator
     {
-        $results     = iterator_to_array($doctrinePaginator);
-        $path        = Paginator::resolveCurrentPath();
-        $query       = $this->queryParams;
+        $path  = Paginator::resolveCurrentPath();
+        $query = $this->queryParams;
 
         return new LengthAwarePaginator(
-            $results,
+            $doctrinePaginator->getQuery()->getResult(),
             $doctrinePaginator->count(),
             $perPage,
             $page,
-            compact('path', 'query')
+            [
+                'path' => $path,
+                'query' => $query,
+            ],
         );
     }
 
-    /**
-     * @return int
-     */
-    protected function getCurrentPage()
+    protected function getCurrentPage(): int
     {
         $page = call_user_func($this->pageResolver);
 

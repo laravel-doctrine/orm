@@ -57,7 +57,7 @@ class LaravelNamingStrategyTest extends TestCase
         $embeddedField = 'address';
         $field         = 'street1';
 
-        $columnName = $this->strategy->embeddedFieldToColumnName($embeddedField, $field);
+        $columnName = $this->strategy->embeddedFieldToColumnName($embeddedField, $field, '', '');
 
         // So this is just like Doctrine's default naming strategy
         $this->assertEquals('address_street1', $columnName);
@@ -76,7 +76,7 @@ class LaravelNamingStrategyTest extends TestCase
         // Given a User -> belongsTo -> Group
         $field = 'group';
 
-        $columnName = $this->strategy->joinColumnName($field);
+        $columnName = $this->strategy->joinColumnName($field, 'className');
 
         // We expect to have a group_id in the users table
         $this->assertEquals('group_id', $columnName);

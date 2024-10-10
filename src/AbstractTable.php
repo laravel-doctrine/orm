@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\DBAL\Schema\Column;
@@ -7,41 +9,23 @@ use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Type;
 
-/** @interal  */
+// phpcs:disable SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming.SuperfluousPrefix
 abstract class AbstractTable
 {
-    /**
-     * @var string
-     */
-    protected string $table;
-
-    /**
-     * @param string $table
-     */
-    public function __construct(string $table)
+    public function __construct(protected string $table)
     {
-        $this->table = $table;
     }
 
-    /**
-     * @return Table
-     */
     public function build(): Table
     {
         return new Table(
             $this->table,
             $this->columns(),
-            $this->indices()
+            $this->indices(),
         );
     }
 
-    /**
-     * @param  string $name
-     * @param  string $type
-     * @param  bool   $autoincrement
-     * @return Column
-     */
-    protected function column($name, string $type, bool $autoincrement = false): Column
+    protected function column(string $name, string $type, bool $autoincrement = false): Column
     {
         $column = new Column($name, Type::getType($type));
         $column->setAutoincrement($autoincrement);
@@ -49,25 +33,15 @@ abstract class AbstractTable
         return $column;
     }
 
-    /**
-     * @param  string $name
-     * @param  string[]  $columns
-     * @param  bool   $unique
-     * @param  bool   $primary
-     * @return Index
-     */
+    /** @param  string[] $columns */
     protected function index(string $name, array $columns, bool $unique = false, bool $primary = false): Index
     {
         return new Index($name, $columns, $unique, $primary);
     }
 
-    /**
-     * @return Column[]
-     */
-    abstract protected function columns();
+    /** @return Column[] */
+    abstract protected function columns(): array;
 
-    /**
-     * @return Index[]
-     */
-    abstract protected function indices();
+    /** @return Index[] */
+    abstract protected function indices(): array;
 }

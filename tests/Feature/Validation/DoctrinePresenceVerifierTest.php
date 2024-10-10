@@ -38,10 +38,12 @@ class DoctrinePresenceVerifierTest extends TestCase
 
     protected function setUp(): void
     {
+        // $this->markTestSkipped('Revisit these tests');
+
         $this->em       = m::mock(EntityManagerInterface::class);
         $this->registry = m::mock(ManagerRegistry::class);
         $this->builder  = m::mock(QueryBuilder::class);
-        $this->query    = m::mock(AbstractQuery::class);
+        $this->query    = m::mock(Doctrine\ORM\Query::class);
 
         $this->verifier = new DoctrinePresenceVerifier(
             $this->registry
@@ -252,7 +254,7 @@ class DoctrinePresenceVerifierTest extends TestCase
         $this->builder->shouldReceive('where')
                       ->once();
 
-        $this->builder->shouldReceive('expr')->andReturn($this->builder);
+        $this->builder->shouldReceive('expr')->andReturn(new \Doctrine\ORM\Query\Expr());
         $this->builder->shouldReceive('in')->with("e.email", ['test@email.com']);
 
         $this->builder->shouldReceive('getQuery')

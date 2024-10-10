@@ -88,7 +88,7 @@ class EntityManagerFactoryTest extends TestCase
      * @var array
      */
     protected $settings = [
-        'meta'       => 'annotations',
+        'meta'       => 'xml',
         'connection' => 'mysql',
         'paths'      => ['Entities'],
         'proxies'    => [
@@ -182,16 +182,9 @@ class EntityManagerFactoryTest extends TestCase
 
         $this->config->shouldReceive('get')
                      ->with('doctrine.cache.second_level', false)->once()
-                     ->andReturn(true);
-
-        $this->configuration->shouldReceive('setSecondLevelCacheEnabled')
-                            ->with(true)->atLeast()->once();
+                     ->andReturn(false);
 
         $cacheConfig = m::mock(\Doctrine\ORM\Cache\CacheConfiguration::class);
-        $cacheConfig->shouldReceive('setCacheFactory')->once();
-        $cacheConfig->shouldReceive('getRegionsConfiguration')->once()->andReturn(
-            m::mock(RegionsConfiguration::class)
-        );
 
         $cacheFactory = m::mock(CacheFactory::class);
         $cacheFactory->shouldReceive('createCache')->atLeast()->once();
@@ -203,8 +196,6 @@ class EntityManagerFactoryTest extends TestCase
                             ->atLeast()->once()->andReturn($cacheConfig);
 
         $cacheImpl = m::mock(Cache::class);
-        $this->cache->shouldReceive('driver')
-                    ->once()->andReturn($cacheImpl);
 
         $this->configuration->shouldReceive('isSecondLevelCacheEnabled')
                             ->atLeast()->once()
@@ -509,7 +500,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver' => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
@@ -568,7 +559,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver' => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
@@ -626,7 +617,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver' => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
@@ -685,7 +676,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver' => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
@@ -697,7 +688,7 @@ class EntityManagerFactoryTest extends TestCase
                 'cache' => [
                     'metadata' => [
                         'driver' => 'php_file',
-                        'path'   => 'myCustomPath'
+                        'path'   => 'tests/cache'
                     ]
                 ]
             ],
@@ -739,7 +730,8 @@ class EntityManagerFactoryTest extends TestCase
         $directory_property = $reflection_cache->getProperty('directory');
         $directory_property->setAccessible(true);
 
-        $this->assertStringContainsString('myCustomPath', $directory_property->getValue($metadata_cache));
+        $this->assertStringContainsString('tests/cache', $directory_property->getValue($metadata_cache));
+        rmdir(__DIR__ . '/../cache/doctrine-cache');
     }
 
     public function test_wrapper_connection()
@@ -752,7 +744,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver'       => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
@@ -795,7 +787,7 @@ class EntityManagerFactoryTest extends TestCase
                 'driver'       => 'mysql'
             ],
             'doctrine' => [
-                'meta'       => 'annotations',
+                'meta'       => 'xml',
                 'connection' => 'mysql',
                 'paths'      => ['Entities'],
                 'proxies'    => [
@@ -1039,8 +1031,6 @@ class EntityManagerFactoryTest extends TestCase
 
         $this->configuration->shouldReceive('getMiddlewares')->once()->andReturn([]);
 
-        $this->configuration->shouldReceive('isLazyGhostObjectEnabled')->once()->andReturnFalse();
-
         $schema_manager_factory = new DefaultSchemaManagerFactory();
         $this->configuration->shouldReceive('setSchemaManagerFactory')->once();
         $this->configuration->shouldReceive('getSchemaManagerFactory')->once()->andReturn($schema_manager_factory);
@@ -1227,8 +1217,12 @@ class FakeConnection extends Connection
 {
 }
 
-class FilterStub
+class FilterStub extends \Doctrine\ORM\Query\Filter\SQLFilter
 {
+    public function addFilterConstraint(\Doctrine\ORM\Mapping\ClassMetadata $targetEntity, string $targetTableAlias): string
+    {
+        return '';
+    }
 }
 
 class ListenerStub

@@ -1,52 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Console;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Contracts\Config\Repository;
 
+use function exec;
+
 class DumpDatabaseCommand extends Command
 {
-    /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
+    protected ManagerRegistry $registry;
 
-    /**
-     * @var Repository
-     */
-    protected $config;
+    protected Repository $config;
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'doctrine:dump:sqlite
-        {--connection=sqlite}
-        {--em=}
-        {--dump=tests/_data/dump.sql : Choose the path for your dump file}
-        {--no-seeding : Disable seeding in the dump process}
-        {--seeder=DatabaseSeeder : Choose the seeder class}
-        {--binary=sqlite3}';
+    protected function configure(): void
+    {
+        parent::configure();
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a dump from a certain connection';
+        $this->setName('doctrine:dump:sqlite');
+        $this->setDescription(<<<'EOF'
+ doctrine:dump:sqlite
 
-    /**
-     * @param ManagerRegistry $registry
-     * @param Repository      $config
-     */
-    public function handle(ManagerRegistry $registry, Repository $config)
+{--connection=sqlite}
+{--em=}
+{--dump=tests/_data/dump.sql : Choose the path for your dump file}
+{--no-seeding : Disable seeding in the dump process}
+{--seeder=DatabaseSeeder : Choose the seeder class}
+{--binary=sqlite3}
+EOF);
+    }
+
+    public function handle(ManagerRegistry $registry, Repository $config): void
     {
         $this->registry = $registry;
         $this->config   = $config;
 
-        $em         = $this->option('em') != '' ? $this->option('em') : $registry->getDefaultManagerName();
+        $em         = $this->option('em') !== '' ? $this->option('em') : $registry->getDefaultManagerName();
         $connection = $this->option('connection');
 
         $dumped = $this->connect($connection, $em)
@@ -62,12 +53,8 @@ class DumpDatabaseCommand extends Command
         }
     }
 
-    /**
-     * @param  string $connection
-     * @param  string $em
-     * @return $this
-     */
-    private function connect($connection, $em)
+    /** @return $this */
+    private function connect(string $connection, string $em)
     {
         // Change connection of given manager to the new format
         $settings               = $this->config->get('doctrine.managers.' . $em);
@@ -83,54 +70,38 @@ class DumpDatabaseCommand extends Command
         return $this;
     }
 
-    /**
-     * @param $em
-     * @return $this
-     */
-    private function dropSchema($em)
+    private function dropSchema(mixed $em): self
     {
         $this->callSilent('doctrine:schema:drop', [
             '--force' => true,
             '--full'  => true,
-            '--em'    => $em
+            '--em'    => $em,
         ]);
 
         return $this;
     }
 
-    /**
-     * @param $em
-     * @return $this
-     */
-    private function createSchema($em)
+    private function createSchema(mixed $em): self
     {
-        $this->callSilent('doctrine:schema:create', [
-            '--em' => $em
-        ]);
+        $this->callSilent('doctrine:schema:create', ['--em' => $em]);
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
+    /** @return $this */
     private function seed()
     {
-        if (!$this->option('no-seeding')) {
+        if (! $this->option('no-seeding')) {
             $this->call('db:seed', [
                 '--class' => $this->option('seeder'),
-                '--force' => true
+                '--force' => true,
             ]);
         }
 
         return $this;
     }
 
-    /**
-     * @param  string $em
-     * @return bool
-     */
-    private function dump($em)
+    private function dump(string $em): bool
     {
         $conn = $this->registry->getManager($em)->getConnection();
 
@@ -138,11 +109,11 @@ class DumpDatabaseCommand extends Command
         $binary = $this->option('binary');
         $dump   = base_path($this->option('dump'));
 
-        $binary  = is_null($binary) ? 'sqlite3' : $binary;
-        $command = "$binary $db .dump";
-        $command .= " > $dump";
+        $binary ??= 'sqlite3';
+        $command = $binary . ' ' . $db . ' .dump';
+        $command .= ' > ' . $dump;
         exec($command, $output, $status);
 
-        return $status == 0;
+        return $status === 0;
     }
 }
