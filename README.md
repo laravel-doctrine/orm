@@ -8,20 +8,19 @@ Laravel Doctrine ORM
 
 An integration library for Laravel and Doctrine ORM
 
-
-UNDER DEVELOPMENT
------------------
-
-Version 3.0 of this library is under active development.  If you would like to help, please
-fork the repository at branch 3.0.x and submit a pull request.
-
+[![Build Status](https://github.com/laravel-doctrine/orm/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/laravel-doctrine/orm/actions/workflows/continuous-integration.yml?query=branch%3Amain)
+[![Code Coverage](https://codecov.io/gh/laravel-doctrine/orm/branch/main/graphs/badge.svg)](https://codecov.io/gh/laravel-doctrine/orm/branch/3.0.x)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%201-brightgreen.svg)](https://img.shields.io/badge/PHPStan-level%201-brightgreen.svg)
+[![License](https://poser.pugx.org/laravel-doctrine/orm/license)](//packagist.org/packages/laravel-doctrine/orm)
 
 Version 3.0 Notes
 -----------------
 
 This library has been around for years as version 1 and 2.  However these old versions don't
 support the latest Doctrine libraries.  Version 3 does not try to maintain backwards compatibility
-with the old versions of this library.  Version 3 supports DBAL ^4.0 and ORM ^3.0.
+with the old versions of this library.  However, this author dropped it into the
+[LDOG Stack](https://ldog.apiskeletons.dev)
+and it worked without modification.  Version 3 supports DBAL ^4.0 and ORM ^3.0.
 
 
 Installation
@@ -29,9 +28,9 @@ Installation
 
 Via composer:
 
-~~composer require laravel-doctrine/orm ^3.0~~
-
-**No stable release yet.  Use the development branch 3.0.x for now.**
+```bash
+composer require laravel-doctrine/orm ^3.0.0
+```
 
 Because of the auto package discovery feature Laravel has, the ServiceProvider and Facades 
 are automatically registered.
@@ -46,7 +45,7 @@ Documentation
 -------------
 
 Full documentation of this library does not exist at this time.  However, the library is
-very similar to the old versions of this library.
+similar to the 2.0 version of this library.
 
 
 Features
