@@ -38,7 +38,7 @@ object-oriented programming if persistence and entities are seperate.
   repositories
   console
 
-  config-file
+  configuration
   doctrine-manager
   connections
   meta-data-configuration

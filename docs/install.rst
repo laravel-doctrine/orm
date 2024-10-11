@@ -42,7 +42,17 @@ two ORMs.
   ~/app/ORM/Doctrine
   ~/app/ORM/Doctrine/Entity
   ~/app/ORM/Doctrine/Repository
+  ~/app/ORM/Doctrine/Subscriber
+  ~/app/ORM/Doctrine/Listener
 
+If you are using both Eloquent and Doctrine together in an application, it is
+suggested you modify your directory structure to accomodate both in a logical
+way.
+
+.. code-block:: bash
+
+  ~/app/ORM/Eloquent
+  ~/app/ORM/Eloquent/Models
 
 Change the ``config/doctrine.php`` file paths
 
