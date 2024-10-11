@@ -2,6 +2,10 @@
 Laravel Doctrine ORM
 ====================
 
+.. image:: banner.png
+   :align: center
+   :scale: 25 %
+
 An integration library for Laravel and Doctrine ORM.
 Version 3 of this library supports Laravel 10+,
 Doctrine ORM ^3.0, and Doctrine DBAL ^4.0.
@@ -25,7 +29,7 @@ object-oriented programming if persistence and entities are seperate.
 
   :caption: Table of Contents
 
-  installation
+  install
   lumen
   entities
   meta-data
