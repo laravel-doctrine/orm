@@ -1,6 +1,6 @@
 <p align="center">
     <img src="https://placehold.co/10x10/337ab7/337ab7.png" width="100%" height="15px">
-    <img width="450px" src="https://private-user-images.githubusercontent.com/493920/375536074-18bfa85b-082d-4b53-b6ce-d2757c4b163c.svg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3Mjg1OTI1MTIsIm5iZiI6MTcyODU5MjIxMiwicGF0aCI6Ii80OTM5MjAvMzc1NTM2MDc0LTE4YmZhODViLTA4MmQtNGI1My1iNmNlLWQyNzU3YzRiMTYzYy5zdmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQxMDEwJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MTAxMFQyMDMwMTJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0yYzQ5ZWEyZWJkYjcwY2NkZmRkMjFhN2ZiOTlkMmZjMDJiNTUyMTIxNWFhYjg0Nzc0ZGQyODE0YTk2YmRlZTU3JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.rQ87Pep6Ki44HHXayqZWI7q8uXUObdVmzODUqq_HiPE"/>
+    <img width="450px" src="https://github.com/laravel-doctrine/orm/blob/3.0.x/logo.svg"/>
 </p>
 
 Laravel Doctrine ORM
