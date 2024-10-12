@@ -38,7 +38,16 @@ Within the entity manager name array are configuration settings.  These are
   are located.
 * ``repository`` - An EntityRepository serves as a repository for entities
   with generic as well as business specific methods for retrieving entities.
-
+* ``decorator`` - A custom entity manager decorator to override the default.
+* ``proxies.namespace`` - Namespace (if different) specified for proxy classes.
+* ``proxies.path`` - The path where proxy classes should be generated.
+* ``proxies.auto_generate`` - Should proxy classes be generated every time an
+  entity manager is created?  Turn off for production.
+* ``events.subscribers`` - Subscribers should implement ``Doctrine\Common\EventSubscriber``
+* ``events.listeners`` - Key should be event type. e.g. ``Doctrine\ORM\Events::onFlush``.
+  Value should be the listener class
+* ``filters`` - Filter system that allows the developer to add SQL to the
+  conditional clauses of queries, regardless the place where the SQL is generated
 
 
 Multiple Entity Managers
@@ -61,179 +70,201 @@ array.
           ]
 
 
-| Property | Explanation |
-|:-----------|------------|
-| **repository** | (Optional) The default repository to use for this EM. |
-| **decorator** | (Optional) Your custom EM decorator to overwrite the default EM. |
-| **proxies.namespace** | Namespace (if different) specified for proxy classes |
-| **proxies.path** | The path where proxy classes should be generated. |
-| **proxies.auto_generate** | Should proxy classes be generated every time an EM is created? (Turn off production) |
-| **events.subscribers** |Subscribers should implement `Doctrine\Common\EventSubscriber` |
-| **events.listeners** | Key should be event type. E.g. `Doctrine\ORM\Events::onFlush`. Value should be the listener class |
-| **filters** | Filter system that allows the developer to add SQL to the conditional clauses of queries, regardless the place where the SQL is generated |
+Example configuration
 
+.. code-block:: php
+  'managers'                  => [
+      'default' => [
+          'dev'        => env('APP_DEBUG'),
+          'meta'       => env('DOCTRINE_METADATA', 'attributes'),
+          'connection' => env('DB_CONNECTION', 'mysql'),
+          'namespaces' => [
+              'App'
+          ],
+          'paths'      => [
+              base_path('app')
+          ],
+          'repository' => Doctrine\ORM\EntityRepository::class,
+          'proxies'    => [
+              'namespace'     => false,
+              'path'          => storage_path('proxies'),
+              'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', false)
+          ],
+          'events' => ...
+          'filters' => ...
+      ]
+  ]
 
-```php
-    'managers'                  => [
-        'default' => [
-            'dev'        => env('APP_DEBUG'),
-            'meta'       => env('DOCTRINE_METADATA', 'annotations'),
-            'connection' => env('DB_CONNECTION', 'mysql'),
-            'namespaces' => [
-                'App'
-            ],
-            'paths'      => [
-                base_path('app')
-            ],
-            'repository' => Doctrine\ORM\EntityRepository::class,
-            'proxies'    => [
-                'namespace'     => false,
-                'path'          => storage_path('proxies'),
-                'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', false)
-            ],
-            'events' => ...
-            'filters' => ...
-        ]
-    ]
-```
-
-#### <a name="entity-manager-namespace-alias"></a> Namespace Alias
+Namespace Alias
+===============
 
 To use namespace alias, you just have to specify then as key of each namespace.
 
 Example:
-```php
-    'managers'                  => [
-        'default' => [
-            ...
-            'connection' => env('DB_CONNECTION', 'mysql'),
-            'namespaces' => [
-                'Foo' => 'App\Model\Foo\Entities',
-                'Bar' => 'App\Model\Bar\Entities',
-            ],
-            'paths'      => [
-                base_path('app')
-            ],
-            ...
-        ]
-    ]
-```
 
-Whenever you need to specify entities in these namespaces, you can simple use the alias as follow:
-```php
-    SELECT f FROM Foo:SomeEntity
-    or
-    \EntityManager::getRepository('Bar:SomeEntity');
-```
+.. code-block:: php
 
-### <a name="extensions"></a> Extensions
+  'managers' => [
+      'default' => [
+          ...
+          'connection' => env('DB_CONNECTION', 'mysql'),
+          'namespaces' => [
+              'Foo' => 'App\Model\Foo\Entities',
+              'Bar' => 'App\Model\Bar\Entities',
+          ],
+          'paths'      => [
+              base_path('app')
+          ],
+          ...
+      ]
+  ]
 
-Extensions can be enabled by adding them to this array. They provide additional functionality Entities (Timestamps, Loggable, etc.)
+
+Whenever you need to specify entities in these namespaces, you can simple
+use the alias as follow:
+
+.. code-block:: sql
+
+  SELECT f FROM Foo:SomeEntity
+
+or
+
+.. code-block:: php
+
+    EntityManager::getRepository('Bar:SomeEntity');
+
+
+Extensions
+==========
+
+Extensions can be enabled by adding them to this array. They provide additional
+functionality Entities (Timestamps, Loggable, etc.)
+
+To use the extensions in this sample you must install the extensions package.
+
+.. code-block:: bash
+
+  composer require laravel-doctrine/extensions
+
+and follow the
+`installation instructions <http://www.laraveldoctrine.org/docs/current/extensions/installation>`_.
+
+.. code-block:: php
+
+  'extensions'                => [
+      //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
+      //LaravelDoctrine\Extensions\Timestamps\TimestampableExtension::class,
+      //LaravelDoctrine\Extensions\SoftDeletes\SoftDeleteableExtension::class,
+      //LaravelDoctrine\Extensions\Sluggable\SluggableExtension::class,
+      //LaravelDoctrine\Extensions\Sortable\SortableExtension::class,
+      //LaravelDoctrine\Extensions\Tree\TreeExtension::class,
+      //LaravelDoctrine\Extensions\Loggable\LoggableExtension::class,
+      //LaravelDoctrine\Extensions\Blameable\BlameableExtension::class,
+      //LaravelDoctrine\Extensions\IpTraceable\IpTraceableExtension::class,
+      //LaravelDoctrine\Extensions\Translatable\TranslatableExtension::class
+  ],
+
+
+Custom Types
+============
+
+Custom types are classes that allow Doctrine to marshal data to/from the data
+source in a custom format.
+
+To register a custom type simple add the class to this list.
+`For more information on custom types refer to the Doctrine documentation <https://www.doctrine-project.org/projects/doctrine-orm/en/latest/cookbook/custom-mapping-types.html>`_.
+
+
+Custom Functions
+================
+
+These are classes that extend the functionality of Doctrine's DQL language.
+More information on what functions are available
+`at the repository <https://github.com/beberlei/DoctrineExtensions>`_
 
 To use the extensions in this sample you must install the extensions package:
 
-```
-require laravel-doctrine/extensions
-```
+.. code-block:: bash
 
-and follow the [installation instructions.](http://www.laraveldoctrine.org/docs/current/extensions/installation)
+  doctrine require laravel-doctrine/extensions
 
-```php
-'extensions'                => [
-    //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
-    //LaravelDoctrine\Extensions\Timestamps\TimestampableExtension::class,
-    //LaravelDoctrine\Extensions\SoftDeletes\SoftDeleteableExtension::class,
-    //LaravelDoctrine\Extensions\Sluggable\SluggableExtension::class,
-    //LaravelDoctrine\Extensions\Sortable\SortableExtension::class,
-    //LaravelDoctrine\Extensions\Tree\TreeExtension::class,
-    //LaravelDoctrine\Extensions\Loggable\LoggableExtension::class,
-    //LaravelDoctrine\Extensions\Blameable\BlameableExtension::class,
-    //LaravelDoctrine\Extensions\IpTraceable\IpTraceableExtension::class,
-    //LaravelDoctrine\Extensions\Translatable\TranslatableExtension::class
-],
-```
+and follow the `installation instructions <http://www.laraveldoctrine.org/docs/current/extensions/installation>`_.
 
-### <a name="custom-types"></a> Custom Types
-
-Custom types are classes that allow Doctrine to marshal data to/from the data source in a custom format.
-
-To register a custom type simple add the class to this list. [For more information on custom types refer to the Doctrine documentation.](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/cookbook/custom-mapping-types.html)
-
-### <a name="custom-functions"></a> Custom Functions
-
-These are classes that extend the functionality of Doctrine's DQL language. More information on what functions are available [visit the repository.](https://github.com/beberlei/DoctrineExtensions)
-
-To use the extensions in this sample you must install the extensions package:
-
-```
-require laravel-doctrine/extensions
-```
-
-and follow the [installation instructions.](http://www.laraveldoctrine.org/docs/current/extensions/installation)
-
-If you include `BeberleiExtensionsServiceProvider` all custom functions will automatically be registered.
+If you include the `BeberleiExtensionsServiceProvider` all custom functions will
+automatically be registered.
 
 To add a function simply add it to the correct list using this format:
+``'FUNCTION_NAME' => 'Path\To\Class'``
 
-`'FUNCTION_NAME' => 'Path\To\Class'`
 
-```php
-/*
-|--------------------------------------------------------------------------
-| DQL custom datetime functions
-|--------------------------------------------------------------------------
-*/
-'custom_datetime_functions' => [],
-/*
-|--------------------------------------------------------------------------
-| DQL custom numeric functions
-|--------------------------------------------------------------------------
-*/
-'custom_numeric_functions'  => [],
-/*
-|--------------------------------------------------------------------------
-| DQL custom string functions
-|--------------------------------------------------------------------------
-*/
-'custom_string_functions'   => [],
-```
+.. code-block:: php
 
-### <a name="custom-hydration-modes"></a> Custom Hydration Modes
+  /*
+  |--------------------------------------------------------------------------
+  | DQL custom datetime functions
+  |--------------------------------------------------------------------------
+  */
+  'custom_datetime_functions' => [],
+  /*
+  |--------------------------------------------------------------------------
+  | DQL custom numeric functions
+  |--------------------------------------------------------------------------
+  */
+  'custom_numeric_functions'  => [],
+  /*
+  |--------------------------------------------------------------------------
+  | DQL custom string functions
+  |--------------------------------------------------------------------------
+  */
+  'custom_string_functions'   => [],
 
-This option enables you to register your Hydrator classes to use as custom hydration modes. For more information about custom hydration modes see [doctrine documentation](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/dql-doctrine-query-language.html#custom-hydration-modes).
+
+Custom Hydration Modes
+======================
+
+This option enables you to register your Hydrator classes to use as custom
+hydration modes. For more information about custom hydration modes see
+`Doctrine documentation <https://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/dql-doctrine-query-language.html#custom-hydration-modes>`_.
 
 To register custom hydrator, add it to the list in following format:
 
-`'hydrationModeName' => MyHydrator::class`
+``'hydrationModeName' => MyHydrator::class``
 
-```php
-/*
-|--------------------------------------------------------------------------
-| Register custom hydrators
-|--------------------------------------------------------------------------
-*/
-'custom_hydration_modes'     => [
-    // e.g. 'hydrationModeName' => MyHydrator::class,
-],
-```
+.. code-block:: php
 
-### <a name="logger"></a> Logger
+  /*
+  |--------------------------------------------------------------------------
+  | Register custom hydrators
+  |--------------------------------------------------------------------------
+  */
+  'custom_hydration_modes'     => [
+      'hydrationModeName' => MyHydrator::class,
+  ],
 
-Enable logging of Laravel Doctrine and Doctrine by using the logger functionality.
 
-|Available loggers|
-|--|
-| `LaravelDoctrine\ORM\Loggers\LaravelDebugbarLogger` |
-| `LaravelDoctrine\ORM\Loggers\ClockworkLogger` |
-| `LaravelDoctrine\ORM\Loggers\FileLogger` |
+Logger
+======
 
-` 'logger' => env('DOCTRINE_LOGGER', false),`
+Enable logging of Laravel Doctrine and Doctrine by using the logger
+functionality.
 
-### <a name="cache"></a> Cache
+Available loggers
 
-Cache will be used to cache metadata, results and queries.
+* ``LaravelDoctrine\ORM\Loggers\LaravelDebugbarLogger``
+* ``LaravelDoctrine\ORM\Loggers\ClockworkLogger``
+* ``LaravelDoctrine\ORM\Loggers\FileLogger``
 
-**Available cache providers:**
+.. code-block:: php
+
+  'logger' => env('DOCTRINE_LOGGER', false),
+
+
+Cache
+=====
+
+Caches will be used to cache metadata, results, and queries.
+
+Available cache providers
 
 * apc
 * array
@@ -241,24 +272,38 @@ Cache will be used to cache metadata, results and queries.
 * memcached
 * redis
 
-** Config settings:**
+Config settings
+---------------
 
-|Property|Explanation |
-|--|--|
-| **cache.default** | The default cache provider to use. |
-| **cache.namespace** |  Will add namespace to the cache key. This is useful if you need extra control over handling key names collisions in your Cache solution.|
-| **cache.second_level** | The Second Level Cache is designed to reduce the amount of necessary database access. It sits between your application and the database to avoid the number of database hits as much as possible. When turned on, entities will be first searched in cache and if they are not found, a database query will be fired an then the entity result will be stored in a cache provider. When used, READ_ONLY is mostly used. ReadOnly cache can do reads, inserts and deletes, cannot perform updates|
-| **cache.metadata** | Your class metadata can be parsed from a few different sources like YAML, XML, Annotations, etc. Instead of parsing this information on each request we should cache it using one of the cache drivers. |
-| **cache.query** | Cache transformation of a DQL query to its SQL counterpart. |
-| **cache.result** | The result cache can be used to cache the results of your queries so you don't have to query the database or hydrate the data again after the first time. |
+* ``cache.default`` - The default cache provider to use.
+* ``cache.namespace`` - Will add namespace to the cache key. This is useful if
+  you need extra control over handling key names collisions in your
+  cache solution.
+* ``cache.second_level`` - The Second Level Cache is designed to reduce the
+  amount of necessary database access. It sits between your application and
+  the database to avoid the number of database hits as much as possible. When
+  turned on, entities will be first searched in cache and if they are not
+  found, a database query will be fired an then the entity result will be
+  stored in a cache provider. When used, READ_ONLY is mostly used. ReadOnly
+  cache can do reads, inserts and deletes, and cannot perform updates.
+* ``cache.metadata`` - Your class metadata can be parsed from a few different
+  sources like YAML, XML, Annotations, etc. Instead of parsing this information
+  on each request we should cache it using one of the cache drivers.
+* ``cache.query`` - Cache transformation of a DQL query to its SQL counterpart.
+* ``cache.result`` - The result cache can be used to cache the results of your
+* queries so you don't have to query the database or hydrate the data again
+* after the first time.
 
-### Gedmo
+Gedmo
+=====
 
-This is an option for use with **Extensions**
+This is an option for use with ``Extensions``.
 
-To use this option you must first install the extensions package:
+To use this option you must first install the extensions package
 
-```
-require laravel-doctrine/extensions
-```
-and follow the [installation instructions.](http://www.laraveldoctrine.org/docs/current/extensions/installation)
+.. code-block:: bash
+
+  composer require laravel-doctrine/extensions
+
+and follow the
+`installation instructions <http://www.laraveldoctrine.org/docs/current/extensions/installation>`_.
