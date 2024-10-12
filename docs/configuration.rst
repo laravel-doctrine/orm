@@ -307,3 +307,9 @@ To use this option you must first install the extensions package
 
 and follow the
 `installation instructions <http://www.laraveldoctrine.org/docs/current/extensions/installation>`_.
+
+
+.. role:: raw-html(raw)
+   :format: html
+
+.. include:: footer.rst

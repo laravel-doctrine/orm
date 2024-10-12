@@ -28,3 +28,9 @@ implement ``Doctrine\Common\Cache\Cache`` or extend ``Doctrine\Common\Cache\Cach
           });
       });
   }
+
+
+.. role:: raw-html(raw)
+   :format: html
+
+.. include:: footer.rst
