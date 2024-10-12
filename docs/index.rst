@@ -30,7 +30,6 @@ object-oriented programming if persistence and entities are seperate.
   :caption: Table of Contents
 
   install
-  lumen
   entities
   meta-data
   entity-manager
