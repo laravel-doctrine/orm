@@ -292,7 +292,7 @@ Config settings
 * ``cache.query`` - Cache transformation of a DQL query to its SQL counterpart.
 * ``cache.result`` - The result cache can be used to cache the results of your
 * queries so you don't have to query the database or hydrate the data again
-* after the first time.
+  after the first time.
 
 Gedmo
 =====

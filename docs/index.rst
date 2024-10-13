@@ -6,6 +6,8 @@ Laravel Doctrine ORM
    :align: center
    :scale: 25 %
 
+This is the documentation for `laravel-doctrine/orm <https://github.com/laravel-doctrine/orm>`_
+
 An integration library for Laravel and Doctrine ORM.
 Version 3 of this library supports Laravel 10+,
 Doctrine ORM ^3.0, and Doctrine DBAL ^4.0.
@@ -50,23 +52,6 @@ object-oriented programming if persistence and entities are seperate.
   notifications
   pagination
 
-
-Features
---------
-
-* Easy configuration
-* Pagination
-* Preconfigured metadata, connections and caching
-* Extendable: extend or add your own drivers for metadata, connections or cache
-* Change metadata, connection or cache settings easy with a resolved hook
-* Annotations, yaml, xml, config and static php meta data mappings
-* Multiple entity managers and connections
-* Laravel naming strategy
-* Simple authentication implementation
-* Password reminders implementation
-* Doctrine console commands
-* DoctrineExtensions supported
-* Timestamps, Softdeletes and TablePrefix listeners
 
 .. role:: raw-html(raw)
    :format: html
