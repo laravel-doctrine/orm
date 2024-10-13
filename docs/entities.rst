@@ -29,6 +29,9 @@ with properties and getters and setters.
 Generally the properties are protected or private, so they only can be accessed
 through getters and setters.
 
+However, with property hooks in 8.4, entities composed of gloal properties only
+may become the norm.
+
 The domain/business logic is completely separated from the persistence logic.
 This means we have to tell Doctrine how it should map the columns from the
 database to our Entity class. In this example we are using annotations.
@@ -47,8 +50,6 @@ You can easily add on new relations with ``->add()``, remove them with
 The ``Scientist`` entity used in the example above looks like this when using
 annotations for the meta data.
 
-    Coding note:  Thanks to property hooks in PHP 8.4, getters and setters may
-    no longer be necessary.
 
 .. code-block:: php
 

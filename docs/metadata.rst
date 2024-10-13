@@ -2,7 +2,7 @@
 Metadata
 ========
 
-Because Doctrine entities dont extend any smart base class, we have to tell
+Because Doctrine entities do not extend any smart ancestor class, we have to tell
 Doctrine how to map the data from the database into the entity. There are
 multiple ways of doing this.
 
@@ -65,26 +65,27 @@ App.Entities.Article.dcm.xml
 
 .. code-block:: xml
 
-<?xml version="1.0" encoding="UTF-8"?>
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                          http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+  <?xml version="1.0" encoding="UTF-8"?>
+  <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                            http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
 
-    <entity name="App\Entities\Article" table="articles">
-        <id name="id" type="integer" column="id">
-            <generator strategy="AUTO"/>
-            <sequence-generator sequence-name="tablename_seq" allocation-size="100" initial-value="1" />
-        </id>
-        <field name="title" column="title" type="string" />
-    </entity>
-</doctrine-mapping>
-```
+      <entity name="App\Entities\Article" table="articles">
+          <id name="id" type="integer" column="id">
+              <generator strategy="AUTO"/>
+              <sequence-generator sequence-name="tablename_seq" allocation-size="100" initial-value="1" />
+          </id>
+          <field name="title" column="title" type="string" />
+      </entity>
+  </doctrine-mapping>
+
 
 More information about XML mappings:
 https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/xml-mapping.html
 
-### Config files
+Config files
+------------
 
 This package adds another option, which leverages Laravel's config system.
 In addition to setting `meta`, this also requires setting `mapping_file`.
