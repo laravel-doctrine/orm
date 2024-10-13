@@ -41,11 +41,12 @@ To publish the config use:
 php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\ORM\DoctrineServiceProvider"
 ```
 
+
 Documentation
 -------------
 
-Full documentation of this library does not exist at this time.  However, the library is
-similar to the 2.0 version of this library.
+Full documentation is available at https://laravel-doctrine-orm-testing.readthedocs.io/
+or in the docs directory.
 
 
 Features
