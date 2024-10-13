@@ -48,8 +48,7 @@ object-oriented programming if persistence and entities are seperate.
   testing
   validation
   notifications
-
-  upgrade
+  pagination
 
 
 Features
