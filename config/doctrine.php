@@ -12,7 +12,7 @@ return [
     | paths setting to the appropriate path and replace App namespace
     | by your own namespace.
     |
-    | Available meta drivers: attributes|fluent|xml|simplified_xml|static_php|php
+    | Available meta drivers: attributes|xml|simplified_xml|static_php|php
     |
     | Available connections: mysql|oracle|pgsql|sqlite|sqlsrv
     | (Connections can be configured in the database config)
