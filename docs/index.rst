@@ -31,7 +31,7 @@ object-oriented programming if persistence and entities are seperate.
 
   install
   entities
-  meta-data
+  metadata
   entity-manager
   multiple-connections
   repositories
@@ -40,7 +40,6 @@ object-oriented programming if persistence and entities are seperate.
   configuration
   doctrine-manager
   connections
-  meta-data-configuration
   caching
   troubleshooting
 
@@ -51,7 +50,6 @@ object-oriented programming if persistence and entities are seperate.
   notifications
 
   upgrade
-  contributions
 
 
 Features
