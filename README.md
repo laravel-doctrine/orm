@@ -45,7 +45,7 @@ php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\ORM\Doctri
 Documentation
 -------------
 
-Full documentation is available at https://laravel-doctrine-orm-testing.readthedocs.io/
+Full documentation is available at https://laravel-doctrine-orm-official.readthedocs.io
 or in the docs directory.
 
 
