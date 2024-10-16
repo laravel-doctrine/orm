@@ -40,6 +40,8 @@ Within the entity manager name array are configuration settings.  These are
   metadata configurtions are recommended.
 * ``namespaces`` - If your entities are not located in the configured app
   namespace, you can specify a different one here.
+* ``naming_strategy`` - Default is the included Laravel naming strategy.
+  Doctrine ships with others e.g. ``Doctrine\ORM\Mapping\DefaultNamingStrategy``
 * ``paths`` - The path(s) where the mapping configurations for your entities
   are located.
 * ``repository`` - An EntityRepository serves as a repository for entities
