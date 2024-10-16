@@ -8,11 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait Authenticatable
 {
-    /** @ORM\Column(type="string") */
     #[ORM\Column(type: 'string')]
     protected string $password;
 
-    /** @ORM\Column(name="remember_token", type="string", nullable=true) */
     #[ORM\Column(name: 'remember_token', type: 'string', nullable: true)]
     protected string $rememberToken;
 

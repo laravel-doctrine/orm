@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace LaravelDoctrine\ORM\Console;
 
-class InfoCommand extends \Doctrine\ORM\Tools\Console\Command\InfoCommand
+use Doctrine\ORM\Tools\Console\Command\InfoCommand as DoctrineInfoCommand;
+
+class InfoCommand extends DoctrineInfoCommand
 {
     public function __construct(EntityManagerProvider $entityManagerProvider)
     {

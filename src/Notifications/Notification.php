@@ -6,15 +6,9 @@ namespace LaravelDoctrine\ORM\Notifications;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\MappedSuperclass */
 #[ORM\MappedSuperclass]
 class Notification
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -24,32 +18,24 @@ class Notification
 
     /**
      * The "level" of the notification (info, success, error).
-     *
-     * @ORM\Column(type="string")
      */
     #[ORM\Column(type: 'string')]
     protected string $level = 'info';
 
     /**
      * The message of the notification.
-     *
-     * @ORM\Column(type="string")
      */
     #[ORM\Column(type: 'string')]
     protected string $message;
 
     /**
      * The text / label for the action.
-     *
-     * @ORM\Column(type="string")
      */
     #[ORM\Column(type: 'string')]
     protected string $actionText;
 
     /**
      * The action URL.
-     *
-     * @ORM\Column(type="string")
      */
     #[ORM\Column(type: 'string')]
     protected string $actionUrl;

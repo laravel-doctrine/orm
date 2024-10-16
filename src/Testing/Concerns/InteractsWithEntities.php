@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace LaravelDoctrine\ORM\Testing\Concerns;
 
 use PHPUnit\Framework\Assert;
-use PHPUnit_Framework_AssertionFailedError;
-use PHPUnit_Framework_SkippedTestError;
 
 use function collect;
 use function count;
@@ -17,11 +15,7 @@ use const PHP_EOL;
 
 trait InteractsWithEntities
 {
-    /**
-     * @return object
-     *
-     * @throws PHPUnit_Framework_AssertionFailedError
-     */
+    /** @return object */
     public function entityExists(string $class, mixed $id): mixed
     {
         $entity = $this->entityManager()->find($class, $id);
@@ -31,7 +25,6 @@ trait InteractsWithEntities
         return $entity;
     }
 
-    /** @throws PHPUnit_Framework_AssertionFailedError */
     public function entityDoesNotExist(string $class, mixed $id): void
     {
         Assert::assertNull(
@@ -44,8 +37,6 @@ trait InteractsWithEntities
      * @param mixed[] $criteria
      *
      * @return mixed[]
-     *
-     * @throws PHPUnit_Framework_AssertionFailedError
      */
     public function entitiesMatch(string $class, array $criteria, int|null $count = null): mixed
     {
@@ -65,11 +56,7 @@ trait InteractsWithEntities
         return $entities;
     }
 
-    /**
-     * @param mixed[] $criteria
-     *
-     * @throws PHPUnit_Framework_AssertionFailedError
-     */
+    /** @param mixed[] $criteria */
     public function noEntitiesMatch(string $class, array $criteria): void
     {
         Assert::assertEmpty(
@@ -101,7 +88,6 @@ trait InteractsWithEntities
         return print_r($criteria, true);
     }
 
-    /** @throws PHPUnit_Framework_SkippedTestError */
     protected function entityManager(): mixed
     {
         if (! isset($this->app)) {
