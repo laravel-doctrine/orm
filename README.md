@@ -9,7 +9,7 @@ Laravel Doctrine ORM
 An integration library for Laravel and Doctrine ORM
 
 [![Build Status](https://github.com/laravel-doctrine/orm/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/laravel-doctrine/orm/actions/workflows/continuous-integration.yml?query=branch%3Amain)
-[![Code Coverage](https://codecov.io/gh/laravel-doctrine/orm/branch/main/graphs/badge.svg)](https://codecov.io/gh/laravel-doctrine/orm/branch/3.0.x)
+[![Code Coverage](https://codecov.io/gh/laravel-doctrine/orm/graph/badge.svg?token=3CpQzDXOWX)](https://codecov.io/gh/laravel-doctrine/orm)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%201-brightgreen.svg)](https://img.shields.io/badge/PHPStan-level%201-brightgreen.svg)
 [![License](https://poser.pugx.org/laravel-doctrine/orm/license)](//packagist.org/packages/laravel-doctrine/orm)
 
