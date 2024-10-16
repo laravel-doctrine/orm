@@ -21,7 +21,7 @@ class DumpDatabaseCommand extends Command
 
         $this->setName('doctrine:dump:sqlite');
         $this->setDescription(<<<'EOF'
- doctrine:dump:sqlite
+doctrine:dump:sqlite
 
 {--connection=sqlite}
 {--em=}

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace LaravelDoctrine\ORM\Console;
 
-class GenerateProxiesCommand extends \Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand
+use Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand as DoctrineGenerateProxiesCommand;
+
+class GenerateProxiesCommand extends DoctrineGenerateProxiesCommand
 {
     public function __construct(EntityManagerProvider $entityManagerProvider)
     {
