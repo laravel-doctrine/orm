@@ -31,6 +31,8 @@ object-oriented programming if persistence and entities are seperate.
 
   :caption: Table of Contents
 
+  upgrade
+
   install
   entities
   metadata
