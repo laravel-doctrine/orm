@@ -121,14 +121,4 @@ abstract class Manager
     {
         return $this->drivers;
     }
-
-    /**
-     * Dynamically call the default driver instance.
-     *
-     * @param mixed[] $parameters
-     */
-    public function __call(string $method, array $parameters): mixed
-    {
-        return call_user_func_array([$this->driver(), $method], $parameters);
-    }
 }
