@@ -48,8 +48,7 @@
         "phpstan/phpstan": "^1.9",
         "phpstan/phpstan-deprecation-rules": "^1.1",
         "doctrine/coding-standard": "^12.0",
-        "php-parallel-lint/php-parallel-lint": "^1.4",
-        "vimeo/psalm": "^0.3.14"
+        "php-parallel-lint/php-parallel-lint": "^1.4"
     },
     "autoload": {
         "psr-4": {
