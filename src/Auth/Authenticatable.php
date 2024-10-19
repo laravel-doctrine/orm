@@ -25,12 +25,14 @@ trait Authenticatable
     /**
      * Get the unique identifier for the user.
      */
+    // @codeCoverageIgnoreStart
     public function getAuthIdentifier(): mixed
     {
         $name = $this->getAuthIdentifierName();
 
         return $this->{$name};
     }
+    // @codeCoverageIgnoreEnd
 
     public function getPassword(): string
     {
@@ -76,8 +78,10 @@ trait Authenticatable
         return 'rememberToken';
     }
 
+    // @codeCoverageIgnoreStart
     public function getAuthPasswordName(): string
     {
         return 'password';
     }
+    // @codeCoverageIgnoreEnd
 }

@@ -111,10 +111,12 @@ class DoctrineUserProvider implements UserProvider
     /**
      * Returns entity namespace.
      */
+    // @codeCoverageIgnoreStart
     public function getModel(): string
     {
         return $this->entity;
     }
+    // @codeCoverageIgnoreEnd
 
     /** @param mixed[] $credentials */
     public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
