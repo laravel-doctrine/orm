@@ -51,6 +51,8 @@ class PaginatorAdapterTest extends TestCase
         $adapter = PaginatorAdapter::fromParams($query, 15, 2, false)
             ->queryParams(['foo' => 'bar']);
 
+        $this->assertEquals(['foo' => 'bar'], $adapter->getQueryParams());
+
         $paginator = $adapter->make();
 
         $this->assertStringContainsString('foo=bar', $paginator->url(1));
