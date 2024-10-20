@@ -45,10 +45,6 @@ class EntityListenerResolver implements ResolverContract
 
     public function register(object $object): void
     {
-        if (! is_object($object)) {
-            throw new InvalidArgumentException(sprintf('An object was expected, but got "%s".', gettype($object)));
-        }
-
         $this->instances[$object::class] = $object;
     }
 }
