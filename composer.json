@@ -45,7 +45,7 @@
         "illuminate/notifications": "^10.0|^11.0",
         "illuminate/queue": "^10.0|^11.0",
         "mockery/mockery": "^1.6.12",
-        "nikic/php-parser": "^4.19",
+        "nikic/php-parser": "^4.19 || ^5.0",
         "php-parallel-lint/php-parallel-lint": "^1.4",
         "phpstan/phpstan": "^1.9",
         "phpstan/phpstan-deprecation-rules": "^1.1",
