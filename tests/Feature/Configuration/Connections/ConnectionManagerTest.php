@@ -71,6 +71,8 @@ class ConnectionManagerTest extends TestCase
             return 'connection';
         });
 
+        $drivers = $this->manager->getDrivers();
+
         $this->assertEquals('connection', $this->manager->driver('new'));
     }
 

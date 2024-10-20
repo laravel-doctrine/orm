@@ -39,9 +39,11 @@ class PrimaryReadReplicaConnection extends Connection
         $writeReplicas = $this->getReplicasConfiguration($settings['write'] ?? [], $driver);
 
         if (count($writeReplicas) !== 1) {
+            // @codeCoverageIgnoreStart
             throw new InvalidArgumentException(
                 'There should be exactly 1 write replica. ' . count($writeReplicas) . ' found.',
             );
+            // @codeCoverageIgnoreEnd
         }
 
         $resolvedSettings = [

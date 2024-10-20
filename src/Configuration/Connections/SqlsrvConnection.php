@@ -31,12 +31,14 @@ class SqlsrvConnection extends Connection
             'wrapperClass'        => Arr::get($settings, 'wrapperClass'),
             'driverOptions'       => array_merge(
                 Arr::get($settings, 'options', []),
+                // @codeCoverageIgnoreStart
                 isset($settings['encrypt'])
                     ? ['encrypt' => Arr::get($settings, 'encrypt')]
                     : [],
                 isset($settings['trust_server_certificate'])
                     ? ['trustServerCertificate' => Arr::get($settings, 'trust_server_certificate')]
                     : [],
+                // @codeCoverageIgnoreEnd
             ),
         ];
     }

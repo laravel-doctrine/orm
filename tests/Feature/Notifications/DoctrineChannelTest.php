@@ -40,7 +40,24 @@ class DoctrineChannelTest extends TestCase
                        ->with('LaravelDoctrine\ORM\Notifications\Notification')
                        ->andReturn($this->em);
 
-        $this->channel->send(new NotifiableStub, new NotificationStub);
+        $this->channel->send(new NotifiableStub(), new NotificationStub());
+        $this->channel->send(new NotifiableStub(), new NotificationDatabaseStub());
+
+        $this->em->shouldHaveReceived('persist')->twice();
+        $this->em->shouldHaveReceived('flush')->twice();
+
+        $this->assertTrue(true);
+    }
+
+    public function testTriggerExceptionOnInvalidNotification()
+    {
+        $this->registry->shouldReceive('getManagerForClass')
+            ->with('LaravelDoctrine\ORM\Notifications\Notification')
+            ->andReturn($this->em);
+
+        $this->expectException(RuntimeException::class);
+
+        $this->channel->send(new NotifiableStub(), new NotificationInvalidStub());
 
         $this->em->shouldHaveReceived('persist')->once();
         $this->em->shouldHaveReceived('flush')->once();
@@ -54,7 +71,7 @@ class DoctrineChannelTest extends TestCase
                        ->with('custom')
                        ->andReturn($this->em);
 
-        $this->channel->send(new CustomNotifiableStub, new NotificationStub);
+        $this->channel->send(new CustomNotifiableStub(), new NotificationStub());
 
         $this->em->shouldHaveReceived('persist')->once();
         $this->em->shouldHaveReceived('flush')->once();
@@ -70,7 +87,7 @@ class DoctrineChannelTest extends TestCase
                        ->with('custom')
                        ->andReturnNull();
 
-        $this->channel->send(new CustomNotifiableStub, new NotificationStub);
+        $this->channel->send(new CustomNotifiableStub(), new NotificationStub());
     }
 }
 
@@ -80,6 +97,18 @@ class NotificationStub extends \Illuminate\Notifications\Notification
     {
         return (new \LaravelDoctrine\ORM\Notifications\Notification);
     }
+}
+
+class NotificationDatabaseStub extends \Illuminate\Notifications\Notification
+{
+    public function toDatabase()
+    {
+        return (new \LaravelDoctrine\ORM\Notifications\Notification);
+    }
+}
+
+class NotificationInvalidStub extends \Illuminate\Notifications\Notification
+{
 }
 
 class NotifiableStub

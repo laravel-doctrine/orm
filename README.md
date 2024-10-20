@@ -16,11 +16,9 @@ An integration library for Laravel and Doctrine ORM
 Version 3.0 Notes
 -----------------
 
-This library has been around for years as version 1 and 2.  However these old versions don't
-support the latest Doctrine libraries.  Version 3 does not try to maintain backwards compatibility
-with the old versions of this library.  However, this author dropped it into the
-[LDOG Stack](https://ldog.apiskeletons.dev)
-and it worked without modification.  Version 3 supports DBAL ^4.0 and ORM ^3.0.
+Version 3 supports DBAL ^4.0 and ORM ^3.0.  See the 
+[upgrade guide](https://laravel-doctrine-orm-official.readthedocs.io/en/latest/upgrade.html) 
+for more information.
 
 
 Installation

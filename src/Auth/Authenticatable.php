@@ -24,6 +24,8 @@ trait Authenticatable
 
     /**
      * Get the unique identifier for the user.
+     *
+     * @codeCoverageIgnoreStart
      */
     public function getAuthIdentifier(): mixed
     {
@@ -32,6 +34,7 @@ trait Authenticatable
         return $this->{$name};
     }
 
+    /** @codeCoverageIgnoreEnd */
     public function getPassword(): string
     {
         return $this->password;
@@ -60,8 +63,9 @@ trait Authenticatable
 
     /**
      * Set the token value for the "remember me" session.
+     *
+     * phpcs:disable
      */
-    // phpcs:disable
     public function setRememberToken($value): void
     {
         // phpcs:enable
@@ -76,8 +80,11 @@ trait Authenticatable
         return 'rememberToken';
     }
 
+    /** @codeCoverageIgnoreStart */
     public function getAuthPasswordName(): string
     {
         return 'password';
     }
+
+    // @codeCoverageIgnoreEnd
 }

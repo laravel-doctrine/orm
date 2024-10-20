@@ -8,7 +8,6 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Str;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 
-use function call_user_func_array;
 use function class_exists;
 
 abstract class Manager
@@ -120,15 +119,5 @@ abstract class Manager
     public function getDrivers(): array
     {
         return $this->drivers;
-    }
-
-    /**
-     * Dynamically call the default driver instance.
-     *
-     * @param mixed[] $parameters
-     */
-    public function __call(string $method, array $parameters): mixed
-    {
-        return call_user_func_array([$this->driver(), $method], $parameters);
     }
 }

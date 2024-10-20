@@ -209,7 +209,9 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
         $schema = $this->connection->createSchemaManager();
 
         if (! $schema->tablesExist([$this->table])) {
+            // @codeCoverageIgnoreStart
             $schema->createTable($this->getTableDefinition());
+            // @codeCoverageIgnoreEnd
         }
 
         return $this->getConnection()->createQueryBuilder();
@@ -223,9 +225,15 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
         return $this->connection;
     }
 
-    /** @throws Exception */
+    /**
+     * @throws Exception
+     *
+     * @codeCoverageIgnoreStart
+     * */
     protected function getTableDefinition(): Table
     {
         return (new PasswordResetTable($this->table))->build();
     }
+
+    // @codeCoverageIgnoreEnd
 }

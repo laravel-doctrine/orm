@@ -2,6 +2,7 @@
 
 use LaravelDoctrine\ORM\Serializers\Arrayable;
 use LaravelDoctrine\ORM\Serializers\ArraySerializer;
+use LaravelDoctrine\ORM\Serializers\Jsonable;
 use PHPUnit\Framework\TestCase;
 
 class ArraySerializerTest extends TestCase
@@ -18,7 +19,11 @@ class ArraySerializerTest extends TestCase
 
     public function test_can_serialize_to_array()
     {
-        $array = $this->serializer->serialize(new ArrayableEntity);
+        $arrayableEntity = new ArrayableEntity();
+
+        $array = $this->serializer->serialize($arrayableEntity);
+
+        $this->assertEquals($array, $arrayableEntity->toArray());
 
         $this->assertEquals([
             'id'   => 'IDVALUE',

@@ -9,6 +9,8 @@ you are upgrading from version 2.0.
   extension and doesn't fit with the goal of Laravel and Doctrine integration.
 * EnsureProductionSettingsCommand has been removed - Doctrine no longer
   ships with this command.
+* Annotations and YAML metadata drivers have been removed -
+  these have been removed from Doctrine.
 
 
 .. role:: raw-html(raw)
