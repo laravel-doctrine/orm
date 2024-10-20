@@ -110,12 +110,14 @@ class DoctrineUserProvider implements UserProvider
 
     /**
      * Returns entity namespace.
+     *
+     * @codeCoverageIgnoreStart
      */
-    // @codeCoverageIgnoreStart
     public function getModel(): string
     {
         return $this->entity;
     }
+
     // @codeCoverageIgnoreEnd
 
     /** @param mixed[] $credentials */

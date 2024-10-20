@@ -8,7 +8,6 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Str;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 
-use function call_user_func_array;
 use function class_exists;
 
 abstract class Manager

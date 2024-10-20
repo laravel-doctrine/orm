@@ -225,11 +225,15 @@ class DoctrineTokenRepository implements TokenRepositoryInterface
         return $this->connection;
     }
 
-    /** @throws Exception */
-    // @codeCoverageIgnoreStart
+    /**
+     * @throws Exception
+     *
+     * @codeCoverageIgnoreStart
+     * */
     protected function getTableDefinition(): Table
     {
         return (new PasswordResetTable($this->table))->build();
     }
+
     // @codeCoverageIgnoreEnd
 }
