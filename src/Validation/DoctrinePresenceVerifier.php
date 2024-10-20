@@ -122,6 +122,10 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
 
     /**
      * Set the connection to be used.
+     *
+     * Required by DatabasePresenceVerifierInterface
+     *
+     * @codeCoverageIgnoreStart
      */
     // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
     public function setConnection($connection): void
@@ -129,4 +133,6 @@ class DoctrinePresenceVerifier implements DatabasePresenceVerifierInterface
         // phpcs:enable SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
         $this->connection = $connection;
     }
+
+    /** @codeCoverageIgnoreStart */
 }
