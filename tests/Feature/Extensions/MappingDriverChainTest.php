@@ -64,6 +64,21 @@ class MappingDriverChainTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function test_can_add_mappings_to_filedriver()
+    {
+        $driver  = m::mock(XmlDriver::class);
+        $locator = m::mock(DefaultFileLocator::class);
+        $chain   = new MappingDriverChain($driver, 'Namespace');
+
+        $locator->shouldReceive('addMappings')->with(['paths']);
+        $locator->shouldReceive('addMappings')->with(['paths2']);
+
+        $chain->addMappings(['paths']);
+        $chain->addMappings(['paths2']);
+
+        $this->assertTrue(true);
+    }
+
     public function test_can_add_paths_to_simplified_filedriver()
     {
         $driver  = m::mock(SimplifiedXmlDriver::class);
