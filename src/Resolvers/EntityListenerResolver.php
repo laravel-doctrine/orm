@@ -6,13 +6,10 @@ namespace LaravelDoctrine\ORM\Resolvers;
 
 use Doctrine\ORM\Mapping\EntityListenerResolver as ResolverContract;
 use Illuminate\Contracts\Container\Container;
-use InvalidArgumentException;
 
-use function gettype;
-use function is_object;
-use function sprintf;
 use function trim;
 
+// phpcs:disable
 class EntityListenerResolver implements ResolverContract
 {
     /** @var object[] Map of class name to entity listener instances. */
@@ -33,7 +30,7 @@ class EntityListenerResolver implements ResolverContract
         $this->instances = [];
     }
 
-    public function resolve(string $className): object
+    public function resolve($className): object
     {
         $hasInstance = isset($this->instances[$className = trim($className, '\\')]);
         if ($hasInstance) {
@@ -43,7 +40,7 @@ class EntityListenerResolver implements ResolverContract
         return $this->instances[$className] = $this->container->make($className);
     }
 
-    public function register(object $object): void
+    public function register($object): void
     {
         $this->instances[$object::class] = $object;
     }

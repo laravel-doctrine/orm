@@ -7,7 +7,6 @@ use LaravelDoctrine\ORM\Notifications\DoctrineChannel;
 use LaravelDoctrine\ORM\Notifications\Notifiable;
 use Mockery\Mock;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 class DoctrineChannelTest extends TestCase
 {
