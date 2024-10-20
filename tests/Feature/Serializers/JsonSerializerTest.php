@@ -18,7 +18,12 @@ class JsonSerializerTest extends TestCase
 
     public function test_can_serialize_to_json()
     {
-        $json = $this->serializer->serialize(new JsonableEntity);
+        $jsonableEntity = new JsonableEntity();
+
+        $json = $this->serializer->serialize($jsonableEntity);
+        $jsonableEntity->jsonSerialize();
+
+        $this->assertEquals($jsonableEntity->toJson(), $json);
 
         $this->assertJson($json);
         $this->assertEquals('{"id":"IDVALUE","name":"NAMEVALUE","numeric":"1"}', $json);
