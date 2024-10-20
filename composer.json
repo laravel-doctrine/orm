@@ -40,15 +40,16 @@
         "laravel/lumen": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.3",
+        "doctrine/coding-standard": "^12.0",
+        "illuminate/log": "^10.0|^11.0",
+        "illuminate/notifications": "^10.0|^11.0",
+        "illuminate/queue": "^10.0|^11.0",
         "mockery/mockery": "^1.6.12",
-        "illuminate/log": "^9.0|^10.0|^11.0",
-        "illuminate/notifications": "^9.0|^10.0|^11.0",
-        "illuminate/queue": "^9.0|^10.0|^11.0",
+        "nikic/php-parser": "^4.19",
+        "php-parallel-lint/php-parallel-lint": "^1.4",
         "phpstan/phpstan": "^1.9",
         "phpstan/phpstan-deprecation-rules": "^1.1",
-        "doctrine/coding-standard": "^12.0",
-        "php-parallel-lint/php-parallel-lint": "^1.4"
+        "phpunit/phpunit": "^9.3"
     },
     "autoload": {
         "psr-4": {
