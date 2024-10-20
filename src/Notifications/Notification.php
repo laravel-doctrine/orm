@@ -42,10 +42,8 @@ class Notification
 
     /**
      * Indicate that the notification gives information about a successful operation.
-     *
-     * @return $this
      */
-    public function success()
+    public function success(): self
     {
         $this->level = 'success';
 
@@ -54,10 +52,8 @@ class Notification
 
     /**
      * Indicate that the notification gives information about an error.
-     *
-     * @return $this
      */
-    public function error()
+    public function error(): self
     {
         $this->level = 'error';
 
@@ -66,18 +62,15 @@ class Notification
 
     /**
      * Set the "level" of the notification (success, error, etc.).
-     *
-     * @return $this
      */
-    public function level(string $level)
+    public function level(string $level): self
     {
         $this->level = $level;
 
         return $this;
     }
 
-    /** @return $this */
-    public function message(string $message)
+    public function message(string $message): self
     {
         $this->message = $message;
 
@@ -86,10 +79,8 @@ class Notification
 
     /**
      * Configure the "call to action" button.
-     *
-     * @return $this
      */
-    public function action(string $text, string $url)
+    public function action(string $text, string $url): self
     {
         $this->actionText = $text;
         $this->actionUrl  = $url;
@@ -97,7 +88,7 @@ class Notification
         return $this;
     }
 
-    public function to(mixed $user): Notification
+    public function to(mixed $user): self
     {
         $this->user = $user;
 
