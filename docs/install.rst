@@ -23,10 +23,17 @@ Environment Variables
 
 Environment variables used inside the config
 
-* ``DOCTRINE_CACHE``
-* ``DOCTRINE_LOGGER``
-* ``DOCTRINE_METADATA``
-* ``DOCTRINE_PROXY_AUTOGENERATE``
+* ``DOCTRINE_METADATA`` - The type of metadata for the Doctrine entities.
+  Defaults to ``attributes``.
+* ``DOCTRINE_PROXY_AUTOGENERATE`` - Whether to autogenerate proxies.  Should be
+  set to ``false`` for production.
+* ``DOCTRINE_CACHE`` - The cache handler.  Default is ``array``.
+* ``DOCTRINE_METADATA_CACHE`` - The cache handler for metadata.
+  Default is ``DOCTRINE_CACHE``.
+* ``DOCTRINE_QUERY_CACHE`` - The cache handler for the query cache.
+  Default is ``DOCTRINE_CACHE``.
+* ``DOCTRINE_RESULT_CACHE`` - The cache handler for the results.
+  Default is ``DOCTRINE_CACHE``.
 
 
 Application Folder Structure
