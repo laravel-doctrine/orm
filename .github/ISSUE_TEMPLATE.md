@@ -1,9 +1,12 @@
-Please prefix your issue with one of the following: [BUG] [PROPOSAL] [QUESTION].
+> If you have a question, and not a bug or proposal, post in the discussions.
+> https://github.com/laravel-doctrine/orm/discussions 
 
-### Package version, Laravel version
 
-### Expected behaviour
+# laravel-doctrine/orm version & Laravel version
 
-### Actual behaviour
+# Expected behaviour
 
-### Steps to reproduce the behaviour
+# Actual behaviour
+
+# Steps to reproduce 
+
