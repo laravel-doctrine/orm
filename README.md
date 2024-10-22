@@ -14,6 +14,7 @@ An integration library for Laravel and Doctrine ORM
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://app.gitter.im/#/room/#laravel-doctrine_community:gitter.im)
 [![License](https://poser.pugx.org/laravel-doctrine/orm/license)](//packagist.org/packages/laravel-doctrine/orm)
 
+
 Version 3.0 Notes
 -----------------
 
@@ -28,13 +29,12 @@ Installation
 Via composer:
 
 ```bash
-composer require laravel-doctrine/orm ^3.0.0
+composer require laravel-doctrine/orm
 ```
 
-Because of the auto package discovery feature Laravel has, the ServiceProvider and Facades 
-are automatically registered.
+The ServiceProvider and Facades are audodiscovered.
 
-To publish the config use:
+Publish the config:
 
 ```bash
 php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\ORM\DoctrineServiceProvider"
@@ -44,7 +44,7 @@ php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\ORM\Doctri
 Documentation
 -------------
 
-Full documentation is available at https://laravel-doctrine-orm-official.readthedocs.io
+Full documentation at https://laravel-doctrine-orm-official.readthedocs.io
 or in the docs directory.
 
 
@@ -52,20 +52,18 @@ Features
 --------
 
 * Easy configuration
-* Pre-configured metadata, connections and caching
-* Support for multiple entity managers and connections
-* Laravel naming strategy
-* Pagination
-* Simple authentication implementation
-* Password reminders implementation
 * Doctrine console commands
 * DoctrineExtensions supported
+* Pagination
+* Support for multiple entity managers and connections
+* Laravel naming strategy
 * Timestamps and SoftDelete listeners
-* Extendable: extend or add your own drivers for metadata, connections or cache
+* Simple authentication
+* Pre-configured metadata, connections, and caching
+* Password reminders
 
 
 License
 -------
 
 See [LICENSE](https://github.com/laravel-doctrine/orm/blob/master/LICENSE).
-
