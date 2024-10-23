@@ -48,22 +48,8 @@ Full documentation at https://laravel-doctrine-orm-official.readthedocs.io
 or in the docs directory.
 
 
-Features
---------
-
-* Easy configuration
-* Doctrine console commands
-* DoctrineExtensions supported
-* Pagination
-* Support for multiple entity managers and connections
-* Laravel naming strategy
-* Timestamps and SoftDelete listeners
-* Simple authentication
-* Pre-configured metadata, connections, and caching
-* Password reminders
-
-
 License
 -------
 
 See [LICENSE](https://github.com/laravel-doctrine/orm/blob/master/LICENSE).
+
