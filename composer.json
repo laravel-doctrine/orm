@@ -1,13 +1,11 @@
 {
     "name": "laravel-doctrine/orm",
-    "description": "A Doctrine ORM bridge for Laravel 5",
+    "description": "An integration library for Laravel and Doctrine ORM",
     "license": "MIT",
     "keywords": [
-        "doctrine",
         "laravel",
+        "doctrine",
         "orm",
-        "data mapper",
-        "database"
     ],
     "authors": [
         {
