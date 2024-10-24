@@ -68,6 +68,8 @@ class ExtensionManager
         EventManager $evm,
         Configuration $configuration,
     ): void {
+        $extension->addSubscribers($evm, $em);
+
         if (is_array($extension->getFilters())) {
             foreach ($extension->getFilters() as $name => $filter) {
                 $configuration->addFilter($name, $filter);
