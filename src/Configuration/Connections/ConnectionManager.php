@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
 use LaravelDoctrine\ORM\Configuration\Manager;
@@ -8,25 +10,18 @@ class ConnectionManager extends Manager
 {
     /**
      * Get the default driver name.
-     * @return string
      */
-    public function getDefaultDriver()
+    public function getDefaultDriver(): string
     {
         return 'mysql';
     }
 
-    /**
-     * @return string
-     */
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return __NAMESPACE__;
     }
 
-    /**
-     * @return string
-     */
-    public function getClassSuffix()
+    public function getClassSuffix(): string
     {
         return 'Connection';
     }

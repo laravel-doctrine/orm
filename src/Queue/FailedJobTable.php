@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Queue;
 
 use Doctrine\DBAL\Schema\Column;
@@ -8,10 +10,8 @@ use LaravelDoctrine\ORM\AbstractTable;
 
 class FailedJobTable extends AbstractTable
 {
-    /**
-     * @return Column[]
-     */
-    protected function columns()
+    /** @return Column[] */
+    protected function columns(): array
     {
         return [
             $this->column('id', 'integer', true),
@@ -24,14 +24,12 @@ class FailedJobTable extends AbstractTable
         ];
     }
 
-    /**
-     * @return Index[]
-     */
-    protected function indices()
+    /** @return Index[] */
+    protected function indices(): array
     {
         return [
             $this->index('pk', ['id'], true, true),
-            $this->index('uuid_unique', ['uuid'], true)
+            $this->index('uuid_unique', ['uuid'], true),
         ];
     }
 }

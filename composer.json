@@ -1,50 +1,56 @@
 {
     "name": "laravel-doctrine/orm",
-    "description": "A Doctrine ORM bridge for Laravel 5",
+    "description": "An integration library for Laravel and Doctrine ORM",
     "license": "MIT",
     "keywords": [
-        "doctrine",
         "laravel",
-        "orm",
-        "data mapper",
-        "database"
+        "doctrine",
+        "orm"
     ],
     "authors": [
         {
             "name": "Patrick Brouwers",
             "email": "patrick@maatwebsite.nl"
+        },
+        {
+            "name": "Tom H Anderson",
+            "email": "tom.h.anderson@gmail.com"
         }
     ],
     "require": {
-        "php": "^8.0",
-        "doctrine/annotations": "^2",
-        "doctrine/dbal": "^3.2",
-        "doctrine/orm": "^2.14",
-        "doctrine/persistence": "^3",
-        "illuminate/auth": "^9.0|^10.0",
-        "illuminate/console": "^9.0|^10.0",
-        "illuminate/container": "^9.0|^10.0",
-        "illuminate/contracts": "^9.0|^10.0",
-        "illuminate/pagination": "^9.0|^10.0",
-        "illuminate/routing": "^9.0|^10.0",
-        "illuminate/support": "^9.0|^10.0",
-        "illuminate/validation": "^9.0|^10.0",
-        "illuminate/view": "^9.0|^10.0",
-        "symfony/cache": "^6.0",
-        "symfony/serializer": "^5.0|^6.0",
-        "symfony/yaml": "^5.0|^6.0"
+        "php": "^8.2",
+        "doctrine/dbal": "^3.0 || ^4.0",
+        "doctrine/orm": "^3.1",
+        "doctrine/persistence": "^3.3",
+        "illuminate/auth": "^10.0|^11.0",
+        "illuminate/console": "^10.0|^11.0",
+        "illuminate/container": "^10.0|^11.0",
+        "illuminate/contracts": "^10.0|^11.0",
+        "illuminate/pagination": "^10.0|^11.0",
+        "illuminate/routing": "^10.0|^11.0",
+        "illuminate/support": "^10.0|^11.0",
+        "illuminate/validation": "^10.0|^11.0",
+        "illuminate/view": "^10.0|^11.0",
+        "symfony/cache": "^6.0|^7.0",
+        "symfony/serializer": "^5.0|^6.0|^7.0"
+    },
+    "require-dev": {
+        "doctrine/coding-standard": "^12.0",
+        "illuminate/log": "^10.0 || ^11.0",
+        "illuminate/notifications": "^10.0 || ^11.0",
+        "illuminate/queue": "^10.0 || ^11.0",
+        "mockery/mockery": "^1.6.12",
+        "nikic/php-parser": "^4.19 || ^5.0",
+        "php-parallel-lint/php-parallel-lint": "^1.4",
+        "phpstan/phpstan": "^1.9",
+        "phpstan/phpstan-deprecation-rules": "^1.1",
+        "phpunit/phpunit": "^11.4",
+        "fakerphp/faker": "^1.23",
+        "laravel/framework": "^10.0 || ^11.0",
+        "orchestra/testbench": "^9.5"
     },
     "conflict": {
         "laravel/lumen": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.3",
-        "mockery/mockery": "^1.3.1",
-        "illuminate/log": "^9.0|^10.0",
-        "illuminate/notifications": "^9.0|^10.0",
-        "illuminate/queue": "^9.0|^10.0",
-        "phpstan/phpstan": "^1.9",
-        "phpstan/phpstan-deprecation-rules": "^1.1"
     },
     "autoload": {
         "psr-4": {
@@ -55,12 +61,14 @@
         ]
     },
     "autoload-dev": {
-        "classmap": [
-            "tests"
-        ]
+        "psr-4": {
+            "LaravelDoctrineTest\\ORM\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
     },
     "suggest": {
-        "laravel-doctrine/fluent": "Fluent mapping driver (alternative to xml, yaml, ... (~1.1).",
         "fzaninotto/faker": "Required to use the entity factory builder (~1.4).",
         "laravel-doctrine/acl": "to integrate Doctrine roles & permissions with Laravel's Authorization system (~1.0)",
         "laravel-doctrine/extensions": "to add Behavioral and Query/Type Extensions for Laravel Doctrine (~1.0)",
@@ -78,5 +86,34 @@
                 "EntityManager": "LaravelDoctrine\\ORM\\Facades\\EntityManager"
             }
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts": {
+        "test": [
+            "vendor/bin/parallel-lint src tests",
+            "vendor/bin/phpcs",
+            "vendor/bin/phpunit",
+            "vendor/bin/phpstan analyze src --level 1"
+        ],
+        "coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html=coverage",
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "lint": [
+            "@php vendor/bin/phpstan analyse --verbose --ansi"
+        ]
     }
 }

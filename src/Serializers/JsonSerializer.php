@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Serializers;
 
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -8,14 +10,8 @@ use Symfony\Component\Serializer\Serializer;
 
 class JsonSerializer
 {
-    /**
-     * @var Serializer
-     */
-    protected $serializer;
+    protected Serializer $serializer;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->serializer = new Serializer([$this->getNormalizer()], [
@@ -23,30 +19,18 @@ class JsonSerializer
         ]);
     }
 
-    /**
-     * @param $entity
-     *
-     * @param  int    $jsonEncodeOptions
-     * @return string
-     */
-    public function serialize($entity, $jsonEncodeOptions = 0)
+    public function serialize(mixed $entity, int $jsonEncodeOptions = 0): string
     {
         return $this->serializer->serialize($entity, 'json', ['json_encode_options' => $jsonEncodeOptions]);
     }
 
-    /**
-     * @return GetSetMethodNormalizer
-     */
-    protected function getNormalizer()
+    protected function getNormalizer(): GetSetMethodNormalizer
     {
-        return new GetSetMethodNormalizer;
+        return new GetSetMethodNormalizer();
     }
 
-    /**
-     * @return JsonEncoder
-     */
-    protected function getEncoder()
+    protected function getEncoder(): JsonEncoder
     {
-        return new JsonEncoder;
+        return new JsonEncoder();
     }
 }

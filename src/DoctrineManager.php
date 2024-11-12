@@ -1,126 +1,95 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 
+use function assert;
+use function call_user_func_array;
+use function class_exists;
+use function is_callable;
+
 class DoctrineManager
 {
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    public function __construct(protected Container $container)
     {
-        $this->container = $container;
     }
 
-    /**
-     * @return string
-     */
-    public function getDefaultManagerName()
+    public function getDefaultManagerName(): string
     {
         return $this->container->make('registry')->getDefaultManagerName();
     }
 
-    /**
-     * @param $callback
-     */
-    public function onResolve(callable $callback)
+    public function onResolve(callable $callback): void
     {
-        BootChain::add(function (ManagerRegistry $registry) use ($callback) {
+        BootChain::add(function (ManagerRegistry $registry) use ($callback): void {
             call_user_func_array($callback, [$registry, $this]);
         });
     }
 
-    /**
-     * @param string|null     $connection
-     * @param string|callable $callback
-     */
-    public function extend($connection, $callback)
+    public function extend(string|null $connection, string|callable $callback): void
     {
-        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $callback) {
+        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $callback): void {
             $this->callExtendOn($connection, $callback, $registry);
         });
     }
 
-    /**
-     * @param string|callable $callback
-     */
-    public function extendAll($callback)
+    public function extendAll(string|callable $callback): void
     {
-        $this->onResolve(function (ManagerRegistry $registry) use ($callback) {
+        $this->onResolve(function (ManagerRegistry $registry) use ($callback): void {
             foreach ($registry->getManagerNames() as $connection) {
                 $this->callExtendOn($connection, $callback, $registry);
             }
         });
     }
 
-    /**
-     * @param string|null     $connection
-     * @param string|callable $callback
-     * @param ManagerRegistry $registry
-     */
-    private function callExtendOn($connection, $callback, ManagerRegistry $registry)
+    private function callExtendOn(string|null $connection, string|callable $callback, ManagerRegistry $registry): void
     {
-        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
         $manager = $registry->getManager($connection);
+        assert($manager instanceof EntityManagerInterface);
 
-        if (!is_callable($callback)) {
-            if (!class_exists($callback)) {
-                throw new InvalidArgumentException("DoctrineExtender {$callback} does not exist");
+        if (! is_callable($callback)) {
+            if (! class_exists($callback)) {
+                throw new InvalidArgumentException('DoctrineExtender ' . $callback . ' does not exist');
             }
 
             $callback = [$this->container->make($callback), 'extend'];
         }
 
-        if (!is_callable($callback)) {
-            throw new InvalidArgumentException("No valid extend callback is given. Either pass a class or closure");
+        if (! is_callable($callback)) {
+            throw new InvalidArgumentException('No valid extend callback is given. Either pass a class or closure');
         }
 
         call_user_func_array($callback, [
             $manager->getConfiguration(),
             $manager->getConnection(),
-            $manager->getEventManager()
+            $manager->getEventManager(),
         ]);
     }
 
-    /**
-     * @param array       $paths
-     * @param string|null $connection
-     */
-    public function addPaths(array $paths = [], $connection = null)
+    /** @param mixed[] $paths */
+    public function addPaths(array $paths = [], string|null $connection = null): void
     {
-        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $paths) {
+        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $paths): void {
             $this->getMetaDataDriver($connection, $registry)->addPaths($paths);
         });
     }
 
-    /**
-     * @param array       $mappings
-     * @param string|null $connection
-     */
-    public function addMappings(array $mappings = [], $connection = null)
+    /** @param mixed[] $mappings */
+    public function addMappings(array $mappings = [], string|null $connection = null): void
     {
-        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $mappings) {
+        $this->onResolve(function (ManagerRegistry $registry) use ($connection, $mappings): void {
             $this->getMetaDataDriver($connection, $registry)->addMappings($mappings);
         });
     }
 
-    /**
-     * @param string|null $connection
-     *
-     * @param  ManagerRegistry $registry
-     * @return MappingDriver
-     */
-    public function getMetaDataDriver($connection, ManagerRegistry $registry)
+    public function getMetaDataDriver(string|null $connection, ManagerRegistry $registry): MappingDriver
     {
         $registry = $registry ?: $this->container->make('registry');
         $manager  = $registry->getManager($connection);

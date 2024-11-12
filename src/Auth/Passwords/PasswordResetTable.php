@@ -1,30 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Auth\Passwords;
 
 use LaravelDoctrine\ORM\AbstractTable;
 
 class PasswordResetTable extends AbstractTable
 {
-    /**
-     * @return array
-     */
-    public function columns()
+    /** @return mixed[] */
+    public function columns(): array
     {
         return [
             $this->column('email', 'string'),
             $this->column('token', 'string'),
-            $this->column('created_at', 'datetime')
+            $this->column('created_at', 'datetime'),
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function indices()
+    /** @return mixed[] */
+    public function indices(): array
     {
-        return [
-            $this->index('pk', ['email', 'token'], true, true)
-        ];
+        return [$this->index('pk', ['email', 'token'], true, true)];
     }
 }

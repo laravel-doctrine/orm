@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
 use Illuminate\Support\Arr;
@@ -7,11 +9,11 @@ use Illuminate\Support\Arr;
 class PgsqlConnection extends Connection
 {
     /**
-     * @param array $settings
+     * @param mixed[] $settings
      *
-     * @return array
+     * @return mixed[]
      */
-    public function resolve(array $settings = [])
+    public function resolve(array $settings = []): array
     {
         return [
             'driver'              => 'pdo_pgsql',
@@ -22,6 +24,11 @@ class PgsqlConnection extends Connection
             'charset'             => Arr::get($settings, 'charset'),
             'port'                => Arr::get($settings, 'port'),
             'sslmode'             => Arr::get($settings, 'sslmode'),
+            'sslkey'              => Arr::get($settings, 'sslkey'),
+            'sslcert'             => Arr::get($settings, 'sslcert'),
+            'sslrootcert'         => Arr::get($settings, 'sslrootcert'),
+            'sslcrl'              => Arr::get($settings, 'sslcrl'),
+            'gssencmode'          => Arr::get($settings, 'gssencmode'),
             'prefix'              => Arr::get($settings, 'prefix'),
             'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
             'serverVersion'       => Arr::get($settings, 'serverVersion'),

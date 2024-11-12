@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Serializers;
 
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -7,31 +9,21 @@ use Symfony\Component\Serializer\Serializer;
 
 class ArraySerializer
 {
-    /**
-     * @var Serializer
-     */
-    protected $serializer;
+    protected Serializer $serializer;
 
     public function __construct()
     {
         $this->serializer = new Serializer([$this->getNormalizer()]);
     }
 
-    /**
-     * @param $entity
-     *
-     * @return array
-     */
-    public function serialize($entity)
+    /** @return mixed[] */
+    public function serialize(mixed $entity): array
     {
         return $this->serializer->normalize($entity, 'array');
     }
 
-    /**
-     * @return GetSetMethodNormalizer
-     */
-    protected function getNormalizer()
+    protected function getNormalizer(): GetSetMethodNormalizer
     {
-        return new GetSetMethodNormalizer;
+        return new GetSetMethodNormalizer();
     }
 }

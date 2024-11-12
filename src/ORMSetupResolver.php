@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM;
 
 use Doctrine\ORM\Configuration;
@@ -8,9 +10,8 @@ class ORMSetupResolver
 {
     public function createConfiguration(
         bool $isDevMode = false,
-        ?string $proxyDir = null,
-    ): Configuration
-    {
+        string|null $proxyDir = null,
+    ): Configuration {
         $config = new Configuration();
 
         $config->setProxyDir($proxyDir);

@@ -1,18 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Testing;
 
 use ReflectionClass;
 
 class SimpleHydrator
 {
-    /**
-     * @param       $class
-     * @param array $attributes
-     *
-     * @return object
-     */
-    public static function hydrate($class, array $attributes = [])
+    /** @param mixed[] $attributes */
+    public static function hydrate(mixed $class, array $attributes = []): object
     {
         $reflection = new ReflectionClass($class);
         $instance   = $reflection->newInstanceWithoutConstructor();
@@ -24,20 +21,17 @@ class SimpleHydrator
         return $instance;
     }
 
-    /**
-     * @param ReflectionClass $reflection
-     * @param object          $instance
-     * @param string          $field
-     * @param mixed           $value
-     */
-    private static function hydrateReflection(ReflectionClass $reflection, $instance, $field, $value)
+    private static function hydrateReflection(ReflectionClass $reflection, object $instance, string $field, mixed $value): void
     {
         if ($reflection->hasProperty($field)) {
             $property = $reflection->getProperty($field);
             $property->setAccessible(true);
             $property->setValue($instance, $value);
-        } elseif ($parent = $reflection->getParentClass()) {
-            self::hydrateReflection($parent, $instance, $field, $value);
+        } else {
+            $parent = $reflection->getParentClass();
+            if ($parent) {
+                self::hydrateReflection($parent, $instance, $field, $value);
+            }
         }
     }
 }

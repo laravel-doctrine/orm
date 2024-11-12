@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\ORM\Mapping\MappingException;
-use Doctrine\Persistence\ManagerRegistry;
-use Exception;
+use Doctrine\ORM\Tools\Console\Command\InfoCommand as DoctrineInfoCommand;
 
-class InfoCommand extends \Doctrine\ORM\Tools\Console\Command\InfoCommand
+class InfoCommand extends DoctrineInfoCommand
 {
     public function __construct(EntityManagerProvider $entityManagerProvider)
     {

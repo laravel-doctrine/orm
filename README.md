@@ -1,64 +1,54 @@
-# Laravel Doctrine ORM
+<p align="center">
+    <img src="https://placehold.co/10x10/337ab7/337ab7.png" width="100%" height="15px">
+    <img width="450px" src="https://github.com/laravel-doctrine/orm/blob/3.0.x/docs/banner.png"/>
+</p>
 
-<img src="https://cloud.githubusercontent.com/assets/7728097/12726966/cf009822-c91a-11e5-8f19-63ce1d77e8b2.jpg"/>
+Laravel Doctrine ORM
+====================
 
-[![GitHub release](https://img.shields.io/github/release/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
-[![Github actions](https://github.com/laravel-doctrine/orm/workflows/CI/badge.svg?branch=1.8)](https://github.com/laravel-doctrine/orm/actions?query=workflow%3ACI+branch%3A1.7)
-[![Scrutinizer](https://img.shields.io/scrutinizer/g/laravel-doctrine/orm.svg?style=flat-square)](https://github.com/laravel-doctrine/orm)
-[![Packagist](https://img.shields.io/packagist/dm/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
-[![Packagist](https://img.shields.io/packagist/dt/laravel-doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/laravel-doctrine/orm)
+An integration library for Laravel and Doctrine ORM
 
-*A drop-in Doctrine ORM 2 implementation for Laravel*
+[![Build Status](https://github.com/laravel-doctrine/orm/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/laravel-doctrine/orm/actions/workflows/continuous-integration.yml?query=branch%3Amain)
+[![Code Coverage](https://codecov.io/gh/laravel-doctrine/orm/branch/3.0.x/graph/badge.svg?token=3CpQzDXOWX)](https://codecov.io/gh/laravel-doctrine/orm)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%201-brightgreen.svg)](https://img.shields.io/badge/PHPStan-level%201-brightgreen.svg)
+[![Documentation](https://readthedocs.org/projects/laravel-doctrine-orm-official/badge/?version=latest)](https://laravel-doctrine-orm-official.readthedocs.io/en/latest/)
+[![Packagist Downloads](https://img.shields.io/packagist/dd/laravel-doctrine/orm)](https://packagist.org/packages/laravel-doctrine/orm)
 
-```php
-$scientist = new Scientist(
-    'Albert',
-    'Einstein'
-);
 
-$scientist->addTheory(
-    new Theory('Theory of relativity')
-);
+Installation
+------------
 
-EntityManager::persist($scientist);
-EntityManager::flush();
+Via composer:
+
+```bash
+composer require laravel-doctrine/orm
 ```
 
-* Easy configuration
-* Pagination
-* Pre-configured metadata, connections and caching
-* Extendable: extend or add your own drivers for metadata, connections or cache
-* Fluent, Annotations, YAML, SimplifiedYAML, XML, SimplifiedXML, Config and Static PHP metadata mappings
-* Multiple entity managers and connections
-* Laravel naming strategy
-* Simple authentication implementation
-* Password reminders implementation
-* Doctrine console commands
-* DoctrineExtensions supported
-* Timestamps, Softdeletes and TablePrefix listeners
+The ServiceProvider and Facades are autodiscovered.
 
-## Documentation
-
-[Read the full documentation](http://laraveldoctrine.org/docs/current/orm).
-
-## Versions
-
-Version | Supported Laravel Versions
-:---------|:----------
-~1.5 | 6.x
-~1.6 | 7.x
-~1.7 | 8.x
-~1.8 | 9.x
-~2.0 | 10.x
-
-Because of the auto package discovery feature Laravel has, the ServiceProvider and Facades are automatically registered.
-
-To publish the config use:
+Publish the config:
 
 ```bash
 php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\ORM\DoctrineServiceProvider"
 ```
 
-## License
 
-This package is licensed under the [MIT license](https://github.com/laravel-doctrine/orm/blob/master/LICENSE).
+Documentation
+-------------
+
+Full documentation at https://laravel-doctrine-orm-official.readthedocs.io
+or in the docs directory.
+
+
+Versions
+--------
+
+* Version 3 supports DBAL ^4.0, ORM ^3.0, and PHP 8.2.  See the [upgrade guide](https://laravel-doctrine-orm-official.readthedocs.io/en/latest/upgrade.html) for more information.
+* Version 2 supports Laravel 9 - 11, DBAL ^3.0, ORM ^2.0, and PHP ^8.0.
+* Version 1 supports Laravel 6 - 9, DBAL ^2.0, ORM ^2.0, and PHP ^5.5 - ^8.0.
+  See [documentation in version 2](https://github.com/laravel-doctrine/orm/tree/2.0?tab=readme-ov-file#versions)
+
+License
+-------
+
+See [LICENSE](https://github.com/laravel-doctrine/orm/blob/master/LICENSE).

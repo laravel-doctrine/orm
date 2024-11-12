@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<skipper version="3.3.7.1828" mvc="Without MVC" orm="Doctrine2" name="laravel-doctrine-orm" uuid="05bd1ab1-6fa2-494a-ba43-d95b253dcc78">
+  <module name="\App\Doctrine\ORM\Entity" local-name="App\Doctrine\ORM\Entity" namespace="\" export-format="Doctrine2PhpAttributes" export-path="Entity" uuid="ffabe3f5-6845-47b9-bf58-d50040e32df3">
+    <entity name="\Theory" local-name="Theory" namespace="\" uuid="0b5e27f7-8bbb-4272-9ae7-33029445c61a">
+      <field name="id" type="integer" required="true" unique="true" primary="true" auto-increment="true" uuid="a512cdab-c3ab-4f16-8b34-3feb50bccc32"/>
+      <field name="title" type="string" required="true" uuid="d30d20a6-742b-4ac3-a317-d37414c4762a"/>
+      <field name="scientist_id" type="integer" required="true" uuid="0bdfca1a-c956-4891-9e72-43ec1c8abdb7"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Doctrine\ORM\Repository\TheoryRepository</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\Theory" to="\Scientist" caption="Scientist Theories" owner-alias="theories" inverse-alias="scientist" many-owner="true" many-inverse="false" parent-required="true" uuid="2ae5c987-bccb-401d-9ce7-cbcf840081b7">
+      <association-field from="scientist_id" to="id" uuid="38740ad6-d179-4bc2-b15b-b3d5089aa1c0"/>
+    </association>
+    <entity name="\Scientist" local-name="Scientist" namespace="\" uuid="0d22923a-73b4-4575-b83b-7f5f72f46fc5">
+      <field name="id" type="integer" required="true" unique="true" primary="true" auto-increment="true" uuid="57e7fc69-6afe-4376-965c-13155aef0a97"/>
+      <field name="firstName" type="string" uuid="ae683788-22ce-4d37-b209-ae35b5deceb1"/>
+      <field name="lastName" type="string" required="true" uuid="41672585-785a-467f-80f3-47c10ff96786"/>
+      <orm-attributes>
+        <attribute name="repository-class">App\Doctrine\ORM\Repository\ScientistRepository</attribute>
+      </orm-attributes>
+    </entity>
+  </module>
+  <module name="\Article" local-name="Article" namespace="\App\Doctrine\ORM\Entity" local-namespace="App\Doctrine\ORM\Entity" export-format="Doctrine2Xml" export-path="." uuid="71314463-dbd1-4373-b845-7c56da46232a">
+    <entity name="\App\Doctrine\ORM\Entity\Article" local-name="Article" namespace="\App\Doctrine\ORM\Entity" uuid="8aa2c0b3-253b-4235-94ee-7457f67caeeb">
+      <field name="id" type="integer" required="true" unique="true" primary="true" auto-increment="true" uuid="8fc2c6ce-2b78-48ff-9643-b780073394b1"/>
+      <field name="title" type="string" required="true" uuid="f204fbe6-ca41-47d4-b25b-41cf7a6efb0b"/>
+      <orm-attributes>
+        <attribute name="table">articles</attribute>
+      </orm-attributes>
+    </entity>
+  </module>
+  <visual-data>
+    <association uuid="2ae5c987-bccb-401d-9ce7-cbcf840081b7" caption1-position-x="0" caption1-position-y="0" center-position-x="0" center-position-y="0" color="#969696"/>
+    <entity uuid="0b5e27f7-8bbb-4272-9ae7-33029445c61a" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="119" position-y="128" size-x="0" size-x2="104" size-y="0" size-y2="59"/>
+    <entity uuid="0d22923a-73b4-4575-b83b-7f5f72f46fc5" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="19" position-y="22" size-x="0" size-x2="93" size-y="0" size-y2="59"/>
+    <entity uuid="8aa2c0b3-253b-4235-94ee-7457f67caeeb" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="34" position-y="60" size-x="0" size-x2="20" size-y="0" size-y2="20"/>
+    <module uuid="71314463-dbd1-4373-b845-7c56da46232a" bg-color="#FDEBEF" position-x="366" position-y="60" size-x="0" size-x2="186" size-y="0" size-y2="240"/>
+    <module uuid="ffabe3f5-6845-47b9-bf58-d50040e32df3" bg-color="#FEFCE8" position-x="61" position-y="72" size-x="11" size-x2="251" size-y="22" size-y2="228"/>
+    <project uuid="05bd1ab1-6fa2-494a-ba43-d95b253dcc78" size-x="0" size-x2="700" size-y="0" size-y2="350"/>
+  </visual-data>
+</skipper>

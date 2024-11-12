@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Console;
 
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;

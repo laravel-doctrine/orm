@@ -1,13 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration;
 
 interface Driver
 {
-    /**
-     * @param array $settings
-     *
-     * @return mixed
-     */
-    public function resolve(array $settings = []);
+    /** @param mixed[] $settings */
+    public function resolve(array $settings = []): mixed;
 }

@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Console;
 
-use Doctrine\ORM\Tools\Console\MetadataFilter;
-use Doctrine\Persistence\ManagerRegistry;
-use InvalidArgumentException;
+use Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand as DoctrineGenerateProxiesCommand;
 
-class GenerateProxiesCommand extends \Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand
+class GenerateProxiesCommand extends DoctrineGenerateProxiesCommand
 {
     public function __construct(EntityManagerProvider $entityManagerProvider)
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
 use LaravelDoctrine\ORM\Configuration\Manager;
@@ -8,25 +10,18 @@ class CacheManager extends Manager
 {
     /**
      * Get the default driver name.
-     * @return string
      */
-    public function getDefaultDriver()
+    public function getDefaultDriver(): string
     {
         return $this->container->make('config')->get('doctrine.cache.default', 'array');
     }
 
-    /**
-     * @return string
-     */
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return __NAMESPACE__;
     }
 
-    /**
-     * @return string
-     */
-    public function getClassSuffix()
+    public function getClassSuffix(): string
     {
         return 'CacheProvider';
     }

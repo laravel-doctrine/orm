@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration\Cache;
 
 class ApcCacheProvider extends IlluminateCacheProvider
 {
-    /**
-     * @var string
-     */
-    protected $store = 'apc';
+    protected string|null $store = 'apc';
 }

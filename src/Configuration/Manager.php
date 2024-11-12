@@ -1,35 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Str;
 use LaravelDoctrine\ORM\Exceptions\DriverNotFound;
 
+use function class_exists;
+
 abstract class Manager
 {
     /**
      * The application instance.
-     * @var Container
      */
-    protected $container;
+    protected Container $container;
 
     /**
      * The registered custom driver creators.
-     * @var array
+     *
+     * @var mixed[]
      */
-    protected $customCreators = [];
+    protected array $customCreators = [];
 
     /**
      * The array of created "drivers".
-     * @var array
+     *
+     * @var mixed[]
      */
-    protected $drivers = [];
+    protected array $drivers = [];
 
     /**
      * Create a new manager instance.
-     *
-     * @param Container $container
      */
     public function __construct(Container $container)
     {
@@ -38,30 +41,19 @@ abstract class Manager
 
     /**
      * Get the default driver name.
-     * @return string
      */
-    abstract public function getDefaultDriver();
+    abstract public function getDefaultDriver(): string;
 
-    /**
-     * @return string
-     */
-    abstract public function getNamespace();
+    abstract public function getNamespace(): string;
 
-    /**
-     * @return string
-     */
-    abstract public function getClassSuffix();
+    abstract public function getClassSuffix(): string;
 
     /**
      * Get a driver instance.
      *
-     * @param string $driver
-     * @param array  $settings
-     *
-     * @param  bool  $resolve
-     * @return mixed
+     * @param mixed[] $settings
      */
-    public function driver($driver = null, array $settings = [], $resolve = true)
+    public function driver(string|null $driver = null, array $settings = [], bool $resolve = true): mixed
     {
         $driver = $driver ?: $this->getDefaultDriver();
 
@@ -71,13 +63,9 @@ abstract class Manager
     /**
      * Create a new driver instance.
      *
-     * @param string $driver
-     * @param array  $settings
-     *
-     * @param  bool  $resolve
-     * @return mixed
+     * @param mixed[] $settings
      */
-    protected function createDriver($driver, array $settings = [], $resolve = true)
+    protected function createDriver(string $driver, array $settings = [], bool $resolve = true): mixed
     {
         $class = $this->getNamespace() . '\\' . Str::studly($driver) . $this->getClassSuffix();
 
@@ -86,7 +74,9 @@ abstract class Manager
         // drivers using their own customized driver creator Closure to create it.
         if (isset($this->customCreators[$driver])) {
             return $this->callCustomCreator($driver, $settings);
-        } elseif (class_exists($class)) {
+        }
+
+        if (class_exists($class)) {
             $instance = $this->container->make($class);
 
             if ($resolve) {
@@ -96,18 +86,15 @@ abstract class Manager
             return $instance;
         }
 
-        throw new DriverNotFound("Driver [$driver] not supported.");
+        throw new DriverNotFound('Driver [' . $driver . '] not supported.');
     }
 
     /**
      * Call a custom driver creator.
      *
-     * @param string $driver
-     * @param array  $settings
-     *
-     * @return mixed
+     * @param mixed[] $settings
      */
-    protected function callCustomCreator($driver, array $settings = [])
+    protected function callCustomCreator(string $driver, array $settings = []): mixed
     {
         return $this->customCreators[$driver]($settings, $this->container);
     }
@@ -115,12 +102,9 @@ abstract class Manager
     /**
      * Register a custom driver creator Closure.
      *
-     * @param string   $driver
-     * @param callable $callback
-     *
      * @return $this
      */
-    public function extend($driver, callable $callback)
+    public function extend(string $driver, callable $callback): self
     {
         $this->customCreators[$driver] = $callback;
 
@@ -129,23 +113,11 @@ abstract class Manager
 
     /**
      * Get all of the created "drivers".
-     * @return array
+     *
+     * @return mixed[]
      */
-    public function getDrivers()
+    public function getDrivers(): array
     {
         return $this->drivers;
-    }
-
-    /**
-     * Dynamically call the default driver instance.
-     *
-     * @param string $method
-     * @param array  $parameters
-     *
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        return call_user_func_array([$this->driver(), $method], $parameters);
     }
 }

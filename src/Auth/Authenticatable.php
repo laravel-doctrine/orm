@@ -1,73 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Auth;
 
 use Doctrine\ORM\Mapping as ORM;
 
 trait Authenticatable
 {
-    /**
-     * @ORM\Column(type="string")
-     */
     #[ORM\Column(type: 'string')]
-    protected $password;
+    protected string $password;
 
-    /**
-     * @ORM\Column(name="remember_token", type="string", nullable=true)
-     */
     #[ORM\Column(name: 'remember_token', type: 'string', nullable: true)]
-    protected $rememberToken;
+    protected string $rememberToken;
 
     /**
      * Get the column name for the primary key
-     * @return string
      */
-    public function getAuthIdentifierName()
+    public function getAuthIdentifierName(): string
     {
         return 'id';
     }
 
     /**
      * Get the unique identifier for the user.
-     * @return mixed
+     *
+     * @codeCoverageIgnoreStart
      */
-    public function getAuthIdentifier()
+    public function getAuthIdentifier(): mixed
     {
         $name = $this->getAuthIdentifierName();
 
         return $this->{$name};
     }
 
-    /**
-     * @return string
-     */
-    public function getPassword()
+    /** @codeCoverageIgnoreEnd */
+    public function getPassword(): string
     {
         return $this->password;
     }
 
-    /**
-     * @param string $password
-     */
-    public function setPassword($password)
+    public function setPassword(string $password): void
     {
         $this->password = $password;
     }
 
     /**
      * Get the password for the user.
-     * @return string
      */
-    public function getAuthPassword()
+    public function getAuthPassword(): string
     {
         return $this->getPassword();
     }
 
     /**
      * Get the token value for the "remember me" session.
-     * @return string
      */
-    public function getRememberToken()
+    public function getRememberToken(): string
     {
         return $this->rememberToken;
     }
@@ -75,21 +64,27 @@ trait Authenticatable
     /**
      * Set the token value for the "remember me" session.
      *
-     * @param string $value
-     *
-     * @return void
+     * phpcs:disable
      */
-    public function setRememberToken($value)
+    public function setRememberToken($value): void
     {
+        // phpcs:enable
         $this->rememberToken = $value;
     }
 
     /**
      * Get the column name for the "remember me" token.
-     * @return string
      */
-    public function getRememberTokenName()
+    public function getRememberTokenName(): string
     {
         return 'rememberToken';
     }
+
+    /** @codeCoverageIgnoreStart */
+    public function getAuthPasswordName(): string
+    {
+        return 'password';
+    }
+
+    // @codeCoverageIgnoreEnd
 }

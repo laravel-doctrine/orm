@@ -1,34 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Resolvers;
 
 use Doctrine\ORM\Mapping\EntityListenerResolver as ResolverContract;
 use Illuminate\Contracts\Container\Container;
 
+use function trim;
+
+// phpcs:disable
 class EntityListenerResolver implements ResolverContract
 {
-    /**
-     * @var Container
-     */
-    private $container;
+    /** @var object[] Map of class name to entity listener instances. */
+    private array $instances = [];
 
-    /**
-     * @var object[] Map of class name to entity listener instances.
-     */
-    private $instances = [];
-
-    /**
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    public function __construct(private Container $container)
     {
-        $this->container = $container;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function clear($className = null)
+    public function clear(string|null $className = null): void
     {
         if ($className) {
             unset($this->instances[$className = trim($className, '\\')]);
@@ -39,27 +30,18 @@ class EntityListenerResolver implements ResolverContract
         $this->instances = [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function resolve($className)
+    public function resolve($className): object
     {
-        if (isset($this->instances[$className = trim($className, '\\')])) {
+        $hasInstance = isset($this->instances[$className = trim($className, '\\')]);
+        if ($hasInstance) {
             return $this->instances[$className];
         }
 
         return $this->instances[$className] = $this->container->make($className);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function register($object)
+    public function register($object): void
     {
-        if (!is_object($object)) {
-            throw new \InvalidArgumentException(sprintf('An object was expected, but got "%s".', gettype($object)));
-        }
-
-        $this->instances[get_class($object)] = $object;
+        $this->instances[$object::class] = $object;
     }
 }
