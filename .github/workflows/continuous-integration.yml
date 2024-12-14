@@ -55,30 +55,7 @@ jobs:
       - name: "Run PHPUnit"
         run: "vendor/bin/phpunit --coverage-clover=coverage.xml"
 
-      - name: "Upload coverage file"
-        uses: "codecov/codecov-action@v4"
+      - name: "Upload coverage"
+        uses: "codecov/codecov-action@v5"
         with:
-          name: "phpunit-${{ matrix.php-version }}-${{ matrix.dependencies }}-${{ matrix.dbal-version }}.coverage"
-          files: "./coverage.xml"
-
-  upload_coverage:
-    name: "Upload coverage to Codecov"
-    runs-on: "ubuntu-20.04"
-    needs:
-      - "phpunit"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2"
-        with:
-          fetch-depth: 2
-
-      - name: "Download coverage files"
-        uses: "actions/download-artifact@v4"
-        with:
-          path: "reports"
-
-      - name: "Upload to Codecov"
-        uses: "codecov/codecov-action@v2"
-        with:
-          directory: "reports"
+          token: ${{ secrets.CODECOV_TOKEN }}
