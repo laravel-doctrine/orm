@@ -12,7 +12,7 @@ trait Authenticatable
     protected string $password;
 
     #[ORM\Column(name: 'remember_token', type: 'string', nullable: true)]
-    protected string $rememberToken;
+    protected string|null $rememberToken;
 
     /**
      * Get the column name for the primary key
