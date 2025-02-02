@@ -56,7 +56,7 @@ trait Authenticatable
     /**
      * Get the token value for the "remember me" session.
      */
-    public function getRememberToken(): string
+    public function getRememberToken(): ?string
     {
         return $this->rememberToken;
     }
