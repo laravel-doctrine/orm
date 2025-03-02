@@ -90,7 +90,7 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @param string $name The connection name (null for the default one).
      */
-    public function getConnection(string|null $name = null): mixed
+    public function getConnection(string|null $name = null): object
     {
         $name = $name ?: $this->getDefaultConnectionName();
 
@@ -156,7 +156,7 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @param string $name The object manager name (null for the default one).
      */
-    public function getManager(string|null $name = null): mixed
+    public function getManager(string|null $name = null): ObjectManager
     {
         $name ??= $this->getDefaultManagerName();
 
@@ -260,7 +260,7 @@ final class IlluminateRegistry implements ManagerRegistry
      *
      * @param string|null $name The object manager name (null for the default one).
      */
-    public function resetManager(string|null $name = null): mixed
+    public function resetManager(string|null $name = null): ObjectManager
     {
         $this->closeManager($name);
 
