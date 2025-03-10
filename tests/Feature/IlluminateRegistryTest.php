@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LaravelDoctrineTest\ORM\Feature;
 
+use Doctrine\DBAL\Driver\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -111,9 +112,9 @@ class IlluminateRegistryTest extends TestCase
 
         $this->container->shouldReceive('make')
                         ->with('doctrine.connections.default')
-                        ->andReturn('connection');
+                        ->andReturn($conn = m::mock(Connection::class));
 
-        $this->assertEquals('connection', $this->registry->getConnection());
+        $this->assertEquals($conn, $this->registry->getConnection());
         $this->assertEquals($this->registry->getConnection('default'), $this->registry->getConnection());
     }
 
@@ -124,9 +125,9 @@ class IlluminateRegistryTest extends TestCase
 
         $this->container->shouldReceive('make')
                         ->with('doctrine.connections.custom')
-                        ->andReturn('connection');
+                        ->andReturn($conn = m::mock(Connection::class));
 
-        $this->assertEquals('connection', $this->registry->getConnection('custom'));
+        $this->assertEquals($conn, $this->registry->getConnection('custom'));
     }
 
     public function testCannotNonExistingConnection(): void
@@ -145,7 +146,7 @@ class IlluminateRegistryTest extends TestCase
         $this->container->shouldReceive('make')
                         ->once()// container@make will only be called once
                         ->with('doctrine.connections.default')
-                        ->andReturn('connection');
+                        ->andReturn(m::mock(Connection::class));
 
         $this->registry->getConnection();
         $this->registry->getConnection();
@@ -182,11 +183,11 @@ class IlluminateRegistryTest extends TestCase
 
         $this->container->shouldReceive('make')
                         ->with('doctrine.connections.default')
-                        ->andReturn('connection1');
+                        ->andReturn($conn1 = m::mock(Connection::class));
 
         $this->container->shouldReceive('make')
                         ->with('doctrine.connections.custom')
-                        ->andReturn('connection2');
+                        ->andReturn($conn2 = m::mock(Connection::class));
 
         $this->registry->addConnection('default');
         $this->registry->addConnection('custom');
@@ -194,8 +195,8 @@ class IlluminateRegistryTest extends TestCase
         $connections = $this->registry->getConnections();
 
         $this->assertCount(2, $connections);
-        $this->assertContains('connection1', $connections);
-        $this->assertContains('connection2', $connections);
+        $this->assertContains($conn1, $connections);
+        $this->assertContains($conn2, $connections);
     }
 
     public function testCanGetDefaultManager(): void
@@ -205,9 +206,9 @@ class IlluminateRegistryTest extends TestCase
 
         $this->container->shouldReceive('make')
                         ->with('doctrine.managers.default')
-                        ->andReturn('manager');
+                        ->andReturn($em = m::mock(ObjectManager::class));
 
-        $this->assertEquals('manager', $this->registry->getManager());
+        $this->assertEquals($em, $this->registry->getManager());
         $this->assertEquals($this->registry->getManager('default'), $this->registry->getManager());
     }
 
@@ -218,9 +219,9 @@ class IlluminateRegistryTest extends TestCase
 
         $this->container->shouldReceive('make')
                         ->with('doctrine.managers.custom')
-                        ->andReturn('connection');
+                        ->andReturn($em = m::mock(ObjectManager::class));
 
-        $this->assertEquals('connection', $this->registry->getManager('custom'));
+        $this->assertEquals($em, $this->registry->getManager('custom'));
     }
 
     public function testCannotNonExistingManager(): void
@@ -239,7 +240,7 @@ class IlluminateRegistryTest extends TestCase
         $this->container->shouldReceive('make')
                         ->once()// container@make will only be called once
                         ->with('doctrine.managers.default')
-                        ->andReturn('manager');
+                        ->andReturn($em = m::mock(ObjectManager::class));
 
         $this->registry->getManager();
         $this->registry->getManager();
@@ -276,11 +277,11 @@ class IlluminateRegistryTest extends TestCase
 
         $this->container->shouldReceive('make')
                         ->with('doctrine.managers.default')
-                        ->andReturn('manager1');
+                        ->andReturn($em1 = m::mock(ObjectManager::class));
 
         $this->container->shouldReceive('make')
                         ->with('doctrine.managers.custom')
-                        ->andReturn('manager2');
+                        ->andReturn($em2 = m::mock(ObjectManager::class));
 
         $this->registry->addManager('default');
         $this->registry->addManager('custom');
@@ -288,8 +289,8 @@ class IlluminateRegistryTest extends TestCase
         $managers = $this->registry->getManagers();
 
         $this->assertCount(2, $managers);
-        $this->assertContains('manager1', $managers);
-        $this->assertContains('manager2', $managers);
+        $this->assertContains($em1, $managers);
+        $this->assertContains($em2, $managers);
     }
 
     public function testCanPurgeDefaultManager(): void
@@ -574,7 +575,7 @@ class IlluminateRegistryTest extends TestCase
 
         $this->container->shouldReceive('make')
             ->with('doctrine.managers.default')
-            ->andReturn(new stdClass(), new stdClass());
+            ->andReturn(m::mock(ObjectManager::class), m::mock(ObjectManager::class));
 
         $first = $this->registry->getManager();
 
