@@ -6,6 +6,7 @@ namespace LaravelDoctrineTest\ORM\Feature\Notifications;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use InvalidArgumentException;
 use LaravelDoctrine\ORM\Exceptions\NoEntityManagerFound;
 use LaravelDoctrine\ORM\Notifications\DoctrineChannel;
 use LaravelDoctrineTest\ORM\Assets\Notifications\CustomNotifiableStub;
@@ -90,7 +91,7 @@ class DoctrineChannelTest extends TestCase
 
         $this->registry->shouldReceive('getManager')
                        ->with('custom')
-                       ->andReturnNull();
+                       ->andThrow(InvalidArgumentException::class);
 
         $this->channel->send(new CustomNotifiableStub(), new NotificationStub());
     }

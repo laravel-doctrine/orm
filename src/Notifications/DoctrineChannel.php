@@ -6,6 +6,7 @@ namespace LaravelDoctrine\ORM\Notifications;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Illuminate\Notifications\Notification as LaravelNotification;
+use InvalidArgumentException;
 use LaravelDoctrine\ORM\Exceptions\NoEntityManagerFound;
 use RuntimeException;
 
@@ -25,9 +26,13 @@ class DoctrineChannel
         $entity = $this->getEntity($notifiable, $notification);
 
         if (method_exists($notifiable, 'routeNotificationForDoctrine')) {
-            $em = $this->registry->getManager(
-                $notifiable->routeNotificationFor('doctrine', $notification),
-            );
+            try {
+                $em = $this->registry->getManager(
+                    $notifiable->routeNotificationFor('doctrine', $notification),
+                );
+            } catch (InvalidArgumentException) {
+                $em = null;
+            }
         } else {
             $em = $this->registry->getManagerForClass($entity::class);
         }
