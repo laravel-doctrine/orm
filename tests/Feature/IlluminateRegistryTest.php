@@ -18,7 +18,6 @@ use LaravelDoctrine\ORM\IlluminateRegistry;
 use LaravelDoctrineTest\ORM\TestCase;
 use Mockery as m;
 use RuntimeException;
-use stdClass;
 use Throwable;
 
 class IlluminateRegistryTest extends TestCase
