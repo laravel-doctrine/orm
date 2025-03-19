@@ -436,12 +436,12 @@ parameters:
 			path: src/Console/DumpDatabaseCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$em of method LaravelDoctrine\\\\ORM\\\\Console\\\\DumpDatabaseCommand\\:\\:dump\\(\\) expects string, array\\|bool\\|string\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$em of method LaravelDoctrine\\\\ORM\\\\Console\\\\DumpDatabaseCommand\\:\\:dump\\(\\) expects string, array\\|string\\|true given\\.$#"
 			count: 1
 			path: src/Console/DumpDatabaseCommand.php
 
 		-
-			message: "#^Parameter \\#2 \\$em of method LaravelDoctrine\\\\ORM\\\\Console\\\\DumpDatabaseCommand\\:\\:connect\\(\\) expects string, array\\|bool\\|string\\|null given\\.$#"
+			message: "#^Parameter \\#2 \\$em of method LaravelDoctrine\\\\ORM\\\\Console\\\\DumpDatabaseCommand\\:\\:connect\\(\\) expects string, array\\|string\\|true given\\.$#"
 			count: 1
 			path: src/Console/DumpDatabaseCommand.php
 
@@ -523,6 +523,14 @@ parameters:
 		-
 			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Foundation\\\\Application\\:\\:configure\\(\\)\\.$#"
 			count: 3
+			path: src/DoctrineServiceProvider.php
+
+		-
+			message: """
+				#^Call to method register\\(\\) of deprecated class Doctrine\\\\Common\\\\Proxy\\\\Autoloader\\:
+				The Autoloader class is deprecated since doctrine/common 3\\.5\\.$#
+			"""
+			count: 1
 			path: src/DoctrineServiceProvider.php
 
 		-
@@ -1160,6 +1168,11 @@ parameters:
 
 		-
 			message: "#^Method LaravelDoctrine\\\\ORM\\\\Pagination\\\\PaginatorAdapter\\:\\:convertToLaravelPaginator\\(\\) has parameter \\$doctrinePaginator with generic class Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator but does not specify its types\\: T$#"
+			count: 1
+			path: src/Pagination/PaginatorAdapter.php
+
+		-
+			message: "#^Method LaravelDoctrine\\\\ORM\\\\Pagination\\\\PaginatorAdapter\\:\\:convertToLaravelPaginator\\(\\) return type with generic class Illuminate\\\\Pagination\\\\LengthAwarePaginator does not specify its types\\: TKey, TValue$#"
 			count: 1
 			path: src/Pagination/PaginatorAdapter.php
 
