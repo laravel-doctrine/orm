@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelDoctrine\ORM\Configuration\MetaData;
 
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
@@ -14,27 +16,22 @@ use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 
 class Fluent extends MetaData
 {
-    protected Container $container;
-
-    public function __construct(Container $container)
+    public function __construct(protected Container $container)
     {
-        $this->container = $container;
     }
 
     /**
-     * @param array $settings
-     *
-     * @return mixed
+     * @param mixed[] $settings
      *
      * @throws BindingResolutionException
      */
     public function resolve(array $settings = []): FluentDriver
     {
-        $driver         = new FluentDriver(Arr::get($settings, 'mappings', []));
+        $driver = new FluentDriver(Arr::get($settings, 'mappings', []));
 
         $namingStrategy = $this->getNamingStrategy($settings);
 
-        $driver->setFluentFactory(function (ClassMetadata $meta) use ($namingStrategy) {
+        $driver->setFluentFactory(static function (ClassMetadata $meta) use ($namingStrategy) {
             return new Builder(new ClassMetadataBuilder($meta), $namingStrategy);
         });
 
@@ -42,6 +39,8 @@ class Fluent extends MetaData
     }
 
     /**
+     * @param mixed[] $settings
+     *
      * @throws BindingResolutionException
      */
     protected function getNamingStrategy(array $settings = []): mixed
@@ -50,6 +49,8 @@ class Fluent extends MetaData
     }
 
     /**
+     * @param mixed[] $settings
+     *
      * @throws BindingResolutionException
      */
     protected function getQuoteStrategy(array $settings = []): mixed
