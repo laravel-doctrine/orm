@@ -1,0 +1,15 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel-doctrine-orm
+    volumes:
+      - ./:/var/www/html/laravel-doctrine-orm
+      - ./.docker/conf/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    ports:
+      - "8000:80"
+    environment:
+      - XDEBUG_MODE=debug
+      - XDEBUG_CONFIG=client_host=host.docker.internal client_port=9003
+      - PHP_IDE_CONFIG=serverName=laravel-doctrine-orm
