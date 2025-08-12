@@ -119,6 +119,8 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
 
+        $this->mockConfiguration();
+
         $manager = $this->factory->create($this->settings);
 
         $this->assertEntityManager($manager);
@@ -916,24 +918,19 @@ class EntityManagerFactoryTest extends TestCase
 
     protected function mockORMConfiguration(): void
     {
-        $this->configuration = m::mock(Configuration::class);
-        $this->configuration->shouldReceive('setSQLLogger');
-
-        $this->configuration->shouldReceive('getMetadataDriverImpl')
-                            ->andReturn($this->mappingDriver);
-
+        $this->mockConfiguration();
         $this->configuration->shouldReceive('setMetadataDriverImpl')
-                            ->atLeast()->once();
+            ->atLeast()->once();
         $this->configuration->shouldReceive('setMiddlewares')
             ->atLeast()->once();
 
         $this->configuration->shouldReceive('getAutoCommit')
-                            ->atLeast()->once()
-                            ->andReturn(true);
+            ->atLeast()->once()
+            ->andReturn(true);
 
         $this->configuration->shouldReceive('getClassMetadataFactoryName')
-                            ->atLeast()->once()
-                            ->andReturn('Doctrine\ORM\Mapping\ClassMetadataFactory');
+            ->atLeast()->once()
+            ->andReturn('Doctrine\ORM\Mapping\ClassMetadataFactory');
 
         $this->configuration->shouldReceive('setMetadataCache')->once();
         $this->configuration->shouldReceive('setQueryCache')->once();
@@ -991,6 +988,17 @@ class EntityManagerFactoryTest extends TestCase
         $schemaManagerFactory = new DefaultSchemaManagerFactory();
         $this->configuration->shouldReceive('setSchemaManagerFactory')->once();
         $this->configuration->shouldReceive('getSchemaManagerFactory')->once()->andReturn($schemaManagerFactory);
+    }
+
+    protected function mockConfiguration(): void
+    {
+        $this->configuration = m::mock(Configuration::class);
+        $this->configuration->shouldReceive('setSQLLogger');
+
+        $this->configuration->shouldReceive('isNativeLazyObjectsEnabled');
+
+        $this->configuration->shouldReceive('getMetadataDriverImpl')
+            ->andReturn($this->mappingDriver);
     }
 
     protected function enableLaravelNamingStrategy(): void
