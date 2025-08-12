@@ -119,8 +119,6 @@ class EntityManagerFactoryTest extends TestCase
         $this->disableCustomFunctions();
         $this->enableLaravelNamingStrategy();
 
-        $this->mockConfiguration();
-
         $manager = $this->factory->create($this->settings);
 
         $this->assertEntityManager($manager);
@@ -918,11 +916,17 @@ class EntityManagerFactoryTest extends TestCase
 
     protected function mockORMConfiguration(): void
     {
-        $this->mockConfiguration();
+        $this->configuration = m::mock(Configuration::class);
+        $this->configuration->shouldReceive('setSQLLogger');
+        $this->configuration->shouldReceive('isNativeLazyObjectsEnabled');
+
+        $this->configuration->shouldReceive('getMetadataDriverImpl')
+                            ->andReturn($this->mappingDriver);
+
         $this->configuration->shouldReceive('setMetadataDriverImpl')
                             ->atLeast()->once();
         $this->configuration->shouldReceive('setMiddlewares')
-            ->atLeast()->once();
+                            ->atLeast()->once();
 
         $this->configuration->shouldReceive('getAutoCommit')
                             ->atLeast()->once()
@@ -988,17 +992,6 @@ class EntityManagerFactoryTest extends TestCase
         $schemaManagerFactory = new DefaultSchemaManagerFactory();
         $this->configuration->shouldReceive('setSchemaManagerFactory')->once();
         $this->configuration->shouldReceive('getSchemaManagerFactory')->once()->andReturn($schemaManagerFactory);
-    }
-
-    protected function mockConfiguration(): void
-    {
-        $this->configuration = m::mock(Configuration::class);
-        $this->configuration->shouldReceive('setSQLLogger');
-
-        $this->configuration->shouldReceive('isNativeLazyObjectsEnabled');
-
-        $this->configuration->shouldReceive('getMetadataDriverImpl')
-            ->andReturn($this->mappingDriver);
     }
 
     protected function enableLaravelNamingStrategy(): void
