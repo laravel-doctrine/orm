@@ -920,17 +920,17 @@ class EntityManagerFactoryTest extends TestCase
     {
         $this->mockConfiguration();
         $this->configuration->shouldReceive('setMetadataDriverImpl')
-            ->atLeast()->once();
+                            ->atLeast()->once();
         $this->configuration->shouldReceive('setMiddlewares')
             ->atLeast()->once();
 
         $this->configuration->shouldReceive('getAutoCommit')
-            ->atLeast()->once()
-            ->andReturn(true);
+                            ->atLeast()->once()
+                            ->andReturn(true);
 
         $this->configuration->shouldReceive('getClassMetadataFactoryName')
-            ->atLeast()->once()
-            ->andReturn('Doctrine\ORM\Mapping\ClassMetadataFactory');
+                            ->atLeast()->once()
+                            ->andReturn('Doctrine\ORM\Mapping\ClassMetadataFactory');
 
         $this->configuration->shouldReceive('setMetadataCache')->once();
         $this->configuration->shouldReceive('setQueryCache')->once();
