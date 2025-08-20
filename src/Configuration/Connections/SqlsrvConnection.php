@@ -17,29 +17,40 @@ class SqlsrvConnection extends Connection
      */
     public function resolve(array $settings = []): array
     {
-        return [
-            'driver'              => 'pdo_sqlsrv',
-            'host'                => Arr::get($settings, 'host'),
-            'dbname'              => Arr::get($settings, 'database'),
-            'user'                => Arr::get($settings, 'username'),
-            'password'            => Arr::get($settings, 'password'),
-            'port'                => Arr::get($settings, 'port'),
-            'prefix'              => Arr::get($settings, 'prefix'),
-            'charset'             => Arr::get($settings, 'charset'),
-            'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
-            'serverVersion'       => Arr::get($settings, 'serverVersion'),
-            'wrapperClass'        => Arr::get($settings, 'wrapperClass'),
-            'driverOptions'       => array_merge(
-                Arr::get($settings, 'options', []),
-                // @codeCoverageIgnoreStart
-                isset($settings['encrypt'])
-                    ? ['encrypt' => Arr::get($settings, 'encrypt')]
-                    : [],
-                isset($settings['trust_server_certificate'])
-                    ? ['trustServerCertificate' => Arr::get($settings, 'trust_server_certificate')]
-                    : [],
-                // @codeCoverageIgnoreEnd
-            ),
+         $overrides = [
+            'driver' => 'pdo_sqlsrv',
         ];
+
+        // Map Laravel keys to Doctrine DBAL keys
+        if (isset($settings['database'])) {
+            $overrides['dbname'] = $settings['database'];
+            unset($settings['database']);
+        }
+
+        if (isset($settings['username'])) {
+            $overrides['user'] = $settings['username'];
+            unset($settings['username']);
+        }
+
+        $overrides['driverOptions'] = [];
+        if (isset($settings['options'])) {
+            $overrides['driverOptions'] = $settings['options'];
+            unset($settings['options']);
+        }
+
+        if (isset($settings['encrypt'])) {
+            $overrides['driverOptions']['encrypt'] = $settings['encrypt'];
+        }
+
+        if (isset($settings['trust_server_certificate'])) {
+            $overrides['driverOptions']['trustServerCertificate'] = $settings['trust_server_certificate'];
+        }
+
+        // Set default for defaultTableOptions if not present
+        if (!isset($settings['defaultTableOptions'])) {
+            $overrides['defaultTableOptions'] = [];
+        }
+
+        return array_merge($settings, $overrides);
     }
 }
