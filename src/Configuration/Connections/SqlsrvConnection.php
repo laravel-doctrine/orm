@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-use Illuminate\Support\Arr;
-
 use function array_merge;
 
 class SqlsrvConnection extends Connection
@@ -17,9 +15,7 @@ class SqlsrvConnection extends Connection
      */
     public function resolve(array $settings = []): array
     {
-         $overrides = [
-            'driver' => 'pdo_sqlsrv',
-        ];
+        $overrides = ['driver' => 'pdo_sqlsrv'];
 
         // Map Laravel keys to Doctrine DBAL keys
         if (isset($settings['database'])) {
@@ -47,7 +43,7 @@ class SqlsrvConnection extends Connection
         }
 
         // Set default for defaultTableOptions if not present
-        if (!isset($settings['defaultTableOptions'])) {
+        if (! isset($settings['defaultTableOptions'])) {
             $overrides['defaultTableOptions'] = [];
         }
 

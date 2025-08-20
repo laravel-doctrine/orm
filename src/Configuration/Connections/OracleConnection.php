@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-use Illuminate\Support\Arr;
+use function array_merge;
 
 class OracleConnection extends Connection
 {
@@ -15,9 +15,7 @@ class OracleConnection extends Connection
      */
     public function resolve(array $settings = []): array
     {
-        $overrides = [
-            'driver' => 'oci8',
-        ];
+        $overrides = ['driver' => 'oci8'];
 
         // Map Laravel keys to Doctrine DBAL keys
         if (isset($settings['database'])) {
@@ -41,7 +39,7 @@ class OracleConnection extends Connection
         }
 
         // Set default for defaultTableOptions if not present
-        if (!isset($settings['defaultTableOptions'])) {
+        if (! isset($settings['defaultTableOptions'])) {
             $overrides['defaultTableOptions'] = [];
         }
 

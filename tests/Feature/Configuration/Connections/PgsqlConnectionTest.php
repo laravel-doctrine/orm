@@ -41,8 +41,8 @@ class PgsqlConnectionTest extends TestCase
             'sslrootcert'         => 'sslrootcert',
             'sslcrl'              => 'sslcrl',
             'gssencmode'          => 'gssencmode',
-            'defaultTableOptions' => [],
-            'driverOptions'       => [],
+            'application_name'    => 'application_name',
+            'options'             => [],
         ]);
 
         $this->assertEquals('pdo_pgsql', $resolved['driver']);
@@ -59,6 +59,7 @@ class PgsqlConnectionTest extends TestCase
         $this->assertEquals('sslcrl', $resolved['sslcrl']);
         $this->assertEquals('gssencmode', $resolved['gssencmode']);
         $this->assertEquals('prefix', $resolved['prefix']);
+        $this->assertEquals('application_name', $resolved['application_name']);
         $this->assertCount(0, $resolved['defaultTableOptions']);
         $this->assertCount(0, $resolved['driverOptions']);
     }

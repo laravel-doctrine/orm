@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-use Illuminate\Support\Arr;
+use function array_merge;
 
 class PgsqlConnection extends Connection
 {
@@ -15,9 +15,7 @@ class PgsqlConnection extends Connection
      */
     public function resolve(array $settings = []): array
     {
-         $overrides = [
-            'driver' => 'pdo_pgsql',
-        ];
+        $overrides = ['driver' => 'pdo_pgsql'];
 
         // Map Laravel keys to Doctrine DBAL keys
         if (isset($settings['database'])) {
@@ -36,7 +34,7 @@ class PgsqlConnection extends Connection
         }
 
         // Set default for defaultTableOptions if not present
-        if (!isset($settings['defaultTableOptions'])) {
+        if (! isset($settings['defaultTableOptions'])) {
             $overrides['defaultTableOptions'] = [];
         }
 

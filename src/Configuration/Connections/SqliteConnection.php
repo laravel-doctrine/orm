@@ -7,6 +7,8 @@ namespace LaravelDoctrine\ORM\Configuration\Connections;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
+use function array_merge;
+
 class SqliteConnection extends Connection
 {
     /**
@@ -16,11 +18,9 @@ class SqliteConnection extends Connection
      */
     public function resolve(array $settings = []): array
     {
-         $overrides = [
-            'driver' => 'pdo_sqlite',
-        ];
+        $overrides = ['driver' => 'pdo_sqlite'];
 
-        $overrides['memory'] = $this->isMemory($settings);   
+        $overrides['memory'] = $this->isMemory($settings);
 
         // Map Laravel keys to Doctrine DBAL keys
         if (isset($settings['database'])) {
@@ -32,14 +32,14 @@ class SqliteConnection extends Connection
             $overrides['user'] = $settings['username'];
             unset($settings['username']);
         }
-        
+
         if (isset($settings['options'])) {
             $overrides['driverOptions'] = $settings['options'];
             unset($settings['options']);
         }
 
         // Set default for defaultTableOptions if not present
-        if (!isset($settings['defaultTableOptions'])) {
+        if (! isset($settings['defaultTableOptions'])) {
             $overrides['defaultTableOptions'] = [];
         }
 

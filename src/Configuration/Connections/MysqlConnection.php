@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
+use function array_merge;
+
 class MysqlConnection extends Connection
 {
     /**
@@ -13,9 +15,7 @@ class MysqlConnection extends Connection
      */
     public function resolve(array $settings = []): array
     {
-        $overrides = [
-            'driver' => 'pdo_mysql',
-        ];
+        $overrides = ['driver' => 'pdo_mysql'];
 
         // Map Laravel keys to Doctrine DBAL keys
         if (isset($settings['database'])) {
@@ -34,7 +34,7 @@ class MysqlConnection extends Connection
         }
 
         // Set default for defaultTableOptions if not present
-        if (!isset($settings['defaultTableOptions'])) {
+        if (! isset($settings['defaultTableOptions'])) {
             $overrides['defaultTableOptions'] = [];
         }
 
