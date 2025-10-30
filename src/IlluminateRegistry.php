@@ -330,8 +330,8 @@ final class IlluminateRegistry implements ManagerRegistry
                 // @codeCoverageIgnoreEnd
             }
 
-            foreach ($entityManager->getMetadataFactory()->getAllMetadata() as $metadata) {
-                if ($metadata->getName() === $className) {
+            foreach ($entityManager->getConfiguration()->getMetadataDriverImpl()->getAllClassNames() as $_className) {
+                if ($_className === $className) {
                     return $entityManager;
                 }
             }
