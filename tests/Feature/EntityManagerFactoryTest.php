@@ -987,6 +987,7 @@ class EntityManagerFactoryTest extends TestCase
                             ->with('Repo');
 
         $this->configuration->shouldReceive('getMiddlewares')->once()->andReturn([]);
+        $this->configuration->shouldReceive('isNativeLazyObjectsEnabled')->andReturn(false);
 
         $schemaManagerFactory = new DefaultSchemaManagerFactory();
         $this->configuration->shouldReceive('setSchemaManagerFactory')->once();
