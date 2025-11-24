@@ -29,6 +29,7 @@ use LaravelDoctrine\ORM\ORMSetupResolver;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
 use LaravelDoctrine\ORM\Testing\ConfigRepository;
 use LaravelDoctrineTest\ORM\Assets\AnotherListenerStub;
+use LaravelDoctrineTest\ORM\Assets\Configuration\ConfigurationHook;
 use LaravelDoctrineTest\ORM\Assets\Decorator;
 use LaravelDoctrineTest\ORM\Assets\FakeConnection;
 use LaravelDoctrineTest\ORM\Assets\FakeEventManager;
@@ -51,11 +52,11 @@ use function rmdir;
 
 class EntityManagerFactoryTest extends TestCase
 {
-    protected CacheManager $cache;
+    protected CacheManager|Mock $cache;
     protected Repository|Mock $config;
     protected ConnectionManager $connection;
     protected MetaDataManager $meta;
-    protected Container $container;
+    protected Container|Mock $container;
     protected EntityManagerFactory $factory;
     protected Configuration|Mock $configuration;
     protected EntityListenerResolver $listenerResolver;
@@ -285,8 +286,9 @@ class EntityManagerFactoryTest extends TestCase
         $this->container->shouldReceive('make')
                         ->with(ListenerStub::class)
                         ->once()
-                        ->andReturn(new ListenerStub())
-                        ->shouldReceive('make')
+                        ->andReturn(new ListenerStub());
+
+        $this->container->shouldReceive('make')                        
                         ->with(AnotherListenerStub::class)
                         ->once()
                         ->andReturn(new AnotherListenerStub());
@@ -987,6 +989,7 @@ class EntityManagerFactoryTest extends TestCase
                             ->with('Repo');
 
         $this->configuration->shouldReceive('getMiddlewares')->once()->andReturn([]);
+        $this->configuration->shouldReceive('isNativeLazyObjectsEnabled')->andReturn(false);
 
         $schemaManagerFactory = new DefaultSchemaManagerFactory();
         $this->configuration->shouldReceive('setSchemaManagerFactory')->once();
@@ -1120,6 +1123,39 @@ class EntityManagerFactoryTest extends TestCase
         $em                           = $factory->create($this->settings);
 
         $this->assertInstanceOf(PrimaryReadReplicaConnection::class, $em->getConnection());
+    }
+
+    public function testConfigurationHook(): void
+    {
+        m::resetContainer();
+
+        $this->mockApp();
+        $this->mockResolver();
+        $this->mockConfig();
+
+        $this->setup = m::mock(ORMSetupResolver::class);
+        $this->setup->shouldReceive('createConfiguration')->once()->andReturn($this->configuration);
+
+        $this->connection = m::mock(ConnectionManager::class);
+        $this->connection->shouldReceive('driver')
+            ->once()
+            ->with('mysql', ['driver' => 'mysql'])
+            ->andReturn(['driver' => 'pdo_mysql']);
+
+        $factory = new EntityManagerFactory(
+            $this->container,
+            $this->setup,
+            $this->meta,
+            $this->connection,
+            $this->cache,
+            $this->config,
+            $this->listenerResolver,
+        );
+
+        $this->settings['configuration_hook'] = ConfigurationHook::class;
+        $em = $factory->create($this->settings);
+
+        $this->assertTrue($em->getConfiguration()->isNativeLazyObjectsEnabled());
     }
 
     protected function tearDown(): void

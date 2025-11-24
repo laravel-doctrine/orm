@@ -35,6 +35,14 @@ return [
 
             'repository'    => Doctrine\ORM\EntityRepository::class,
 
+            /**
+             * The config hook is a class that is called right after the configuration
+             * is created. This can be used to enable or disable Doctrine features. The
+             * class must implement the \LaravelDoctrine\ORM\Contracts\ConfigurationHookInterface 
+             * interface.             
+             */
+            'configuration_hook'   => null, 
+
             'proxies'       => [
                 'namespace'     => 'DoctrineProxies',
                 'path'          => storage_path('proxies'),

@@ -25,6 +25,7 @@ use LaravelDoctrine\ORM\Configuration\Connections\PrimaryReadReplicaConnection;
 use LaravelDoctrine\ORM\Configuration\LaravelNamingStrategy;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaData;
 use LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager;
+use LaravelDoctrine\ORM\Contracts\ConfigurationHookInterface;
 use LaravelDoctrine\ORM\Extensions\MappingDriverChain;
 use LaravelDoctrine\ORM\Resolvers\EntityListenerResolver;
 use LogicException;
@@ -58,6 +59,7 @@ class EntityManagerFactory
         $configuration = $this->setup->createConfiguration(
             Arr::get($settings, 'dev', false),
             Arr::get($settings, 'proxies.path'),
+            Arr::get($settings, 'configuration_hook'),
         );
 
         $configuration->setSchemaManagerFactory(new DefaultSchemaManagerFactory());
