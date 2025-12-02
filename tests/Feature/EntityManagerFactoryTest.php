@@ -964,9 +964,6 @@ class EntityManagerFactoryTest extends TestCase
             $this->configuration->shouldReceive('enableNativeLazyObjects')
                 ->atLeast()->once()
                 ->with(true);
-            $this->configuration->shouldReceive('isNativeLazyObjectsEnabled')
-                ->atLeast()->once()
-                ->andReturn(true);
         } else {
             $this->configuration->shouldReceive('getProxyDir')
                 ->atLeast()->once()
@@ -980,6 +977,10 @@ class EntityManagerFactoryTest extends TestCase
                 ->atLeast()->once()
                 ->andReturn(false);
         }
+
+        $this->configuration->shouldReceive('isNativeLazyObjectsEnabled')
+            ->atLeast()->once()
+            ->andReturn(true);
 
         $this->configuration->shouldReceive('setProxyDir')
                             ->atLeast()->once()
