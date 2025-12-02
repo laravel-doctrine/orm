@@ -966,15 +966,12 @@ class EntityManagerFactoryTest extends TestCase
                 ->with(true);
         } else {
             $this->configuration->shouldReceive('getProxyDir')
-                ->atLeast()->once()
                 ->andReturn('dir');
 
             $this->configuration->shouldReceive('getProxyNamespace')
-                ->atLeast()->once()
                 ->andReturn('namespace');
 
             $this->configuration->shouldReceive('getAutoGenerateProxyClasses')
-                ->atLeast()->once()
                 ->andReturn(false);
         }
 
