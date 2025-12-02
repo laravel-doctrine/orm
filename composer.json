@@ -31,8 +31,8 @@
         "illuminate/support": "^10.0|^11.0 || ^12.0",
         "illuminate/validation": "^10.0|^11.0 || ^12.0",
         "illuminate/view": "^10.0|^11.0 || ^12.0",
-        "symfony/cache": "^6.0|^7.0",
-        "symfony/serializer": "^5.0|^6.0|^7.0"
+        "symfony/cache": "^6.0|^7.0|^8.0",
+        "symfony/serializer": "^5.0|^6.0|^7.0|^8.0"
     },
     "require-dev": {
         "doctrine/coding-standard": "^12.0",
