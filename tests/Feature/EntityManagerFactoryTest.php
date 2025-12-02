@@ -49,6 +49,8 @@ use function array_key_exists;
 use function count;
 use function rmdir;
 
+use const PHP_VERSION_ID;
+
 class EntityManagerFactoryTest extends TestCase
 {
     protected CacheManager $cache;
@@ -958,25 +960,34 @@ class EntityManagerFactoryTest extends TestCase
                             ->atLeast()->once()
                             ->with(m::type(EntityListenerResolver::class));
 
-        $this->configuration->shouldReceive('getProxyDir')
-                            ->atLeast()->once()
-                            ->andReturn('dir');
+        if (PHP_VERSION_ID >= 80400) {
+            $this->configuration->shouldReceive('enableNativeLazyObjects')
+                ->atLeast()->once()
+                ->with(true);
+            $this->configuration->shouldReceive('isNativeLazyObjectsEnabled')
+                ->atLeast()->once()
+                ->andReturn(true);
+        } else {
+            $this->configuration->shouldReceive('getProxyDir')
+                ->atLeast()->once()
+                ->andReturn('dir');
+
+            $this->configuration->shouldReceive('getProxyNamespace')
+                ->atLeast()->once()
+                ->andReturn('namespace');
+
+            $this->configuration->shouldReceive('getAutoGenerateProxyClasses')
+                ->atLeast()->once()
+                ->andReturn(false);
+        }
 
         $this->configuration->shouldReceive('setProxyDir')
                             ->atLeast()->once()
                             ->with('dir');
 
-        $this->configuration->shouldReceive('getProxyNamespace')
-                            ->atLeast()->once()
-                            ->andReturn('namespace');
-
         $this->configuration->shouldReceive('setProxyNamespace')
                             ->atLeast()->once()
                             ->with('namespace');
-
-        $this->configuration->shouldReceive('getAutoGenerateProxyClasses')
-                            ->atLeast()->once()
-                            ->andReturn(false);
 
         $this->configuration->shouldReceive('setAutoGenerateProxyClasses')
                             ->atLeast()->once()

@@ -21,6 +21,8 @@ use Mockery\Mock;
 use function array_merge;
 use function random_int;
 
+use const PHP_VERSION_ID;
+
 class FactoryBuilderTest extends MockeryTestCase
 {
     private ManagerRegistry $aRegistry;
@@ -93,6 +95,10 @@ class FactoryBuilderTest extends MockeryTestCase
     protected function getEntityManager(): EntityManager
     {
         $config = Setup::createAttributeMetadataConfiguration([__DIR__], true);
+
+        if (PHP_VERSION_ID >= 80400) {
+            $config->enableNativeLazyObjects(true);
+        }
 
         $conn = DriverManager::getConnection([
             'driver'   => 'pdo_sqlite',

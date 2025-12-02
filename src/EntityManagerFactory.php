@@ -37,6 +37,8 @@ use function class_exists;
 use function in_array;
 use function is_array;
 
+use const PHP_VERSION_ID;
+
 class EntityManagerFactory
 {
     public function __construct(
@@ -100,6 +102,10 @@ class EntityManagerFactory
         );
 
         $configuration->setEntityListenerResolver($this->resolver);
+
+        if (PHP_VERSION_ID >= 80400) {
+            $configuration->enableNativeLazyObjects(true);
+        }
 
         $manager = new EntityManager(
             $connection,
