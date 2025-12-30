@@ -35,7 +35,7 @@
         "symfony/serializer": "^5.0|^6.0|^7.0"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^12.0",
+        "doctrine/coding-standard": "^14.0",
         "illuminate/log": "^10.0 || ^11.0 || ^12.0",
         "illuminate/notifications": "^10.0 || ^11.0 || ^12.0",
         "illuminate/queue": "^10.0 || ^11.0 || ^12.0",
