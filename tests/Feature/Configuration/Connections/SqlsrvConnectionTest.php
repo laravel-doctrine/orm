@@ -35,8 +35,9 @@ class SqlsrvConnectionTest extends TestCase
             'port'                => 'port',
             'prefix'              => 'prefix',
             'charset'             => 'charset',
-            'defaultTableOptions' => [],
-            'driverOptions'       => [],
+            'encrypt'             => 'encrypt',
+            'trust_server_certificate' => 'trust_server_certificate',
+            'options'             => [],
         ]);
 
         $this->assertEquals('pdo_sqlsrv', $resolved['driver']);
@@ -48,7 +49,8 @@ class SqlsrvConnectionTest extends TestCase
         $this->assertEquals('prefix', $resolved['prefix']);
         $this->assertEquals('charset', $resolved['charset']);
         $this->assertCount(0, $resolved['defaultTableOptions']);
-        $this->assertCount(0, $resolved['driverOptions']);
+        $this->assertEquals('encrypt', $resolved['driverOptions']['encrypt']);
+        $this->assertEquals('trust_server_certificate', $resolved['driverOptions']['trustServerCertificate']);
     }
 
     protected function tearDown(): void

@@ -32,8 +32,7 @@ class SqliteConnectionTest extends TestCase
             'username'            => 'username',
             'password'            => 'password',
             'prefix'              => 'prefix',
-            'defaultTableOptions' => [],
-            'driverOptions'       => [],
+            'options'             => [],
         ]);
 
         $this->assertEquals('pdo_sqlite', $resolved['driver']);
