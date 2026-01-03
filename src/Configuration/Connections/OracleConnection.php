@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-use Illuminate\Support\Arr;
+use function array_merge;
 
 class OracleConnection extends Connection
 {
@@ -15,21 +15,34 @@ class OracleConnection extends Connection
      */
     public function resolve(array $settings = []): array
     {
-        return [
-            'driver'              => 'oci8',
-            'host'                => Arr::get($settings, 'host'),
-            'dbname'              => Arr::get($settings, 'database'),
-            'servicename'         => Arr::get($settings, 'service_name'),
-            'service'             => Arr::get($settings, 'service'),
-            'user'                => Arr::get($settings, 'username'),
-            'password'            => Arr::get($settings, 'password'),
-            'charset'             => Arr::get($settings, 'charset'),
-            'port'                => Arr::get($settings, 'port'),
-            'prefix'              => Arr::get($settings, 'prefix'),
-            'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
-            'persistent'          => Arr::get($settings, 'persistent'),
-            'wrapperClass'        => Arr::get($settings, 'wrapperClass'),
-            'connectstring'       => Arr::get($settings, 'connectstring'),
-        ];
+        $overrides = ['driver' => 'oci8'];
+
+        // Map Laravel keys to Doctrine DBAL keys
+        if (isset($settings['database'])) {
+            $overrides['dbname'] = $settings['database'];
+            unset($settings['database']);
+        }
+
+        if (isset($settings['username'])) {
+            $overrides['user'] = $settings['username'];
+            unset($settings['username']);
+        }
+
+        if (isset($settings['service_name'])) {
+            $overrides['servicename'] = $settings['service_name'];
+            unset($settings['service_name']);
+        }
+
+        if (isset($settings['options'])) {
+            $overrides['driverOptions'] = $settings['options'];
+            unset($settings['options']);
+        }
+
+        // Set default for defaultTableOptions if not present
+        if (! isset($settings['defaultTableOptions'])) {
+            $overrides['defaultTableOptions'] = [];
+        }
+
+        return array_merge($settings, $overrides);
     }
 }
