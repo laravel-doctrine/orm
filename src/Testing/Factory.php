@@ -14,6 +14,7 @@ use function call_user_func;
 use function database_path;
 use function is_dir;
 
+/** @phpstan-consistent-constructor */
 class Factory implements ArrayAccess
 {
     /**

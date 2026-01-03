@@ -24,6 +24,7 @@ use function is_callable;
 use function is_object;
 use function tap;
 
+/** @phpstan-consistent-constructor */
 class FactoryBuilder
 {
     /**
