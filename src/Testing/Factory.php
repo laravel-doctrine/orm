@@ -14,6 +14,7 @@ use function call_user_func;
 use function database_path;
 use function is_dir;
 
+/** @phpstan-consistent-constructor */
 class Factory implements ArrayAccess
 {
     /**
@@ -66,7 +67,7 @@ class Factory implements ArrayAccess
     {
         $pathToFactories = $pathToFactories ?: database_path('factories');
 
-        return (new self($faker, $registry))->load($pathToFactories);
+        return (new static($faker, $registry))->load($pathToFactories);
     }
 
     /**

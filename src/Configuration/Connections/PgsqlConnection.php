@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LaravelDoctrine\ORM\Configuration\Connections;
 
-use Illuminate\Support\Arr;
+use function array_merge;
 
 class PgsqlConnection extends Connection
 {
@@ -15,25 +15,29 @@ class PgsqlConnection extends Connection
      */
     public function resolve(array $settings = []): array
     {
-        return [
-            'driver'              => 'pdo_pgsql',
-            'host'                => Arr::get($settings, 'host'),
-            'dbname'              => Arr::get($settings, 'database'),
-            'user'                => Arr::get($settings, 'username'),
-            'password'            => Arr::get($settings, 'password'),
-            'charset'             => Arr::get($settings, 'charset'),
-            'port'                => Arr::get($settings, 'port'),
-            'sslmode'             => Arr::get($settings, 'sslmode'),
-            'sslkey'              => Arr::get($settings, 'sslkey'),
-            'sslcert'             => Arr::get($settings, 'sslcert'),
-            'sslrootcert'         => Arr::get($settings, 'sslrootcert'),
-            'sslcrl'              => Arr::get($settings, 'sslcrl'),
-            'gssencmode'          => Arr::get($settings, 'gssencmode'),
-            'prefix'              => Arr::get($settings, 'prefix'),
-            'defaultTableOptions' => Arr::get($settings, 'defaultTableOptions', []),
-            'serverVersion'       => Arr::get($settings, 'serverVersion'),
-            'wrapperClass'        => Arr::get($settings, 'wrapperClass'),
-            'driverOptions'       => Arr::get($settings, 'options', []),
-        ];
+        $overrides = ['driver' => 'pdo_pgsql'];
+
+        // Map Laravel keys to Doctrine DBAL keys
+        if (isset($settings['database'])) {
+            $overrides['dbname'] = $settings['database'];
+            unset($settings['database']);
+        }
+
+        if (isset($settings['username'])) {
+            $overrides['user'] = $settings['username'];
+            unset($settings['username']);
+        }
+
+        if (isset($settings['options'])) {
+            $overrides['driverOptions'] = $settings['options'];
+            unset($settings['options']);
+        }
+
+        // Set default for defaultTableOptions if not present
+        if (! isset($settings['defaultTableOptions'])) {
+            $overrides['defaultTableOptions'] = [];
+        }
+
+        return array_merge($settings, $overrides);
     }
 }

@@ -24,6 +24,7 @@ use function is_callable;
 use function is_object;
 use function tap;
 
+/** @phpstan-consistent-constructor */
 class FactoryBuilder
 {
     /**
@@ -162,7 +163,7 @@ class FactoryBuilder
         array $afterMaking = [],
         array $afterCreating = [],
     ): FactoryBuilder {
-        $instance         = new self($registry, $class, $name, $definitions, $faker, $afterMaking, $afterCreating);
+        $instance         = new static($registry, $class, $name, $definitions, $faker, $afterMaking, $afterCreating);
         $instance->states = $states;
 
         return $instance;

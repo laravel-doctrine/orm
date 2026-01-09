@@ -31,11 +31,11 @@
         "illuminate/support": "^10.0|^11.0 || ^12.0",
         "illuminate/validation": "^10.0|^11.0 || ^12.0",
         "illuminate/view": "^10.0|^11.0 || ^12.0",
-        "symfony/cache": "^6.0|^7.0",
-        "symfony/serializer": "^5.0|^6.0|^7.0"
+        "symfony/cache": "^6.0|^7.0|^8.0",
+        "symfony/serializer": "^5.0|^6.0|^7.0|^8.0"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^12.0",
+        "doctrine/coding-standard": "^14.0",
         "illuminate/log": "^10.0 || ^11.0 || ^12.0",
         "illuminate/notifications": "^10.0 || ^11.0 || ^12.0",
         "illuminate/queue": "^10.0 || ^11.0 || ^12.0",
@@ -44,10 +44,11 @@
         "php-parallel-lint/php-parallel-lint": "^1.4",
         "phpstan/phpstan": "^1.9 || ^2.1",
         "phpstan/phpstan-deprecation-rules": "^1.1 || ^2.0",
-        "phpunit/phpunit": "^11.4",
+        "phpunit/phpunit": "~11.4.0",
         "fakerphp/faker": "^1.23",
         "laravel/framework": "^10.0 || ^11.0 || ^12.0",
-        "orchestra/testbench": "^9.5 || ^10.0"
+        "orchestra/testbench": "^9.5 || ^10.0",
+        "symfony/var-exporter": "^6.4 || ^7.0"
     },
     "conflict": {
         "laravel/lumen": "*"

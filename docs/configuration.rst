@@ -245,23 +245,6 @@ To register custom hydrator, add it to the list in following format:
   ],
 
 
-Logger
-======
-
-Enable logging of Laravel Doctrine and Doctrine by using the logger
-functionality.
-
-Available loggers
-
-* ``LaravelDoctrine\ORM\Loggers\LaravelDebugbarLogger``
-* ``LaravelDoctrine\ORM\Loggers\ClockworkLogger``
-* ``LaravelDoctrine\ORM\Loggers\FileLogger``
-
-.. code-block:: php
-
-  'logger' => env('DOCTRINE_LOGGER', false),
-
-
 Cache
 =====
 

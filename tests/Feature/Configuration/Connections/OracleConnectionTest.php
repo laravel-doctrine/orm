@@ -29,18 +29,20 @@ class OracleConnectionTest extends TestCase
         $resolved = $this->connection->resolve([
             'driver'              => 'oci8',
             'host'                => 'host',
+            'service_name'        => 'service_name',
             'database'            => 'database',
             'username'            => 'username',
             'password'            => 'password',
             'charset'             => 'charset',
             'port'                => 'port',
             'prefix'              => 'prefix',
-            'defaultTableOptions' => [],
+            'options'             => [],
             'persistent'          => 'persistent',
         ]);
 
         $this->assertEquals('oci8', $resolved['driver']);
         $this->assertEquals('host', $resolved['host']);
+        $this->assertEquals('service_name', $resolved['servicename']);
         $this->assertEquals('database', $resolved['dbname']);
         $this->assertEquals('username', $resolved['user']);
         $this->assertEquals('password', $resolved['password']);
@@ -48,6 +50,7 @@ class OracleConnectionTest extends TestCase
         $this->assertEquals('port', $resolved['port']);
         $this->assertEquals('prefix', $resolved['prefix']);
         $this->assertCount(0, $resolved['defaultTableOptions']);
+        $this->assertCount(0, $resolved['driverOptions']);
         $this->assertEquals('persistent', $resolved['persistent']);
     }
 

@@ -6,6 +6,7 @@ namespace LaravelDoctrineTest\ORM\Feature\Testing;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMSetup as Setup;
@@ -19,7 +20,10 @@ use Mockery;
 use Mockery\Mock;
 
 use function array_merge;
+use function method_exists;
 use function random_int;
+
+use const PHP_VERSION_ID;
 
 class FactoryBuilderTest extends MockeryTestCase
 {
@@ -93,6 +97,11 @@ class FactoryBuilderTest extends MockeryTestCase
     protected function getEntityManager(): EntityManager
     {
         $config = Setup::createAttributeMetadataConfiguration([__DIR__], true);
+
+        if (PHP_VERSION_ID >= 80400 && method_exists(Configuration::class, 'enableNativeLazyObjects')) {
+            // TODO: remove check when dropping PHP <8.4 and ORM <3.4
+            $config->enableNativeLazyObjects(true);
+        }
 
         $conn = DriverManager::getConnection([
             'driver'   => 'pdo_sqlite',

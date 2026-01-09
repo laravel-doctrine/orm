@@ -11,6 +11,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
 use function call_user_func;
+use function iterator_to_array;
 
 class PaginatorAdapter
 {
@@ -126,7 +127,7 @@ class PaginatorAdapter
         $query = $this->queryParams;
 
         return new LengthAwarePaginator(
-            $doctrinePaginator->getQuery()->getResult(),
+            iterator_to_array($doctrinePaginator),
             $doctrinePaginator->count(),
             $perPage,
             $page,

@@ -36,6 +36,9 @@ use function array_search;
 use function class_exists;
 use function in_array;
 use function is_array;
+use function method_exists;
+
+use const PHP_VERSION_ID;
 
 class EntityManagerFactory
 {
@@ -100,6 +103,11 @@ class EntityManagerFactory
         );
 
         $configuration->setEntityListenerResolver($this->resolver);
+
+        if (PHP_VERSION_ID >= 80400 && method_exists(Configuration::class, 'enableNativeLazyObjects')) {
+            // TODO: remove check when dropping PHP <8.4 and ORM <3.4
+            $configuration->enableNativeLazyObjects(true);
+        }
 
         $manager = new EntityManager(
             $connection,
