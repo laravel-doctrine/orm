@@ -1,0 +1,25 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Class LaravelDoctrine\\Fluent\\Extensions\\ExtensibleClassMetadataFactory not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Configuration/MetaData/Fluent.php
+
+		-
+			message: '#^Instantiated class LaravelDoctrine\\Fluent\\Builders\\Builder not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Configuration/MetaData/Fluent.php
+
+		-
+			message: '#^Instantiated class LaravelDoctrine\\Fluent\\FluentDriver not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Configuration/MetaData/Fluent.php
+
+		-
+			message: '#^Method LaravelDoctrine\\ORM\\Configuration\\MetaData\\Fluent\:\:resolve\(\) has invalid return type LaravelDoctrine\\Fluent\\FluentDriver\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Configuration/MetaData/Fluent.php

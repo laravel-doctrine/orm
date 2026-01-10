@@ -35,7 +35,7 @@ Within the entity manager name array are configuration settings.  These are
   conditional clauses of queries, regardless the place where the SQL is generated
 * ``mapping_types`` - Link a database type to a local Doctrine type
 * ``meta`` - The type of metadata configuration.  Valid values are
-  ``attributes``, ``xml``, ``simplified_xml``, ``static_php``, ``php``.
+  ``attributes``, ``fluent``, ``xml``, ``simplified_xml``, ``static_php``, ``php``.
   The majority of configurations use ``attributes`` or ``xml`` and these
   metadata configurations are recommended.
 * ``namespaces`` - If your entities are not located in the configured app

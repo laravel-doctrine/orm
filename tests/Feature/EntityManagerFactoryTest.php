@@ -928,7 +928,7 @@ class EntityManagerFactoryTest extends TestCase
         $this->configuration->shouldReceive('setMetadataDriverImpl')
                             ->atLeast()->once();
         $this->configuration->shouldReceive('setMiddlewares')
-            ->atLeast()->once();
+                            ->atLeast()->once();
 
         $this->configuration->shouldReceive('getAutoCommit')
                             ->atLeast()->once()
