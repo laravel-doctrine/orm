@@ -133,7 +133,7 @@ class PaginatorAdapterTest extends TestCase
         $metadata->shouldReceive('getTypeOfField')->andReturn(Types::INTEGER);
 
         $connection->shouldReceive('getDatabasePlatform')->andReturn($platform);
-        $connection->shouldReceive('executeQuery')->andReturn($this->createMock(Result::class));
+        $connection->shouldReceive('executeQuery')->andReturn($this->createStub(Result::class));
         $connection->shouldReceive('getParams')->andReturn([]);
 
         $platform->shouldReceive('appendLockHint')->andReturnUsing(static function ($a) {
