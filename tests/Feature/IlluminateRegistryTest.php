@@ -9,7 +9,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
-use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\ObjectManager;
 use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
@@ -430,17 +430,23 @@ class IlluminateRegistryTest extends TestCase
             ->once()
             ->andReturnFalse();
 
-        $metadata = m::mock(ClassMetadata::class);
-        $metadata->shouldReceive('getName')
-            ->once()
-            ->andReturn('LaravelDoctrineTest\ORM\Assets\Entity\Scientist');
-
-        $metadataFactory->shouldReceive('getAllMetadata')
-            ->once()
-            ->andReturn([$metadata]);
-
         $entityManager->shouldReceive('getMetadataFactory')
             ->andReturn($metadataFactory);
+
+        $configuration  = m::mock(Configuration::class);
+        $metadataDriver = m::mock(MappingDriver::class);
+
+        $metadataDriver->shouldReceive('getAllClassNames')
+            ->once()
+            ->andReturn(['LaravelDoctrineTest\ORM\Assets\Entity\Scientist']);
+
+        $configuration->shouldReceive('getMetadataDriverImpl')
+            ->once()
+            ->andReturn($metadataDriver);
+
+        $entityManager->shouldReceive('getConfiguration')
+            ->once()
+            ->andReturn($configuration);
 
         $this->assertEquals($entityManager, $this->registry->getManagerForClass('LaravelDoctrineTest\ORM\Assets\Entity\Scientist'));
     }
@@ -462,25 +468,26 @@ class IlluminateRegistryTest extends TestCase
             ->once()
             ->andReturn('LaravelDoctrineTest\ORM\Assets\Entity');
 
-        $entityManager->shouldReceive('getConfiguration')->andReturn($configuration);
-
         $metadataFactory = m::mock(ClassMetadataFactory::class);
         $metadataFactory->shouldReceive('isTransient')
             ->with('LaravelDoctrineTest\ORM\Assets\Entity\Scientist')
             ->once()
             ->andReturnFalse();
 
-        $metadata = m::mock(ClassMetadata::class);
-        $metadata->shouldReceive('getName')
-            ->once()
-            ->andReturn('LaravelDoctrineTest\ORM\Assets\Entity\Scientist');
-
-        $metadataFactory->shouldReceive('getAllMetadata')
-            ->once()
-            ->andReturn([$metadata]);
-
         $entityManager->shouldReceive('getMetadataFactory')
             ->andReturn($metadataFactory);
+
+        $metadataDriver = m::mock(MappingDriver::class);
+
+        $metadataDriver->shouldReceive('getAllClassNames')
+            ->once()
+            ->andReturn(['LaravelDoctrineTest\ORM\Assets\Entity\Scientist']);
+
+        $configuration->shouldReceive('getMetadataDriverImpl')
+            ->once()
+            ->andReturn($metadataDriver);
+
+        $entityManager->shouldReceive('getConfiguration')->andReturn($configuration);
 
         $this->assertEquals($entityManager, $this->registry->getManagerForClass('Alias:Scientist'));
     }
@@ -501,17 +508,23 @@ class IlluminateRegistryTest extends TestCase
             ->once()
             ->andReturnFalse();
 
-        $metadata = m::mock(ClassMetadata::class);
-        $metadata->shouldReceive('getName')
-            ->once()
-            ->andReturn('LaravelDoctrineTest\ORM\Assets\Entity\Theory');
-
-        $metadataFactory->shouldReceive('getAllMetadata')
-            ->once()
-            ->andReturn([$metadata]);
-
         $entityManager->shouldReceive('getMetadataFactory')
             ->andReturn($metadataFactory);
+
+        $configuration  = m::mock(Configuration::class);
+        $metadataDriver = m::mock(MappingDriver::class);
+
+        $metadataDriver->shouldReceive('getAllClassNames')
+            ->once()
+            ->andReturn(['LaravelDoctrineTest\ORM\Assets\Entity\Theory']);
+
+        $configuration->shouldReceive('getMetadataDriverImpl')
+            ->once()
+            ->andReturn($metadataDriver);
+
+        $entityManager->shouldReceive('getConfiguration')
+            ->once()
+            ->andReturn($configuration);
 
         $this->assertNull($this->registry->getManagerForClass('LaravelDoctrineTest\ORM\Assets\Entity\Scientist'));
     }
@@ -534,17 +547,23 @@ class IlluminateRegistryTest extends TestCase
             ->once()
             ->andReturnFalse();
 
-        $metadata = m::mock(ClassMetadata::class);
-        $metadata->shouldReceive('getName')
-            ->once()
-            ->andReturn('LaravelDoctrineTest\ORM\Assets\Entity\Theory');
-
-        $metadataFactory->shouldReceive('getAllMetadata')
-            ->once()
-            ->andReturn([$metadata]);
-
         $entityManager->shouldReceive('getMetadataFactory')
             ->andReturn($metadataFactory);
+
+        $configuration  = m::mock(Configuration::class);
+        $metadataDriver = m::mock(MappingDriver::class);
+
+        $metadataDriver->shouldReceive('getAllClassNames')
+            ->once()
+            ->andReturn(['LaravelDoctrineTest\ORM\Assets\Entity\Theory']);
+
+        $configuration->shouldReceive('getMetadataDriverImpl')
+            ->once()
+            ->andReturn($metadataDriver);
+
+        $entityManager->shouldReceive('getConfiguration')
+            ->once()
+            ->andReturn($configuration);
 
         $this->assertEquals($entityManager, $this->registry->getManagerForClass('LaravelDoctrineTest\ORM\Assets\Entity\Scientist', true));
     }
