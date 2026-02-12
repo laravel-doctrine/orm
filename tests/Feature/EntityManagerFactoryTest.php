@@ -695,8 +695,6 @@ class EntityManagerFactoryTest extends TestCase
 
         $reflectionCache   = new ReflectionObject($metadataCache);
         $directoryProperty = $reflectionCache->getProperty('directory');
-        $directoryProperty->setAccessible(true);
-
         $this->assertStringContainsString('tests/cache', $directoryProperty->getValue($metadataCache));
         rmdir(__DIR__ . '/../cache/doctrine-cache');
     }
