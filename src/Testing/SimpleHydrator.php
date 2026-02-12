@@ -25,7 +25,6 @@ class SimpleHydrator
     {
         if ($reflection->hasProperty($field)) {
             $property = $reflection->getProperty($field);
-            $property->setAccessible(true);
             $property->setValue($instance, $value);
         } else {
             $parent = $reflection->getParentClass();
