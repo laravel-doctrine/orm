@@ -324,16 +324,8 @@ final class IlluminateRegistry implements ManagerRegistry
         }
 
         foreach ($this->getManagers() as $entityManager) {
-            if ($entityManager->getMetadataFactory()->isTransient($className)) {
-                // @codeCoverageIgnoreStart
-                continue;
-                // @codeCoverageIgnoreEnd
-            }
-
-            foreach ($entityManager->getMetadataFactory()->getAllMetadata() as $metadata) {
-                if ($metadata->getName() === $className) {
-                    return $entityManager;
-                }
+            if (!$entityManager->getMetadataFactory()->isTransient($className)) {
+                return $entityManager;
             }
         }
 
