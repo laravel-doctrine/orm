@@ -430,15 +430,6 @@ class IlluminateRegistryTest extends TestCase
             ->once()
             ->andReturnFalse();
 
-        $metadata = m::mock(ClassMetadata::class);
-        $metadata->shouldReceive('getName')
-            ->once()
-            ->andReturn('LaravelDoctrineTest\ORM\Assets\Entity\Scientist');
-
-        $metadataFactory->shouldReceive('getAllMetadata')
-            ->once()
-            ->andReturn([$metadata]);
-
         $entityManager->shouldReceive('getMetadataFactory')
             ->andReturn($metadataFactory);
 
@@ -470,15 +461,6 @@ class IlluminateRegistryTest extends TestCase
             ->once()
             ->andReturnFalse();
 
-        $metadata = m::mock(ClassMetadata::class);
-        $metadata->shouldReceive('getName')
-            ->once()
-            ->andReturn('LaravelDoctrineTest\ORM\Assets\Entity\Scientist');
-
-        $metadataFactory->shouldReceive('getAllMetadata')
-            ->once()
-            ->andReturn([$metadata]);
-
         $entityManager->shouldReceive('getMetadataFactory')
             ->andReturn($metadataFactory);
 
@@ -499,16 +481,7 @@ class IlluminateRegistryTest extends TestCase
         $metadataFactory->shouldReceive('isTransient')
             ->with('LaravelDoctrineTest\ORM\Assets\Entity\Scientist')
             ->once()
-            ->andReturnFalse();
-
-        $metadata = m::mock(ClassMetadata::class);
-        $metadata->shouldReceive('getName')
-            ->once()
-            ->andReturn('LaravelDoctrineTest\ORM\Assets\Entity\Theory');
-
-        $metadataFactory->shouldReceive('getAllMetadata')
-            ->once()
-            ->andReturn([$metadata]);
+            ->andReturnTrue();
 
         $entityManager->shouldReceive('getMetadataFactory')
             ->andReturn($metadataFactory);
@@ -532,16 +505,7 @@ class IlluminateRegistryTest extends TestCase
         $metadataFactory->shouldReceive('isTransient')
             ->with('LaravelDoctrineTest\ORM\Assets\Entity\Scientist')
             ->once()
-            ->andReturnFalse();
-
-        $metadata = m::mock(ClassMetadata::class);
-        $metadata->shouldReceive('getName')
-            ->once()
-            ->andReturn('LaravelDoctrineTest\ORM\Assets\Entity\Theory');
-
-        $metadataFactory->shouldReceive('getAllMetadata')
-            ->once()
-            ->andReturn([$metadata]);
+            ->andReturnTrue();
 
         $entityManager->shouldReceive('getMetadataFactory')
             ->andReturn($metadataFactory);
