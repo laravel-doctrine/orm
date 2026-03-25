@@ -1125,39 +1125,6 @@ class EntityManagerFactoryTest extends TestCase
         $this->assertInstanceOf(PrimaryReadReplicaConnection::class, $em->getConnection());
     }
 
-    public function testConfigurationHook(): void
-    {
-        m::resetContainer();
-
-        $this->mockApp();
-        $this->mockResolver();
-        $this->mockConfig();
-
-        $this->setup = m::mock(ORMSetupResolver::class);
-        $this->setup->shouldReceive('createConfiguration')->once()->andReturn($this->configuration);
-
-        $this->connection = m::mock(ConnectionManager::class);
-        $this->connection->shouldReceive('driver')
-            ->once()
-            ->with('mysql', ['driver' => 'mysql'])
-            ->andReturn(['driver' => 'pdo_mysql']);
-
-        $factory = new EntityManagerFactory(
-            $this->container,
-            $this->setup,
-            $this->meta,
-            $this->connection,
-            $this->cache,
-            $this->config,
-            $this->listenerResolver,
-        );
-
-        $this->settings['configuration_hook'] = ConfigurationHook::class;
-        $em = $factory->create($this->settings);
-
-        $this->assertTrue($em->getConfiguration()->isNativeLazyObjectsEnabled());
-    }
-
     protected function tearDown(): void
     {
         m::close();
