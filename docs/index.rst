@@ -26,7 +26,7 @@ The benefit of Doctrine for the programmer is the ability to focus on the
 object-oriented business logic and worry about persistence only as a
 secondary problem. This doesn’t mean persistence is downplayed by Doctrine ORM.
 However, it is our belief that there are considerable benefits for
-object-oriented programming if persistence and entities are seperate.
+object-oriented programming if persistence and entities are separate.
 
 .. toctree::
 
