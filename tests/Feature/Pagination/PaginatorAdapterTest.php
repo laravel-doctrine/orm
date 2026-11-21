@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace LaravelDoctrineTest\ORM\Feature\Pagination;
 
+use Doctrine\DBAL\Configuration as DBALConfiguration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Result;
+use Doctrine\DBAL\Schema\Name\UnquotedIdentifierFolding;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,6 +25,7 @@ use Mockery\Mock;
 use stdClass;
 
 use function assert;
+use function enum_exists;
 
 use const PHP_INT_MAX;
 
@@ -135,6 +138,7 @@ class PaginatorAdapterTest extends TestCase
         $connection->shouldReceive('getDatabasePlatform')->andReturn($platform);
         $connection->shouldReceive('executeQuery')->andReturn($this->createStub(Result::class));
         $connection->shouldReceive('getParams')->andReturn([]);
+        $connection->shouldReceive('getConfiguration')->andReturn(new DBALConfiguration());
 
         $platform->shouldReceive('appendLockHint')->andReturnUsing(static function ($a) {
             return $a;
@@ -143,6 +147,11 @@ class PaginatorAdapterTest extends TestCase
         $platform->shouldReceive('getSQLResultCasing')->andReturnUsing(static function ($a) {
             return $a;
         });
+        // DBAL 4.3+ platforms expose identifier folding, which newer ORM versions use for result casing
+        if (enum_exists(UnquotedIdentifierFolding::class)) {
+            $platform->shouldReceive('getUnquotedIdentifierFolding')->andReturn(UnquotedIdentifierFolding::NONE);
+        }
+
         $platform->shouldReceive('getName')->andReturn('You shouldnt care');
         $platform->shouldReceive('getCountExpression')->andReturnUsing(static function ($col) {
             return 'COUNT(' . $col . ')';
