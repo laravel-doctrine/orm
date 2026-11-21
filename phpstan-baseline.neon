@@ -1,6 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Class LaravelDoctrine\\ORM\\Extensions\\MappingDriverChain extends @final class Doctrine\\Persistence\\Mapping\\Driver\\MappingDriverChain\.$#'
+			identifier: class.extendsFinalByPhpDoc
+			count: 1
+			path: src/Extensions/MappingDriverChain.php
+
+		-
 			message: '#^Class LaravelDoctrine\\Fluent\\Extensions\\ExtensibleClassMetadataFactory not found\.$#'
 			identifier: class.notFound
 			count: 1
